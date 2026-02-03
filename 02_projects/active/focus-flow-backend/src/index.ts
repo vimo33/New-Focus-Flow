@@ -6,12 +6,19 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+// SECURITY: Load OpenClaw secrets from secure location
+import { loadOpenClawSecrets } from './config/load-secrets';
+loadOpenClawSecrets();
+
 // Import routes
 import inboxRoutes from './routes/inbox.routes';
 import tasksRoutes from './routes/tasks.routes';
 import projectsRoutes from './routes/projects.routes';
 import ideasRoutes from './routes/ideas.routes';
 import healthRoutes from './routes/health.routes';
+import aiRoutes from './routes/ai.routes';
+import orchestratorRoutes from './routes/orchestrator.routes';
+import securityRoutes from './routes/security.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -43,6 +50,9 @@ app.use('/api', tasksRoutes);
 app.use('/api', projectsRoutes);
 app.use('/api', ideasRoutes);
 app.use('/api', healthRoutes);
+app.use('/api', aiRoutes);
+app.use('/api/orchestrator', orchestratorRoutes);
+app.use('/api', securityRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -98,6 +108,8 @@ app.listen(PORT, () => {
   console.log('  GET    /api/inbox/counts');
   console.log('  GET    /api/inbox/:id');
   console.log('  POST   /api/inbox/:id/process');
+  console.log('  POST   /api/inbox/:id/classify');
+  console.log('  POST   /api/inbox/classify-all');
   console.log('  GET    /api/tasks');
   console.log('  POST   /api/tasks');
   console.log('  PUT    /api/tasks/:id');
@@ -107,6 +119,14 @@ app.listen(PORT, () => {
   console.log('  POST   /api/ideas');
   console.log('  POST   /api/health/log');
   console.log('  GET    /api/summary');
+  console.log('  POST   /api/ideas/:id/validate');
+  console.log('  POST   /api/classify/:id');
+  console.log('  GET    /api/ai/status');
+  console.log('  POST   /api/orchestrator/prd/:ideaId');
+  console.log('  GET    /api/orchestrator/runs/:runId');
+  console.log('  GET    /api/orchestrator/runs');
+  console.log('  GET    /api/security/status');
+  console.log('  GET    /api/security/audit-log');
   console.log('==========================================');
 });
 

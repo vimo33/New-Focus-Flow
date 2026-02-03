@@ -186,6 +186,118 @@ npm start
 
 Runs the compiled JavaScript from `dist/`.
 
+## Authentication
+
+Focus Flow uses Claude CLI authentication for AI features:
+
+### Setup
+
+1. Authenticate with your Claude subscription:
+   ```bash
+   claude auth
+   ```
+
+2. Verify authentication:
+   ```bash
+   claude auth status
+   ```
+
+3. Start the service:
+   ```bash
+   npm run dev
+   ```
+
+## AI Configuration
+
+Focus Flow uses OpenClaw Gateway to access Claude via your Claude subscription.
+
+### Prerequisites
+
+1. **Claude Subscription** (Pro or higher)
+2. **OpenClaw CLI** installed
+
+### Setup Steps
+
+1. Install OpenClaw:
+   ```bash
+   npm install -g openclaw
+   ```
+
+2. Generate Claude setup token:
+   ```bash
+   claude setup-token
+   # Copy the generated token
+   ```
+
+3. Initialize OpenClaw:
+   ```bash
+   openclaw setup
+   ```
+
+4. Configure Claude authentication:
+   ```bash
+   openclaw models auth paste-token --provider anthropic
+   # Paste the token from step 2
+
+   # Verify
+   openclaw models status
+   ```
+
+5. Generate secure auth token:
+   ```bash
+   openssl rand -hex 32 > /tmp/token.txt
+   mkdir -p /srv/focus-flow/07_system/secrets
+   echo "OPENCLAW_AUTH_TOKEN=$(cat /tmp/token.txt)" > /srv/focus-flow/07_system/secrets/.openclaw.env
+   chmod 600 /srv/focus-flow/07_system/secrets/.openclaw.env
+   shred -u /tmp/token.txt
+   ```
+
+6. Start OpenClaw Gateway (SECURITY: localhost-only binding):
+   ```bash
+   openclaw gateway --host 127.0.0.1 --port 18789 --require-auth
+
+   # Or install as system service
+   openclaw gateway install --host 127.0.0.1 --require-auth
+   openclaw gateway start
+
+   # Verify localhost-only binding
+   netstat -tuln | grep 18789
+   # Expected: 127.0.0.1:18789 (NOT 0.0.0.0:18789)
+   ```
+
+7. Set up firewall:
+   ```bash
+   sudo ufw deny 18789/tcp
+   sudo ufw status | grep 18789
+   ```
+
+8. Start Focus Flow backend:
+   ```bash
+   cd /srv/focus-flow/02_projects/active/focus-flow-backend
+   npm run dev
+   ```
+
+### Security Best Practices
+
+⚠️ **CRITICAL**: OpenClaw has inherent security risks. Follow these practices:
+
+1. **Localhost Only**: Gateway MUST bind to 127.0.0.1 (never 0.0.0.0)
+2. **Authentication Required**: Always use auth tokens
+3. **Firewall Rules**: Block port 18789 from external access
+4. **Audit Logging**: Enable and monitor security audit logs
+5. **Input Sanitization**: All user input is sanitized before AI processing
+6. **Least Privilege**: Limit what data OpenClaw can access
+7. **No Sensitive Data**: Do not process financial, health, or client data
+8. **Regular Monitoring**: Check `/api/security/status` daily
+
+### Troubleshooting
+
+- **Gateway not starting**: Check `openclaw gateway status`
+- **Auth errors**: Re-run `claude setup-token` and update OpenClaw
+- **Connection refused**: Ensure Gateway is on port 18789
+- **API errors**: Check Gateway logs: `openclaw gateway logs`
+- **Security alerts**: Check `/srv/focus-flow/07_system/logs/security-audit.log`
+
 ## Environment Variables
 
 Copy `.env.example` to `.env` and configure:
@@ -197,10 +309,15 @@ cp .env.example .env
 Required variables:
 - `PORT` - Server port (default: 3001)
 - `VAULT_PATH` - Path to Focus Flow vault (default: /srv/focus-flow)
+- `OPENCLAW_GATEWAY_URL` - OpenClaw Gateway URL (default: http://localhost:18789)
+- `OPENCLAW_AUTH_TOKEN` - Loaded from `/srv/focus-flow/07_system/secrets/.openclaw.env`
 
 Optional:
-- `ANTHROPIC_API_KEY` - For AI features
+- `OPENCLAW_MAX_TOKENS` - Max tokens per request (default: 4000)
+- `OPENCLAW_TIMEOUT_MS` - Request timeout (default: 60000)
+- `OPENCLAW_ENABLE_AUDIT_LOG` - Enable security logging (default: true)
 - `TELEGRAM_BOT_TOKEN` - For Telegram integration
+- `CORS_ORIGINS` - Allowed CORS origins
 
 ## CORS Configuration
 

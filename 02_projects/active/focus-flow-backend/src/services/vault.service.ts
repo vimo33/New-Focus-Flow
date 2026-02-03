@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs/promises';
 import {
   InboxItem,
   Task,
@@ -14,7 +15,8 @@ import {
   listFiles,
   deleteFile,
   getVaultPath,
-  appendToFile
+  appendToFile,
+  ensureDir
 } from '../utils/file-operations';
 import {
   generateInboxId,
@@ -262,6 +264,21 @@ export class VaultService {
     return newIdea;
   }
 
+  async getIdea(id: string): Promise<Idea | null> {
+    // Try to find the idea in all possible locations
+    const statuses = ['inbox', 'validated', 'rejected'];
+
+    for (const status of statuses) {
+      const filePath = getVaultPath('03_ideas', status, `${id}.json`);
+      const idea = await readJsonFile<Idea>(filePath);
+      if (idea) {
+        return idea;
+      }
+    }
+
+    return null;
+  }
+
   async getIdeas(status?: string): Promise<Idea[]> {
     const statuses = status ? [status] : ['inbox', 'validated', 'rejected'];
     const ideas: Idea[] = [];
@@ -308,5 +325,40 @@ export class VaultService {
     await writeJsonFile(jsonPath, healthMetric);
 
     return healthMetric;
+  }
+
+  // ==================== GENERIC FILE OPERATIONS ====================
+
+  /**
+   * Get data from a vault path (for orchestrator and other services)
+   */
+  async getData(relativePath: string): Promise<string> {
+    const filePath = getVaultPath(relativePath);
+    try {
+      return await fs.readFile(filePath, 'utf-8');
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        throw new Error(`File not found: ${relativePath}`);
+      }
+      throw error;
+    }
+  }
+
+  /**
+   * Save data to a vault path (for orchestrator and other services)
+   */
+  async saveData(relativePath: string, data: string): Promise<void> {
+    const filePath = getVaultPath(relativePath);
+    const dir = path.dirname(filePath);
+    await ensureDir(dir);
+    await fs.writeFile(filePath, data, 'utf-8');
+  }
+
+  /**
+   * List files in a vault directory
+   */
+  async listFiles(relativePath: string): Promise<string[]> {
+    const dirPath = getVaultPath(relativePath);
+    return await listFiles(dirPath);
   }
 }
