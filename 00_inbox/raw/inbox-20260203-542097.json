@@ -1,0 +1,9 @@
+{
+  "id": "inbox-20260203-542097",
+  "text": "Bulk capture item 1",
+  "source": "telegram",
+  "created_at": "2026-02-03T02:25:42.097Z",
+  "metadata": {
+    "userId": 12345
+  }
+}

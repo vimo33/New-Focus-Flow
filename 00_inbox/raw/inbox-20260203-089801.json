@@ -1,0 +1,10 @@
+{
+  "id": "inbox-20260203-089801",
+  "text": "Call mom at 5pm",
+  "prefix": "📞",
+  "source": "test",
+  "created_at": "2026-02-03T02:18:09.801Z",
+  "metadata": {
+    "priority": "high"
+  }
+}
