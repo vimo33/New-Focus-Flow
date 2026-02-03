@@ -1,0 +1,313 @@
+# Focus Flow OS - Coolify Deployment Configuration
+# This file defines all applications in the Focus Flow ecosystem for Coolify deployment
+# Version: 1.0.0
+# Last Updated: 2026-02-03
+
+version: "3.8"
+
+# =============================================================================
+# APPLICATION 1: Focus Flow UI (Frontend)
+# =============================================================================
+services:
+  focus-flow-ui:
+    # Build Configuration
+    build:
+      context: /srv/focus-flow/02_projects/active/focus-flow-ui
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+        VITE_API_URL: ${VITE_API_URL}
+
+    # Container Configuration
+    image: focus-flow-ui:latest
+    container_name: focus-flow-ui
+    restart: unless-stopped
+
+    # Port Mapping
+    ports:
+      - "5173:5173"
+
+    # Environment Variables
+    environment:
+      # API Configuration
+      - VITE_API_URL=${VITE_API_URL:-http://localhost:3001/api}
+      - NODE_ENV=production
+
+    # Health Check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:5173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # Labels for Coolify
+    labels:
+      - "coolify.managed=true"
+      - "coolify.application=focus-flow-ui"
+      - "coolify.type=frontend"
+      - "coolify.autodeploy=true"
+      - "coolify.branch=main"
+      - "coolify.repository=github.com/yourusername/focus-flow-ui"
+
+    # Networks
+    networks:
+      - focus-flow-network
+
+# =============================================================================
+# APPLICATION 2: Focus Flow Backend API
+# =============================================================================
+  focus-flow-backend:
+    # Build Configuration
+    build:
+      context: /srv/focus-flow/02_projects/active/focus-flow-backend
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+
+    # Container Configuration
+    image: focus-flow-backend:latest
+    container_name: focus-flow-backend
+    restart: unless-stopped
+
+    # Port Mapping
+    ports:
+      - "3001:3001"
+
+    # Environment Variables (do NOT include secrets here)
+    environment:
+      # Server Configuration
+      - PORT=3001
+      - NODE_ENV=production
+
+      # Vault Path (mounted volume)
+      - VAULT_PATH=/vault
+
+      # CORS Origins
+      - CORS_ORIGINS=${CORS_ORIGINS:-http://localhost:5173,https://yourfrontend.com}
+
+      # API Keys (set these in Coolify Secrets)
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+
+    # Volume Mounts
+    volumes:
+      # Mount vault directory for persistent data storage
+      - /srv/focus-flow:/vault:rw
+      # Mount logs directory
+      - /srv/focus-flow/07_system/logs:/app/logs:rw
+
+    # Health Check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "5"
+
+    # Labels for Coolify
+    labels:
+      - "coolify.managed=true"
+      - "coolify.application=focus-flow-backend"
+      - "coolify.type=backend"
+      - "coolify.autodeploy=true"
+      - "coolify.branch=main"
+      - "coolify.repository=github.com/yourusername/focus-flow-backend"
+
+    # Dependencies
+    depends_on:
+      - focus-flow-ui
+
+    # Networks
+    networks:
+      - focus-flow-network
+
+# =============================================================================
+# APPLICATION 3: Focus Flow Telegram Bot
+# =============================================================================
+  focus-flow-telegram-bot:
+    # Build Configuration
+    build:
+      context: /srv/focus-flow/02_projects/active/focus-flow-telegram-bot
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+
+    # Container Configuration
+    image: focus-flow-telegram-bot:latest
+    container_name: focus-flow-telegram-bot
+    restart: unless-stopped
+
+    # Port Mapping (for webhooks in production)
+    ports:
+      - "3002:3002"
+
+    # Environment Variables (do NOT include secrets here)
+    environment:
+      # Application Configuration
+      - NODE_ENV=production
+      - LOG_LEVEL=info
+
+      # Backend API Configuration
+      - BACKEND_API_URL=${BACKEND_API_URL:-http://focus-flow-backend:3001}
+      - BACKEND_API_KEY=${BACKEND_API_KEY}
+
+      # Telegram Configuration (set in Coolify Secrets)
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+
+      # Webhook Configuration (optional, for production)
+      - WEBHOOK_URL=${WEBHOOK_URL:-}
+      - WEBHOOK_PORT=3002
+
+      # AI API Configuration
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+
+    # Health Check
+    healthcheck:
+      test: ["CMD", "node", "-e", "process.exit(0)"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+    # Resource Limits
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+
+    # Logging
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "20m"
+        max-file: "3"
+
+    # Labels for Coolify
+    labels:
+      - "coolify.managed=true"
+      - "coolify.application=focus-flow-telegram-bot"
+      - "coolify.type=bot"
+      - "coolify.autodeploy=true"
+      - "coolify.branch=main"
+      - "coolify.repository=github.com/yourusername/focus-flow-telegram-bot"
+
+    # Dependencies
+    depends_on:
+      - focus-flow-backend
+
+    # Networks
+    networks:
+      - focus-flow-network
+
+# =============================================================================
+# NETWORKS
+# =============================================================================
+networks:
+  focus-flow-network:
+    driver: bridge
+    labels:
+      - "coolify.managed=true"
+      - "coolify.project=focus-flow-os"
+
+# =============================================================================
+# VOLUMES
+# =============================================================================
+volumes:
+  focus-flow-vault:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /srv/focus-flow
+    labels:
+      - "coolify.managed=true"
+      - "coolify.project=focus-flow-os"
+      - "coolify.backup=true"
+
+# =============================================================================
+# DEPLOYMENT NOTES
+# =============================================================================
+#
+# 1. AUTO-DEPLOY CONFIGURATION:
+#    - All applications are configured to auto-deploy on push to 'main' branch
+#    - Coolify will rebuild and redeploy automatically when changes are pushed
+#    - Set up GitHub webhooks to trigger deployments
+#
+# 2. ENVIRONMENT VARIABLES:
+#    - Never commit secrets to this file
+#    - Set all sensitive values in Coolify's Secrets management
+#    - Required secrets:
+#      * ANTHROPIC_API_KEY
+#      * TELEGRAM_BOT_TOKEN
+#      * BACKEND_API_KEY
+#      * VITE_API_URL (for frontend)
+#      * CORS_ORIGINS (for backend)
+#      * WEBHOOK_URL (optional, for production telegram bot)
+#
+# 3. HEALTH CHECKS:
+#    - Frontend: HTTP check on port 5173
+#    - Backend: HTTP check on /health endpoint (port 3001)
+#    - Bot: Simple Node.js process check
+#
+# 4. RESOURCE LIMITS:
+#    - Frontend: 0.5 CPU, 512MB RAM (lightweight static files)
+#    - Backend: 1.0 CPU, 1GB RAM (API processing)
+#    - Bot: 0.5 CPU, 512MB RAM (event-driven)
+#
+# 5. PERSISTENT DATA:
+#    - Backend mounts /srv/focus-flow as /vault for data persistence
+#    - All inbox items, tasks, projects stored in vault
+#    - Logs stored in /srv/focus-flow/07_system/logs
+#
+# 6. NETWORKING:
+#    - All services on private 'focus-flow-network' bridge network
+#    - Frontend exposed on port 5173
+#    - Backend exposed on port 3001
+#    - Bot exposed on port 3002 (for webhooks)
+#
+# 7. LOGGING:
+#    - JSON file driver with rotation
+#    - Frontend: 10MB max, 3 files
+#    - Backend: 50MB max, 5 files (more verbose)
+#    - Bot: 20MB max, 3 files
+#
+# =============================================================================

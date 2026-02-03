@@ -1,0 +1,194 @@
+============================================
+Focus Flow Backend API Test Report
+============================================
+Timestamp: 2026-02-03 02:18:09
+
+
+========== 1. Health Check Endpoint ==========
+
+Test 1: Health check
+  Method: GET
+  Endpoint: /health
+  HTTP Status: 200
+  Response: {"status":"healthy","timestamp":"2026-02-03T02:18:09.635Z","service":"focus-flow-backend","version":"1.0.0"}
+
+
+========== 2. Inbox - Capture ==========
+
+Test 2: Capture text (valid)
+  Method: POST
+  Endpoint: /api/capture
+  Data: {"text":"Schedule dentist appointment for next week","source":"test"}
+  HTTP Status: 201
+  Response: {"id":"inbox-20260203-089679","status":"created","item":{"id":"inbox-20260203-089679","text":"Schedule dentist appointment for next week","source":"test","created_at":"2026-02-03T02:18:09.679Z"}}
+
+Test 3: Capture text with prefix
+  Method: POST
+  Endpoint: /api/capture
+  Data: {"text":"Fix bug in login flow","prefix":"🐛","source":"test"}
+  HTTP Status: 201
+  Response: {"id":"inbox-20260203-089763","status":"created","item":{"id":"inbox-20260203-089763","text":"Fix bug in login flow","prefix":"🐛","source":"test","created_at":"2026-02-03T02:18:09.763Z"}}
+
+Test 4: Capture text with metadata
+  Method: POST
+  Endpoint: /api/capture
+  Data: {"text":"Call mom at 5pm","prefix":"📞","source":"test","metadata":{"priority":"high"}}
+  HTTP Status: 201
+  Response: {"id":"inbox-20260203-089801","status":"created","item":{"id":"inbox-20260203-089801","text":"Call mom at 5pm","prefix":"📞","source":"test","created_at":"2026-02-03T02:18:09.801Z","metadata":{"priority":"high"}}}
+
+Test 5: Capture without text (invalid)
+  Method: POST
+  Endpoint: /api/capture
+  Data: {"source":"test"}
+  HTTP Status: 400
+  Response: {"error":"Text is required"}
+
+
+========== 3. Inbox - Get and Counts ==========
+
+Test 6: Get all inbox items
+  Method: GET
+  Endpoint: /api/inbox
+  HTTP Status: 200
+  Response: {"items":[{"id":"inbox-20260203-089801","text":"Call mom at 5pm","prefix":"📞","source":"test","created_at":"2026-02-03T02:18:09.801Z","metadata":{"priority":"high"}},{"id":"inbox-20260203-089763","text":"Fix bug in login flow","prefix":"🐛","source":"test","created_at":"2026-02-03T02:18:09.763Z"},{"id":"inbox-20260203-089679","text":"Schedule dentist appointment for next week","source":"test","created_at":"2026-02-03T02:18:09.679Z"}],"count":3}
+
+Test 7: Get inbox items with filter
+  Method: GET
+  Endpoint: /api/inbox?filter=work
+  HTTP Status: 200
+  Response: {"items":[],"count":0}
+
+Test 8: Get inbox counts
+  Method: GET
+  Endpoint: /api/inbox/counts
+  HTTP Status: 200
+  Response: {"all":3,"work":0,"personal":0,"ideas":0}
+
+
+========== 4. Tasks - Create, List, and Update ==========
+
+Test 9: Get all tasks
+  Method: GET
+  Endpoint: /api/tasks
+  HTTP Status: 200
+  Response: {"tasks":[],"count":0}
+
+Test 10: Get tasks with category filter
+  Method: GET
+  Endpoint: /api/tasks?category=work
+  HTTP Status: 200
+  Response: {"tasks":[],"count":0}
+
+Test 11: Create task (valid)
+  Method: POST
+  Endpoint: /api/tasks
+  Data: {"title":"Review Q1 budget","category":"work","priority":"high","due_date":"2026-02-10"}
+  HTTP Status: 201
+  Response: {"status":"created","task":{"id":"task-20260203-090036","title":"Review Q1 budget","category":"work","status":"todo","priority":"high","due_date":"2026-02-10","created_at":"2026-02-03T02:18:10.036Z"}}
+
+Test 12: Create task (personal)
+  Method: POST
+  Endpoint: /api/tasks
+  Data: {"title":"Go to gym","category":"personal","priority":"medium"}
+  HTTP Status: 201
+  Response: {"status":"created","task":{"id":"task-20260203-090079","title":"Go to gym","category":"personal","status":"todo","priority":"medium","created_at":"2026-02-03T02:18:10.079Z"}}
+
+Test 13: Create task without title (invalid)
+  Method: POST
+  Endpoint: /api/tasks
+  Data: {"category":"work"}
+  HTTP Status: 400
+  Response: {"error":"Title is required"}
+
+
+========== 5. Projects - Create and List ==========
+
+Test 14: Get all projects
+  Method: GET
+  Endpoint: /api/projects
+  HTTP Status: 200
+  Response: {"projects":[],"count":0}
+
+Test 15: Get projects with status filter
+  Method: GET
+  Endpoint: /api/projects?status=active
+  HTTP Status: 200
+  Response: {"projects":[],"count":0}
+
+Test 16: Create project (valid)
+  Method: POST
+  Endpoint: /api/projects
+  Data: {"title":"Build mobile app","description":"Create iOS and Android apps","status":"active"}
+  HTTP Status: 201
+  Response: {"status":"created","project":{"id":"project-20260203-090229","title":"Build mobile app","description":"Create iOS and Android apps","status":"active","created_at":"2026-02-03T02:18:10.229Z","updated_at":"2026-02-03T02:18:10.229Z"}}
+
+Test 17: Create project without title (invalid)
+  Method: POST
+  Endpoint: /api/projects
+  Data: {"description":"Test project"}
+  HTTP Status: 400
+  Response: {"error":"Title is required"}
+
+
+========== 6. Ideas - Create and List ==========
+
+Test 18: Get all ideas
+  Method: GET
+  Endpoint: /api/ideas
+  HTTP Status: 200
+  Response: {"ideas":[],"count":0}
+
+Test 19: Get ideas with status filter
+  Method: GET
+  Endpoint: /api/ideas?status=inbox
+  HTTP Status: 200
+  Response: {"ideas":[],"count":0}
+
+Test 20: Create idea (valid)
+  Method: POST
+  Endpoint: /api/ideas
+  Data: {"title":"Habit tracking app","description":"Mobile app for daily habit tracking"}
+  HTTP Status: 201
+  Response: {"status":"created","idea":{"id":"idea-20260203-090387","title":"Habit tracking app","description":"Mobile app for daily habit tracking","status":"inbox","created_at":"2026-02-03T02:18:10.388Z"}}
+
+Test 21: Create idea without title (invalid)
+  Method: POST
+  Endpoint: /api/ideas
+  Data: {"description":"Test idea without title"}
+  HTTP Status: 400
+  Response: {"error":"Title and description are required"}
+
+Test 22: Create idea without description (invalid)
+  Method: POST
+  Endpoint: /api/ideas
+  Data: {"title":"Test idea without description"}
+  HTTP Status: 400
+  Response: {"error":"Title and description are required"}
+
+
+========== 7. Dashboard Summary ==========
+
+Test 23: Get dashboard summary
+  Method: GET
+  Endpoint: /api/summary
+  HTTP Status: 200
+  Response: {"inbox_counts":{"all":0,"work":0,"personal":0,"ideas":0},"active_projects_count":0,"tasks_today":0,"recent_activity":[]}
+
+
+========== 8. AI Endpoints ==========
+
+Test 24: Get AI status
+  Method: GET
+  Endpoint: /api/ai/status
+  HTTP Status: 200
+  Response: {"status":"degraded","model":"claude-sonnet-4.5-20250929","api_connected":false,"api_key_configured":true,"services":{"ai_council":{"status":"unavailable","agents":["Feasibility Agent","Alignment Agent","Impact Agent"]},"classification_service":{"status":"operational"}},"timestamp":"2026-02-03T02:18:10.837Z"}
+
+
+============================================
+TEST SUMMARY
+============================================
+Total Tests: 24
+Passed: 24
+Failed: 0
+Timestamp: 2026-02-03 02:18:10
+============================================
