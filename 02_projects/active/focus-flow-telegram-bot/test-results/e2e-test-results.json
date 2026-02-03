@@ -1,0 +1,142 @@
+[
+  {
+    "testNumber": 1,
+    "testName": "Backend API Health Check",
+    "status": "PASS",
+    "duration": 51,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 2,
+    "testName": "Capture Command - Buy groceries",
+    "status": "PASS",
+    "duration": 44,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 3,
+    "testName": "Capture Command - Remember to call mom",
+    "status": "PASS",
+    "duration": 15,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 4,
+    "testName": "Inbox Command - Get Counts",
+    "status": "PASS",
+    "duration": 44,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 5,
+    "testName": "Inbox Command - Get All Items",
+    "status": "PASS",
+    "duration": 16,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 6,
+    "testName": "Inbox Command - Filter Personal",
+    "status": "PASS",
+    "duration": 19,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 7,
+    "testName": "Inbox Command - Filter Work",
+    "status": "PASS",
+    "duration": 18,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 8,
+    "testName": "Inbox Command - Filter Ideas",
+    "status": "PASS",
+    "duration": 19,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 9,
+    "testName": "Process Command - Get Item Details",
+    "status": "PASS",
+    "duration": 6,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 10,
+    "testName": "Process Action - Convert to Task",
+    "status": "PASS",
+    "duration": 13,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 11,
+    "testName": "Process Action - Convert to Project",
+    "status": "PASS",
+    "duration": 4,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 12,
+    "testName": "Capture and Process - Save as Idea",
+    "status": "PASS",
+    "duration": 9,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 13,
+    "testName": "Process Action - Archive Item",
+    "status": "PASS",
+    "duration": 11,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 14,
+    "testName": "Process Action - Delete Item",
+    "status": "PASS",
+    "duration": 10,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 15,
+    "testName": "Error Handling - Invalid Item ID",
+    "status": "PASS",
+    "duration": 3,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 16,
+    "testName": "Error Handling - Invalid Filter",
+    "status": "PASS",
+    "duration": 18,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 17,
+    "testName": "Bulk Capture - Multiple Items",
+    "status": "PASS",
+    "duration": 27,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 18,
+    "testName": "Vault Integration - Files Created",
+    "status": "PASS",
+    "duration": 2,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 19,
+    "testName": "Edge Case - Long Text Capture",
+    "status": "PASS",
+    "duration": 14,
+    "message": "Test passed"
+  },
+  {
+    "testNumber": 20,
+    "testName": "Edge Case - Special Characters",
+    "status": "PASS",
+    "duration": 10,
+    "message": "Test passed"
+  }
+]
