@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Flow - Offline</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .offline-container {
+      background: white;
+      border-radius: 16px;
+      padding: 48px 32px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .offline-icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      background: #f3f4f6;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: #1f2937;
+      margin-bottom: 16px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 32px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      background: #fef3c7;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: #92400e;
+    }
+
+    .status.online {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+    }
+
+    .status.online .status-dot {
+      background: #10b981;
+    }
+
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    button {
+      padding: 14px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    .btn-secondary:hover {
+      background: #e5e7eb;
+    }
+
+    .tips {
+      margin-top: 32px;
+      padding-top: 32px;
+      border-top: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    .tips h2 {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 16px;
+    }
+
+    .tips ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tips li {
+      padding: 8px 0;
+      color: #6b7280;
+      font-size: 14px;
+      line-height: 1.6;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .tips li::before {
+      content: '✓';
+      color: #10b981;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 480px) {
+      .offline-container {
+        padding: 32px 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="offline-container">
+    <div class="offline-icon">
+      <span>📡</span>
+    </div>
+
+    <h1>You're Offline</h1>
+    <p>No internet connection detected. Some features may be limited, but you can still capture thoughts locally.</p>
+
+    <div class="status" id="status">
+      <span class="status-dot"></span>
+      <span id="status-text">Offline</span>
+    </div>
+
+    <div class="actions">
+      <button class="btn-primary" id="reload-btn" onclick="tryReconnect()">
+        Try Again
+      </button>
+      <button class="btn-secondary" onclick="goHome()">
+        Go to Home
+      </button>
+    </div>
+
+    <div class="tips">
+      <h2>While Offline</h2>
+      <ul>
+        <li>Quick captures will be saved locally and synced when you're back online</li>
+        <li>Previously loaded content remains accessible from cache</li>
+        <li>The app will automatically reconnect when internet is available</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    // Check online status
+    function updateStatus() {
+      const statusEl = document.getElementById('status');
+      const statusText = document.getElementById('status-text');
+      const reloadBtn = document.getElementById('reload-btn');
+
+      if (navigator.onLine) {
+        statusEl.classList.add('online');
+        statusText.textContent = 'Back Online';
+        reloadBtn.disabled = false;
+
+        // Auto-reload when back online
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      } else {
+        statusEl.classList.remove('online');
+        statusText.textContent = 'Offline';
+        reloadBtn.disabled = true;
+      }
+    }
+
+    // Try to reconnect
+    function tryReconnect() {
+      if (navigator.onLine) {
+        window.location.href = '/';
+      } else {
+        // Visual feedback
+        const btn = document.getElementById('reload-btn');
+        btn.textContent = 'Still Offline...';
+        setTimeout(() => {
+          btn.textContent = 'Try Again';
+        }, 2000);
+      }
+    }
+
+    // Go to home page (will work if cached)
+    function goHome() {
+      window.location.href = '/';
+    }
+
+    // Listen for online/offline events
+    window.addEventListener('online', updateStatus);
+    window.addEventListener('offline', updateStatus);
+
+    // Initial status check
+    updateStatus();
+
+    // Periodic check
+    setInterval(updateStatus, 3000);
+  </script>
+</body>
+</html>
