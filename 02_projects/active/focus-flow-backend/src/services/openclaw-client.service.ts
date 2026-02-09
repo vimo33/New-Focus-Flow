@@ -55,7 +55,7 @@ export class OpenClawClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      timeout: 60000, // 60 second timeout
+      timeout: 5000, // 5 second timeout - fail fast when gateway is down
       maxRedirects: 0, // SECURITY: Disable redirects to prevent SSRF
     });
 

@@ -6,10 +6,6 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
-// SECURITY: Load OpenClaw secrets from secure location
-import { loadOpenClawSecrets } from './config/load-secrets';
-loadOpenClawSecrets();
-
 // Import routes
 import inboxRoutes from './routes/inbox.routes';
 import tasksRoutes from './routes/tasks.routes';
@@ -17,6 +13,7 @@ import projectsRoutes from './routes/projects.routes';
 import ideasRoutes from './routes/ideas.routes';
 import healthRoutes from './routes/health.routes';
 import aiRoutes from './routes/ai.routes';
+import { VaultService } from './services/vault.service';
 import orchestratorRoutes from './routes/orchestrator.routes';
 import securityRoutes from './routes/security.routes';
 
@@ -57,18 +54,26 @@ app.use('/api', securityRoutes);
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
   try {
-    // This would be implemented in the VaultService
-    // For now, return a simple response
+    const vault = new VaultService();
+    const [inboxCounts, projects, tasks, inboxItems] = await Promise.all([
+      vault.getInboxCounts(),
+      vault.getProjects('active'),
+      vault.getTasks(),
+      vault.getInboxItems(),
+    ]);
+
+    // Build recent activity from newest inbox items
+    const recent_activity = inboxItems.slice(0, 10).map(item => ({
+      type: 'inbox' as const,
+      text: item.text.substring(0, 100),
+      timestamp: item.created_at,
+    }));
+
     res.json({
-      inbox_counts: {
-        all: 0,
-        work: 0,
-        personal: 0,
-        ideas: 0
-      },
-      active_projects_count: 0,
-      tasks_today: 0,
-      recent_activity: []
+      inbox_counts: inboxCounts,
+      active_projects_count: projects.length,
+      tasks_today: tasks.filter(t => t.status !== 'done').length,
+      recent_activity,
     });
   } catch (error: any) {
     console.error('Error fetching summary:', error);

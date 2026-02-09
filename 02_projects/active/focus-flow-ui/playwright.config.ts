@@ -13,7 +13,7 @@ export default defineConfig({
   ],
 
   use: {
-    baseURL: 'http://localhost:3001',
+    baseURL: 'http://localhost:4173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -43,9 +43,9 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: 'npm run preview',
-    url: 'http://localhost:3001',
-    reuseExistingServer: !process.env.CI,
+    command: 'npm run preview -- --port 4173',
+    url: 'http://localhost:4173',
+    reuseExistingServer: true,
     timeout: 120 * 1000,
   },
 });

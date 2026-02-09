@@ -20,7 +20,7 @@ export interface AppState {
 }
 
 // API Base URL - adjust based on environment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 export const useAppStore = create<AppState>((set, get) => ({
   // Initial state
