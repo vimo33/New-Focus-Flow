@@ -3,12 +3,14 @@ import { Link } from 'react-router-dom';
 interface VoiceCommandOverlayProps {
   transcript: string;
   lastExecutedAction: string | null;
+  isTranscribing?: boolean;
   onClose: () => void;
 }
 
 export function VoiceCommandOverlay({
   transcript,
   lastExecutedAction,
+  isTranscribing = false,
   onClose,
 }: VoiceCommandOverlayProps) {
   return (
@@ -26,22 +28,26 @@ export function VoiceCommandOverlay({
           {/* Pulsing Circle Animation */}
           <div className="flex justify-center mb-6">
             <div className="relative">
-              <div className="w-24 h-24 bg-primary rounded-full flex items-center justify-center shadow-lg">
+              <div className={`w-24 h-24 rounded-full flex items-center justify-center shadow-lg ${
+                isTranscribing ? 'bg-amber-500' : 'bg-primary'
+              }`}>
                 <span className="material-symbols-outlined text-white text-[48px]">
-                  mic
+                  {isTranscribing ? 'hourglass_top' : 'mic'}
                 </span>
               </div>
-              <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75"></div>
+              {!isTranscribing && (
+                <div className="absolute inset-0 bg-primary rounded-full animate-ping opacity-75"></div>
+              )}
             </div>
           </div>
 
           {/* Status Text */}
           <div className="text-center mb-6">
             <h2 className="text-white text-2xl font-bold mb-2">
-              Listening...
+              {isTranscribing ? 'Transcribing...' : 'Listening...'}
             </h2>
             <p className="text-slate-300 text-sm">
-              Speak your command
+              {isTranscribing ? 'Processing your speech' : 'Speak your command'}
             </p>
           </div>
 
@@ -54,8 +60,24 @@ export function VoiceCommandOverlay({
             </div>
           )}
 
+          {/* Transcribing Indicator */}
+          {isTranscribing && !transcript && (
+            <div className="bg-amber-500/20 rounded-xl p-4 mb-4 border border-amber-500/30">
+              <div className="flex items-center justify-center gap-3">
+                <div className="flex gap-1">
+                  <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2 h-2 bg-amber-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
+                <p className="text-amber-200 text-sm font-medium">
+                  Transcribing...
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Last Executed Action */}
-          {lastExecutedAction && !transcript && (
+          {lastExecutedAction && !transcript && !isTranscribing && (
             <div className="bg-green-500/20 rounded-xl p-4 mb-4 border border-green-500/30">
               <div className="flex items-center justify-center gap-2">
                 <span className="material-symbols-outlined text-green-400 text-[20px]">

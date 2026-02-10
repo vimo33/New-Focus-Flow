@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useThreadsStore } from '../../stores/threads';
 import { useTTS } from '../../hooks/useTTS';
+import { useSTT } from '../../hooks/useSTT';
 
 interface ChatPanelProps {
   onToggleSidebar: () => void;
@@ -18,113 +19,56 @@ export function ChatPanel({ onToggleSidebar, ttsEnabled }: ChatPanelProps) {
   } = useThreadsStore();
 
   const [inputText, setInputText] = useState('');
-  const [isListening, setIsListening] = useState(false);
   const [handsFreeMode, setHandsFreeMode] = useState(false);
-  const [transcript, setTranscript] = useState('');
   const [localError, setLocalError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
 
   const { speak, stop: stopTTS, isSpeaking } = useTTS();
+
+  // Stable ref for handleSend so useSTT callbacks don't go stale
+  const handleSendRef = useRef<(text: string, source: 'voice' | 'text') => Promise<void>>(undefined);
+
+  const {
+    isListening,
+    isTranscribing,
+    transcript,
+    startListening,
+    stopListening,
+  } = useSTT({
+    continuous: handsFreeMode,
+    interimResults: true,
+    onResult: (text) => handleSendRef.current?.(text, 'voice'),
+    onError: (err) => {
+      if (err !== 'no-speech') {
+        setLocalError('Voice recognition error. Please try again.');
+      }
+    },
+  });
+
+  const toggleListening = useCallback(() => {
+    if (isListening) {
+      stopListening();
+    } else {
+      setLocalError(null);
+      startListening();
+    }
+  }, [isListening, startListening, stopListening]);
+
+  // Handle hands-free mode toggle
+  useEffect(() => {
+    if (handsFreeMode && !isListening) {
+      startListening();
+    } else if (!handsFreeMode && isListening) {
+      stopListening();
+    }
+  }, [handsFreeMode]);
 
   // Auto-scroll on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, isSending]);
-
-  // Initialize Web Speech API
-  useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognitionAPI =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-
-      if (recognitionRef.current) {
-        recognitionRef.current.continuous = handsFreeMode;
-        recognitionRef.current.interimResults = true;
-        recognitionRef.current.lang = 'en-US';
-
-        recognitionRef.current.onstart = () => {
-          setIsListening(true);
-          setLocalError(null);
-        };
-
-        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-          let interimTranscript = '';
-          let finalTranscript = '';
-
-          for (let i = event.resultIndex; i < event.results.length; i++) {
-            const piece = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-              finalTranscript += piece;
-            } else {
-              interimTranscript += piece;
-            }
-          }
-
-          if (finalTranscript) {
-            setTranscript('');
-            handleSend(finalTranscript.trim(), 'voice');
-          } else {
-            setTranscript(interimTranscript);
-          }
-        };
-
-        recognitionRef.current.onerror = (event: any) => {
-          if (event.error !== 'no-speech') {
-            setLocalError('Voice recognition error. Please try again.');
-          }
-          setIsListening(false);
-        };
-
-        recognitionRef.current.onend = () => {
-          setIsListening(false);
-          if (handsFreeMode && recognitionRef.current) {
-            setTimeout(() => {
-              try {
-                recognitionRef.current?.start();
-              } catch (_) {}
-            }, 100);
-          }
-        };
-      }
-    }
-
-    return () => {
-      recognitionRef.current?.stop();
-    };
-  }, [handsFreeMode]);
-
-  // Handle hands-free mode toggle
-  useEffect(() => {
-    if (handsFreeMode && recognitionRef.current && !isListening) {
-      try {
-        recognitionRef.current.start();
-      } catch (_) {}
-    } else if (!handsFreeMode && recognitionRef.current && isListening) {
-      recognitionRef.current.stop();
-    }
-  }, [handsFreeMode]);
-
-  const toggleListening = useCallback(() => {
-    if (!recognitionRef.current) {
-      setLocalError('Voice recognition is not supported in your browser');
-      return;
-    }
-    if (isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-    } else {
-      setLocalError(null);
-      try {
-        recognitionRef.current.start();
-      } catch (_) {
-        setLocalError('Failed to start voice recognition');
-      }
-    }
-  }, [isListening]);
 
   const handleSend = useCallback(
     async (text: string, source: 'voice' | 'text' = 'text') => {
@@ -146,6 +90,7 @@ export function ChatPanel({ onToggleSidebar, ttsEnabled }: ChatPanelProps) {
     },
     [activeThreadId, isSending, createThread, sendMessage, ttsEnabled, speak]
   );
+  handleSendRef.current = handleSend;
 
   const handleTextSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -317,21 +262,21 @@ export function ChatPanel({ onToggleSidebar, ttsEnabled }: ChatPanelProps) {
         {/* Mic button */}
         <button
           onClick={toggleListening}
-          disabled={handsFreeMode}
+          disabled={handsFreeMode || isTranscribing}
           className={`
             relative h-10 w-10 rounded-full flex items-center justify-center transition-all
-            ${isListening ? 'bg-primary/20 border border-primary' : 'bg-[#1e2936] border border-slate-700 hover:border-primary'}
-            ${handsFreeMode ? 'opacity-50 cursor-not-allowed' : ''}
+            ${isTranscribing ? 'bg-amber-500/20 border border-amber-500' : isListening ? 'bg-primary/20 border border-primary' : 'bg-[#1e2936] border border-slate-700 hover:border-primary'}
+            ${handsFreeMode || isTranscribing ? 'opacity-50 cursor-not-allowed' : ''}
           `}
         >
-          {isListening && (
+          {isListening && !isTranscribing && (
             <div className="absolute inset-0 bg-primary/20 rounded-full animate-ping" />
           )}
           <span
-            className={`material-symbols-outlined ${isListening ? 'text-primary' : 'text-slate-400'} relative z-10`}
+            className={`material-symbols-outlined ${isTranscribing ? 'text-amber-400' : isListening ? 'text-primary' : 'text-slate-400'} relative z-10`}
             style={{ fontSize: '20px', fontVariationSettings: '"FILL" 1' }}
           >
-            mic
+            {isTranscribing ? 'hourglass_top' : 'mic'}
           </span>
         </button>
 

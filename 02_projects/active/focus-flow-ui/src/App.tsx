@@ -12,6 +12,10 @@ const ProjectDetail = lazy(() => import('./components/ProjectDetail/ProjectDetai
 const Calendar = lazy(() => import('./components/Calendar/Calendar').then(module => ({ default: module.Calendar })))
 const Ideas = lazy(() => import('./components/Ideas/Ideas').then(module => ({ default: module.Ideas })))
 const Wellbeing = lazy(() => import('./components/Wellbeing/Wellbeing').then(module => ({ default: module.Wellbeing })))
+const CommandCenter = lazy(() => import('./components/CommandCenter/CommandCenter').then(module => ({ default: module.CommandCenter })))
+const IdeaDetail = lazy(() => import('./components/IdeaDetail/IdeaDetail').then(module => ({ default: module.IdeaDetail })))
+const Sales = lazy(() => import('./components/Sales/Sales').then(module => ({ default: module.Sales })))
+const CRM = lazy(() => import('./components/CRM/CRM').then(module => ({ default: module.CRM })))
 const Voice = lazy(() => import('./components/Voice/Voice').then(module => ({ default: module.Voice })))
 
 function App() {
@@ -25,9 +29,14 @@ function App() {
             <Route path="/inbox" element={<Inbox />} />
             <Route path="/calendar" element={<Calendar />} />
             <Route path="/ideas" element={<Ideas />} />
+            <Route path="/ideas/:id" element={<IdeaDetail />} />
             <Route path="/projects" element={<Projects />} />
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/wellbeing" element={<Wellbeing />} />
+            <Route path="/command" element={<CommandCenter />} />
+            <Route path="/command/:threadId" element={<CommandCenter />} />
+            <Route path="/sales" element={<Sales />} />
+            <Route path="/crm" element={<CRM />} />
             <Route path="/voice" element={<Voice />} />
             <Route path="/voice/:threadId" element={<Voice />} />
           </Routes>

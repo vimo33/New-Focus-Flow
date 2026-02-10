@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { VoiceControlFAB } from '../VoiceControl';
+import { PWAInstallPrompt } from '../PWAInstallPrompt';
 
 interface LayoutProps {
   children: ReactNode;
@@ -21,7 +22,10 @@ const navItems: NavItem[] = [
   { name: 'Ideas', path: '/ideas', icon: 'lightbulb' },
   { name: 'Calendar', path: '/calendar', icon: 'calendar_month' },
   { name: 'Wellbeing', path: '/wellbeing', icon: 'favorite' },
+  { name: 'Sales', path: '/sales', icon: 'monetization_on' },
+  { name: 'CRM', path: '/crm', icon: 'contacts' },
   { name: 'Voice', path: '/voice', icon: 'mic' },
+  { name: 'Command', path: '/command', icon: 'terminal' },
 ];
 
 export function Layout({ children }: LayoutProps) {
@@ -118,13 +122,20 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Main Content */}
         <main className="md:pl-64 pb-16 md:pb-0">
-          <div className={`mx-auto ${location.pathname === '/calendar' ? 'h-screen max-w-full p-0' : 'max-w-7xl px-4 sm:px-6 lg:px-8 py-8'}`}>
+          <div className={`mx-auto ${
+            location.pathname === '/calendar' || location.pathname.startsWith('/command') || location.pathname.startsWith('/voice')
+              ? 'h-screen max-w-full p-0'
+              : 'max-w-7xl px-4 sm:px-6 lg:px-8 py-8'
+          }`}>
             {children}
           </div>
         </main>
 
         {/* Global Voice Control FAB - Show on all pages except /voice */}
-        {!location.pathname.startsWith('/voice') && <VoiceControlFAB />}
+        {!location.pathname.startsWith('/voice') && !location.pathname.startsWith('/command') && <VoiceControlFAB />}
+
+        {/* PWA Install Prompt */}
+        <PWAInstallPrompt />
       </div>
     </div>
   );

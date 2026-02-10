@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { api } from '../../services/api';
 import type { InboxItem, CaptureResponse } from '../../services/api';
+import { useSTT } from '../../hooks/useSTT';
 
 interface CaptureProps {
   className?: string;
@@ -22,7 +23,6 @@ export function Capture({ className = '' }: CaptureProps) {
   const [text, setText] = useState('');
   const [prefix, setPrefix] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isListening, setIsListening] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [lastCapturedItem, setLastCapturedItem] = useState<InboxItem | null>(null);
@@ -30,47 +30,17 @@ export function Capture({ className = '' }: CaptureProps) {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+
+  const { isListening, startListening, stopListening } = useSTT({
+    continuous: false,
+    interimResults: false,
+    onResult: (transcript) => setText(transcript),
+    onError: () => setError('Voice recognition failed. Please try again.'),
+  });
 
   // Load recent captures on mount
   useEffect(() => {
     loadRecentCaptures();
-  }, []);
-
-  // Initialize Web Speech API
-  useEffect(() => {
-    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-      const SpeechRecognitionAPI =
-        (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognitionAPI();
-
-      if (recognitionRef.current) {
-        recognitionRef.current.continuous = false;
-        recognitionRef.current.interimResults = false;
-        recognitionRef.current.lang = 'en-US';
-
-        recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-          const transcript = event.results[0][0].transcript;
-          setText(transcript);
-          setIsListening(false);
-        };
-
-        recognitionRef.current.onerror = () => {
-          setIsListening(false);
-          setError('Voice recognition failed. Please try again.');
-        };
-
-        recognitionRef.current.onend = () => {
-          setIsListening(false);
-        };
-      }
-    }
-
-    return () => {
-      if (recognitionRef.current) {
-        recognitionRef.current.stop();
-      }
-    };
   }, []);
 
   // Keyboard shortcuts
@@ -138,18 +108,11 @@ export function Capture({ className = '' }: CaptureProps) {
   };
 
   const startVoiceInput = () => {
-    if (!recognitionRef.current) {
-      setError('Voice recognition is not supported in your browser');
-      return;
-    }
-
     if (isListening) {
-      recognitionRef.current.stop();
-      setIsListening(false);
+      stopListening();
     } else {
       setError(null);
-      recognitionRef.current.start();
-      setIsListening(true);
+      startListening();
     }
   };
 
