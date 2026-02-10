@@ -37,6 +37,17 @@ export class ClaudeClient {
   }
 
   /**
+   * Extract JSON from a response that may be wrapped in markdown code fences
+   */
+  private extractJSON(text: string): string {
+    const fenceMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+    if (fenceMatch) {
+      return fenceMatch[1].trim();
+    }
+    return text.trim();
+  }
+
+  /**
    * Classify an inbox item using Claude Haiku 4.5
    * Determines category, confidence, and suggested action
    */
@@ -78,8 +89,9 @@ Respond ONLY with valid JSON in this exact format:
         }
       );
 
-      // Parse the JSON response
-      const response = JSON.parse(responseText) as ClassificationResponse;
+      // Parse the JSON response (model may wrap in markdown code fences)
+      const jsonText = this.extractJSON(responseText);
+      const response = JSON.parse(jsonText) as ClassificationResponse;
 
       // Validate the response
       this.validateClassificationResponse(response);
@@ -172,8 +184,9 @@ Respond ONLY with valid JSON in this exact format:
         }
       );
 
-      // Parse the JSON response
-      const response = JSON.parse(responseText) as IdeaEvaluationResponse;
+      // Parse the JSON response (model may wrap in markdown code fences)
+      const jsonText = this.extractJSON(responseText);
+      const response = JSON.parse(jsonText) as IdeaEvaluationResponse;
 
       // Validate the response
       this.validateIdeaEvaluationResponse(response);

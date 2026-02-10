@@ -35,8 +35,8 @@ export interface OpenClawResponse {
 export class OpenClawClient {
   private client: AxiosInstance;
   private readonly GATEWAY_URL: string;
-  private readonly HAIKU_MODEL = 'claude-haiku-4.5-20250514';
-  private readonly SONNET_MODEL = 'claude-sonnet-4.5-20250929';
+  private readonly HAIKU_MODEL = 'openclaw:main';
+  private readonly SONNET_MODEL = 'openclaw:main';
   private requestCount = 0;
   private errorCount = 0;
 
@@ -55,7 +55,7 @@ export class OpenClawClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      timeout: 5000, // 5 second timeout - fail fast when gateway is down
+      timeout: 30000, // 30 second timeout - AI completions need time
       maxRedirects: 0, // SECURITY: Disable redirects to prevent SSRF
     });
 

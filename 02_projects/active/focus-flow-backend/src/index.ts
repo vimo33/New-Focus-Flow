@@ -6,6 +6,10 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config();
 
+// Load secrets from secure location (must happen after dotenv, before routes)
+import { loadOpenClawSecrets } from './config/load-secrets';
+loadOpenClawSecrets();
+
 // Import routes
 import inboxRoutes from './routes/inbox.routes';
 import tasksRoutes from './routes/tasks.routes';
