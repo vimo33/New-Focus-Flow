@@ -493,6 +493,111 @@ export class VaultAPI {
   async getVoiceCommandStatus(): Promise<{ status: string; api_connected: boolean }> {
     return this.request<{ status: string; api_connected: boolean }>('/voice-command/status');
   }
+
+  // ============================================================================
+  // Orchestrator Methods
+  // ============================================================================
+
+  async sendOrchestratorMessage(
+    content: string,
+    threadId?: string | null,
+    source: 'voice' | 'text' = 'text'
+  ): Promise<{ thread_id: string; content: string; tool_calls?: any[]; navigate_to?: string }> {
+    return this.request('/orchestrator/chat', {
+      method: 'POST',
+      body: JSON.stringify({ content, thread_id: threadId, source }),
+    });
+  }
+
+  async getOrchestratorThreads(): Promise<{ threads: any[]; count: number }> {
+    return this.request('/orchestrator/threads');
+  }
+
+  async createOrchestratorThread(title?: string): Promise<any> {
+    return this.request('/orchestrator/threads', {
+      method: 'POST',
+      body: JSON.stringify({ title }),
+    });
+  }
+
+  async getOrchestratorThread(id: string): Promise<any> {
+    return this.request(`/orchestrator/threads/${id}`);
+  }
+
+  // ============================================================================
+  // Idea Detail Methods
+  // ============================================================================
+
+  async getIdea(id: string): Promise<Idea> {
+    return this.request<Idea>(`/ideas/${id}`);
+  }
+
+  async expandIdea(id: string): Promise<{ status: string; idea: Idea }> {
+    return this.request(`/ideas/${id}/expand`, { method: 'POST' });
+  }
+
+  async promoteIdea(id: string): Promise<{ status: string; project: Project; idea_id: string }> {
+    return this.request(`/ideas/${id}/promote`, { method: 'POST' });
+  }
+
+  // ============================================================================
+  // Project Detail Methods
+  // ============================================================================
+
+  async getProject(id: string): Promise<Project & { tasks: Task[]; progress: number }> {
+    return this.request(`/projects/${id}`);
+  }
+
+  async updateProject(id: string, data: Partial<Project>): Promise<{ status: string; project: Project }> {
+    return this.request(`/projects/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // CRM Methods
+  // ============================================================================
+
+  async getContacts(search?: string): Promise<{ contacts: any[]; total: number }> {
+    const params = search ? `?search=${encodeURIComponent(search)}` : '';
+    return this.request(`/crm/contacts${params}`);
+  }
+
+  async createContact(data: { name: string; email?: string; company?: string; phone?: string; tags?: string[] }): Promise<any> {
+    return this.request('/crm/contacts', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Sales Methods
+  // ============================================================================
+
+  async getDeals(stage?: string): Promise<{ deals: any[]; total: number }> {
+    const params = stage ? `?stage=${encodeURIComponent(stage)}` : '';
+    return this.request(`/sales/deals${params}`);
+  }
+
+  async createDeal(data: { title: string; value?: number; stage?: string }): Promise<any> {
+    return this.request('/sales/deals', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateDeal(id: string, data: { stage?: string; value?: number }): Promise<any> {
+    return this.request(`/sales/deals/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getSalesPipeline(): Promise<any> {
+    return this.request('/sales/pipeline');
+  }
+
 }
 
 // ============================================================================

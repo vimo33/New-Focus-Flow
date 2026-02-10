@@ -33,7 +33,15 @@ export interface InboxItem {
   processed_at?: string;
   metadata?: Record<string, any>;
   ai_classification?: AIClassification;
+  auto_routed?: boolean;
+  routed_to?: {
+    entity_type: SmartClassificationType;
+    entity_id: string;
+    vault_path: string;
+  };
 }
+
+export type SmartClassificationType = 'task' | 'idea' | 'note' | 'health_log' | 'event';
 
 export interface AIClassification {
   category: 'work' | 'personal' | 'ideas';
@@ -41,6 +49,9 @@ export interface AIClassification {
   suggested_action: 'task' | 'project' | 'idea' | 'note';
   suggested_project?: string;
   reasoning: string;
+  smart_type?: SmartClassificationType;
+  smart_confidence?: number;
+  auto_routable?: boolean;
 }
 
 export interface AgentEvaluation {
@@ -64,27 +75,60 @@ export interface Task {
   metadata?: Record<string, any>;
 }
 
+export type ProjectPhase = 'idea' | 'spec' | 'design' | 'dev' | 'deploy' | 'gtm' | 'sales' | 'crm';
+
 export interface Project {
   id: string;
   title: string;
   description?: string;
   status: 'active' | 'paused' | 'completed';
+  phase?: ProjectPhase;
+  idea_id?: string;
   created_at: string;
   updated_at: string;
   completed_at?: string;
   tasks?: Task[];
-  progress?: number; // Progress percentage (0-100)
+  progress?: number;
   metadata?: Record<string, any>;
+}
+
+export type IdeaStatus =
+  | 'inbox'
+  | 'draft'
+  | 'expanded'
+  | 'validating'
+  | 'validated'
+  | 'rejected'
+  | 'spec_ready'
+  | 'in_development'
+  | 'deployed'
+  | 'gtm'
+  | 'live';
+
+export interface ExpandedIdea {
+  problem_statement: string;
+  proposed_solution: string;
+  target_users: string;
+  value_proposition: string;
+  key_features: string[];
+  risks: string[];
+  success_metrics: string[];
+  competitive_landscape?: string;
+  estimated_effort?: string;
 }
 
 export interface Idea {
   id: string;
   title: string;
   description: string;
-  status: 'inbox' | 'validated' | 'rejected';
+  status: IdeaStatus;
   created_at: string;
+  expanded_at?: string;
   validated_at?: string;
+  expanded?: ExpandedIdea;
   council_verdict?: CouncilVerdict;
+  prd?: PRDDocument;
+  project_id?: string;
   metadata?: Record<string, any>;
 }
 
@@ -94,6 +138,8 @@ export interface CouncilVerdict {
   evaluations: AgentEvaluation[];
   synthesized_reasoning: string;
   next_steps?: string[];
+  council_composition?: string[];
+  prd_generated?: boolean;
 }
 
 export interface HealthMetric {
@@ -111,6 +157,16 @@ export interface CaptureRequest {
   prefix?: string;
   source?: 'telegram' | 'pwa' | 'voice' | 'api';
   metadata?: Record<string, any>;
+  auto_process?: boolean;
+}
+
+export interface AutoRouteResult {
+  routed: boolean;
+  entity_type?: SmartClassificationType;
+  entity_id?: string;
+  vault_path?: string;
+  confidence?: number;
+  reason?: string;
 }
 
 export interface ProcessInboxRequest {

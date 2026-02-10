@@ -130,7 +130,7 @@ export function ProjectDetail() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [newTaskText, setNewTaskText] = useState('');
-  const [activeTab, setActiveTab] = useState<'overview' | 'tasks' | 'notes' | 'activity'>('tasks');
+  const [activeTab, setActiveTab] = useState<'overview' | 'pipeline' | 'tasks' | 'notes' | 'activity'>('tasks');
 
   useEffect(() => {
     if (id) {
@@ -143,22 +143,9 @@ export function ProjectDetail() {
     setError(null);
 
     try {
-      // Fetch all projects and find the one we need
-      const projectsResponse = await api.getProjects();
-      const foundProject = projectsResponse.projects.find((p) => p.id === projectId);
-
-      if (!foundProject) {
-        setError('Project not found');
-        setLoading(false);
-        return;
-      }
-
-      setProject(foundProject);
-
-      // Fetch tasks for this project
-      const tasksResponse = await api.getTasks();
-      const projectTasks = tasksResponse.tasks.filter((t) => t.project_id === projectId);
-      setTasks(projectTasks);
+      const projectData = await api.getProject(projectId);
+      setProject(projectData);
+      setTasks(projectData.tasks || []);
     } catch (err) {
       console.error('Failed to load project:', err);
       setError(err instanceof Error ? err.message : 'Failed to load project');
@@ -384,6 +371,17 @@ export function ProjectDetail() {
             </span>
           </button>
           <button
+            onClick={() => setActiveTab('pipeline')}
+            className={`px-1 pb-4 mr-6 text-sm font-medium border-b-2 transition-colors ${
+              activeTab === 'pipeline'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+            data-testid="tab-pipeline"
+          >
+            Pipeline
+          </button>
+          <button
             onClick={() => setActiveTab('notes')}
             className={`px-1 pb-4 mr-6 text-sm font-medium border-b-2 transition-colors ${
               activeTab === 'notes'
@@ -497,6 +495,20 @@ export function ProjectDetail() {
           </div>
         )}
 
+        {activeTab === 'pipeline' && (
+          <PipelineView
+            project={project}
+            onPhaseChange={async (phase) => {
+              try {
+                const res = await api.updateProject(project.id, { metadata: { ...project.metadata, phase } });
+                setProject(res.project);
+              } catch (err) {
+                console.error('Failed to update phase:', err);
+              }
+            }}
+          />
+        )}
+
         {activeTab === 'notes' && (
           <div className="space-y-4" data-testid="notes-content">
             <div className="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-700/50 p-6">
@@ -532,6 +544,113 @@ export function ProjectDetail() {
             </div>
           </div>
         )}
+      </div>
+    </div>
+  );
+}
+
+const PIPELINE_PHASES = [
+  { key: 'idea', label: 'Idea', icon: 'lightbulb', color: 'bg-amber-500' },
+  { key: 'spec', label: 'Spec', icon: 'description', color: 'bg-blue-500' },
+  { key: 'design', label: 'Design', icon: 'palette', color: 'bg-purple-500' },
+  { key: 'dev', label: 'Dev', icon: 'code', color: 'bg-emerald-500' },
+  { key: 'test', label: 'Test', icon: 'bug_report', color: 'bg-orange-500' },
+  { key: 'deploy', label: 'Deploy', icon: 'rocket_launch', color: 'bg-cyan-500' },
+  { key: 'gtm', label: 'GTM', icon: 'campaign', color: 'bg-pink-500' },
+  { key: 'live', label: 'Live', icon: 'check_circle', color: 'bg-green-500' },
+] as const;
+
+function PipelineView({ project, onPhaseChange }: { project: Project; onPhaseChange: (phase: string) => void }) {
+  const currentPhase = project.metadata?.phase || 'idea';
+  const currentIdx = PIPELINE_PHASES.findIndex(p => p.key === currentPhase);
+
+  return (
+    <div className="space-y-6" data-testid="pipeline-content">
+      {/* Phase Progress Bar */}
+      <div className="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-700/50 p-6">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-6">Project Pipeline</h3>
+
+        {/* Horizontal Phase Track */}
+        <div className="relative">
+          {/* Connection Line */}
+          <div className="absolute top-5 left-5 right-5 h-0.5 bg-slate-200 dark:bg-slate-700" />
+          <div
+            className="absolute top-5 left-5 h-0.5 bg-primary transition-all duration-500"
+            style={{ width: currentIdx >= 0 ? `${(currentIdx / (PIPELINE_PHASES.length - 1)) * 100}%` : '0%' }}
+          />
+
+          <div className="relative flex justify-between">
+            {PIPELINE_PHASES.map((phase, idx) => {
+              const isCompleted = idx < currentIdx;
+              const isCurrent = idx === currentIdx;
+              const isFuture = idx > currentIdx;
+
+              return (
+                <button
+                  key={phase.key}
+                  onClick={() => onPhaseChange(phase.key)}
+                  className="flex flex-col items-center gap-2 group"
+                  data-testid={`phase-${phase.key}`}
+                >
+                  <div className={`
+                    w-10 h-10 rounded-full flex items-center justify-center z-10 transition-all
+                    ${isCurrent
+                      ? `${phase.color} text-white ring-4 ring-primary/20 shadow-lg`
+                      : isCompleted
+                      ? 'bg-primary text-white'
+                      : 'bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 group-hover:bg-slate-300 dark:group-hover:bg-slate-600'
+                    }
+                  `}>
+                    <span className="material-symbols-outlined text-[18px]">
+                      {isCompleted ? 'check' : phase.icon}
+                    </span>
+                  </div>
+                  <span className={`text-xs font-medium ${
+                    isCurrent ? 'text-primary' : isFuture ? 'text-slate-400' : 'text-slate-600 dark:text-slate-300'
+                  }`}>
+                    {phase.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* Current Phase Card */}
+      <div className="bg-white dark:bg-[#1a2632] rounded-xl border border-slate-200 dark:border-slate-700/50 p-6">
+        <div className="flex items-center gap-3 mb-4">
+          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${PIPELINE_PHASES[currentIdx >= 0 ? currentIdx : 0].color} text-white`}>
+            <span className="material-symbols-outlined">{PIPELINE_PHASES[currentIdx >= 0 ? currentIdx : 0].icon}</span>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              Current Phase: {PIPELINE_PHASES[currentIdx >= 0 ? currentIdx : 0].label}
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Phase {(currentIdx >= 0 ? currentIdx : 0) + 1} of {PIPELINE_PHASES.length}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          {currentIdx > 0 && (
+            <button
+              onClick={() => onPhaseChange(PIPELINE_PHASES[currentIdx - 1].key)}
+              className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+            >
+              Back to {PIPELINE_PHASES[currentIdx - 1].label}
+            </button>
+          )}
+          {currentIdx < PIPELINE_PHASES.length - 1 && (
+            <button
+              onClick={() => onPhaseChange(PIPELINE_PHASES[currentIdx + 1].key)}
+              className="px-4 py-2 text-sm font-medium text-white bg-primary rounded-lg hover:bg-blue-600 transition-colors"
+            >
+              Advance to {PIPELINE_PHASES[currentIdx + 1].label}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

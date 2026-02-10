@@ -15,6 +15,28 @@ export interface OpenClawRequest {
   stream?: boolean;
 }
 
+export interface OpenClawToolFunction {
+  name: string;
+  arguments: string | Record<string, any>;
+}
+
+export interface OpenClawToolCall {
+  id: string;
+  type: 'function';
+  function: OpenClawToolFunction;
+}
+
+export interface OpenClawRequestWithTools extends OpenClawRequest {
+  tools?: Array<{
+    type: 'function';
+    function: {
+      name: string;
+      description: string;
+      parameters: Record<string, any>;
+    };
+  }>;
+}
+
 export interface OpenClawResponse {
   id: string;
   model: string;
@@ -22,6 +44,7 @@ export interface OpenClawResponse {
     message: {
       role: string;
       content: string;
+      tool_calls?: OpenClawToolCall[];
     };
     finish_reason: string;
   }>;
@@ -194,6 +217,71 @@ export class OpenClawClient {
           });
         }
 
+        throw new Error(
+          `OpenClaw API Error: ${error.response.status} - ${error.response.data?.error || error.message}`
+        );
+      }
+      throw new Error(`OpenClaw Connection Error: ${error.message}`);
+    }
+  }
+
+  /**
+   * Chat completion with tool definitions
+   * OpenClaw proxies to Claude which natively supports tool use.
+   */
+  async chatCompletionWithTools(
+    request: OpenClawRequestWithTools
+  ): Promise<OpenClawResponse> {
+    // Extract user input for security analysis
+    const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+
+    // Sanitize and detect injection
+    const sanitized = PromptSanitizer.sanitize(userMessage);
+    const detection = PromptSanitizer.detectInjection(sanitized);
+
+    // Log to security audit
+    SecurityAuditService.logAIRequest({
+      model: request.model,
+      promptLength: sanitized.length,
+      userInput: sanitized,
+      wasSanitized: sanitized !== userMessage,
+      wasSuspicious: detection.isSuspicious,
+      suspiciousReasons: detection.reasons,
+    });
+
+    // Block if highly suspicious
+    if (detection.isSuspicious && detection.reasons.length >= 2) {
+      SecurityAuditService.log({
+        timestamp: new Date().toISOString(),
+        type: 'prompt_injection',
+        severity: 'high',
+        details: {
+          userInput: sanitized,
+          reasons: detection.reasons,
+        },
+      });
+      throw new Error('Security: Potential prompt injection detected. Request blocked.');
+    }
+
+    try {
+      const response = await this.client.post<OpenClawResponse>(
+        '/v1/chat/completions',
+        request
+      );
+      return response.data;
+    } catch (error: any) {
+      if (error.response) {
+        if (error.response.status === 401 || error.response.status === 403) {
+          SecurityAuditService.log({
+            timestamp: new Date().toISOString(),
+            type: 'auth_failure',
+            severity: 'high',
+            details: {
+              status: error.response.status,
+              message: 'OpenClaw authentication failed (tool use)',
+            },
+          });
+        }
         throw new Error(
           `OpenClaw API Error: ${error.response.status} - ${error.response.data?.error || error.message}`
         );

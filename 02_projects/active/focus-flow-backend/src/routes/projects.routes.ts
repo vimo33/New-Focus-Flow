@@ -50,4 +50,56 @@ router.post('/projects', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/projects/:id - Get single project with tasks
+router.get('/projects/:id', async (req: Request, res: Response) => {
+  try {
+    const allProjects = await vaultService.getProjects();
+    const project = allProjects.find(p => p.id === String(req.params.id));
+
+    if (!project) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    const [tasks, progress] = await Promise.all([
+      vaultService.getTasksByProject(project.id),
+      vaultService.calculateProjectProgress(project.id),
+    ]);
+
+    res.json({ ...project, tasks, progress });
+  } catch (error: any) {
+    console.error('Error fetching project:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// PUT /api/projects/:id - Update project
+router.put('/projects/:id', async (req: Request, res: Response) => {
+  try {
+    const allProjects = await vaultService.getProjects();
+    const existing = allProjects.find(p => p.id === String(req.params.id));
+
+    if (!existing) {
+      return res.status(404).json({ error: 'Project not found' });
+    }
+
+    const updates = req.body;
+    const updatedProject: Project = {
+      ...existing,
+      ...updates,
+      id: existing.id, // Prevent ID override
+      updated_at: new Date().toISOString(),
+    };
+
+    await vaultService.saveData(
+      `02_projects/${updatedProject.status || 'active'}/${updatedProject.id}.json`,
+      JSON.stringify(updatedProject, null, 2)
+    );
+
+    res.json({ status: 'updated', project: updatedProject });
+  } catch (error: any) {
+    console.error('Error updating project:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

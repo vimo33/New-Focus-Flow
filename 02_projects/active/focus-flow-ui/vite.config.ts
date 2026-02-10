@@ -64,4 +64,15 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+
+  // Preview server configuration
+  preview: {
+    host: '0.0.0.0',
+    port: 5173,
+    allowedHosts: [
+      'focus-flow-new.tail49878c.ts.net',
+      '167.235.63.193',
+      'localhost',
+    ],
+  },
 })

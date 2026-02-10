@@ -1,5 +1,7 @@
 import express, { Express, Request, Response } from 'express';
 import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
 
@@ -22,13 +24,56 @@ import orchestratorRoutes from './routes/orchestrator.routes';
 import securityRoutes from './routes/security.routes';
 import threadRoutes from './routes/threads.routes';
 import voiceRoutes from './routes/voice.routes';
+import memoryRoutes from './routes/memory.routes';
+import orchestratorChatRoutes from './routes/orchestrator-chat.routes';
+import crmRoutes from './routes/crm.routes';
+import salesRoutes from './routes/sales.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+// Security middleware
+app.use(helmet());
+
+// CORS — restrict to known origins
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+  'https://167.235.63.193',
+  'https://focus-flow-new.tail49878c.ts.net',
+  process.env.FRONTEND_URL,
+].filter(Boolean) as string[];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (curl, server-to-server)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
+
+// Global rate limiter: 200 requests per minute per IP
+const globalLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests, please try again later' },
+});
+app.use(globalLimiter);
+
+// Stricter rate limit for AI endpoints (expensive operations)
+const aiLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'AI rate limit exceeded, please wait before retrying' },
+});
+
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Request logging middleware
@@ -54,10 +99,14 @@ app.use('/api', projectsRoutes);
 app.use('/api', ideasRoutes);
 app.use('/api', healthRoutes);
 app.use('/api', aiRoutes);
-app.use('/api/orchestrator', orchestratorRoutes);
+app.use('/api/orchestrator', aiLimiter, orchestratorRoutes);
 app.use('/api', securityRoutes);
 app.use('/api', threadRoutes);
 app.use('/api', voiceRoutes);
+app.use('/api', memoryRoutes);
+app.use('/api/orchestrator', aiLimiter, orchestratorChatRoutes);
+app.use('/api', crmRoutes);
+app.use('/api', salesRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -148,6 +197,14 @@ app.listen(PORT, () => {
   console.log('  DELETE /api/threads/:id');
   console.log('  POST   /api/voice-command/classify');
   console.log('  GET    /api/voice-command/status');
+  console.log('  GET    /api/memory/search');
+  console.log('  GET    /api/memory');
+  console.log('  GET    /api/memory/health');
+  console.log('  DELETE /api/memory/:id');
+  console.log('  POST   /api/orchestrator/chat');
+  console.log('  GET    /api/orchestrator/threads');
+  console.log('  POST   /api/orchestrator/threads');
+  console.log('  GET    /api/orchestrator/threads/:id');
   console.log('==========================================');
 });
 

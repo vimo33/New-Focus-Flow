@@ -8,4 +8,5 @@ export { ProjectDetail } from '../components/ProjectDetail';
 export { Calendar } from '../components/Calendar';
 export { Ideas } from '../components/Ideas';
 export { Wellbeing } from '../components/Wellbeing/Wellbeing';
-export { Voice } from '../components/Voice';
+export { Sales } from '../components/Sales/Sales';
+export { CRM } from '../components/CRM/CRM';

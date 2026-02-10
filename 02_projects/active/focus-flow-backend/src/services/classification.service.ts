@@ -1,4 +1,4 @@
-import { InboxItem, AIClassification } from '../models/types';
+import { InboxItem, AIClassification, AutoRouteResult } from '../models/types';
 import { claudeClient } from '../ai/claude-client';
 import { VaultService } from './vault.service';
 
@@ -130,6 +130,82 @@ export class ClassificationService {
     } catch (error) {
       console.error('Error classifying all unclassified items:', error);
       throw error;
+    }
+  }
+
+  /**
+   * Auto-route an inbox item based on its classification.
+   * Creates the appropriate entity (task, idea, etc.) and marks the item as routed.
+   */
+  async autoRouteItem(item: InboxItem): Promise<AutoRouteResult> {
+    try {
+      // Ensure the item is classified
+      if (!item.ai_classification) {
+        item = await this.classifyInboxItem(item);
+      }
+
+      const classification = item.ai_classification;
+      if (!classification || !classification.auto_routable) {
+        return { routed: false, reason: 'Not auto-routable' };
+      }
+
+      if ((classification.smart_confidence || classification.confidence) < 0.7) {
+        return { routed: false, reason: 'Confidence too low for auto-routing' };
+      }
+
+      const smartType = classification.smart_type || classification.suggested_action;
+      let entityId: string | undefined;
+      let vaultPath: string | undefined;
+
+      switch (smartType) {
+        case 'task': {
+          const task = await this.vaultService.createTask({
+            title: item.text,
+            category: classification.category === 'work' ? 'work' : 'personal',
+          });
+          entityId = task.id;
+          vaultPath = `01_tasks/${task.category}/${task.id}.json`;
+          break;
+        }
+        case 'idea': {
+          const idea = await this.vaultService.createIdea({
+            title: item.text.substring(0, 100),
+            description: item.text,
+          });
+          entityId = idea.id;
+          vaultPath = `03_ideas/inbox/${idea.id}.json`;
+          break;
+        }
+        default:
+          return {
+            routed: false,
+            reason: `Auto-routing not supported for type: ${smartType}`,
+          };
+      }
+
+      // Mark the inbox item as routed
+      const routedItem: InboxItem = {
+        ...item,
+        auto_routed: true,
+        routed_to: {
+          entity_type: smartType as any,
+          entity_id: entityId!,
+          vault_path: vaultPath!,
+        },
+      };
+      // Save updated item (with routing info) then archive it
+      await this.vaultService.processInboxItem(item.id, { action: 'archive' });
+
+      return {
+        routed: true,
+        entity_type: smartType as any,
+        entity_id: entityId,
+        vault_path: vaultPath,
+        confidence: classification.smart_confidence || classification.confidence,
+      };
+    } catch (error: any) {
+      console.error(`[AutoRoute] Error routing item ${item.id}:`, error.message);
+      return { routed: false, reason: error.message };
     }
   }
 }

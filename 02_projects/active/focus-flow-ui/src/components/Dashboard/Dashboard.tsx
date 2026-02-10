@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import { useAppStore } from '../../stores/app';
-import type { DashboardSummary, Project } from '../../services/api';
+import type { DashboardSummary, Project, Idea } from '../../services/api';
 
 interface TodaysBriefProps {
   summary: DashboardSummary | null;
@@ -203,7 +203,7 @@ function ActiveProjects({ projects, loading }: ActiveProjectsProps) {
               <div
                 key={project.id}
                 className="flex flex-col gap-2 cursor-pointer hover:opacity-80 transition-opacity"
-                onClick={() => navigate('/projects')}
+                onClick={() => navigate(`/projects/${project.id}`)}
                 data-testid={`project-${project.id}`}
               >
                 <div className="flex justify-between items-end">
@@ -331,6 +331,102 @@ function RecentActivity({ summary, loading }: RecentActivityProps) {
   );
 }
 
+interface IdeasPipelineProps {
+  ideas: Idea[];
+  loading: boolean;
+}
+
+function IdeasPipeline({ ideas, loading }: IdeasPipelineProps) {
+  const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className="col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-6">
+        <div className="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-white/5 p-6 h-full">
+          <div className="h-6 bg-slate-300 dark:bg-slate-700 rounded w-32 mb-5 animate-pulse"></div>
+          <div className="flex flex-col gap-3">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-12 bg-slate-100 dark:bg-slate-800/50 rounded animate-pulse"></div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const statusCounts = {
+    inbox: ideas.filter(i => i.status === 'inbox').length,
+    validated: ideas.filter(i => i.status === 'validated').length,
+    rejected: ideas.filter(i => i.status === 'rejected').length,
+  };
+
+  const recentIdeas = ideas.slice(0, 4);
+
+  return (
+    <div className="col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-6">
+      <div
+        className="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-white/5 p-6 h-full"
+        data-testid="ideas-pipeline"
+      >
+        <div className="flex items-center justify-between mb-5">
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white">Ideas Pipeline</h3>
+          <button
+            onClick={() => navigate('/ideas')}
+            className="text-slate-400 hover:text-primary transition-colors"
+            aria-label="View Ideas"
+          >
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </div>
+
+        {/* Status Summary */}
+        <div className="flex gap-3 mb-4">
+          <div className="flex-1 bg-blue-500/10 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-blue-400">{statusCounts.inbox}</div>
+            <div className="text-xs text-slate-500">Inbox</div>
+          </div>
+          <div className="flex-1 bg-emerald-500/10 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-emerald-400">{statusCounts.validated}</div>
+            <div className="text-xs text-slate-500">Validated</div>
+          </div>
+          <div className="flex-1 bg-red-500/10 rounded-lg p-3 text-center">
+            <div className="text-2xl font-bold text-red-400">{statusCounts.rejected}</div>
+            <div className="text-xs text-slate-500">Rejected</div>
+          </div>
+        </div>
+
+        {/* Recent Ideas */}
+        {recentIdeas.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-6 text-center">
+            <span className="material-symbols-outlined text-slate-300 dark:text-slate-700 text-4xl mb-2">lightbulb</span>
+            <p className="text-slate-500 dark:text-slate-400 text-sm">No ideas yet</p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-2">
+            {recentIdeas.map((idea) => (
+              <div
+                key={idea.id}
+                className="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                onClick={() => navigate(`/ideas/${idea.id}`)}
+              >
+                <span className={`material-symbols-outlined text-[16px] ${
+                  idea.status === 'validated' ? 'text-emerald-400' : idea.status === 'rejected' ? 'text-red-400' : 'text-blue-400'
+                }`}>
+                  {idea.status === 'validated' ? 'check_circle' : idea.status === 'rejected' ? 'cancel' : 'lightbulb'}
+                </span>
+                <span className="text-sm text-slate-700 dark:text-slate-200 truncate flex-1">{idea.title}</span>
+                {idea.council_verdict && (
+                  <span className="text-xs font-bold text-primary">{idea.council_verdict.overall_score}/10</span>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 interface QuickActionsProps {
   onNewCapture: () => void;
   onViewInbox: () => void;
@@ -373,6 +469,7 @@ export function Dashboard() {
   const { refreshInboxCount } = useAppStore();
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
   const [projects, setProjects] = useState<Project[]>([]);
+  const [ideas, setIdeas] = useState<Idea[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -386,13 +483,15 @@ export function Dashboard() {
 
     try {
       // Fetch all dashboard data in parallel
-      const [summaryData, projectsData] = await Promise.all([
+      const [summaryData, projectsData, ideasData] = await Promise.all([
         api.getSummary(),
         api.getProjects('active'),
+        api.getIdeas(),
       ]);
 
       setSummary(summaryData);
       setProjects(projectsData.projects);
+      setIdeas(ideasData.ideas);
 
       // Refresh inbox count in store
       await refreshInboxCount();
@@ -477,6 +576,7 @@ export function Dashboard() {
         <InboxWidget loading={loading} />
         <ActiveProjects projects={projects} loading={loading} />
         <RecentActivity summary={summary} loading={loading} />
+        <IdeasPipeline ideas={ideas} loading={loading} />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 // Focus Flow Service Worker
 // Provides offline functionality with caching strategies
 
-const CACHE_VERSION = 'focus-flow-v1';
+const CACHE_VERSION = 'focus-flow-v2';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 const OFFLINE_SYNC_QUEUE = 'offline-captures';

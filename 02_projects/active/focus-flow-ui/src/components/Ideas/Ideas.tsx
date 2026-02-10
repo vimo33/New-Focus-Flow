@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../../services/api';
 import type { Idea } from '../../services/api';
 import { CreateIdeaModal } from './CreateIdeaModal';
@@ -6,6 +7,7 @@ import { CreateIdeaModal } from './CreateIdeaModal';
 type StatusFilter = 'inbox' | 'validated' | 'rejected';
 
 export function Ideas() {
+  const navigate = useNavigate();
   const [ideas, setIdeas] = useState<Idea[]>([]);
   const [activeFilter, setActiveFilter] = useState<StatusFilter>('inbox');
   const [loading, setLoading] = useState(true);
@@ -268,6 +270,7 @@ export function Ideas() {
                   key={idea.id}
                   idea={idea}
                   onValidate={handleValidateIdea}
+                  onNavigate={() => navigate(`/ideas/${idea.id}`)}
                   isValidating={validatingId === idea.id}
                   getStatusBadge={getStatusBadge}
                   getRecommendationBadge={getRecommendationBadge}
@@ -293,19 +296,21 @@ export function Ideas() {
 interface IdeaCardProps {
   idea: Idea;
   onValidate: (ideaId: string) => void;
+  onNavigate: () => void;
   isValidating: boolean;
   getStatusBadge: (status: string) => string;
   getRecommendationBadge: (recommendation: string) => string;
   formatDate: (dateString: string) => string;
 }
 
-function IdeaCard({ idea, onValidate, isValidating, getStatusBadge, getRecommendationBadge, formatDate }: IdeaCardProps) {
+function IdeaCard({ idea, onValidate, onNavigate, isValidating, getStatusBadge, getRecommendationBadge, formatDate }: IdeaCardProps) {
   const verdict = idea.council_verdict;
   const hasVerdict = !!verdict;
 
   return (
     <div
-      className="group flex flex-col bg-[#192633] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-primary/30 transition-all duration-300"
+      onClick={onNavigate}
+      className="group flex flex-col bg-[#192633] rounded-xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-black/20 border border-transparent hover:border-primary/30 transition-all duration-300 cursor-pointer"
       data-testid={`idea-card-${idea.id}`}
     >
       {/* Header with Status Badge */}
@@ -403,7 +408,7 @@ function IdeaCard({ idea, onValidate, isValidating, getStatusBadge, getRecommend
       <div className="p-5 pt-4 mt-auto border-t border-white/5">
         {idea.status === 'inbox' && (
           <button
-            onClick={() => onValidate(idea.id)}
+            onClick={(e) => { e.stopPropagation(); onValidate(idea.id); }}
             disabled={isValidating}
             className="w-full bg-[#233648] hover:bg-white/10 text-white h-9 rounded-lg text-sm font-medium transition-colors border border-white/10 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
             data-testid={`validate-button-${idea.id}`}
@@ -424,6 +429,7 @@ function IdeaCard({ idea, onValidate, isValidating, getStatusBadge, getRecommend
 
         {idea.status === 'validated' && verdict?.recommendation === 'approve' && (
           <button
+            onClick={(e) => e.stopPropagation()}
             className="w-full bg-primary hover:bg-blue-600 text-white h-9 rounded-lg text-sm font-medium transition-colors shadow-lg shadow-blue-900/20"
             data-testid={`promote-button-${idea.id}`}
           >
@@ -433,6 +439,7 @@ function IdeaCard({ idea, onValidate, isValidating, getStatusBadge, getRecommend
 
         {idea.status === 'rejected' && (
           <button
+            onClick={(e) => e.stopPropagation()}
             className="w-full bg-transparent hover:bg-white/5 text-[#92adc9] h-9 rounded-lg text-sm font-medium transition-colors border border-white/10"
             data-testid={`view-reason-button-${idea.id}`}
           >

@@ -64,6 +64,44 @@ export class PromptSanitizer {
   }
 
   /**
+   * Sanitize AI output to detect leaked sensitive data
+   */
+  static sanitizeOutput(output: string): { sanitized: string; leaked: string[] } {
+    const leaked: string[] = [];
+    let sanitized = output;
+
+    // Detect potential API key leaks (generic patterns)
+    const apiKeyPatterns = [
+      /sk-[a-zA-Z0-9]{20,}/g,  // OpenAI/Anthropic style keys
+      /AKIA[0-9A-Z]{16}/g,     // AWS access key
+      /ghp_[a-zA-Z0-9]{36}/g,  // GitHub PAT
+    ];
+
+    for (const pattern of apiKeyPatterns) {
+      if (pattern.test(sanitized)) {
+        leaked.push('Potential API key detected in output');
+        sanitized = sanitized.replace(pattern, '[REDACTED_KEY]');
+      }
+    }
+
+    // Detect file path leaks to sensitive locations
+    const sensitivePathPatterns = [
+      /\/srv\/focus-flow\/07_system\/secrets\/[^\s]*/g,
+      /\/root\/\.openclaw\/[^\s]*/g,
+      /\.env[^\s]*/g,
+    ];
+
+    for (const pattern of sensitivePathPatterns) {
+      if (pattern.test(sanitized)) {
+        leaked.push('Sensitive file path detected in output');
+        sanitized = sanitized.replace(pattern, '[REDACTED_PATH]');
+      }
+    }
+
+    return { sanitized, leaked };
+  }
+
+  /**
    * Create a safe system prompt that resists injection
    */
   static createSafeSystemPrompt(basePrompt: string): string {
