@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { VoiceControlFAB } from '../VoiceControl';
@@ -29,20 +28,14 @@ const navItems: NavItem[] = [
 ];
 
 export function Layout({ children }: LayoutProps) {
-  const [darkMode, setDarkMode] = useState(true);
   const location = useLocation();
-
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
-  };
 
   const isActive = (path: string) => {
     return location.pathname === path;
   };
 
   return (
-    <div className={darkMode ? 'dark' : ''}>
+    <div className="dark">
       <div className="min-h-screen bg-background-light dark:bg-background-dark">
         {/* Desktop Sidebar */}
         <aside className="hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col">
@@ -81,17 +74,19 @@ export function Layout({ children }: LayoutProps) {
               })}
             </nav>
 
-            {/* Dark Mode Toggle */}
+            {/* Settings */}
             <div className="flex-shrink-0 p-4 border-t border-card-dark">
-              <button
-                onClick={toggleDarkMode}
-                className="flex w-full items-center px-3 py-2.5 text-sm font-medium text-gray-300 hover:bg-card-dark hover:text-white rounded-lg transition-colors duration-150"
+              <Link
+                to="/settings"
+                className={`flex w-full items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors duration-150 ${
+                  isActive('/settings')
+                    ? 'bg-primary text-white'
+                    : 'text-gray-300 hover:bg-card-dark hover:text-white'
+                }`}
               >
-                <span className="material-symbols-outlined mr-3 text-[20px]">
-                  {darkMode ? 'light_mode' : 'dark_mode'}
-                </span>
-                {darkMode ? 'Light Mode' : 'Dark Mode'}
-              </button>
+                <span className="material-symbols-outlined mr-3 text-[20px]">settings</span>
+                Settings
+              </Link>
             </div>
           </div>
         </aside>

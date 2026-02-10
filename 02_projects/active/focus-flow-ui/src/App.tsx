@@ -17,6 +17,7 @@ const IdeaDetail = lazy(() => import('./components/IdeaDetail/IdeaDetail').then(
 const Sales = lazy(() => import('./components/Sales/Sales').then(module => ({ default: module.Sales })))
 const CRM = lazy(() => import('./components/CRM/CRM').then(module => ({ default: module.CRM })))
 const Voice = lazy(() => import('./components/Voice/Voice').then(module => ({ default: module.Voice })))
+const Settings = lazy(() => import('./components/Settings/Settings').then(module => ({ default: module.Settings })))
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
             <Route path="/crm" element={<CRM />} />
             <Route path="/voice" element={<Voice />} />
             <Route path="/voice/:threadId" element={<Voice />} />
+            <Route path="/settings" element={<Settings />} />
           </Routes>
         </Suspense>
       </Layout>
