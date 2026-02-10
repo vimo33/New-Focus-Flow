@@ -1,6 +1,13 @@
 // Focus Flow API Client Service
 // Provides typed methods for all backend API endpoints
 
+import type {
+  Thread,
+  ThreadListResponse,
+  ThreadDetailResponse,
+  SendMessageResponse,
+} from '../types/threads';
+
 // ============================================================================
 // Type Definitions
 // ============================================================================
@@ -48,6 +55,7 @@ export interface Project {
   updated_at: string;
   completed_at?: string;
   tasks?: Task[];
+  progress?: number; // Progress percentage (0-100)
   metadata?: Record<string, any>;
 }
 
@@ -172,6 +180,34 @@ export interface ProcessResponse {
 export interface ApiError {
   error: string;
   message?: string;
+}
+
+// ============================================================================
+// Voice Command Types
+// ============================================================================
+
+export type VoiceIntentType = 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation';
+
+export interface VoiceCommandIntent {
+  type: VoiceIntentType;
+  confidence: number;
+  action: string;
+  parameters: Record<string, any>;
+  requires_confirmation: boolean;
+  suggested_response?: string;
+}
+
+export interface VoiceCommandRequest {
+  command: string;
+  context?: {
+    current_route?: string;
+    recent_items?: string[];
+  };
+}
+
+export interface VoiceCommandResponse {
+  status: 'classified';
+  intent: VoiceCommandIntent;
 }
 
 // ============================================================================
@@ -391,6 +427,71 @@ export class VaultAPI {
       method: 'POST',
       body: data ? JSON.stringify(data) : undefined,
     });
+  }
+
+  // ============================================================================
+  // Thread Methods
+  // ============================================================================
+
+  async createThread(data?: { title?: string; project_id?: string }): Promise<Thread> {
+    return this.request<Thread>('/threads', {
+      method: 'POST',
+      body: JSON.stringify(data || {}),
+    });
+  }
+
+  async getThreads(projectId?: string): Promise<ThreadListResponse> {
+    const params = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request<ThreadListResponse>(`/threads${params}`);
+  }
+
+  async getThread(id: string): Promise<ThreadDetailResponse> {
+    return this.request<ThreadDetailResponse>(`/threads/${id}`);
+  }
+
+  async sendMessage(
+    threadId: string,
+    content: string,
+    source: 'voice' | 'text' = 'text'
+  ): Promise<SendMessageResponse> {
+    return this.request<SendMessageResponse>(`/threads/${threadId}/messages`, {
+      method: 'POST',
+      body: JSON.stringify({ content, source }),
+    });
+  }
+
+  async updateThread(id: string, data: { title?: string; project_id?: string }): Promise<Thread> {
+    return this.request<Thread>(`/threads/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteThread(id: string): Promise<{ status: string; id: string }> {
+    return this.request<{ status: string; id: string }>(`/threads/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ============================================================================
+  // Voice Command Methods
+  // ============================================================================
+
+  /**
+   * POST /api/voice-command/classify - Classify a voice command
+   */
+  async classifyVoiceCommand(request: VoiceCommandRequest): Promise<VoiceCommandResponse> {
+    return this.request<VoiceCommandResponse>('/voice-command/classify', {
+      method: 'POST',
+      body: JSON.stringify(request),
+    });
+  }
+
+  /**
+   * GET /api/voice-command/status - Get voice command service status
+   */
+  async getVoiceCommandStatus(): Promise<{ status: string; api_connected: boolean }> {
+    return this.request<{ status: string; api_connected: boolean }>('/voice-command/status');
   }
 }
 

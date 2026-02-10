@@ -1,0 +1,13 @@
+{
+  "id": "inbox-20260210-477325",
+  "text": "Buy groceries after work",
+  "category": "personal",
+  "source": "api",
+  "created_at": "2026-02-10T00:31:17.325Z",
+  "ai_classification": {
+    "category": "personal",
+    "confidence": 0.95,
+    "suggested_action": "task",
+    "reasoning": "This is a straightforward personal errand - buying groceries is a household task unrelated to work. It's a single actionable item that can be completed in one session."
+  }
+}

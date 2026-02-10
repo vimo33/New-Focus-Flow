@@ -29,6 +29,7 @@ function App() {
             <Route path="/projects/:id" element={<ProjectDetail />} />
             <Route path="/wellbeing" element={<Wellbeing />} />
             <Route path="/voice" element={<Voice />} />
+            <Route path="/voice/:threadId" element={<Voice />} />
           </Routes>
         </Suspense>
       </Layout>

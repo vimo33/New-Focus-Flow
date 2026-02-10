@@ -245,6 +245,29 @@ export class VaultService {
     return projects.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
   }
 
+  /**
+   * Get tasks for a specific project
+   */
+  async getTasksByProject(projectId: string): Promise<Task[]> {
+    const allTasks = await this.getTasks();
+    return allTasks.filter(task => task.project_id === projectId);
+  }
+
+  /**
+   * Calculate progress for a project based on task completion
+   * Returns percentage (0-100) rounded to nearest integer
+   */
+  async calculateProjectProgress(projectId: string): Promise<number> {
+    const tasks = await this.getTasksByProject(projectId);
+
+    if (tasks.length === 0) return 0;
+
+    const completedTasks = tasks.filter(task => task.status === 'done');
+    const progressPercent = (completedTasks.length / tasks.length) * 100;
+
+    return Math.round(progressPercent);
+  }
+
   // ==================== IDEA OPERATIONS ====================
 
   async createIdea(idea: Partial<Idea>): Promise<Idea> {

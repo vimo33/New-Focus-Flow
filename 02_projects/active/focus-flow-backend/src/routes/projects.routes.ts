@@ -11,9 +11,17 @@ router.get('/projects', async (req: Request, res: Response) => {
     const status = req.query.status as string | undefined;
     const projects = await vaultService.getProjects(status);
 
+    // Calculate progress for each project in parallel
+    const projectsWithProgress = await Promise.all(
+      projects.map(async (project) => ({
+        ...project,
+        progress: await vaultService.calculateProjectProgress(project.id)
+      }))
+    );
+
     res.json({
-      projects,
-      count: projects.length
+      projects: projectsWithProgress,
+      count: projectsWithProgress.length
     });
   } catch (error: any) {
     console.error('Error fetching projects:', error);

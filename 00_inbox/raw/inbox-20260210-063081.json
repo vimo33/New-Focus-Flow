@@ -1,0 +1,14 @@
+{
+  "id": "inbox-20260210-063081",
+  "text": "Finish quarterly report by Friday",
+  "category": "work",
+  "source": "pwa",
+  "created_at": "2026-02-10T00:41:03.081Z",
+  "ai_classification": {
+    "category": "work",
+    "confidence": 0.95,
+    "suggested_action": "task",
+    "suggested_project": "Quarterly Reporting",
+    "reasoning": "Clear work deliverable with specific deadline. Single actionable task rather than multi-step project."
+  }
+}

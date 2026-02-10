@@ -29,3 +29,11 @@ export function generateIdeaId(): string {
 export function generateHealthId(): string {
   return generateId('health');
 }
+
+export function generateThreadId(): string {
+  return generateId('thread');
+}
+
+export function generateMessageId(): string {
+  return generateId('msg');
+}

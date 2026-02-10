@@ -1,5 +1,28 @@
 // Type definitions for Focus Flow OS
 
+// ============================================================================
+// Thread / Conversation Types
+// ============================================================================
+
+export interface Thread {
+  id: string;
+  title: string;
+  project_id?: string;
+  created_at: string;
+  updated_at: string;
+  message_count: number;
+  last_message_preview?: string;
+}
+
+export interface ThreadMessage {
+  id: string;
+  thread_id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  source: 'voice' | 'text';
+  created_at: string;
+}
+
 export interface InboxItem {
   id: string;
   text: string;
@@ -50,6 +73,7 @@ export interface Project {
   updated_at: string;
   completed_at?: string;
   tasks?: Task[];
+  progress?: number; // Progress percentage (0-100)
   metadata?: Record<string, any>;
 }
 
@@ -276,4 +300,47 @@ export interface DeploymentResult {
   frontend_files: string[];
   backend_files: string[];
   git_commit: string | null;
+}
+
+// ============================================================================
+// Voice Command Types
+// ============================================================================
+
+export type VoiceIntentType = 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation';
+
+export type VoiceActionType =
+  | 'navigate_inbox'
+  | 'navigate_projects'
+  | 'navigate_calendar'
+  | 'navigate_tasks'
+  | 'navigate_ideas'
+  | 'navigate_voice'
+  | 'navigate_wellbeing'
+  | 'create_task'
+  | 'create_project'
+  | 'create_idea'
+  | 'capture_quick'
+  | 'query_inbox_count'
+  | 'query_agenda'
+  | 'query_projects'
+  | 'query_tasks'
+  | 'update_task_status'
+  | 'delete_item'
+  | 'conversation';
+
+export interface VoiceCommandIntent {
+  type: VoiceIntentType;
+  confidence: number;
+  action: VoiceActionType;
+  parameters: Record<string, any>;
+  requires_confirmation: boolean;
+  suggested_response?: string;
+}
+
+export interface VoiceCommandRequest {
+  command: string;
+  context?: {
+    current_route?: string;
+    recent_items?: string[];
+  };
 }

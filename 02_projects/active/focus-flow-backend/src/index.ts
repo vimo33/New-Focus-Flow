@@ -20,6 +20,8 @@ import aiRoutes from './routes/ai.routes';
 import { VaultService } from './services/vault.service';
 import orchestratorRoutes from './routes/orchestrator.routes';
 import securityRoutes from './routes/security.routes';
+import threadRoutes from './routes/threads.routes';
+import voiceRoutes from './routes/voice.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -54,6 +56,8 @@ app.use('/api', healthRoutes);
 app.use('/api', aiRoutes);
 app.use('/api/orchestrator', orchestratorRoutes);
 app.use('/api', securityRoutes);
+app.use('/api', threadRoutes);
+app.use('/api', voiceRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -136,6 +140,14 @@ app.listen(PORT, () => {
   console.log('  GET    /api/orchestrator/runs');
   console.log('  GET    /api/security/status');
   console.log('  GET    /api/security/audit-log');
+  console.log('  POST   /api/threads');
+  console.log('  GET    /api/threads');
+  console.log('  GET    /api/threads/:id');
+  console.log('  POST   /api/threads/:id/messages');
+  console.log('  PUT    /api/threads/:id');
+  console.log('  DELETE /api/threads/:id');
+  console.log('  POST   /api/voice-command/classify');
+  console.log('  GET    /api/voice-command/status');
   console.log('==========================================');
 });
 

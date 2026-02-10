@@ -155,11 +155,17 @@ function ActiveProjects({ projects, loading }: ActiveProjectsProps) {
     );
   }
 
-  // Calculate mock progress for projects (in real app, this would come from backend)
-  const projectsWithProgress = projects.slice(0, 3).map((project, idx) => ({
+  // Use real progress from backend, generate dynamic subtitles
+  const projectsWithProgress = projects.slice(0, 3).map((project) => ({
     ...project,
-    progress: idx === 0 ? 75 : idx === 1 ? 40 : 15,
-    subtitle: idx === 0 ? 'Due in 2 days' : idx === 1 ? 'Kickoff phase' : 'Review needed',
+    progress: project.progress ?? 0,
+    subtitle: project.progress !== undefined && project.progress >= 75
+      ? 'Nearly complete'
+      : project.progress !== undefined && project.progress >= 50
+      ? 'Good progress'
+      : project.progress !== undefined && project.progress > 0
+      ? 'Just started'
+      : 'No tasks yet',
   }));
 
   return (
