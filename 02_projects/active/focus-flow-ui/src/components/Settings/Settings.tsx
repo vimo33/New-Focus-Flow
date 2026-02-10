@@ -414,6 +414,75 @@ function PowerUserGuide() {
         </div>
       ),
     },
+    {
+      id: 'vault',
+      icon: 'database',
+      title: 'Data & Vault Architecture',
+      content: (
+        <div className="space-y-3">
+          <p>
+            Focus Flow uses a <Strong>file-based vault</Strong> — no database. Every item you create is a plain JSON file
+            on disk at <code className="px-1.5 py-0.5 bg-card-dark rounded text-xs font-mono text-primary">/srv/focus-flow/</code>.
+            You can read, edit, back up, or version-control your data with standard tools.
+          </p>
+
+          <h4 className="text-white font-medium text-sm">Vault directory structure:</h4>
+          <div className="bg-slate-800/50 rounded-lg p-4 font-mono text-xs text-slate-300 leading-relaxed">
+            <pre className="whitespace-pre">{`/srv/focus-flow/
+├── 00_inbox/
+│   ├── raw/            Unprocessed captures
+│   ├── archive/        Processed items
+│   └── processing/     Being classified by AI
+├── 01_tasks/
+│   ├── work/           Work category
+│   ├── personal/       Personal category
+│   └── scheduled/      Time-blocked tasks
+├── 02_projects/
+│   ├── active/         Active projects + source repos
+│   ├── paused/         On hold
+│   └── completed/      Done
+├── 03_ideas/
+│   ├── inbox/          Raw ideas
+│   ├── validated/      Passed AI Council
+│   └── rejected/       Did not pass
+├── 06_health/logs/     CSV + JSON health entries
+├── 08_threads/         Voice & command conversations
+└── 09_crm/
+    ├── contacts/       People
+    ├── deals/          Sales pipeline
+    └── interactions/   Activity log`}</pre>
+          </div>
+
+          <h4 className="text-white font-medium text-sm">How it works:</h4>
+          <ul className="text-slate-300 text-sm space-y-1.5">
+            <li className="flex items-start gap-2">
+              <span className="text-slate-600 mt-0.5">-</span>
+              <span>Each entity is <Strong>one JSON file</Strong> named by its ID, e.g. <code className="px-1 py-0.5 bg-card-dark rounded text-xs font-mono">task-20260210-798204.json</code></span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-slate-600 mt-0.5">-</span>
+              <span>IDs are <Strong>date-based</Strong> — <code className="px-1 py-0.5 bg-card-dark rounded text-xs font-mono">{'{type}-{YYYYMMDD}-{timestamp}'}</code> — so files sort chronologically</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-slate-600 mt-0.5">-</span>
+              <span><Strong>Status changes move files</Strong> between directories (e.g. idea goes from <code className="px-1 py-0.5 bg-card-dark rounded text-xs font-mono">ideas/inbox/</code> to <code className="px-1 py-0.5 bg-card-dark rounded text-xs font-mono">ideas/validated/</code>)</span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="text-slate-600 mt-0.5">-</span>
+              <span>Health logs use <Strong>dual storage</Strong>: a CSV file for easy analysis + individual JSON files for rich metadata</span>
+            </li>
+          </ul>
+
+          <Tips tips={[
+            'Back up your vault with a simple rsync or cp -r of /srv/focus-flow/',
+            'The entire vault is git-tracked — you can see full history of every change',
+            'Files are human-readable — open any JSON file to inspect or hand-edit your data',
+            'No database means zero setup, zero migrations, and full portability',
+            'AI classification results are written back into the same JSON file as an ai_classification field',
+          ]} />
+        </div>
+      ),
+    },
   ];
 
   const [activeSection, setActiveSection] = useState<string | null>(null);
