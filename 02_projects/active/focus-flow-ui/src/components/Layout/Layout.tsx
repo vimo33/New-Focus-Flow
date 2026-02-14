@@ -23,6 +23,7 @@ const navItems: NavItem[] = [
   { name: 'Sales', path: '/sales', icon: 'monetization_on' },
   { name: 'CRM', path: '/crm', icon: 'contacts' },
   { name: 'Voice', path: '/voice', icon: 'mic' },
+  { name: 'Uploads', path: '/uploads', icon: 'upload_file' },
   { name: 'Command', path: '/command', icon: 'terminal' },
 ];
 

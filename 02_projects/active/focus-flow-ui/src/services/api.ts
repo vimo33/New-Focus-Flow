@@ -260,6 +260,14 @@ export interface ActivityEntry {
   timestamp: string;
 }
 
+export interface UploadedFile {
+  name: string;
+  originalName: string;
+  size: number;
+  path?: string;
+  uploadedAt: string;
+}
+
 export interface CaptureRequest {
   text: string;
   prefix?: string;
@@ -986,6 +994,37 @@ export class VaultAPI {
 
   async deleteContact(id: string): Promise<{ status: string }> {
     return this.request(`/crm/contacts/${id}`, { method: 'DELETE' });
+  }
+
+  // ============================================================================
+  // Upload Methods
+  // ============================================================================
+
+  async uploadFile(file: File): Promise<{ files: UploadedFile[] }> {
+    const formData = new FormData();
+    formData.append('files', file);
+    const url = `${this.baseURL}/uploads`;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Upload failed' }));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
+  async getUploads(): Promise<{ files: UploadedFile[]; count: number }> {
+    return this.request('/uploads');
+  }
+
+  getDownloadUrl(filename: string): string {
+    return `${this.baseURL}/uploads/${encodeURIComponent(filename)}`;
+  }
+
+  async deleteUpload(filename: string): Promise<{ status: string; filename: string }> {
+    return this.request(`/uploads/${encodeURIComponent(filename)}`, { method: 'DELETE' });
   }
 
 }

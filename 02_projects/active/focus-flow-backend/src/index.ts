@@ -31,6 +31,7 @@ import salesRoutes from './routes/sales.routes';
 import focusSessionRoutes from './routes/focus-session.routes';
 import designRoutes from './routes/design.routes';
 import pipelineRoutes from './routes/pipeline.routes';
+import uploadRoutes from './routes/upload.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -113,6 +114,7 @@ app.use('/api', salesRoutes);
 app.use('/api', focusSessionRoutes);
 app.use('/api', designRoutes);
 app.use('/api', pipelineRoutes);
+app.use('/api', uploadRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

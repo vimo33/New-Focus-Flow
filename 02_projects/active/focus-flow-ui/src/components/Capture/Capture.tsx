@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { api } from '../../services/api';
 import type { InboxItem, CaptureResponse } from '../../services/api';
 import { useSTT } from '../../hooks/useSTT';
@@ -28,8 +28,13 @@ export function Capture({ className = '' }: CaptureProps) {
   const [lastCapturedItem, setLastCapturedItem] = useState<InboxItem | null>(null);
   const [recentCaptures, setRecentCaptures] = useState<InboxItem[]>([]);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { isListening, startListening, stopListening } = useSTT({
     continuous: false,
@@ -163,8 +168,55 @@ export function Capture({ className = '' }: CaptureProps) {
     return 'bg-orange-500';
   };
 
+  const handleFileUpload = async (fileList: FileList | null) => {
+    if (!fileList || fileList.length === 0) return;
+    setUploadError(null);
+    setUploadSuccess(null);
+    setUploadingFile(true);
+
+    try {
+      for (const file of Array.from(fileList)) {
+        if (file.size > 10 * 1024 * 1024) {
+          setUploadError(`${file.name} exceeds 10MB limit`);
+          continue;
+        }
+        await api.uploadFile(file);
+      }
+      const names = Array.from(fileList).map(f => f.name).join(', ');
+      setUploadSuccess(`Uploaded: ${names}`);
+      setTimeout(() => setUploadSuccess(null), 5000);
+    } catch (err: any) {
+      setUploadError(err.message);
+    } finally {
+      setUploadingFile(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleCaptureDrop = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    handleFileUpload(e.dataTransfer.files);
+  }, []);
+
+  const handleCaptureDragOver = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(true);
+  }, []);
+
+  const handleCaptureDragLeave = useCallback((e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+  }, []);
+
   return (
-    <div className={`min-h-screen flex flex-col ${className}`} data-testid="capture-screen">
+    <div
+      className={`min-h-screen flex flex-col ${className} ${dragOver ? 'ring-2 ring-primary ring-inset' : ''}`}
+      data-testid="capture-screen"
+      onDrop={handleCaptureDrop}
+      onDragOver={handleCaptureDragOver}
+      onDragLeave={handleCaptureDragLeave}
+    >
       {/* Main Content Container */}
       <div className="flex-1 flex flex-col items-center justify-center w-full max-w-4xl mx-auto px-6 md:px-12 py-8">
 
@@ -312,6 +364,49 @@ export function Capture({ className = '' }: CaptureProps) {
             {error}
           </div>
         )}
+
+        {/* File Upload Section */}
+        <div className="w-full mt-8 pt-6 border-t border-slate-800/50">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-slate-400 text-sm font-medium flex items-center gap-2">
+              <span className="material-symbols-outlined text-[18px]">attach_file</span>
+              Upload Files
+            </h3>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploadingFile}
+              className="text-sm text-primary hover:text-blue-400 transition-colors flex items-center gap-1"
+            >
+              <span className="material-symbols-outlined text-[16px]">upload_file</span>
+              Browse
+            </button>
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".docx,.pdf,.md,.txt,.json,.csv,.png,.jpg,.jpeg,.svg"
+            className="hidden"
+            onChange={(e) => handleFileUpload(e.target.files)}
+          />
+          <div
+            onClick={() => fileInputRef.current?.click()}
+            className="cursor-pointer rounded-lg border border-dashed border-slate-700 hover:border-slate-500 bg-card-dark/30 p-4 text-center transition-colors"
+          >
+            <p className="text-slate-500 text-sm">
+              {uploadingFile ? 'Uploading...' : 'Drop files here or click to browse'}
+            </p>
+            <p className="text-slate-600 text-xs mt-1">
+              .docx, .pdf, .md, .txt, .json, .csv, .png, .jpg, .svg
+            </p>
+          </div>
+          {uploadError && (
+            <p className="mt-2 text-red-400 text-sm">{uploadError}</p>
+          )}
+          {uploadSuccess && (
+            <p className="mt-2 text-emerald-400 text-sm">{uploadSuccess}</p>
+          )}
+        </div>
 
         {/* Recent Captures List */}
         {recentCaptures.length > 0 && (

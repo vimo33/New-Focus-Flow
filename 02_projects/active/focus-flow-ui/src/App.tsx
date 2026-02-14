@@ -19,6 +19,7 @@ const CRM = lazy(() => import('./components/CRM/CRM').then(module => ({ default:
 const CRMDetail = lazy(() => import('./components/CRM/CRMDetail').then(module => ({ default: module.CRMDetail })))
 const Voice = lazy(() => import('./components/Voice/Voice').then(module => ({ default: module.Voice })))
 const Settings = lazy(() => import('./components/Settings/Settings').then(module => ({ default: module.Settings })))
+const Upload = lazy(() => import('./components/Upload/Upload').then(module => ({ default: module.Upload })))
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path="/crm/:id" element={<CRMDetail />} />
             <Route path="/voice" element={<Voice />} />
             <Route path="/voice/:threadId" element={<Voice />} />
+            <Route path="/uploads" element={<Upload />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </Suspense>
