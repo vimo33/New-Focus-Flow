@@ -32,6 +32,7 @@ import focusSessionRoutes from './routes/focus-session.routes';
 import designRoutes from './routes/design.routes';
 import pipelineRoutes from './routes/pipeline.routes';
 import uploadRoutes from './routes/upload.routes';
+import decisionsRoutes from './routes/decisions.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -115,6 +116,7 @@ app.use('/api', focusSessionRoutes);
 app.use('/api', designRoutes);
 app.use('/api', pipelineRoutes);
 app.use('/api', uploadRoutes);
+app.use('/api', decisionsRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -216,6 +218,14 @@ app.listen(PORT, () => {
   console.log('  POST   /api/pipeline/:projectId/start');
   console.log('  GET    /api/pipeline/:projectId/status');
   console.log('  POST   /api/pipeline/:projectId/review');
+  console.log('  POST   /api/decisions');
+  console.log('  GET    /api/decisions');
+  console.log('  GET    /api/decisions/:id');
+  console.log('  PUT    /api/decisions/:id');
+  console.log('  DELETE /api/decisions/:id');
+  console.log('  GET    /api/memory/project/:projectId');
+  console.log('  GET    /api/memory/project/:projectId/context');
+  console.log('  POST   /api/memory/project/:projectId');
   console.log('==========================================');
 });
 

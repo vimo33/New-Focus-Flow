@@ -265,6 +265,27 @@ export interface DashboardSummary {
 }
 
 // ============================================================================
+// Decision Log Types
+// ============================================================================
+
+export type DecisionType = 'council_response' | 'pipeline_gate' | 'strategic' | 'technical' | 'override';
+export type DecisionOutcome = 'pending' | 'succeeded' | 'failed' | 'revised';
+export type DecisionSource = 'user' | 'council' | 'agent';
+
+export interface DecisionEntry {
+  id: string;
+  project_id: string;
+  timestamp: string;
+  decision_type: DecisionType;
+  context: string;
+  decision: string;
+  reasoning: string;
+  alternatives: string[];
+  outcome: DecisionOutcome;
+  source: DecisionSource;
+}
+
+// ============================================================================
 // Orchestrator Types - PRD to Code Pipeline
 // ============================================================================
 

@@ -1,6 +1,7 @@
 import { ThreadService } from './thread.service';
 import { openClawClient, OpenClawMessage } from './openclaw-client.service';
 import { ThreadMessage, CouncilMember } from '../models/types';
+import { mem0Service } from './mem0.service';
 
 export const DEFAULT_COUNCIL: CouncilMember[] = [
   {
@@ -102,10 +103,22 @@ export class ConceptChatService {
       source: 'text',
     });
 
+    // Retrieve project memory context (graceful — returns '' if unavailable)
+    let memoryContext = '';
+    try {
+      memoryContext = await mem0Service.assembleContext(projectId, concept);
+    } catch (e: any) {
+      console.error('[ConceptChat] Memory context retrieval failed:', e.message);
+    }
+
+    const systemPromptWithMemory = memoryContext
+      ? `${CONCEPT_ANALYST_PROMPT}\n\n${memoryContext}`
+      : CONCEPT_ANALYST_PROMPT;
+
     // Send the FULL concept to the analyst — no truncation.
     // Claude Sonnet 4.5 has a 200k token context window; even a 70k char doc is ~18k tokens.
     const messages: OpenClawMessage[] = [
-      { role: 'system', content: CONCEPT_ANALYST_PROMPT },
+      { role: 'system', content: systemPromptWithMemory },
       {
         role: 'user',
         content: `Here is my project concept for council evaluation:\n\nTitle: ${title}\n\n${concept}`,
@@ -128,6 +141,15 @@ export class ConceptChatService {
       content: aiContent,
       source: 'text',
     });
+
+    // Store conversation in Mem0 for cross-session context
+    mem0Service.addMemories(
+      [
+        { role: 'user', content: `Concept for "${title}": ${concept.substring(0, 500)}` },
+        { role: 'assistant', content: aiContent.substring(0, 500) },
+      ],
+      { projectId }
+    ).catch(e => console.error('[ConceptChat] Failed to store memories:', e.message));
 
     return {
       thread_id: thread.id,
@@ -152,8 +174,23 @@ export class ConceptChatService {
     // Build conversation context
     const recentMessages = await this.threadService.getMessages(threadId, CONTEXT_WINDOW);
 
+    // Retrieve project memory context from thread's project
+    const thread = await this.threadService.getThread(threadId);
+    let sendMemoryContext = '';
+    if (thread?.project_id) {
+      try {
+        sendMemoryContext = await mem0Service.assembleContext(thread.project_id, content);
+      } catch (e: any) {
+        console.error('[ConceptChat] Memory context retrieval failed:', e.message);
+      }
+    }
+
+    const sendSystemPrompt = sendMemoryContext
+      ? `${CONCEPT_ANALYST_PROMPT}\n\n${sendMemoryContext}`
+      : CONCEPT_ANALYST_PROMPT;
+
     const messages: OpenClawMessage[] = [
-      { role: 'system', content: CONCEPT_ANALYST_PROMPT },
+      { role: 'system', content: sendSystemPrompt },
       ...recentMessages.map((m, idx) => {
         const isLatest = idx === recentMessages.length - 1;
         const limit = isLatest ? MAX_CURRENT_MSG_CHARS : MAX_MSG_CHARS;
@@ -183,6 +220,17 @@ export class ConceptChatService {
       content: aiContent,
       source: 'text',
     });
+
+    // Store in Mem0
+    if (thread?.project_id) {
+      mem0Service.addMemories(
+        [
+          { role: 'user', content: content.substring(0, 500) },
+          { role: 'assistant', content: aiContent.substring(0, 500) },
+        ],
+        { projectId: thread.project_id }
+      ).catch(e => console.error('[ConceptChat] Failed to store memories:', e.message));
+    }
 
     return { user_message: userMessage, assistant_message: assistantMessage };
   }

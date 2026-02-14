@@ -1,6 +1,8 @@
 import { openClawClient } from '../services/openclaw-client.service';
 import { CouncilVerdict, AgentEvaluation, CouncilMember } from '../models/types';
 import { DynamicAgent } from './agents/dynamic-agent';
+import { mem0Service } from '../services/mem0.service';
+import { decisionLogService } from '../services/decision-log.service';
 
 /**
  * AI Council of Elders
@@ -30,21 +32,55 @@ export class AICouncil {
 
   /**
    * Validate with a set of council members (runs all in parallel, then synthesizes).
+   * When projectId is provided, injects project memory context and auto-logs the decision.
    */
   async validateWithCouncil(
     title: string,
     description: string,
-    members: CouncilMember[]
+    members: CouncilMember[],
+    projectId?: string
   ): Promise<CouncilVerdict> {
     console.log(`AI Council evaluating: ${title} with agents: ${members.map(m => m.agent_name).join(', ')}`);
 
-    const evaluationPromises = members.map((m) => this.runSingleAgent(m, title, description));
+    // Inject project memory context if available
+    let enrichedDescription = description;
+    if (projectId) {
+      try {
+        const memoryContext = await mem0Service.assembleContext(projectId, title);
+        if (memoryContext) {
+          enrichedDescription = `${description}\n\n---\n\n${memoryContext}`;
+        }
+      } catch (e: any) {
+        console.error('[AICouncil] Memory context retrieval failed:', e.message);
+      }
+    }
+
+    const evaluationPromises = members.map((m) => this.runSingleAgent(m, title, enrichedDescription));
     const evaluations = await Promise.all(evaluationPromises);
 
     evaluations.forEach((e) => console.log(`- ${e.agent_name}: ${e.score}/10`));
 
-    const verdict = await this.synthesizeVerdict(title, description, evaluations);
+    const verdict = await this.synthesizeVerdict(title, enrichedDescription, evaluations);
     console.log(`Verdict: ${verdict.recommendation.toUpperCase()} (Score: ${verdict.overall_score}/10)`);
+
+    // Auto-log as a decision entry
+    if (projectId) {
+      try {
+        await decisionLogService.createDecision({
+          project_id: projectId,
+          decision_type: 'council_response',
+          context: `Council evaluated "${title}" with ${members.length} agents`,
+          decision: `${verdict.recommendation} (score: ${verdict.overall_score}/10)`,
+          reasoning: verdict.synthesized_reasoning.substring(0, 1000),
+          alternatives: verdict.next_steps || [],
+          outcome: verdict.recommendation === 'approve' ? 'succeeded' : 'pending',
+          source: 'council',
+        });
+      } catch (e: any) {
+        console.error('[AICouncil] Failed to log decision:', e.message);
+      }
+    }
+
     return verdict;
   }
 
