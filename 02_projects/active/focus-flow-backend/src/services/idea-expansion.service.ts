@@ -1,4 +1,4 @@
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 import { Idea, ExpandedIdea } from '../models/types';
 import { VaultService } from './vault.service';
 import { getVaultPath, writeJsonFile, readJsonFile } from '../utils/file-operations';
@@ -42,10 +42,12 @@ Respond ONLY with valid JSON in this exact format:
 Title: ${idea.title}
 Description: ${idea.description}`;
 
-    const responseText = await openClawClient.complete(
+    const responseText = await cachedInference.complete(
       userMessage,
       systemPrompt,
-      { maxTokens: 2000, temperature: 0.6 }
+      'content_creation',
+      'standard',
+      { max_tokens: 2000, temperature: 0.6 }
     );
 
     // Parse the expansion

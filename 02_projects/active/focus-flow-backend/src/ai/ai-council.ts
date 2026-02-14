@@ -1,4 +1,4 @@
-import { openClawClient } from '../services/openclaw-client.service';
+import { cachedInference } from '../services/cached-inference.service';
 import { CouncilVerdict, AgentEvaluation, CouncilMember } from '../models/types';
 import { DynamicAgent } from './agents/dynamic-agent';
 import { mem0Service } from '../services/mem0.service';
@@ -13,7 +13,6 @@ import { decisionLogService } from '../services/decision-log.service';
  */
 export class AICouncil {
   private dynamicAgent: DynamicAgent;
-  private readonly OPUS_MODEL = 'anthropic/claude-opus-4-6';
 
   constructor() {
     this.dynamicAgent = new DynamicAgent();
@@ -159,10 +158,12 @@ ${evaluationSummary}
 Provide synthesized reasoning and actionable next steps. Ground your synthesis in the full context above — reference specific details from the original submission and chat refinement, not just the agent scores.`;
 
     try {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        { model: this.OPUS_MODEL, maxTokens: 2000, temperature: 0.5 }
+        'synthesis',
+        'standard',
+        { max_tokens: 2000, temperature: 0.5 }
       );
 
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);
@@ -205,6 +206,7 @@ Provide synthesized reasoning and actionable next steps. Ground your synthesis i
 
   async healthCheck(): Promise<boolean> {
     try {
+      const { openClawClient } = await import('../services/openclaw-client.service');
       return await openClawClient.healthCheck();
     } catch (error) {
       console.error('AI Council health check failed:', error);

@@ -1,4 +1,4 @@
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 import {
   Specification,
   ParsedDesign,
@@ -15,11 +15,8 @@ import {
  * following Focus Flow's architectural patterns.
  */
 export class CodeGeneratorService {
-  private readonly MODEL = 'claude-sonnet-4.5-20250929';
-
   constructor() {
-    // Uses OpenClaw Gateway for Claude access
-    // Ensure OpenClaw is running: openclaw gateway start
+    // Uses CachedInferenceClient → OpenClaw Gateway for Claude access
   }
 
   /**
@@ -122,14 +119,12 @@ export function ${this.toComponentName(spec.feature_name)}({ }: ${this.toCompone
 Generate ONLY valid JSON with the structure above.`;
 
     try {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.MODEL,
-          maxTokens: 4000,
-          temperature: 0.4,
-        }
+        'code_generation',
+        'standard',
+        { max_tokens: 4000, temperature: 0.4 }
       );
 
       const response = JSON.parse(responseText);
@@ -205,14 +200,12 @@ export default router;
 Generate ONLY valid JSON with the structure above.`;
 
     try {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.MODEL,
-          maxTokens: 3000,
-          temperature: 0.3,
-        }
+        'code_generation',
+        'standard',
+        { max_tokens: 3000, temperature: 0.3 }
       );
 
       const response = JSON.parse(responseText);

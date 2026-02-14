@@ -1,5 +1,6 @@
 import { ThreadService } from './thread.service';
-import { openClawClient, OpenClawMessage } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
+import { OpenClawMessage } from './openclaw-client.service';
 import { ThreadMessage, CouncilMember } from '../models/types';
 import { mem0Service } from './mem0.service';
 
@@ -117,23 +118,19 @@ export class ConceptChatService {
 
     // Send the FULL concept to the analyst — no truncation.
     // Claude Sonnet 4.5 has a 200k token context window; even a 70k char doc is ~18k tokens.
-    const messages: OpenClawMessage[] = [
-      { role: 'system', content: systemPromptWithMemory },
-      {
+    const result = await cachedInference.chat(
+      systemPromptWithMemory,
+      [{
         role: 'user',
         content: `Here is my project concept for council evaluation:\n\nTitle: ${title}\n\n${concept}`,
-      },
-    ];
-
-    const response = await openClawClient.chatCompletion({
-      model: 'openclaw:main',
-      messages,
-      max_tokens: 2048,
-      temperature: 0.5,
-    });
+      }],
+      'conversation',
+      'standard',
+      { max_tokens: 2048, temperature: 0.5, project_id: projectId }
+    );
 
     const aiContent =
-      response.choices[0]?.message?.content ||
+      result.content ||
       "I've received your concept. Let me audit it against the council evaluation criteria and identify any gaps.";
 
     const aiMsg = await this.threadService.addMessage(thread.id, {
@@ -189,31 +186,27 @@ export class ConceptChatService {
       ? `${CONCEPT_ANALYST_PROMPT}\n\n${sendMemoryContext}`
       : CONCEPT_ANALYST_PROMPT;
 
-    const messages: OpenClawMessage[] = [
-      { role: 'system', content: sendSystemPrompt },
-      ...recentMessages.map((m, idx) => {
-        const isLatest = idx === recentMessages.length - 1;
-        const limit = isLatest ? MAX_CURRENT_MSG_CHARS : MAX_MSG_CHARS;
-        const truncated = m.content.length > limit
-          ? m.content.substring(0, limit) + `\n... [truncated — full message is ${m.content.length.toLocaleString()} chars]`
-          : m.content;
-        return {
-          role: m.role as 'user' | 'assistant',
-          content: truncated,
-        };
-      }),
-    ];
-
-    const response = await openClawClient.chatCompletion({
-      model: 'openclaw:main',
-      messages,
-      max_tokens: 1024,
-      temperature: 0.7,
+    const chatMessages: OpenClawMessage[] = recentMessages.map((m, idx) => {
+      const isLatest = idx === recentMessages.length - 1;
+      const limit = isLatest ? MAX_CURRENT_MSG_CHARS : MAX_MSG_CHARS;
+      const truncated = m.content.length > limit
+        ? m.content.substring(0, limit) + `\n... [truncated — full message is ${m.content.length.toLocaleString()} chars]`
+        : m.content;
+      return {
+        role: m.role as 'user' | 'assistant',
+        content: truncated,
+      };
     });
 
-    const aiContent =
-      response.choices[0]?.message?.content ||
-      'Could you tell me more about that?';
+    const result = await cachedInference.chat(
+      sendSystemPrompt,
+      chatMessages,
+      'conversation',
+      'standard',
+      { max_tokens: 1024, temperature: 0.7, project_id: thread?.project_id }
+    );
+
+    const aiContent = result.content || 'Could you tell me more about that?';
 
     const assistantMessage = await this.threadService.addMessage(threadId, {
       role: 'assistant',
@@ -268,10 +261,12 @@ export class ConceptChatService {
 Be comprehensive. Use the specific details from the conversation. Do not omit important details — this summary feeds into council evaluation and PRD generation.`;
 
     try {
-      const response = await openClawClient.complete(
+      const response = await cachedInference.complete(
         `Summarize this concept refinement conversation:\n\n${conversationText}`,
         systemPrompt,
-        { maxTokens: 4000, temperature: 0.3 }
+        'summarization',
+        'standard',
+        { max_tokens: 4000, temperature: 0.3 }
       );
       return response;
     } catch (error: any) {
@@ -371,10 +366,12 @@ Respond ONLY with valid JSON — an array of 3-5 agent definitions:
 ]`;
 
     try {
-      const response = await openClawClient.complete(
+      const response = await cachedInference.complete(
         `Recommend evaluation perspectives for this concept:\n\n${conceptSummary}`,
         systemPrompt,
-        { maxTokens: 1500, temperature: 0.5 }
+        'evaluation',
+        'standard',
+        { max_tokens: 1500, temperature: 0.5 }
       );
 
       const jsonMatch = response.match(/\[[\s\S]*\]/);

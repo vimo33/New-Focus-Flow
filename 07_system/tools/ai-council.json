@@ -1,0 +1,48 @@
+{
+  "id": "ai-council",
+  "name": "AI Council of Elders",
+  "version": "1.0.0",
+  "description": "Multi-agent evaluation panel that assesses project ideas from diverse expert perspectives and produces a synthesized verdict with scores and recommendations.",
+  "capabilities": ["evaluation", "strategic_reasoning"],
+  "execution_type": "in-process",
+  "invocation": {
+    "service": "aiCouncil",
+    "method": "validateWithCouncil"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["title", "description", "members"],
+    "properties": {
+      "title": { "type": "string", "description": "Title of the concept to evaluate" },
+      "description": { "type": "string", "description": "Detailed description of the concept" },
+      "members": {
+        "type": "array",
+        "description": "Council member definitions",
+        "items": {
+          "type": "object",
+          "properties": {
+            "agent_name": { "type": "string" },
+            "role": { "type": "string" },
+            "expertise": { "type": "string" },
+            "evaluation_criteria": { "type": "array", "items": { "type": "string" } }
+          }
+        }
+      },
+      "project_id": { "type": "string", "description": "Optional project ID for memory context" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "recommendation": { "type": "string", "enum": ["approve", "reject", "needs-info"] },
+      "overall_score": { "type": "number" },
+      "evaluations": { "type": "array" },
+      "synthesized_reasoning": { "type": "string" },
+      "next_steps": { "type": "array", "items": { "type": "string" } }
+    }
+  },
+  "trust_level": "trusted",
+  "requires_approval": false,
+  "max_execution_seconds": 120,
+  "cost_estimate": "high"
+}

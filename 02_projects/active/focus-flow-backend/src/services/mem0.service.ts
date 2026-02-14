@@ -12,7 +12,7 @@
 import { QdrantClient } from '@qdrant/js-client-rest';
 import { EmbeddingModel, FlagEmbedding } from 'fastembed';
 import crypto from 'crypto';
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 
 const LOG_PREFIX = '[Mem0]';
 const DEFAULT_USER = 'focus-flow-user';
@@ -174,10 +174,12 @@ class Mem0Service {
       .map(m => `${m.role}: ${m.content}`)
       .join('\n');
 
-    const text = await openClawClient.complete(
+    const text = await cachedInference.complete(
       `${EXTRACTION_PROMPT}\n\nConversation:\n${conversationText}`,
-      undefined,
-      { maxTokens: 1000, temperature: 0.3 }
+      'You are a memory extraction assistant.',
+      'memory_extraction',
+      'economy',
+      { max_tokens: 1000, temperature: 0.3 }
     );
 
     if (text.trim() === 'NONE') return [];

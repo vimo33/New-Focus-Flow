@@ -6,10 +6,8 @@
  * Claude responds with JSON tool calls, we execute them, and loop.
  */
 
-import {
-  openClawClient,
-  OpenClawMessage,
-} from '../services/openclaw-client.service';
+import { cachedInference } from '../services/cached-inference.service';
+import { OpenClawMessage } from '../services/openclaw-client.service';
 import { ThreadService } from '../services/thread.service';
 import { mem0Service } from '../services/mem0.service';
 import { PromptSanitizer } from '../utils/prompt-sanitizer';
@@ -144,10 +142,12 @@ export class OrchestratorService {
     let finalContent = '';
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         apiMessages[apiMessages.length - 1].content,
         systemPrompt,
-        { maxTokens: 2048, temperature: 0.5 }
+        'conversation',
+        'standard',
+        { max_tokens: 2048, temperature: 0.5 }
       );
 
       // Check if response contains a tool call

@@ -1,0 +1,36 @@
+{
+  "id": "design-studio",
+  "name": "Design Studio",
+  "version": "1.0.0",
+  "description": "AI-driven UI design generation using Gemini + Stitch, producing screen mockups and HTML prototypes for projects.",
+  "capabilities": ["ui_design"],
+  "execution_type": "in-process",
+  "invocation": {
+    "service": "designService",
+    "method": "generateScreen"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["project_id", "prompt"],
+    "properties": {
+      "project_id": { "type": "string", "description": "Project to generate designs for" },
+      "prompt": { "type": "string", "description": "Design prompt describing the screen to generate" },
+      "model": { "type": "string", "default": "gemini-2.0-flash", "description": "Gemini model to use" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "id": { "type": "string" },
+      "project_id": { "type": "string" },
+      "name": { "type": "string" },
+      "status": { "type": "string" },
+      "image_path": { "type": "string" },
+      "html_path": { "type": "string" }
+    }
+  },
+  "trust_level": "trusted",
+  "requires_approval": false,
+  "max_execution_seconds": 300,
+  "cost_estimate": "medium"
+}

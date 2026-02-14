@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "updated_at": "2026-02-14T00:00:00.000Z",
+  "models": {
+    "haiku": "openclaw:main",
+    "sonnet": "openclaw:main",
+    "opus": "anthropic/claude-opus-4-6"
+  },
+  "routes": {
+    "fast_classification": {
+      "economy": { "model": "haiku", "max_tokens": 500, "temperature": 0.3 },
+      "standard": { "model": "haiku", "max_tokens": 500, "temperature": 0.3 },
+      "premium": { "model": "sonnet", "max_tokens": 800, "temperature": 0.3 }
+    },
+    "memory_extraction": {
+      "economy": { "model": "haiku", "max_tokens": 1000, "temperature": 0.3 },
+      "standard": { "model": "haiku", "max_tokens": 1000, "temperature": 0.3 },
+      "premium": { "model": "haiku", "max_tokens": 1000, "temperature": 0.3 }
+    },
+    "conversation": {
+      "economy": { "model": "sonnet", "max_tokens": 1024, "temperature": 0.7 },
+      "standard": { "model": "sonnet", "max_tokens": 2048, "temperature": 0.7 },
+      "premium": { "model": "opus", "max_tokens": 4096, "temperature": 0.7 }
+    },
+    "summarization": {
+      "economy": { "model": "haiku", "max_tokens": 2000, "temperature": 0.3 },
+      "standard": { "model": "sonnet", "max_tokens": 4000, "temperature": 0.3 },
+      "premium": { "model": "sonnet", "max_tokens": 4000, "temperature": 0.3 }
+    },
+    "content_creation": {
+      "economy": { "model": "sonnet", "max_tokens": 2000, "temperature": 0.5 },
+      "standard": { "model": "sonnet", "max_tokens": 3000, "temperature": 0.5 },
+      "premium": { "model": "opus", "max_tokens": 4000, "temperature": 0.5 }
+    },
+    "code_generation": {
+      "economy": { "model": "sonnet", "max_tokens": 3000, "temperature": 0.3 },
+      "standard": { "model": "sonnet", "max_tokens": 4000, "temperature": 0.3 },
+      "premium": { "model": "opus", "max_tokens": 4000, "temperature": 0.3 }
+    },
+    "evaluation": {
+      "economy": { "model": "sonnet", "max_tokens": 1500, "temperature": 0.5 },
+      "standard": { "model": "opus", "max_tokens": 2000, "temperature": 0.5 },
+      "premium": { "model": "opus", "max_tokens": 2000, "temperature": 0.5 }
+    },
+    "synthesis": {
+      "economy": { "model": "sonnet", "max_tokens": 2000, "temperature": 0.5 },
+      "standard": { "model": "opus", "max_tokens": 2000, "temperature": 0.5 },
+      "premium": { "model": "opus", "max_tokens": 3000, "temperature": 0.5 }
+    },
+    "strategic_reasoning": {
+      "economy": { "model": "opus", "max_tokens": 2000, "temperature": 0.5 },
+      "standard": { "model": "opus", "max_tokens": 3000, "temperature": 0.5 },
+      "premium": { "model": "opus", "max_tokens": 4000, "temperature": 0.5 }
+    }
+  }
+}
