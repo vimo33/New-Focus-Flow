@@ -1,0 +1,189 @@
+{
+  "id": "project-20260212-644685",
+  "title": "Overture Event",
+  "description": "# OVERTURE – MASTER STRATEGY DOCUMENT\n\n---\n\n# 1. EXECUTIVE SUMMARY\n\nOverture is a community-driven live performance platform designed to democratize access to artists while empowering them with fair compensation, visibility, and direct audience relationships.\n\nThe platform connects:\n\n* Artists\n* Private individuals\n* Venues\n* Corporates\n* Performance enthusiasts\n\nOverture operates on a transparent commission-based model (5–19%), integrates direct artist support, and builds localized cultural ecosystems with global scalability.\n\n---\n\n# 2. VISION, MISSION & VALUES\n\n## Vision\n\nTo democratize live performances globally and build thriving cultural communities where artists and audiences connect meaningfully.\n\n## Mission\n\nTo provide artists, venues, corporates, and audiences with a transparent, scalable platform that simplifies bookings, fosters community, and ensures fair compensation.\n\n## Core Values\n\n* Artist Empowerment\n* Transparency\n* Community First\n* Accessibility\n* Cultural Impact\n* Fair Economics\n\n---\n\n# 3. CORE OFFERINGS\n\n## 1. Book Artists for Private & Commercial Events\n\nCommission Model:\n\n* Private Users: 10%\n* Venues: 15%\n* Corporates: 18%\n\nValue:\n\n* Easy discovery\n* Secure booking & payment\n* Genre-based search\n* Transparent pricing\n\n## 2. Artist-Hosted Soirée Events\n\nCommission: 7%\n\nValue:\n\n* Intimate performances\n* Direct artist-audience relationships\n* Curated local cultural experiences\n\n## 3. Direct Artist Support (Patreon-like)\n\nCommission: 5%\n\nValue:\n\n* Fans support artists monthly\n* Transparent contributions\n* Community-driven artist growth\n\n---\n\n# 4. PROBLEM STATEMENTS\n\n## Artists\n\nArtists face limited performance opportunities, high platform commissions, and lack direct financial relationships with their audience.\n\n## Performance Enthusiasts\n\nPerformance enthusiasts struggle to access affordable, intimate, and curated live events tailored to their preferences.\n\n## Private & Corporate Clients\n\nPrivate and corporate event organizers want to hire artists but lack a simple and reliable way to connect with them.\n\n---\n\n# 5. MARKET OPPORTUNITY\n\n## Global Market\n\nWorldwide Live Entertainment Market: $29B\n\n## Swiss Market\n\n~15,000 artists\n5,000+ venues\n\n## Target Segment\n\nYoung urban professionals\nCultural enthusiasts\nTourists\nCorporate event planners\n\n## TAM / SAM / SOM (Global)\n\nTAM: $52.9B\nSAM: $15.87B\nSOM (5-year target): ~$79M\n\n---\n\n# 6. BUSINESS MODEL\n\nRevenue Streams:\n\n1. Booking Commissions (5–19%)\n2. Artist-Hosted Event Commission (7%)\n3. Direct Artist Support Commission (5%)\n4. Administrative Ticketing Fee (15%)\n5. Subscription Model (Future expansion)\n\nRevenue Sharing:\nArtists retain majority (81–95%) depending on model.\n\n---\n\n# 7. COMPETITIVE LANDSCAPE\n\nKey Competitors:\n\n* Sofar Sounds\n* SofaConcerts\n* GigSalad\n* Gigmit\n* The Bash\n* Entertainers Worldwide\n* Patreon\n* Eventbrite\n\nOverture Differentiation:\n\n* Lower commission structure\n* Direct artist support integrated\n* Review & qualification ecosystem\n* Dynamic & transparent pricing\n* Local focus with global scalability\n* Community-driven governance vision\n\n---\n\n# 8. PLATFORM OPERATIONS\n\n## Platform Development\n\n* Supabase backend\n* Stripe payment integration\n* Scalable architecture\n\n## Artist & Venue Onboarding\n\n* Guided onboarding tutorials\n* Portfolio setup tools\n* Qualification & review system\n\n## Performance Logistics\n\n* Event promotion support\n* Sound setup guidance\n* Scheduling automation\n\n## Administrative Management\n\n* Lean team structure\n* Automated workflows\n* AI-assisted support systems\n\n---\n\n# 9. HOW IT WORKS\n\n## Artists\n\n* Register\n* Set pricing & availability\n* Receive bookings\n* Host events\n* Get supported directly\n\n## Venues\n\n* Discover artists\n* Create open calls\n* Collaborate for curated events\n\n## Audience\n\n* Discover events\n* Book performances\n* Attend invite-only shows\n* Support artists directly\n\n---\n\n# 10. SWOT ANALYSIS\n\nStrengths:\n\n* Low commissions\n* Multi-revenue streams\n* Artist empowerment\n* Scalable tech stack\n\nWeaknesses:\n\n* Early-stage brand\n* Network effect dependency\n\nOpportunities:\n\n* Growing demand for local experiences\n* Subscription-based support models\n* Corporate entertainment demand\n\nThreats:\n\n* Established competitors\n* Scaling complexity\n* Economic downturn impact on events\n\n---\n\n# 11. TIMELINE\n\nQ1 Year 1:\n\n* Legal setup\n* Platform development\n\nQ3 Year 1:\n\n* Platform launch\n* First artist onboarding\n* First live events\n\nQ4 Year 2:\n\n* Break-even achieved\n* Market expansion begins\n\nQ4 Year 4:\n\n* 10,000 subscribers\n* Revenue reaches CHF 2.18M\n\n---\n\n# 12. FINANCIAL OUTLOOK (3-YEAR PROJECTION)\n\nYear 1:\nRevenue: CHF 100,000\n\nYear 2:\nRevenue: CHF 300,000\n\nYear 3:\nRevenue: CHF 750,000\n\nLong-term scaling through corporate bookings and artist support subscriptions.\n\n---\n\n# 13. INVESTMENT THESIS\n\nWhy Invest:\n\n* Clear differentiation\n* Fair economics model\n* Growing market demand\n* Cultural & social impact alignment\n* Multiple revenue streams\n\nKey Risk:\n\n* Requires strong execution to reach network effects\n\n---\n\n# 14. STRATEGIC POSITIONING\n\nOverture is not just a booking marketplace.\n\nIt is:\n\n* A cultural infrastructure platform\n* A financial empowerment layer for artists\n* A discovery engine for local creative economies\n* A scalable event ecosystem\n\n---\n\nEND OF MASTER DOCUMENT",
+  "status": "active",
+  "created_at": "2026-02-12T11:27:24.685Z",
+  "updated_at": "2026-02-12T11:36:28.007Z",
+  "pipeline": {
+    "current_phase": "concept",
+    "phases": {
+      "concept": {
+        "phase": "concept",
+        "sub_state": "review",
+        "started_at": "2026-02-12T11:27:24.689Z",
+        "step": "council_review"
+      }
+    },
+    "run_id": "pipeline-1770895644689-lt5j",
+    "updated_at": "2026-02-12T11:36:28.006Z"
+  },
+  "phase": "concept",
+  "concept_thread_id": "thread-20260212-644693",
+  "artifacts": {
+    "refined_concept": "# Concept Summary: Overture\n\n## 1. Problem Statement\nArtists face limited performance opportunities, high platform commissions (20-30% industry standard), and lack direct financial relationships with their audience. Performance enthusiasts struggle to access affordable, intimate, and curated live events. Private and corporate event organizers lack a simple, reliable way to discover and book artists.\n\n## 2. Target Users\n- **Artists** (musicians, performers seeking opportunities and fair compensation)\n- **Performance enthusiasts** (fans wanting intimate, curated experiences)\n- **Venues** (spaces looking to book talent and host events)\n- **Private individuals** (hosting events, parties)\n- **Corporates** (event planners seeking entertainment)\n\n## 3. Proposed Solution\nA multi-sided marketplace platform connecting artists with audiences, venues, and clients through three core mechanisms:\n- **Transparent commission structure** (5-19% vs. industry 20-30%)\n- **Artist-hosted intimate events** (soirées with 7% commission)\n- **Direct artist support** (Patreon-like monthly contributions at 5% commission)\n- **Secure booking, payment, and discovery infrastructure**\n\n## 4. Key Features\n- Genre-based artist search and discovery\n- Dynamic, transparent pricing\n- Secure booking and Stripe payment integration\n- Artist-hosted soirée event system\n- Direct monthly artist support (subscription-based)\n- Review & qualification ecosystem\n- Portfolio setup and onboarding tools\n- Event promotion and logistics support\n- Administrative ticketing (15% fee)\n\n## 5. Differentiation\n- **Lower commissions** (5-19% vs. competitors at 20-30%)\n- **Integrated direct support** (combines booking + patronage in one platform)\n- **Artist-first economics** (artists retain 81-95% depending on service)\n- **Community-driven governance** vision\n- **Local cultural focus** with global scalability\n- **Transparent pricing** (no hidden fees)\n- Multi-revenue stream model (not just booking marketplace)\n\n## 6. Success Criteria\n**Financial milestones:**\n- Break-even: Q4 Year 2\n- Year 1: CHF 100,000 revenue\n- Year 3: CHF 750,000 revenue\n- Year 4: 10,000 subscribers, CHF 2.18M revenue\n\n**Market metrics:**\n- Target SOM (5-year): ~$79M from $15.87B SAM\n- Swiss market: ~15,000 artists, 5,000+ venues\n\n## 7. Scope & Constraints\n\n**In Scope (Full Vision):**\n- All three revenue streams (bookings, soirées, direct support)\n- Multi-sided marketplace (artists, venues, corporates, fans)\n- Supabase backend with Stripe integration\n- Review/qualification system\n- Global scalability from local foundation\n\n**Constraints:**\n- **Network effect dependency** (chicken-and-egg marketplace challenge)\n- **Early-stage brand** (low initial visibility)\n- Requires strong execution to reach critical mass\n- MVP scope to be determined post-council validation\n- Commission structure must remain competitive while sustainable\n\n**Validation approach:**\n- Full vision presented to council first\n- MVP boundaries carved strategically after validation feedback\n- Early signals gathered from mixed stakeholder conversations (artists, venues, fans, personal experience)",
+    "selected_council": [
+      {
+        "agent_name": "Feasibility Agent",
+        "role": "Technical Feasibility",
+        "focus": "Can this be built? Technical complexity, dependencies, resources needed"
+      },
+      {
+        "agent_name": "Impact Agent",
+        "role": "Impact & ROI",
+        "focus": "What value does this create? Usage likelihood, return on investment"
+      },
+      {
+        "agent_name": "Market Agent",
+        "role": "Market Analysis",
+        "focus": "Is there demand? Who are competitors? Market timing and positioning"
+      }
+    ],
+    "council_progress": {
+      "started_at": "2026-02-12T11:35:02.228Z",
+      "agents": [
+        {
+          "agent_name": "Feasibility Agent",
+          "status": "completed",
+          "started_at": "2026-02-12T11:35:02.232Z",
+          "completed_at": "2026-02-12T11:35:42.250Z",
+          "evaluation": {
+            "agent_name": "Feasibility Agent",
+            "score": 6,
+            "reasoning": "Overture is technically feasible but faces significant execution challenges. TECHNICAL STACK: Supabase + Stripe is a solid, proven foundation for marketplace MVPs. Supabase provides authentication, database, real-time subscriptions, and storage - suitable for handling artist profiles, bookings, and event management. Free tier supports early development; paid plans scale reasonably ($25-$599/month based on usage). Stripe Connect enables multi-party payments and commission splits, though implementing 5 different commission tiers (5%, 7%, 10%, 15%, 18%) adds complexity. Stripe's standard fees (2.9% + $0.30) will eat into the low-commission model. MARKET POSITION: The 5-19% commission structure is competitive vs. typical 15-25% industry rates, but creates thin margins requiring high volume. The financial projections (CHF 100K Year 1 → CHF 750K Year 3) are optimistic given the cold-start problem. CORE CHALLENGE: Two-sided marketplace chicken-and-egg problem - need artists to attract audiences, need audiences to attract artists. Established competitors (Sofar Sounds, GigSalad) have network effects. The plan lacks detail on initial user acquisition strategy. DEVELOPMENT TIMELINE: Building the core platform (user management, booking system, payment integration, event management, review system) = 4-6 months for an experienced full-stack developer. Additional 2-3 months for testing, compliance (payment regulations, artist contracts), and polish. The Q1-Q3 Year 1 timeline is achievable for MVP. RESOURCE REQUIREMENTS: Minimum viable team needs full-stack developer, designer, community manager, and operations coordinator. Estimated development cost: $50K-$150K for outsourced MVP or 6-12 months founder time. Ongoing: payment processing fees, hosting ($50-500/month initially), customer support, legal compliance. REGULATORY: Payment processing regulations, artist contract law, venue liability, tax compliance across jurisdictions add legal overhead. Switzerland has strict financial regulations. BIGGEST RISKS: (1) User acquisition cost may exceed revenue per user initially, (2) Artists may resist another platform, (3) Scaling requires localized community building which doesn't scale technically, (4) Corporate booking (18% commission, highest margin) requires B2B sales capability not detailed in plan.",
+            "concerns": [
+              "Cold-start problem: no clear strategy for initial artist and audience acquisition in competitive market",
+              "Thin margins with low commission rates may not support platform operations and growth",
+              "Stripe fees (2.9% + $0.30) significantly impact 5-7% commission tiers",
+              "Financial projections appear optimistic without detailed user acquisition strategy or CAC/LTV analysis",
+              "Requires localized community building in each city - doesn't scale purely through technology",
+              "Regulatory compliance complexity across payment processing, artist contracts, and multi-country operations",
+              "Established competitors (Sofar Sounds, GigSalad) have strong network effects and brand recognition",
+              "Plan lacks detail on customer acquisition cost, marketing budget, and growth tactics",
+              "Corporate booking revenue (highest margin at 18%) requires enterprise sales capability not addressed",
+              "Multi-party payment splits and varying commission structures add significant technical and accounting complexity"
+            ]
+          }
+        },
+        {
+          "agent_name": "Impact Agent",
+          "status": "completed",
+          "started_at": "2026-02-12T11:35:02.239Z",
+          "completed_at": "2026-02-12T11:35:47.061Z",
+          "evaluation": {
+            "agent_name": "Impact Agent",
+            "score": 4,
+            "reasoning": "Overture faces the classic two-sided marketplace chicken-and-egg problem in a crowded competitive landscape. While the vision is compelling and addresses real pain points (artist empowerment, transparent pricing, direct support), the execution risk is extremely high. The low commission structure (5-19%) may be unsustainable given customer acquisition costs, payment processing fees (~2.9% + $0.30), platform maintenance, and support costs. Established competitors like Sofar Sounds (founded 2009, significant VC backing), GigSalad, and The Bash already have network effects and brand trust. The revenue projections (CHF 100K Y1 → 750K Y3) require aggressive user acquisition without clear unit economics shown. Breaking even by Q4 Y2 seems optimistic without showing customer acquisition cost, lifetime value, or churn rates. The multi-revenue stream approach (bookings + events + artist support + ticketing) means competing simultaneously against Patreon, Eventbrite, GigSalad, and others—each dominant in their niche. Swiss market sizing (15,000 artists, 5,000 venues) doesn't account for what % actively seek bookings or would switch platforms. The cold-start problem isn't addressed: how do you attract artists without audiences, and audiences without artists? 'Lower commissions' alone rarely wins—artists often prefer established platforms with more bookings even at higher fees. Positive elements: fair artist economics, cultural impact alignment, clear problem statements, and multiple revenue streams show strategic thinking. However, without demonstrated traction, proven unit economics, or a compelling growth hack to overcome network effects, this is a 'nice to have' with moderate ROI at best.",
+            "concerns": [
+              "Two-sided marketplace cold-start problem not addressed—how to simultaneously attract artists AND audiences",
+              "Commission rates (5-19%) likely unsustainable after accounting for CAC, payment processing, platform costs, and support",
+              "No unit economics shown: Customer Acquisition Cost, Lifetime Value, churn rates, or payback period",
+              "Fierce competition from well-funded, established players with existing network effects (Sofar Sounds, GigSalad, Patreon)",
+              "Revenue projections appear optimistic without clear growth drivers or validation",
+              "'Lower commissions' is weak differentiation—artists typically prefer more bookings over lower fees",
+              "Multiple revenue streams mean competing on multiple fronts simultaneously, diluting focus",
+              "Swiss market penetration assumptions unclear—what % of 15K artists would actually switch?",
+              "Break-even by Q4 Y2 seems aggressive for a marketplace that requires critical mass",
+              "No clear moat or defensibility once competitors lower their fees in response"
+            ]
+          }
+        },
+        {
+          "agent_name": "Market Agent",
+          "status": "completed",
+          "started_at": "2026-02-12T11:35:02.245Z",
+          "completed_at": "2026-02-12T11:35:55.903Z",
+          "evaluation": {
+            "agent_name": "Market Agent",
+            "score": 5,
+            "reasoning": "Live entertainment booking is a real, established $29B global market with proven demand, but this space is extremely saturated with well-capitalized competitors. **Competition Analysis:** Sofar Sounds dominates the intimate concert niche with significant VC backing and global presence across 400+ cities. GigSalad and The Bash are mature US platforms with tens of thousands of artists and established network effects. Eventbrite handles millions of events globally. Patreon has 250k+ creators and processes $2B+ annually in creator support. Gigmit is an established European player. **Commission Comparison:** Overture's 5-19% range is competitive but not disruptive. Patreon charges 5-12%, GigSalad uses subscription models ($15-30/month for artists), and industry booking standards run 10-25%. The marginal savings won't overcome switching costs. **Market Dynamics:** This is a classic two-sided marketplace requiring simultaneous artist AND customer acquisition - a chicken-and-egg problem that requires massive capital. Network effects heavily favor incumbents. Starting in Switzerland (15k artists) is a tiny wedge that limits initial traction. **Monetization Concerns:** Year 1 revenue of CHF 100k implies ~140 mid-tier bookings at 10% commission (CHF 700 avg). Scaling to CHF 2.18M by Year 4 requires 50x growth without a clear viral loop or acquisition strategy. Corporate event booking is relationship-driven and hard to disrupt digitally. **Weak Differentiation:** Lower commissions, reviews, and transparency are table stakes, not competitive moats. The 'direct artist support' feature directly competes with Patreon's entrenched position. The soirée/intimate event focus mirrors Sofar Sounds' proven model. **Positive Signals:** Swiss market is affluent and culturally engaged. Multi-revenue streams could work if execution is excellent. Local cultural focus is the strongest differentiator but also limits scale.",
+            "concerns": [
+              "Extremely crowded market with well-funded incumbents (Sofar Sounds, Eventbrite, Patreon, GigSalad, Gigmit)",
+              "Weak differentiation - incremental improvements rather than 10x better solution",
+              "Two-sided marketplace requires critical mass on both sides simultaneously - high customer acquisition cost",
+              "Starting market (Switzerland, ~15k artists) is too small to achieve network effects",
+              "Revenue projections (CHF 100k → 2.18M in 4 years) require 50x growth without clear viral/acquisition strategy",
+              "No clear answer to 'why would artists/venues switch from established platforms?'",
+              "Multiple revenue streams (bookings, events, support, ticketing, future subscriptions) may dilute focus rather than strengthen position",
+              "Corporate booking market is relationship-driven and difficult to disrupt with a digital platform alone"
+            ]
+          }
+        }
+      ],
+      "synthesis_status": "completed",
+      "completed_count": 3,
+      "total_count": 3
+    },
+    "council_verdict": {
+      "recommendation": "needs-info",
+      "overall_score": 5,
+      "evaluations": [
+        {
+          "agent_name": "Feasibility Agent",
+          "score": 6,
+          "reasoning": "Overture is technically feasible but faces significant execution challenges. TECHNICAL STACK: Supabase + Stripe is a solid, proven foundation for marketplace MVPs. Supabase provides authentication, database, real-time subscriptions, and storage - suitable for handling artist profiles, bookings, and event management. Free tier supports early development; paid plans scale reasonably ($25-$599/month based on usage). Stripe Connect enables multi-party payments and commission splits, though implementing 5 different commission tiers (5%, 7%, 10%, 15%, 18%) adds complexity. Stripe's standard fees (2.9% + $0.30) will eat into the low-commission model. MARKET POSITION: The 5-19% commission structure is competitive vs. typical 15-25% industry rates, but creates thin margins requiring high volume. The financial projections (CHF 100K Year 1 → CHF 750K Year 3) are optimistic given the cold-start problem. CORE CHALLENGE: Two-sided marketplace chicken-and-egg problem - need artists to attract audiences, need audiences to attract artists. Established competitors (Sofar Sounds, GigSalad) have network effects. The plan lacks detail on initial user acquisition strategy. DEVELOPMENT TIMELINE: Building the core platform (user management, booking system, payment integration, event management, review system) = 4-6 months for an experienced full-stack developer. Additional 2-3 months for testing, compliance (payment regulations, artist contracts), and polish. The Q1-Q3 Year 1 timeline is achievable for MVP. RESOURCE REQUIREMENTS: Minimum viable team needs full-stack developer, designer, community manager, and operations coordinator. Estimated development cost: $50K-$150K for outsourced MVP or 6-12 months founder time. Ongoing: payment processing fees, hosting ($50-500/month initially), customer support, legal compliance. REGULATORY: Payment processing regulations, artist contract law, venue liability, tax compliance across jurisdictions add legal overhead. Switzerland has strict financial regulations. BIGGEST RISKS: (1) User acquisition cost may exceed revenue per user initially, (2) Artists may resist another platform, (3) Scaling requires localized community building which doesn't scale technically, (4) Corporate booking (18% commission, highest margin) requires B2B sales capability not detailed in plan.",
+          "concerns": [
+            "Cold-start problem: no clear strategy for initial artist and audience acquisition in competitive market",
+            "Thin margins with low commission rates may not support platform operations and growth",
+            "Stripe fees (2.9% + $0.30) significantly impact 5-7% commission tiers",
+            "Financial projections appear optimistic without detailed user acquisition strategy or CAC/LTV analysis",
+            "Requires localized community building in each city - doesn't scale purely through technology",
+            "Regulatory compliance complexity across payment processing, artist contracts, and multi-country operations",
+            "Established competitors (Sofar Sounds, GigSalad) have strong network effects and brand recognition",
+            "Plan lacks detail on customer acquisition cost, marketing budget, and growth tactics",
+            "Corporate booking revenue (highest margin at 18%) requires enterprise sales capability not addressed",
+            "Multi-party payment splits and varying commission structures add significant technical and accounting complexity"
+          ]
+        },
+        {
+          "agent_name": "Impact Agent",
+          "score": 4,
+          "reasoning": "Overture faces the classic two-sided marketplace chicken-and-egg problem in a crowded competitive landscape. While the vision is compelling and addresses real pain points (artist empowerment, transparent pricing, direct support), the execution risk is extremely high. The low commission structure (5-19%) may be unsustainable given customer acquisition costs, payment processing fees (~2.9% + $0.30), platform maintenance, and support costs. Established competitors like Sofar Sounds (founded 2009, significant VC backing), GigSalad, and The Bash already have network effects and brand trust. The revenue projections (CHF 100K Y1 → 750K Y3) require aggressive user acquisition without clear unit economics shown. Breaking even by Q4 Y2 seems optimistic without showing customer acquisition cost, lifetime value, or churn rates. The multi-revenue stream approach (bookings + events + artist support + ticketing) means competing simultaneously against Patreon, Eventbrite, GigSalad, and others—each dominant in their niche. Swiss market sizing (15,000 artists, 5,000 venues) doesn't account for what % actively seek bookings or would switch platforms. The cold-start problem isn't addressed: how do you attract artists without audiences, and audiences without artists? 'Lower commissions' alone rarely wins—artists often prefer established platforms with more bookings even at higher fees. Positive elements: fair artist economics, cultural impact alignment, clear problem statements, and multiple revenue streams show strategic thinking. However, without demonstrated traction, proven unit economics, or a compelling growth hack to overcome network effects, this is a 'nice to have' with moderate ROI at best.",
+          "concerns": [
+            "Two-sided marketplace cold-start problem not addressed—how to simultaneously attract artists AND audiences",
+            "Commission rates (5-19%) likely unsustainable after accounting for CAC, payment processing, platform costs, and support",
+            "No unit economics shown: Customer Acquisition Cost, Lifetime Value, churn rates, or payback period",
+            "Fierce competition from well-funded, established players with existing network effects (Sofar Sounds, GigSalad, Patreon)",
+            "Revenue projections appear optimistic without clear growth drivers or validation",
+            "'Lower commissions' is weak differentiation—artists typically prefer more bookings over lower fees",
+            "Multiple revenue streams mean competing on multiple fronts simultaneously, diluting focus",
+            "Swiss market penetration assumptions unclear—what % of 15K artists would actually switch?",
+            "Break-even by Q4 Y2 seems aggressive for a marketplace that requires critical mass",
+            "No clear moat or defensibility once competitors lower their fees in response"
+          ]
+        },
+        {
+          "agent_name": "Market Agent",
+          "score": 5,
+          "reasoning": "Live entertainment booking is a real, established $29B global market with proven demand, but this space is extremely saturated with well-capitalized competitors. **Competition Analysis:** Sofar Sounds dominates the intimate concert niche with significant VC backing and global presence across 400+ cities. GigSalad and The Bash are mature US platforms with tens of thousands of artists and established network effects. Eventbrite handles millions of events globally. Patreon has 250k+ creators and processes $2B+ annually in creator support. Gigmit is an established European player. **Commission Comparison:** Overture's 5-19% range is competitive but not disruptive. Patreon charges 5-12%, GigSalad uses subscription models ($15-30/month for artists), and industry booking standards run 10-25%. The marginal savings won't overcome switching costs. **Market Dynamics:** This is a classic two-sided marketplace requiring simultaneous artist AND customer acquisition - a chicken-and-egg problem that requires massive capital. Network effects heavily favor incumbents. Starting in Switzerland (15k artists) is a tiny wedge that limits initial traction. **Monetization Concerns:** Year 1 revenue of CHF 100k implies ~140 mid-tier bookings at 10% commission (CHF 700 avg). Scaling to CHF 2.18M by Year 4 requires 50x growth without a clear viral loop or acquisition strategy. Corporate event booking is relationship-driven and hard to disrupt digitally. **Weak Differentiation:** Lower commissions, reviews, and transparency are table stakes, not competitive moats. The 'direct artist support' feature directly competes with Patreon's entrenched position. The soirée/intimate event focus mirrors Sofar Sounds' proven model. **Positive Signals:** Swiss market is affluent and culturally engaged. Multi-revenue streams could work if execution is excellent. Local cultural focus is the strongest differentiator but also limits scale.",
+          "concerns": [
+            "Extremely crowded market with well-funded incumbents (Sofar Sounds, Eventbrite, Patreon, GigSalad, Gigmit)",
+            "Weak differentiation - incremental improvements rather than 10x better solution",
+            "Two-sided marketplace requires critical mass on both sides simultaneously - high customer acquisition cost",
+            "Starting market (Switzerland, ~15k artists) is too small to achieve network effects",
+            "Revenue projections (CHF 100k → 2.18M in 4 years) require 50x growth without clear viral/acquisition strategy",
+            "No clear answer to 'why would artists/venues switch from established platforms?'",
+            "Multiple revenue streams (bookings, events, support, ticketing, future subscriptions) may dilute focus rather than strengthen position",
+            "Corporate booking market is relationship-driven and difficult to disrupt with a digital platform alone"
+          ]
+        }
+      ],
+      "synthesized_reasoning": "Overture addresses real pain points in the live entertainment market with a technically sound foundation (Supabase + Stripe) and achievable MVP timeline. However, all three agents converge on critical execution gaps that make this a high-risk venture. The core challenge is the two-sided marketplace cold-start problem: the platform needs artists to attract audiences and audiences to attract artists, while competing against well-funded incumbents (Sofar Sounds, GigSalad, Patreon, Eventbrite) that already have network effects and brand trust. The proposed differentiation—lower commissions (5-19%) and transparency—is incremental rather than disruptive, and may prove unsustainable once customer acquisition costs, payment processing fees (~2.9%), and operational overhead are factored in. The financial projections (CHF 100K Y1 → 750K Y3) appear optimistic without demonstrated unit economics (CAC, LTV, churn, payback period) or a clear viral growth mechanism. Starting in Switzerland's small market (~15K artists) limits initial traction needed to achieve network effects. The multi-revenue stream approach (bookings + events + artist support + ticketing) means competing simultaneously on multiple fronts against category leaders, potentially diluting focus. While the vision is culturally valuable and the problem is real, the plan lacks the strategic depth required to overcome entrenched competition and marketplace dynamics.",
+      "next_steps": [
+        "Develop detailed unit economics: Calculate Customer Acquisition Cost (CAC), Lifetime Value (LTV), churn assumptions, and payback period for each user segment (artists, venues, audiences, corporates)",
+        "Design a cold-start strategy: Articulate specific tactics for simultaneously acquiring initial artists AND audiences in pilot city—consider launching with a curated cohort of 20-30 committed artists and pre-selling events before platform launch",
+        "Validate differentiation hypothesis: Interview 50+ target artists currently using competitors to understand if lower commissions alone justify platform switching, or if additional value (better discovery, higher booking rates, community) is required",
+        "Refine market positioning: Either focus narrowly on one defensible niche (e.g., Swiss soirée events only) or identify a 10x better solution that justifies competing across multiple categories simultaneously",
+        "Pressure-test financial model: Rebuild revenue projections bottom-up from realistic booking volumes, conversion rates, and retention metrics; ensure margins support growth after all costs",
+        "Assess competitive response: War-game what happens when Sofar Sounds or GigSalad lower fees or launch similar features in response to Overture's entry",
+        "Define minimum viable network: Determine the critical mass of artists + venues + monthly events required in one city to achieve sustainable engagement before expanding",
+        "Secure early validation: Run a manual MVP (no-code) in one Swiss city with 10 artists and 100 events to validate demand and refine model before platform investment"
+      ],
+      "council_composition": [
+        "Feasibility Agent",
+        "Impact Agent",
+        "Market Agent"
+      ]
+    }
+  }
+}

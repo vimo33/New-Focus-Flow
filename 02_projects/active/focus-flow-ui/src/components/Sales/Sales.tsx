@@ -35,7 +35,7 @@ function formatCurrency(value: number, currency = 'EUR') {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(value);
 }
 
-function DealCard({ deal, onMove }: { deal: Deal; onMove: (stage: DealStage) => void }) {
+function DealCard({ deal, onMove, onDelete }: { deal: Deal; onMove: (stage: DealStage) => void; onDelete: () => void }) {
   const currentIdx = STAGES.findIndex(s => s.key === deal.stage);
 
   return (
@@ -69,6 +69,13 @@ function DealCard({ deal, onMove }: { deal: Deal; onMove: (stage: DealStage) => 
             <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
           </button>
         )}
+        <button
+          onClick={onDelete}
+          className="p-1 rounded text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-colors"
+          title="Delete deal"
+        >
+          <span className="material-symbols-outlined text-[16px]">delete</span>
+        </button>
         <span className="ml-auto text-xs text-slate-500">
           {new Date(deal.created_at).toLocaleDateString()}
         </span>
@@ -77,12 +84,25 @@ function DealCard({ deal, onMove }: { deal: Deal; onMove: (stage: DealStage) => 
   );
 }
 
+interface Contact {
+  id: string;
+  name: string;
+  company?: string;
+}
+
+interface Project {
+  id: string;
+  title: string;
+}
+
 export function Sales() {
   const [deals, setDeals] = useState<Deal[]>([]);
   const [pipeline, setPipeline] = useState<PipelineSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
-  const [newDeal, setNewDeal] = useState({ title: '', value: '', stage: 'lead' as DealStage });
+  const [newDeal, setNewDeal] = useState({ title: '', value: '', stage: 'lead' as DealStage, contact_id: '', project_id: '' });
+  const [contacts, setContacts] = useState<Contact[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
 
   useEffect(() => {
     loadData();
@@ -91,12 +111,16 @@ export function Sales() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const [dealsRes, pipelineRes] = await Promise.all([
+      const [dealsRes, pipelineRes, contactsRes, projectsRes] = await Promise.all([
         api.getDeals(),
         api.getSalesPipeline(),
+        api.getContacts(),
+        api.getProjects(),
       ]);
       setDeals(dealsRes.deals || []);
       setPipeline(pipelineRes);
+      setContacts(contactsRes.contacts || []);
+      setProjects(projectsRes.projects || []);
     } catch (err) {
       console.error('Failed to load sales data:', err);
     } finally {
@@ -120,12 +144,24 @@ export function Sales() {
         title: newDeal.title,
         value: newDeal.value ? parseFloat(newDeal.value) : undefined,
         stage: newDeal.stage,
+        contact_id: newDeal.contact_id || undefined,
+        project_id: newDeal.project_id || undefined,
       });
-      setNewDeal({ title: '', value: '', stage: 'lead' });
+      setNewDeal({ title: '', value: '', stage: 'lead', contact_id: '', project_id: '' });
       setShowCreate(false);
       loadData();
     } catch (err) {
       console.error('Failed to create deal:', err);
+    }
+  };
+
+  const handleDeleteDeal = async (dealId: string) => {
+    if (!window.confirm('Delete this deal?')) return;
+    try {
+      await api.deleteDeal(dealId);
+      loadData();
+    } catch (err) {
+      console.error('Failed to delete deal:', err);
     }
   };
 
@@ -214,6 +250,7 @@ export function Sales() {
                           key={deal.id}
                           deal={deal}
                           onMove={(newStage) => handleMoveDeal(deal.id, newStage)}
+                          onDelete={() => handleDeleteDeal(deal.id)}
                         />
                       ))}
                       {stageDeals.length === 0 && (
@@ -280,6 +317,26 @@ export function Sales() {
               >
                 {STAGES.slice(0, 5).map(s => (
                   <option key={s.key} value={s.key}>{s.label}</option>
+                ))}
+              </select>
+              <select
+                value={newDeal.contact_id}
+                onChange={(e) => setNewDeal({ ...newDeal, contact_id: e.target.value })}
+                className="w-full px-3 py-2 bg-white dark:bg-card-dark border border-slate-200 dark:border-[#2a3b4d] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-primary"
+              >
+                <option value="">Link Contact (optional)</option>
+                {contacts.map(c => (
+                  <option key={c.id} value={c.id}>{c.name}{c.company ? ` — ${c.company}` : ''}</option>
+                ))}
+              </select>
+              <select
+                value={newDeal.project_id}
+                onChange={(e) => setNewDeal({ ...newDeal, project_id: e.target.value })}
+                className="w-full px-3 py-2 bg-white dark:bg-card-dark border border-slate-200 dark:border-[#2a3b4d] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-primary"
+              >
+                <option value="">Link Project (optional)</option>
+                {projects.map(p => (
+                  <option key={p.id} value={p.id}>{p.title}</option>
                 ))}
               </select>
               <div className="flex gap-3 justify-end">

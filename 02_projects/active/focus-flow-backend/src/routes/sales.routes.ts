@@ -57,4 +57,15 @@ router.put('/sales/deals/:id', async (req: Request, res: Response) => {
   }
 });
 
+// DELETE /api/sales/deals/:id
+router.delete('/sales/deals/:id', async (req: Request, res: Response) => {
+  try {
+    const deleted = await salesService.deleteDeal(String(req.params.id));
+    if (!deleted) return res.status(404).json({ error: 'Deal not found' });
+    res.json({ status: 'deleted', id: req.params.id });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

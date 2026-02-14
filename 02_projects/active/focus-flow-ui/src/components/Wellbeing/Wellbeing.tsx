@@ -50,44 +50,41 @@ export function Wellbeing() {
     setError(null);
 
     try {
-      // Load today's metrics and historical data
-      // In a real app, these would be separate API calls
-      const today = new Date().toISOString().split('T')[0];
+      // Load trends and today's data from API
+      const [trendsRes, todayRes, expRes] = await Promise.all([
+        api.getHealthTrends(14).catch(() => ({ trends: [], averages: {} })),
+        api.getHealthToday().catch(() => ({ log: null })),
+        api.getExperiments().catch(() => ({ experiments: [] })),
+      ]);
 
-      // Mock historical data for demo
-      const mockData: HealthMetric[] = generateMockData();
-      setHistoricalData(mockData);
+      // Map API data to frontend format
+      const mapped: HealthMetric[] = (trendsRes as any).trends.map((t: any) => ({
+        date: t.date,
+        mood: t.mood || 5,
+        energy: t.energy || 5,
+        sleep: t.sleep_hours || 7,
+        exercise: t.exercise_minutes || 0,
+      }));
+      setHistoricalData(mapped);
 
-      // Set current metrics from today or defaults
-      const todayMetric = mockData.find(m => m.date === today);
-      if (todayMetric) {
-        setCurrentMetrics(todayMetric);
-        setMood(todayMetric.mood);
-        setEnergy(todayMetric.energy);
-        setSleep(todayMetric.sleep);
-        setExercise(todayMetric.exercise);
+      // Set current metrics from today's log
+      const todayLog = (todayRes as any).log;
+      if (todayLog) {
+        setCurrentMetrics({
+          date: todayLog.date,
+          mood: todayLog.mood,
+          energy: todayLog.energy,
+          sleep: todayLog.sleep_hours,
+          exercise: todayLog.exercise_minutes,
+        });
+        setMood(todayLog.mood);
+        setEnergy(todayLog.energy);
+        setSleep(todayLog.sleep_hours);
+        setExercise(todayLog.exercise_minutes);
       }
 
-      // Mock experiments
-      setExperiments([
-        {
-          id: '1',
-          title: 'Morning Meditation',
-          description: 'Test if 10 min morning meditation improves focus',
-          start_date: '2024-10-01',
-          status: 'active',
-          metrics_tracked: ['mood', 'energy'],
-        },
-        {
-          id: '2',
-          title: 'Sleep Optimization',
-          description: 'Track impact of 8+ hours sleep on productivity',
-          start_date: '2024-09-15',
-          end_date: '2024-10-15',
-          status: 'active',
-          metrics_tracked: ['sleep', 'energy'],
-        },
-      ]);
+      // Set experiments from API
+      setExperiments((expRes as any).experiments || []);
     } catch (err) {
       console.error('Failed to load health data:', err);
       setError(err instanceof Error ? err.message : 'Failed to load health data');
@@ -96,46 +93,20 @@ export function Wellbeing() {
     }
   };
 
-  const generateMockData = (): HealthMetric[] => {
-    const data: HealthMetric[] = [];
-    const today = new Date();
-
-    for (let i = 14; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-
-      data.push({
-        date: date.toISOString().split('T')[0],
-        sleep: 6 + Math.random() * 2.5,
-        exercise: 20 + Math.random() * 50,
-        mood: Math.floor(6 + Math.random() * 4),
-        energy: Math.floor(6 + Math.random() * 4),
-      });
-    }
-
-    return data;
-  };
-
   const handleSubmit = async () => {
     setLoading(true);
     setError(null);
 
     try {
-      const logData = {
+      await api.saveHealthLog({
         mood,
         energy,
         sleep_hours: sleep,
         exercise_minutes: exercise,
         date: new Date().toISOString().split('T')[0],
-      };
+      });
 
-      await api.post('/api/health/log', logData);
-
-      // Reload data after successful save
       await loadHealthData();
-
-      // Show success feedback
-      alert('Health metrics saved successfully!');
     } catch (err) {
       console.error('Failed to save health log:', err);
       setError(err instanceof Error ? err.message : 'Failed to save health metrics');

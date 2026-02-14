@@ -1,6 +1,7 @@
 import { openClawClient } from './openclaw-client.service';
 import { PRDDocument, Specification } from '../models/types';
 
+
 /**
  * SpecGeneratorService - Generates technical specifications from PRDs using OpenClaw Gateway
  *
@@ -89,6 +90,48 @@ ${prd.success_metrics ? `Success Metrics:\n${prd.success_metrics.join('\n')}` : 
         throw new Error('Failed to parse spec generation response as JSON');
       }
       throw error;
+    }
+  }
+
+  /**
+   * Refine existing specs based on user feedback
+   */
+  async refineSpecs(
+    specs: Specification[],
+    feedback: string,
+    prd: PRDDocument
+  ): Promise<Specification[]> {
+    const systemPrompt = `You are a Senior Technical Architect refining specifications based on user feedback.
+Maintain the same JSON structure. Apply the feedback to improve the specs.
+Respond ONLY with valid JSON array.`;
+
+    const userMessage = `Refine these specs based on feedback:
+
+PRD: ${prd.title}
+Requirements: ${prd.requirements.join(', ')}
+
+Current Specs:
+${JSON.stringify(specs, null, 2)}
+
+User Feedback: ${feedback}`;
+
+    try {
+      const responseText = await openClawClient.complete(
+        userMessage,
+        systemPrompt,
+        {
+          model: this.MODEL,
+          maxTokens: 4000,
+          temperature: 0.3,
+        }
+      );
+
+      const refined = JSON.parse(responseText) as Specification[];
+      this.validateSpecs(refined);
+      return refined;
+    } catch (error) {
+      console.error('Spec refinement failed, returning original specs:', error);
+      return specs;
     }
   }
 

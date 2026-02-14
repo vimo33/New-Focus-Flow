@@ -16,6 +16,7 @@ const CommandCenter = lazy(() => import('./components/CommandCenter/CommandCente
 const IdeaDetail = lazy(() => import('./components/IdeaDetail/IdeaDetail').then(module => ({ default: module.IdeaDetail })))
 const Sales = lazy(() => import('./components/Sales/Sales').then(module => ({ default: module.Sales })))
 const CRM = lazy(() => import('./components/CRM/CRM').then(module => ({ default: module.CRM })))
+const CRMDetail = lazy(() => import('./components/CRM/CRMDetail').then(module => ({ default: module.CRMDetail })))
 const Voice = lazy(() => import('./components/Voice/Voice').then(module => ({ default: module.Voice })))
 const Settings = lazy(() => import('./components/Settings/Settings').then(module => ({ default: module.Settings })))
 
@@ -38,6 +39,7 @@ function App() {
             <Route path="/command/:threadId" element={<CommandCenter />} />
             <Route path="/sales" element={<Sales />} />
             <Route path="/crm" element={<CRM />} />
+            <Route path="/crm/:id" element={<CRMDetail />} />
             <Route path="/voice" element={<Voice />} />
             <Route path="/voice/:threadId" element={<Voice />} />
             <Route path="/settings" element={<Settings />} />

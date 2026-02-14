@@ -131,6 +131,16 @@ export class CRMService {
     return interaction;
   }
 
+  async deleteContact(id: string): Promise<boolean> {
+    try {
+      const filePath = path.join(getVaultPath(), CONTACTS_DIR, `${id}.json`);
+      await fs.unlink(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async getInteractions(contactId?: string): Promise<Interaction[]> {
     await this.ensureDirs();
     const dir = path.join(getVaultPath(), INTERACTIONS_DIR);

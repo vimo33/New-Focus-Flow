@@ -18,7 +18,6 @@ const navItems: NavItem[] = [
   { name: 'Capture', path: '/capture', icon: 'add_circle' },
   { name: 'Inbox', path: '/inbox', icon: 'inbox' },
   { name: 'Projects', path: '/projects', icon: 'folder' },
-  { name: 'Ideas', path: '/ideas', icon: 'lightbulb' },
   { name: 'Calendar', path: '/calendar', icon: 'calendar_month' },
   { name: 'Wellbeing', path: '/wellbeing', icon: 'favorite' },
   { name: 'Sales', path: '/sales', icon: 'monetization_on' },

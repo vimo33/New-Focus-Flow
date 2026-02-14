@@ -46,16 +46,109 @@ export interface Task {
   metadata?: Record<string, any>;
 }
 
+export type ProjectPhase = 'concept' | 'spec' | 'design' | 'dev' | 'test' | 'deploy' | 'live';
+
+export type ConceptStep = 'refining' | 'council_selection' | 'council_running' | 'council_review' | 'prd_generation' | 'prd_review';
+
+export interface CouncilMember {
+  agent_name: string;
+  role: string;
+  focus: string;
+  evaluation_criteria?: string[];
+}
+
+export interface ThreadMessage {
+  id: string;
+  thread_id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  source: 'voice' | 'text';
+  created_at: string;
+}
+export type PhaseSubState = 'idle' | 'working' | 'review' | 'approved' | 'rejected';
+
+export interface PhaseState {
+  phase: ProjectPhase;
+  sub_state: PhaseSubState;
+  started_at?: string;
+  completed_at?: string;
+  feedback?: string;
+  step?: string;
+}
+
+export interface PipelineState {
+  current_phase: ProjectPhase;
+  phases: Partial<Record<ProjectPhase, PhaseState>>;
+  run_id?: string;
+  updated_at: string;
+}
+
+export interface DesignSystemColor {
+  name: string;
+  hex: string;
+  usage: string;
+}
+
+export interface DesignSystemType {
+  color_palette: DesignSystemColor[];
+  typography: { role: string; font: string; size: string; weight: string }[];
+  spacing_scale: Record<string, string>;
+  component_inventory: string[];
+  brand_guidelines?: string;
+}
+
+export interface PRDDocument {
+  id: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  user_stories?: string[];
+  constraints?: string[];
+  success_metrics?: string[];
+}
+
+export interface Specification {
+  feature_name: string;
+  description: string;
+  frontend: {
+    components: string[];
+    routes: string[];
+    state: string[];
+  };
+  backend: {
+    endpoints: { method: string; path: string; purpose: string }[];
+    models: string[];
+  };
+  acceptance_criteria: string[];
+  dependencies: string[];
+  complexity: 'simple' | 'moderate' | 'complex';
+}
+
+export interface ProjectArtifacts {
+  prd?: PRDDocument;
+  refined_concept?: string;
+  council_verdict?: CouncilVerdict;
+  selected_council?: CouncilMember[];
+  council_progress?: CouncilProgress;
+  specs?: Specification[];
+  design_system?: DesignSystemType;
+  designs?: any[];
+}
+
 export interface Project {
   id: string;
   title: string;
   description?: string;
   status: 'active' | 'paused' | 'completed';
+  phase?: ProjectPhase;
+  concept_thread_id?: string;
   created_at: string;
   updated_at: string;
   completed_at?: string;
   tasks?: Task[];
-  progress?: number; // Progress percentage (0-100)
+  progress?: number;
+  pipeline?: PipelineState;
+  artifacts?: ProjectArtifacts;
   metadata?: Record<string, any>;
 }
 
@@ -77,6 +170,23 @@ export interface AgentEvaluation {
   concerns: string[];
 }
 
+export interface AgentProgressEntry {
+  agent_name: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  started_at?: string;
+  completed_at?: string;
+  evaluation?: AgentEvaluation;
+  error?: string;
+}
+
+export interface CouncilProgress {
+  started_at: string;
+  agents: AgentProgressEntry[];
+  synthesis_status: 'pending' | 'running' | 'completed' | 'failed';
+  completed_count: number;
+  total_count: number;
+}
+
 export interface CouncilVerdict {
   recommendation: 'approve' | 'reject' | 'needs-info';
   overall_score: number;
@@ -93,6 +203,61 @@ export interface HealthMetric {
   date: string;
   notes?: string;
   metadata?: Record<string, any>;
+}
+
+export interface DesignScreen {
+  id: string;
+  project_id: string;
+  name: string;
+  prompt: string;
+  status: 'generating' | 'completed' | 'failed';
+  image_path?: string;
+  html_path?: string;
+  created_at: string;
+  completed_at?: string;
+  error?: string;
+}
+
+export interface HealthLog {
+  id: string;
+  mood: number;
+  energy: number;
+  sleep_hours: number;
+  exercise_minutes: number;
+  date: string;
+  notes?: string;
+  created_at: string;
+}
+
+export interface HealthExperiment {
+  id: string;
+  title: string;
+  description: string;
+  start_date: string;
+  end_date?: string;
+  status: 'active' | 'completed' | 'paused';
+  metrics_tracked: string[];
+}
+
+export interface FocusSession {
+  id: string;
+  project_id: string;
+  session_type: string;
+  work_duration: number;
+  break_duration: number;
+  started_at: string;
+  ended_at: string | null;
+  duration_minutes: number | null;
+  status: 'active' | 'paused' | 'completed' | 'cancelled';
+  notes: string | null;
+}
+
+export interface ActivityEntry {
+  id: string;
+  type: string;
+  description: string;
+  metadata?: Record<string, any>;
+  timestamp: string;
 }
 
 export interface CaptureRequest {
@@ -338,6 +503,15 @@ export class VaultAPI {
     });
   }
 
+  /**
+   * DELETE /api/tasks/:id - Delete a task
+   */
+  async deleteTask(id: string): Promise<{ status: string; id: string }> {
+    return this.request<{ status: string; id: string }>(`/tasks/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // ============================================================================
   // Project Methods
   // ============================================================================
@@ -555,6 +729,46 @@ export class VaultAPI {
     });
   }
 
+  async deleteProject(id: string): Promise<{ status: string }> {
+    return this.request(`/projects/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getProjectNotes(id: string): Promise<{ content: string }> {
+    return this.request(`/projects/${id}/notes`);
+  }
+
+  async saveProjectNotes(id: string, content: string): Promise<{ status: string }> {
+    return this.request(`/projects/${id}/notes`, {
+      method: 'PUT',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  async getProjectActivity(id: string): Promise<{ entries: ActivityEntry[] }> {
+    return this.request(`/projects/${id}/activity`);
+  }
+
+  async startFocusSession(data: { project_id: string; session_type?: string; work_duration?: number; break_duration?: number }): Promise<{ status: string; session: FocusSession }> {
+    return this.request('/focus-sessions', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateFocusSession(id: string, data: Partial<FocusSession>): Promise<{ status: string; session: FocusSession }> {
+    return this.request(`/focus-sessions/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getFocusSessions(projectId?: string): Promise<{ sessions: FocusSession[]; count: number }> {
+    const params = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/focus-sessions${params}`);
+  }
+
   // ============================================================================
   // CRM Methods
   // ============================================================================
@@ -580,7 +794,7 @@ export class VaultAPI {
     return this.request(`/sales/deals${params}`);
   }
 
-  async createDeal(data: { title: string; value?: number; stage?: string }): Promise<any> {
+  async createDeal(data: { title: string; value?: number; stage?: string; contact_id?: string; project_id?: string }): Promise<any> {
     return this.request('/sales/deals', {
       method: 'POST',
       body: JSON.stringify(data),
@@ -596,6 +810,182 @@ export class VaultAPI {
 
   async getSalesPipeline(): Promise<any> {
     return this.request('/sales/pipeline');
+  }
+
+  async deleteDeal(id: string): Promise<{ status: string }> {
+    return this.request(`/sales/deals/${id}`, { method: 'DELETE' });
+  }
+
+  // ============================================================================
+  // Concept Chat Methods
+  // ============================================================================
+
+  async sendConceptMessage(projectId: string, content: string): Promise<{
+    user_message: ThreadMessage;
+    assistant_message: ThreadMessage;
+  }> {
+    return this.request(`/pipeline/${projectId}/concept/chat`, {
+      method: 'POST',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  async getConceptMessages(projectId: string): Promise<{ messages: ThreadMessage[] }> {
+    return this.request(`/pipeline/${projectId}/concept/messages`);
+  }
+
+  async markConceptReady(projectId: string): Promise<{
+    status: string;
+    project: Project;
+    pipeline: PipelineState;
+    refined_concept: string;
+    suggested_council: CouncilMember[];
+  }> {
+    return this.request(`/pipeline/${projectId}/concept/ready`, { method: 'POST' });
+  }
+
+  async approveCouncil(projectId: string, agents: CouncilMember[]): Promise<{
+    status: string;
+    project: Project;
+    pipeline: PipelineState;
+    council_progress?: CouncilProgress;
+  }> {
+    return this.request(`/pipeline/${projectId}/council/approve`, {
+      method: 'POST',
+      body: JSON.stringify({ agents }),
+    });
+  }
+
+  async retryCouncil(projectId: string): Promise<{
+    status: string;
+    project: Project;
+    pipeline: PipelineState;
+    council_progress?: CouncilProgress;
+  }> {
+    return this.request(`/pipeline/${projectId}/council/retry`, { method: 'POST' });
+  }
+
+  // ============================================================================
+  // Pipeline Methods
+  // ============================================================================
+
+  async startPipeline(projectId: string): Promise<{ status: string; project: Project; pipeline: PipelineState }> {
+    return this.request(`/pipeline/${projectId}/start`, { method: 'POST' });
+  }
+
+  async getPipelineStatus(projectId: string): Promise<{
+    project: Project;
+    pipeline: PipelineState | null;
+    current_phase_state: PhaseState | null;
+  }> {
+    return this.request(`/pipeline/${projectId}/status`);
+  }
+
+  async reviewPhase(
+    projectId: string,
+    action: 'approve' | 'reject',
+    feedback?: string
+  ): Promise<{ status: string; project: Project; pipeline: PipelineState }> {
+    return this.request(`/pipeline/${projectId}/review`, {
+      method: 'POST',
+      body: JSON.stringify({ action, feedback }),
+    });
+  }
+
+  // ============================================================================
+  // Design Methods
+  // ============================================================================
+
+  async getDesignScreens(projectId: string): Promise<{ screens: DesignScreen[]; count: number }> {
+    return this.request(`/designs/${projectId}`);
+  }
+
+  async generateDesignScreen(projectId: string, prompt: string, model?: string): Promise<{ status: string; screen: DesignScreen }> {
+    return this.request(`/designs/${projectId}/generate`, {
+      method: 'POST',
+      body: JSON.stringify({ prompt, model }),
+    });
+  }
+
+  async deleteDesignScreen(projectId: string, screenId: string): Promise<{ status: string }> {
+    return this.request(`/designs/${projectId}/${screenId}`, { method: 'DELETE' });
+  }
+
+  // ============================================================================
+  // Health Methods (Extended)
+  // ============================================================================
+
+  async getHealthLogs(startDate?: string, endDate?: string): Promise<{ logs: HealthLog[]; count: number }> {
+    const params = new URLSearchParams();
+    if (startDate) params.set('start_date', startDate);
+    if (endDate) params.set('end_date', endDate);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/health/logs${qs}`);
+  }
+
+  async getHealthToday(): Promise<{ log: HealthLog | null }> {
+    return this.request('/health/logs/today');
+  }
+
+  async getHealthTrends(days?: number): Promise<{ trends: HealthLog[]; averages: Record<string, number> }> {
+    const qs = days ? `?days=${days}` : '';
+    return this.request(`/health/trends${qs}`);
+  }
+
+  async saveHealthLog(data: { mood: number; energy: number; sleep_hours: number; exercise_minutes: number; date?: string }): Promise<{ status: string; log: HealthLog }> {
+    return this.request('/health/log', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getExperiments(): Promise<{ experiments: HealthExperiment[]; count: number }> {
+    return this.request('/health/experiments');
+  }
+
+  async createExperiment(data: { title: string; description: string; metrics_tracked: string[] }): Promise<{ status: string; experiment: HealthExperiment }> {
+    return this.request('/health/experiments', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExperiment(id: string, data: Partial<HealthExperiment>): Promise<{ status: string; experiment: HealthExperiment }> {
+    return this.request(`/health/experiments/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // CRM Extended Methods
+  // ============================================================================
+
+  async getContact(id: string): Promise<any> {
+    return this.request(`/crm/contacts/${id}`);
+  }
+
+  async updateContact(id: string, data: any): Promise<any> {
+    return this.request(`/crm/contacts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async addInteraction(data: { contact_id: string; type: string; notes: string }): Promise<any> {
+    return this.request('/crm/interactions', {
+      method: 'POST',
+      body: JSON.stringify({
+        contact_id: data.contact_id,
+        type: data.type,
+        subject: data.notes,
+        content: data.notes,
+      }),
+    });
+  }
+
+  async deleteContact(id: string): Promise<{ status: string }> {
+    return this.request(`/crm/contacts/${id}`, { method: 'DELETE' });
   }
 
 }

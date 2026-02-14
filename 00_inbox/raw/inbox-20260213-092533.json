@@ -1,0 +1,14 @@
+{
+  "id": "inbox-20260213-092533",
+  "text": "meeting with Guillaume for discussing way forward",
+  "category": "work",
+  "source": "pwa",
+  "created_at": "2026-02-13T13:08:12.534Z",
+  "ai_classification": {
+    "category": "work",
+    "confidence": 0.75,
+    "suggested_action": "task",
+    "suggested_project": null,
+    "reasoning": "Scheduled meeting to discuss strategic direction ('way forward') with another person suggests a professional context. The item is a single actionable event (the meeting) rather than a multi-step project."
+  }
+}

@@ -47,6 +47,17 @@ router.put('/crm/contacts/:id', async (req: Request, res: Response) => {
   }
 });
 
+// DELETE /api/crm/contacts/:id
+router.delete('/crm/contacts/:id', async (req: Request, res: Response) => {
+  try {
+    const deleted = await crmService.deleteContact(String(req.params.id));
+    if (!deleted) return res.status(404).json({ error: 'Contact not found' });
+    res.json({ status: 'deleted', id: req.params.id });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // POST /api/crm/interactions
 router.post('/crm/interactions', async (req: Request, res: Response) => {
   try {

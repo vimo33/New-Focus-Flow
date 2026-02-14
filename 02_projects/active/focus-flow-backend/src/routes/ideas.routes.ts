@@ -68,7 +68,7 @@ router.post('/ideas/:id/expand', async (req: Request, res: Response) => {
   }
 });
 
-// POST /api/ideas/:id/promote - Promote idea to project
+// POST /api/ideas/:id/promote - Promote idea to project (with artifact carry-over)
 router.post('/ideas/:id/promote', async (req: Request, res: Response) => {
   try {
     const idea = await vaultService.getIdea(String(req.params.id));
@@ -76,11 +76,33 @@ router.post('/ideas/:id/promote', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Idea not found' });
     }
 
+    // Build artifacts from idea data
+    const artifacts: Record<string, any> = {};
+    if (idea.prd) {
+      artifacts.prd = idea.prd;
+    }
+
     const project = await vaultService.createProject({
       title: idea.title,
       description: idea.description,
       phase: 'idea',
       idea_id: idea.id,
+      artifacts: Object.keys(artifacts).length > 0 ? artifacts : undefined,
+      pipeline: {
+        current_phase: 'idea',
+        phases: {},
+        updated_at: new Date().toISOString(),
+      },
+      metadata: {
+        expanded: idea.expanded,
+        council_verdict: idea.council_verdict,
+      },
+    } as any);
+
+    // Link idea back to project
+    await vaultService.updateIdea(idea.id, {
+      project_id: project.id,
+      status: 'in_development' as any,
     });
 
     res.status(201).json({

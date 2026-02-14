@@ -1,0 +1,14 @@
+{
+  "id": "inbox-20260212-970106",
+  "text": "finalize project concept ith Savya",
+  "category": "work",
+  "source": "pwa",
+  "created_at": "2026-02-12T14:02:50.106Z",
+  "ai_classification": {
+    "category": "work",
+    "confidence": 0.75,
+    "suggested_action": "task",
+    "suggested_project": "Project Concept Development",
+    "reasoning": "Finalizing a project concept with a collaborator (Savya) indicates a professional task requiring discussion or meeting. Single actionable item rather than multi-step project."
+  }
+}

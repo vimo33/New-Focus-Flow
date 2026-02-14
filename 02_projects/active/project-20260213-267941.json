@@ -1,0 +1,23 @@
+{
+  "id": "project-20260213-267941",
+  "title": "Multiplium",
+  "description": "Alright. Let’s zoom out from SSH drama and talk about the actual organism you’re building.\n\nFrom what you’ve described across this thread and earlier work, **Multiplium** is not “just another AI tool.” It’s a structured, multi-agent research engine designed to produce **decision-grade investment intelligence** — not fluffy summaries, not ChatGPT essays — but structured, traceable, defensible research.\n\nHere’s how I would articulate the concept and vision clearly and sharply.\n\n---\n\n# 🌌 The Core Concept of Multiplium\n\n**Multiplium is a multi-agent AI research system designed to generate high-quality, structured investment opportunity analysis.**\n\nInstead of relying on a single large model to “think about everything,” Multiplium decomposes research into specialized agents that collaborate:\n\n* One agent gathers data.\n* Another validates or enriches it.\n* Another applies KPIs.\n* Another synthesizes findings into structured reports.\n\nIt’s not a chatbot.\nIt’s an **orchestrated research workflow engine.**\n\nThe idea is simple but powerful:\n\n> Divide cognition. Enforce structure. Produce reliable output.\n\n---\n\n# 🎯 The Problem It Solves\n\nInvestment research today suffers from:\n\n* Fragmented information\n* Analyst bias\n* Inconsistent methodology\n* Weak reproducibility\n* Shallow AI-generated summaries\n\nMultiplium aims to solve this by:\n\n* Making research modular and auditable\n* Separating data gathering from interpretation\n* Enforcing explicit evaluation criteria (KPIs, frameworks, scoring)\n* Making outputs deterministic and structured\n\nIt treats research as a **system**, not a conversation.\n\n---\n\n# 🧠 The Vision\n\nThe long-term vision is larger than “AI research tool.”\n\nMultiplium aims to become:\n\n> A scalable, structured intelligence engine for evaluating complex opportunities.\n\nInitially: investment research\nEventually: any domain where structured evaluation matters\n(e.g. policy analysis, startup evaluation, impact investing, sector mapping, due diligence)\n\nIt is essentially:\n\n* A cognitive assembly line\n* A modular intelligence infrastructure\n* A framework for turning unstructured information into decision-ready artifacts\n\n---\n\n# 🏗 Architectural Philosophy\n\nThe philosophical pillars appear to be:\n\n1. **Agent modularity**\n   Each agent has a bounded responsibility.\n\n2. **Deterministic > creative**\n   Structured output beats poetic analysis.\n\n3. **Traceability**\n   You should be able to trace conclusions back to inputs.\n\n4. **Workflow over prompt magic**\n   Intelligence emerges from orchestration, not from one giant prompt.\n\n5. **Reusability**\n   The system should support new workflows beyond investment research.\n\n---\n\n# 🔬 Why Multi-Agent?\n\nSingle-model systems blur roles:\n\n* Data retrieval\n* Evaluation\n* Judgment\n* Synthesis\n\nMultiplium separates them.\n\nThat separation creates:\n\n* Cleaner reasoning\n* Reduced hallucination risk\n* Easier debugging\n* Better auditability\n* More reliable iteration\n\nYou can improve one agent without destabilizing the whole system.\n\nThat’s engineering, not wizardry.\n\n---\n\n# 🚀 Strategic Positioning\n\nMultiplium is positioned between:\n\n* Human analyst teams (expensive, slow)\n* Single-LLM research tools (fast, shallow, inconsistent)\n\nIt aims to be:\n\n> Faster than human teams\n> More structured than generic AI\n> More scalable than consulting firms\n\n---\n\n# 🔮 Where This Can Go\n\nIf executed properly, Multiplium could evolve into:\n\n* A research OS\n* A family-office intelligence engine\n* A due-diligence automation backbone\n* A verticalized AI research platform\n* Or even a “research protocol” others build on\n\nIt’s not a feature. It’s infrastructure.\n\n---",
+  "status": "active",
+  "created_at": "2026-02-13T13:11:07.942Z",
+  "updated_at": "2026-02-13T13:11:39.923Z",
+  "pipeline": {
+    "current_phase": "concept",
+    "phases": {
+      "concept": {
+        "phase": "concept",
+        "sub_state": "working",
+        "started_at": "2026-02-13T13:11:07.945Z",
+        "step": "refining"
+      }
+    },
+    "run_id": "pipeline-1770988267945-82v6",
+    "updated_at": "2026-02-13T13:11:07.945Z"
+  },
+  "phase": "concept",
+  "concept_thread_id": "thread-20260213-267948"
+}

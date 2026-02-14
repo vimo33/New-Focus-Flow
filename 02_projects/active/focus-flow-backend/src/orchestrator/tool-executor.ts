@@ -278,7 +278,12 @@ export async function executeTool(
         if (!ideaToValidate) {
           return { success: false, error: `Idea ${input.id} not found` };
         }
-        const verdict = await aiCouncil.validateIdea(ideaToValidate);
+        const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
+        const verdict = await aiCouncil.validateWithCouncil(
+          ideaToValidate.title,
+          ideaToValidate.description || '',
+          DEFAULT_COUNCIL
+        );
         return {
           success: true,
           data: {
@@ -286,7 +291,7 @@ export async function executeTool(
             overall_score: verdict.overall_score,
             reasoning: verdict.synthesized_reasoning,
             next_steps: verdict.next_steps,
-            evaluations: verdict.evaluations.map(e => ({
+            evaluations: verdict.evaluations.map((e: any) => ({
               agent: e.agent_name,
               score: e.score,
             })),
@@ -303,7 +308,7 @@ export async function executeTool(
         const newProject = await vaultService.createProject({
           title: ideaToPromote.title,
           description: ideaToPromote.description,
-          phase: 'idea',
+          phase: 'concept',
           idea_id: ideaToPromote.id,
         });
         return {

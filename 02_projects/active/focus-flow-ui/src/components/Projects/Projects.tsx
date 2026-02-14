@@ -11,12 +11,17 @@ interface ProjectCardProps {
   onClick: () => void;
 }
 
-function ProjectCard({ project, onClick }: ProjectCardProps) {
-  // Calculate mock progress (in real app, this would come from backend)
-  const totalTasks = project.tasks?.length || 0;
-  const completedTasks = project.tasks?.filter(t => t.status === 'done').length || 0;
-  const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+const PIPELINE_PHASES: { key: string; label: string; icon: string }[] = [
+  { key: 'concept', label: 'Concept', icon: 'lightbulb' },
+  { key: 'spec', label: 'Spec', icon: 'description' },
+  { key: 'design', label: 'Design', icon: 'palette' },
+  { key: 'dev', label: 'Dev', icon: 'code' },
+  { key: 'test', label: 'Test', icon: 'bug_report' },
+  { key: 'deploy', label: 'Deploy', icon: 'rocket_launch' },
+  { key: 'live', label: 'Live', icon: 'check_circle' },
+];
 
+function ProjectCard({ project, onClick }: ProjectCardProps) {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'active':
@@ -53,13 +58,6 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
     ];
     const index = parseInt(projectId.slice(-1), 36) % colors.length;
     return colors[index];
-  };
-
-  const getProgressColor = (progress: number) => {
-    if (progress >= 75) return 'bg-primary';
-    if (progress >= 50) return 'bg-teal-500';
-    if (progress >= 25) return 'bg-pink-500';
-    return 'bg-amber-500';
   };
 
   const formatDate = (dateString: string) => {
@@ -123,24 +121,53 @@ function ProjectCard({ project, onClick }: ProjectCardProps) {
           </div>
         )}
 
-        <div className="mb-2">
-          <div className="flex justify-between text-xs mb-1.5">
-            <span className="text-slate-600 dark:text-slate-300 font-medium">Progress</span>
-            <span className="text-slate-500 dark:text-slate-400">
-              {completedTasks}/{totalTasks} tasks
-            </span>
+        {project.pipeline && (
+          <div className="mb-2">
+            <div className="flex items-center gap-1">
+              {PIPELINE_PHASES.map((phase, i) => {
+                const currentIdx = PIPELINE_PHASES.findIndex(p => p.key === project.pipeline!.current_phase);
+                const isDone = i < currentIdx;
+                const isCurrent = i === currentIdx;
+                return (
+                  <div key={phase.key} className="flex items-center gap-1 flex-1 min-w-0">
+                    <div className={`flex items-center justify-center w-6 h-6 rounded-full flex-shrink-0 ${
+                      isDone ? 'bg-emerald-500/15 text-emerald-500'
+                        : isCurrent ? 'bg-primary/15 text-primary ring-2 ring-primary/30'
+                        : 'bg-slate-100 dark:bg-slate-800 text-slate-400'
+                    }`}>
+                      <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>
+                        {isDone ? 'check' : phase.icon}
+                      </span>
+                    </div>
+                    {i < PIPELINE_PHASES.length - 1 && (
+                      <div className={`h-0.5 flex-1 rounded-full ${
+                        isDone ? 'bg-emerald-500/30' : 'bg-slate-200 dark:bg-slate-700'
+                      }`} />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+            <p className="text-xs font-medium text-primary mt-1.5">
+              {PIPELINE_PHASES.find(p => p.key === project.pipeline!.current_phase)?.label || project.pipeline.current_phase}
+            </p>
           </div>
-          <div className="h-2 w-full bg-slate-200 dark:bg-[#233648] rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full ${getProgressColor(progress)}`}
-              style={{ width: `${progress}%` }}
-              data-testid={`progress-bar-${project.id}`}
-            ></div>
-          </div>
-        </div>
+        )}
       </div>
 
-      <div className="pt-4 mt-2 border-t border-slate-100 dark:border-[#233648] flex justify-end">
+      <div className="pt-4 mt-2 border-t border-slate-100 dark:border-[#233648] flex justify-between items-center">
+        {project.artifacts?.council_verdict ? (() => {
+          const score = project.artifacts.council_verdict.overall_score;
+          const color = score >= 7 ? 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20'
+            : score >= 5 ? 'text-amber-500 bg-amber-500/10 border-amber-500/20'
+            : 'text-red-400 bg-red-500/10 border-red-500/20';
+          return (
+            <span className={`inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold border ${color}`}>
+              <span className="material-symbols-outlined text-[14px]">gavel</span>
+              {score}/10
+            </span>
+          );
+        })() : <span />}
         <button
           className="text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-primary dark:hover:text-white transition-colors flex items-center gap-1"
           onClick={(e) => {

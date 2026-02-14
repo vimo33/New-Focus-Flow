@@ -3,13 +3,12 @@ import type { Project } from '../../services/api';
 
 interface CreateProjectModalProps {
   onClose: () => void;
-  onCreate: (data: Partial<Project>) => Promise<void>;
+  onCreate: (data: Partial<Project> & { concept?: string }) => Promise<void>;
 }
 
 export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProps) {
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState<'active' | 'paused' | 'completed'>('active');
+  const [concept, setConcept] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,9 +26,8 @@ export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProp
 
       await onCreate({
         title: title.trim(),
-        description: description.trim() || undefined,
-        status,
-      });
+        concept: concept.trim() || undefined,
+      } as any);
     } catch (err) {
       console.error('Failed to create project:', err);
       setError(err instanceof Error ? err.message : 'Failed to create project');
@@ -57,14 +55,14 @@ export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProp
         <div className="flex items-center justify-between p-6 border-b border-slate-200 dark:border-[#2a3b4d]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <span className="material-symbols-outlined text-primary">folder</span>
+              <span className="material-symbols-outlined text-primary">rocket_launch</span>
             </div>
             <div>
               <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                Create New Project
+                New Project
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Setup a new workspace to organize your tasks
+                Describe your concept and refine it with AI
               </p>
             </div>
           </div>
@@ -94,7 +92,7 @@ export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProp
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g., Website Redesign, Mobile App MVP"
+                placeholder="e.g., AI Recipe Generator, Smart Home Dashboard"
                 className="w-full px-4 py-2.5 bg-white dark:bg-[#111a22] border border-slate-200 dark:border-[#2a3b4d] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
                 disabled={loading}
                 autoFocus
@@ -102,46 +100,27 @@ export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProp
               />
             </div>
 
-            {/* Description Input */}
+            {/* Concept Input */}
             <div>
               <label
-                htmlFor="project-description"
+                htmlFor="project-concept"
                 className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
               >
-                Description <span className="text-xs text-slate-500">(Optional)</span>
+                Concept
               </label>
               <textarea
-                id="project-description"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="Add project details, folder path, or any notes..."
-                rows={3}
+                id="project-concept"
+                value={concept}
+                onChange={(e) => setConcept(e.target.value)}
+                placeholder="Describe your project concept — what problem does it solve, who is it for, what's the core idea? An AI Concept Analyst will help you refine it."
+                rows={5}
                 className="w-full px-4 py-2.5 bg-white dark:bg-[#111a22] border border-slate-200 dark:border-[#2a3b4d] rounded-lg text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors resize-none"
                 disabled={loading}
                 data-testid="project-description-input"
               />
-            </div>
-
-            {/* Status Select */}
-            <div>
-              <label
-                htmlFor="project-status"
-                className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2"
-              >
-                Initial Status
-              </label>
-              <select
-                id="project-status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value as 'active' | 'paused' | 'completed')}
-                className="w-full px-4 py-2.5 bg-white dark:bg-[#111a22] border border-slate-200 dark:border-[#2a3b4d] rounded-lg text-slate-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors"
-                disabled={loading}
-                data-testid="project-status-select"
-              >
-                <option value="active">Active</option>
-                <option value="paused">Paused</option>
-                <option value="completed">Completed</option>
-              </select>
+              <p className="text-xs text-slate-400 dark:text-slate-500 mt-1.5">
+                The more detail you provide, the better the AI can help refine your concept.
+              </p>
             </div>
 
             {/* Error Message */}
@@ -181,7 +160,7 @@ export function CreateProjectModal({ onClose, onCreate }: CreateProjectModalProp
               ) : (
                 <>
                   <span className="material-symbols-outlined text-[18px]">add</span>
-                  <span>Create Project</span>
+                  <span>{concept.trim() ? 'Create & Refine' : 'Create Project'}</span>
                 </>
               )}
             </button>

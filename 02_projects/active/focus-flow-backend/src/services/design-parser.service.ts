@@ -9,6 +9,7 @@ import {
   StyleGuide,
   FormField,
 } from '../models/types';
+import { getVaultPath } from '../utils/file-operations';
 
 /**
  * DesignParserService - Parses Stitch HTML/PNG exports into structured design data
@@ -17,8 +18,7 @@ import {
  * layout, components, and styling information from HTML files.
  */
 export class DesignParserService {
-  private stitchExportsPath =
-    '/opt/brain/vault/Work/01_Projects/Active/focus-flow-ui/design/stitch_exports';
+  private stitchExportsPath = getVaultPath('07_system', 'designs');
 
   /**
    * Parse Stitch exports for each specification

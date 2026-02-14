@@ -13,6 +13,8 @@ export interface OpenClawRequest {
   max_tokens?: number;
   temperature?: number;
   stream?: boolean;
+  /** Skip prompt sanitization — use for internal AI-to-AI calls (summarize, council, etc.) */
+  _internal?: boolean;
 }
 
 export interface OpenClawToolFunction {
@@ -28,12 +30,13 @@ export interface OpenClawToolCall {
 
 export interface OpenClawRequestWithTools extends OpenClawRequest {
   tools?: Array<{
-    type: 'function';
-    function: {
+    type: 'function' | string;
+    function?: {
       name: string;
       description: string;
       parameters: Record<string, any>;
     };
+    [key: string]: any;
   }>;
 }
 
@@ -60,6 +63,7 @@ export class OpenClawClient {
   private readonly GATEWAY_URL: string;
   private readonly HAIKU_MODEL = 'openclaw:main';
   private readonly SONNET_MODEL = 'openclaw:main';
+  private readonly OPUS_MODEL = 'anthropic/claude-opus-4-6';
   private requestCount = 0;
   private errorCount = 0;
 
@@ -78,7 +82,7 @@ export class OpenClawClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      timeout: 30000, // 30 second timeout - AI completions need time
+      timeout: 180000, // 3 minute timeout - multi-message AI completions with large context need time
       maxRedirects: 0, // SECURITY: Disable redirects to prevent SSRF
     });
 
@@ -162,43 +166,42 @@ export class OpenClawClient {
    * Send a chat completion request to OpenClaw Gateway
    */
   async chatCompletion(request: OpenClawRequest): Promise<OpenClawResponse> {
-    // Extract user input for security analysis
-    const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+    // Skip sanitization for internal AI-to-AI calls (summarize, council, etc.)
+    // Sanitization is only relevant for direct user input from the chat UI
+    if (!request._internal) {
+      const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+      const sanitized = PromptSanitizer.sanitize(userMessage);
+      const detection = PromptSanitizer.detectInjection(sanitized);
 
-    // Sanitize and detect injection
-    const sanitized = PromptSanitizer.sanitize(userMessage);
-    const detection = PromptSanitizer.detectInjection(sanitized);
-
-    // Log to security audit
-    SecurityAuditService.logAIRequest({
-      model: request.model,
-      promptLength: sanitized.length,
-      userInput: sanitized,
-      wasSanitized: sanitized !== userMessage,
-      wasSuspicious: detection.isSuspicious,
-      suspiciousReasons: detection.reasons,
-    });
-
-    // Block if highly suspicious (2+ injection indicators)
-    if (detection.isSuspicious && detection.reasons.length >= 2) {
-      SecurityAuditService.log({
-        timestamp: new Date().toISOString(),
-        type: 'prompt_injection',
-        severity: 'high',
-        details: {
-          userInput: sanitized,
-          reasons: detection.reasons,
-        },
+      SecurityAuditService.logAIRequest({
+        model: request.model,
+        promptLength: sanitized.length,
+        userInput: sanitized,
+        wasSanitized: sanitized !== userMessage,
+        wasSuspicious: detection.isSuspicious,
+        suspiciousReasons: detection.reasons,
       });
 
-      throw new Error('Security: Potential prompt injection detected. Request blocked.');
+      if (detection.isSuspicious && detection.reasons.length >= 2) {
+        SecurityAuditService.log({
+          timestamp: new Date().toISOString(),
+          type: 'prompt_injection',
+          severity: 'high',
+          details: {
+            userInput: sanitized,
+            reasons: detection.reasons,
+          },
+        });
+        throw new Error('Security: Potential prompt injection detected. Request blocked.');
+      }
     }
 
-    // Send request to OpenClaw Gateway
+    // Send request to OpenClaw Gateway (strip _internal flag before sending)
+    const { _internal, ...apiRequest } = request;
     try {
       const response = await this.client.post<OpenClawResponse>(
         '/v1/chat/completions',
-        request
+        apiRequest
       );
       return response.data;
     } catch (error: any) {
@@ -232,41 +235,41 @@ export class OpenClawClient {
   async chatCompletionWithTools(
     request: OpenClawRequestWithTools
   ): Promise<OpenClawResponse> {
-    // Extract user input for security analysis
-    const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+    // Skip sanitization for internal AI-to-AI calls
+    if (!request._internal) {
+      const userMessage = request.messages.find((m) => m.role === 'user')?.content || '';
+      const sanitized = PromptSanitizer.sanitize(userMessage);
+      const detection = PromptSanitizer.detectInjection(sanitized);
 
-    // Sanitize and detect injection
-    const sanitized = PromptSanitizer.sanitize(userMessage);
-    const detection = PromptSanitizer.detectInjection(sanitized);
-
-    // Log to security audit
-    SecurityAuditService.logAIRequest({
-      model: request.model,
-      promptLength: sanitized.length,
-      userInput: sanitized,
-      wasSanitized: sanitized !== userMessage,
-      wasSuspicious: detection.isSuspicious,
-      suspiciousReasons: detection.reasons,
-    });
-
-    // Block if highly suspicious
-    if (detection.isSuspicious && detection.reasons.length >= 2) {
-      SecurityAuditService.log({
-        timestamp: new Date().toISOString(),
-        type: 'prompt_injection',
-        severity: 'high',
-        details: {
-          userInput: sanitized,
-          reasons: detection.reasons,
-        },
+      SecurityAuditService.logAIRequest({
+        model: request.model,
+        promptLength: sanitized.length,
+        userInput: sanitized,
+        wasSanitized: sanitized !== userMessage,
+        wasSuspicious: detection.isSuspicious,
+        suspiciousReasons: detection.reasons,
       });
-      throw new Error('Security: Potential prompt injection detected. Request blocked.');
+
+      if (detection.isSuspicious && detection.reasons.length >= 2) {
+        SecurityAuditService.log({
+          timestamp: new Date().toISOString(),
+          type: 'prompt_injection',
+          severity: 'high',
+          details: {
+            userInput: sanitized,
+            reasons: detection.reasons,
+          },
+        });
+        throw new Error('Security: Potential prompt injection detected. Request blocked.');
+      }
     }
 
+    // Strip _internal flag before sending
+    const { _internal, ...apiRequest } = request;
     try {
       const response = await this.client.post<OpenClawResponse>(
         '/v1/chat/completions',
-        request
+        apiRequest
       );
       return response.data;
     } catch (error: any) {
@@ -315,6 +318,43 @@ export class OpenClawClient {
       messages,
       max_tokens: options?.maxTokens || 2000,
       temperature: options?.temperature || 0.7,
+      _internal: true,
+    });
+
+    return response.choices[0].message.content;
+  }
+
+  /**
+   * Completion with Claude's native web search tool.
+   * OpenClaw passes through Anthropic's built-in web_search tool —
+   * Claude handles searching and reading pages internally, no custom loop needed.
+   */
+  async completeWithResearch(
+    prompt: string,
+    systemPrompt?: string,
+    options?: {
+      model?: string;
+      maxTokens?: number;
+      temperature?: number;
+    }
+  ): Promise<string> {
+    const messages: OpenClawMessage[] = [];
+
+    if (systemPrompt) {
+      messages.push({ role: 'system', content: systemPrompt });
+    }
+
+    messages.push({ role: 'user', content: prompt });
+
+    const response = await this.chatCompletionWithTools({
+      model: options?.model || this.SONNET_MODEL,
+      messages,
+      max_tokens: options?.maxTokens || 4000,
+      temperature: options?.temperature || 0.7,
+      _internal: true,
+      tools: [
+        { type: 'web_search_20250305' as any, name: 'web_search', max_uses: 5 } as any,
+      ],
     });
 
     return response.choices[0].message.content;
@@ -340,6 +380,7 @@ export class OpenClawClient {
     return {
       haiku: this.HAIKU_MODEL,
       sonnet: this.SONNET_MODEL,
+      opus: this.OPUS_MODEL,
     };
   }
 }

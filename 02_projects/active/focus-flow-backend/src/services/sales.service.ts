@@ -100,6 +100,16 @@ export class SalesService {
     return updated;
   }
 
+  async deleteDeal(id: string): Promise<boolean> {
+    try {
+      const filePath = path.join(getVaultPath(), SALES_DIR, `${id}.json`);
+      await fs.unlink(filePath);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async getPipelineSummary(): Promise<Record<DealStage, { count: number; total_value: number }>> {
     const deals = await this.getDeals();
     const stages: DealStage[] = ['lead', 'qualified', 'demo', 'proposal', 'negotiation', 'closed_won', 'closed_lost'];

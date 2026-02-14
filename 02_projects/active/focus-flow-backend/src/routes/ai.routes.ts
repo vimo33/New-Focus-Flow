@@ -44,7 +44,12 @@ router.post('/ideas/:id/validate', async (req: Request, res: Response) => {
 
     // Run AI Council validation
     console.log(`Running AI Council validation for idea: ${ideaId}`);
-    const verdict = await aiCouncil.validateIdea(idea, userContext);
+    const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
+    const verdict = await aiCouncil.validateWithCouncil(
+      idea.title,
+      idea.description || '',
+      DEFAULT_COUNCIL
+    );
 
     res.status(200).json({
       status: 'validated',

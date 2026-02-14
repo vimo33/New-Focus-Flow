@@ -203,6 +203,18 @@ export class VaultService {
     return null;
   }
 
+  async deleteTask(id: string): Promise<boolean> {
+    for (const category of ['work', 'personal', 'scheduled']) {
+      const filePath = getVaultPath('01_tasks', category, `${id}.json`);
+      const task = await readJsonFile<Task>(filePath);
+      if (task) {
+        await deleteFile(filePath);
+        return true;
+      }
+    }
+    return false;
+  }
+
   // ==================== PROJECT OPERATIONS ====================
 
   async createProject(project: Partial<Project>): Promise<Project> {
@@ -268,6 +280,55 @@ export class VaultService {
     return Math.round(progressPercent);
   }
 
+  /**
+   * Get a single project by ID, searching across status directories
+   */
+  async getProjectById(projectId: string): Promise<Project | null> {
+    for (const status of ['active', 'paused', 'completed']) {
+      const filePath = getVaultPath('02_projects', status, `${projectId}.json`);
+      const project = await readJsonFile<Project>(filePath);
+      if (project) return project;
+    }
+    return null;
+  }
+
+  /**
+   * Update a project by ID. Finds it across status directories and saves.
+   */
+  async updateProject(projectId: string, updates: Partial<Project>): Promise<Project | null> {
+    for (const status of ['active', 'paused', 'completed']) {
+      const filePath = getVaultPath('02_projects', status, `${projectId}.json`);
+      const existing = await readJsonFile<Project>(filePath);
+      if (existing) {
+        const updated: Project = {
+          ...existing,
+          ...updates,
+          id: existing.id, // prevent ID override
+          updated_at: new Date().toISOString(),
+        };
+        await writeJsonFile(filePath, updated);
+        return updated;
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Update an idea by ID. Finds it across status directories and saves.
+   */
+  async updateIdea(ideaId: string, updates: Partial<Idea>): Promise<Idea | null> {
+    for (const status of ['inbox', 'validated', 'rejected']) {
+      const filePath = getVaultPath('03_ideas', status, `${ideaId}.json`);
+      const existing = await readJsonFile<Idea>(filePath);
+      if (existing) {
+        const updated: Idea = { ...existing, ...updates, id: existing.id };
+        await writeJsonFile(filePath, updated);
+        return updated;
+      }
+    }
+    return null;
+  }
+
   // ==================== IDEA OPERATIONS ====================
 
   async createIdea(idea: Partial<Idea>): Promise<Idea> {
@@ -324,6 +385,24 @@ export class VaultService {
     return ideas.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
   }
 
+  // ==================== NOTES OPERATIONS ====================
+
+  async getProjectNotes(projectId: string): Promise<string> {
+    const filePath = getVaultPath('04_notes', 'work', `${projectId}.md`);
+    try {
+      return await fs.readFile(filePath, 'utf-8');
+    } catch {
+      return '';
+    }
+  }
+
+  async saveProjectNotes(projectId: string, content: string): Promise<void> {
+    const dirPath = getVaultPath('04_notes', 'work');
+    await ensureDir(dirPath);
+    const filePath = path.join(dirPath, `${projectId}.md`);
+    await fs.writeFile(filePath, content, 'utf-8');
+  }
+
   // ==================== HEALTH OPERATIONS ====================
 
   async logHealthMetric(metric: Partial<HealthMetric>): Promise<HealthMetric> {
@@ -348,6 +427,91 @@ export class VaultService {
     await writeJsonFile(jsonPath, healthMetric);
 
     return healthMetric;
+  }
+
+  // ==================== FOCUS SESSION OPERATIONS ====================
+
+  async createFocusSession(data: { project_id: string; session_type?: string; work_duration?: number; break_duration?: number }): Promise<any> {
+    const id = `focus-${Date.now()}`;
+    const session = {
+      id,
+      project_id: data.project_id,
+      session_type: data.session_type || 'pomodoro',
+      work_duration: data.work_duration || 25,
+      break_duration: data.break_duration || 5,
+      started_at: new Date().toISOString(),
+      ended_at: null,
+      duration_minutes: null,
+      status: 'active',
+      notes: null,
+    };
+    const dirPath = getVaultPath('07_system', 'focus-sessions');
+    await ensureDir(dirPath);
+    await writeJsonFile(path.join(dirPath, `${id}.json`), session);
+    return session;
+  }
+
+  async updateFocusSession(id: string, updates: Record<string, any>): Promise<any> {
+    const filePath = getVaultPath('07_system', 'focus-sessions', `${id}.json`);
+    const session = await readJsonFile<any>(filePath);
+    if (!session) return null;
+    const updated = { ...session, ...updates };
+    if (updates.ended_at && session.started_at) {
+      updated.duration_minutes = Math.round((new Date(updates.ended_at).getTime() - new Date(session.started_at).getTime()) / 60000);
+    }
+    await writeJsonFile(filePath, updated);
+    return updated;
+  }
+
+  async getFocusSessions(projectId?: string): Promise<any[]> {
+    const dirPath = getVaultPath('07_system', 'focus-sessions');
+    const files = await listFiles(dirPath);
+    const sessions: any[] = [];
+    for (const file of files) {
+      if (!file.endsWith('.json')) continue;
+      const session = await readJsonFile<any>(path.join(dirPath, file));
+      if (session && (!projectId || session.project_id === projectId)) {
+        sessions.push(session);
+      }
+    }
+    return sessions.sort((a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime());
+  }
+
+  // ==================== ACTIVITY LOG OPERATIONS ====================
+
+  async logActivity(projectId: string, event: { type: string; description: string; metadata?: Record<string, any> }): Promise<void> {
+    const dirPath = getVaultPath('07_system', 'activity');
+    await ensureDir(dirPath);
+    const filePath = path.join(dirPath, `${projectId}.json`);
+
+    let entries: any[] = [];
+    try {
+      const raw = await fs.readFile(filePath, 'utf-8');
+      entries = JSON.parse(raw);
+    } catch {}
+
+    entries.unshift({
+      id: `act-${Date.now()}`,
+      type: event.type,
+      description: event.description,
+      metadata: event.metadata,
+      timestamp: new Date().toISOString(),
+    });
+
+    // Keep last 200 entries
+    if (entries.length > 200) entries = entries.slice(0, 200);
+
+    await fs.writeFile(filePath, JSON.stringify(entries, null, 2), 'utf-8');
+  }
+
+  async getActivity(projectId: string): Promise<any[]> {
+    const filePath = getVaultPath('07_system', 'activity', `${projectId}.json`);
+    try {
+      const raw = await fs.readFile(filePath, 'utf-8');
+      return JSON.parse(raw);
+    } catch {
+      return [];
+    }
   }
 
   // ==================== GENERIC FILE OPERATIONS ====================
@@ -375,6 +539,14 @@ export class VaultService {
     const dir = path.dirname(filePath);
     await ensureDir(dir);
     await fs.writeFile(filePath, data, 'utf-8');
+  }
+
+  /**
+   * Delete a file from a vault path
+   */
+  async deleteData(relativePath: string): Promise<void> {
+    const filePath = getVaultPath(relativePath);
+    await fs.unlink(filePath).catch(() => {});
   }
 
   /**

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
 
 interface Contact {
@@ -172,7 +173,9 @@ export function CRM() {
           {!loading && contacts.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {contacts.map(contact => (
-                <ContactCard key={contact.id} contact={contact} />
+                <Link key={contact.id} to={`/crm/${contact.id}`} className="block">
+                  <ContactCard contact={contact} />
+                </Link>
               ))}
             </div>
           )}

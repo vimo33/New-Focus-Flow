@@ -74,5 +74,9 @@ export default defineConfig({
       '167.235.63.193',
       'localhost',
     ],
+    headers: {
+      // Prevent caching of index.html so new JS hashes are picked up
+      'Cache-Control': 'no-cache, no-store, must-revalidate',
+    },
   },
 })

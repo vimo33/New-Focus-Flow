@@ -1,0 +1,74 @@
+[
+  {
+    "id": "act-1770819188403",
+    "type": "focus_session_ended",
+    "description": "Focus session completed (0min)",
+    "timestamp": "2026-02-11T14:13:08.403Z"
+  },
+  {
+    "id": "act-1770819179767",
+    "type": "focus_session_started",
+    "description": "Focus session started (25min)",
+    "timestamp": "2026-02-11T14:12:59.767Z"
+  },
+  {
+    "id": "act-1770812275426",
+    "type": "focus_session_ended",
+    "description": "Focus session completed (0min)",
+    "timestamp": "2026-02-11T12:17:55.426Z"
+  },
+  {
+    "id": "act-1770812272115",
+    "type": "focus_session_started",
+    "description": "Focus session started (25min)",
+    "timestamp": "2026-02-11T12:17:52.115Z"
+  },
+  {
+    "id": "act-1770812262305",
+    "type": "phase_changed",
+    "description": "Phase changed to idea",
+    "timestamp": "2026-02-11T12:17:42.305Z"
+  },
+  {
+    "id": "act-1770812257877",
+    "type": "phase_changed",
+    "description": "Phase changed to spec",
+    "timestamp": "2026-02-11T12:17:37.877Z"
+  },
+  {
+    "id": "act-1770812248351",
+    "type": "phase_changed",
+    "description": "Phase changed to design",
+    "timestamp": "2026-02-11T12:17:28.351Z"
+  },
+  {
+    "id": "act-1770811053211",
+    "type": "focus_session_ended",
+    "description": "Focus session completed (25min)",
+    "timestamp": "2026-02-11T11:57:33.211Z"
+  },
+  {
+    "id": "act-1770811042804",
+    "type": "focus_session_started",
+    "description": "Focus session started (25min)",
+    "timestamp": "2026-02-11T11:57:22.804Z"
+  },
+  {
+    "id": "act-1770811038944",
+    "type": "focus_session_started",
+    "description": "Focus session started (25min)",
+    "timestamp": "2026-02-11T11:57:18.944Z"
+  },
+  {
+    "id": "act-1770811025761",
+    "type": "focus_session_started",
+    "description": "Focus session started (25min)",
+    "timestamp": "2026-02-11T11:57:05.761Z"
+  },
+  {
+    "id": "act-1770811025536",
+    "type": "notes_saved",
+    "description": "Project notes updated",
+    "timestamp": "2026-02-11T11:57:05.536Z"
+  }
+]

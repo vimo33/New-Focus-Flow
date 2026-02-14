@@ -61,6 +61,23 @@ export interface AgentEvaluation {
   concerns: string[];
 }
 
+export interface AgentProgressEntry {
+  agent_name: string;
+  status: 'pending' | 'running' | 'completed' | 'failed';
+  started_at?: string;
+  completed_at?: string;
+  evaluation?: AgentEvaluation;
+  error?: string;
+}
+
+export interface CouncilProgress {
+  started_at: string;
+  agents: AgentProgressEntry[];
+  synthesis_status: 'pending' | 'running' | 'completed' | 'failed';
+  completed_count: number;
+  total_count: number;
+}
+
 export interface Task {
   id: string;
   title: string;
@@ -75,7 +92,55 @@ export interface Task {
   metadata?: Record<string, any>;
 }
 
-export type ProjectPhase = 'idea' | 'spec' | 'design' | 'dev' | 'deploy' | 'gtm' | 'sales' | 'crm';
+export type ProjectPhase = 'concept' | 'spec' | 'design' | 'dev' | 'test' | 'deploy' | 'live';
+
+export type ConceptStep = 'refining' | 'council_selection' | 'council_running' | 'council_review' | 'prd_generation' | 'prd_review';
+
+export interface CouncilMember {
+  agent_name: string;
+  role: string;
+  focus: string;
+  evaluation_criteria?: string[];
+}
+
+// Pipeline HITL types
+export type PhaseSubState = 'idle' | 'working' | 'review' | 'approved' | 'rejected';
+
+export interface PhaseState {
+  phase: ProjectPhase;
+  sub_state: PhaseSubState;
+  started_at?: string;
+  completed_at?: string;
+  feedback?: string;
+  step?: string; // For multi-step phases (design: 'system'|'main_screens'|'all_screens')
+}
+
+export interface PipelineState {
+  current_phase: ProjectPhase;
+  phases: Partial<Record<ProjectPhase, PhaseState>>;
+  run_id?: string;
+  updated_at: string;
+}
+
+export interface DesignSystem {
+  color_palette: { name: string; hex: string; usage: string }[];
+  typography: { role: string; font: string; size: string; weight: string }[];
+  spacing_scale: Record<string, string>;
+  component_inventory: string[];
+  brand_guidelines?: string;
+}
+
+export interface ProjectArtifacts {
+  prd?: PRDDocument;
+  refined_concept?: string;
+  council_brief?: string;
+  council_verdict?: CouncilVerdict;
+  selected_council?: CouncilMember[];
+  council_progress?: CouncilProgress;
+  specs?: Specification[];
+  design_system?: DesignSystem;
+  designs?: ParsedDesign[];
+}
 
 export interface Project {
   id: string;
@@ -84,11 +149,14 @@ export interface Project {
   status: 'active' | 'paused' | 'completed';
   phase?: ProjectPhase;
   idea_id?: string;
+  concept_thread_id?: string;
   created_at: string;
   updated_at: string;
   completed_at?: string;
   tasks?: Task[];
   progress?: number;
+  pipeline?: PipelineState;
+  artifacts?: ProjectArtifacts;
   metadata?: Record<string, any>;
 }
 

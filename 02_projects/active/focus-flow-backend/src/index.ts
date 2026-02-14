@@ -28,6 +28,9 @@ import memoryRoutes from './routes/memory.routes';
 import orchestratorChatRoutes from './routes/orchestrator-chat.routes';
 import crmRoutes from './routes/crm.routes';
 import salesRoutes from './routes/sales.routes';
+import focusSessionRoutes from './routes/focus-session.routes';
+import designRoutes from './routes/design.routes';
+import pipelineRoutes from './routes/pipeline.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -107,6 +110,9 @@ app.use('/api', memoryRoutes);
 app.use('/api/orchestrator', aiLimiter, orchestratorChatRoutes);
 app.use('/api', crmRoutes);
 app.use('/api', salesRoutes);
+app.use('/api', focusSessionRoutes);
+app.use('/api', designRoutes);
+app.use('/api', pipelineRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -205,6 +211,9 @@ app.listen(PORT, () => {
   console.log('  GET    /api/orchestrator/threads');
   console.log('  POST   /api/orchestrator/threads');
   console.log('  GET    /api/orchestrator/threads/:id');
+  console.log('  POST   /api/pipeline/:projectId/start');
+  console.log('  GET    /api/pipeline/:projectId/status');
+  console.log('  POST   /api/pipeline/:projectId/review');
   console.log('==========================================');
 });
 

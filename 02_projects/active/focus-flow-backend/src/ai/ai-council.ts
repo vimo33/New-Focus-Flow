@@ -1,86 +1,77 @@
 import { openClawClient } from '../services/openclaw-client.service';
-import { Idea, CouncilVerdict, AgentEvaluation } from '../models/types';
-import { FeasibilityAgent } from './agents/feasibility';
-import { AlignmentAgent } from './agents/alignment';
-import { ImpactAgent } from './agents/impact';
-import { VaultService } from '../services/vault.service';
-import { getVaultPath, writeJsonFile, deleteFile } from '../utils/file-operations';
+import { CouncilVerdict, AgentEvaluation, CouncilMember } from '../models/types';
+import { DynamicAgent } from './agents/dynamic-agent';
 
 /**
  * AI Council of Elders
  *
- * Orchestrates 3 specialized agents to evaluate ideas from multiple perspectives:
- * - Feasibility Agent: Can this be built?
- * - Alignment Agent: Does this align with user goals?
- * - Impact Agent: What's the ROI?
- *
- * Synthesizes their evaluations into a final verdict with recommendation.
+ * Orchestrates dynamically-defined agents to evaluate project concepts
+ * from multiple perspectives. Agent definitions come from the meta-agent
+ * recommendation step, not a hardcoded pool.
  */
 export class AICouncil {
-  private feasibilityAgent: FeasibilityAgent;
-  private alignmentAgent: AlignmentAgent;
-  private impactAgent: ImpactAgent;
-  private vaultService: VaultService;
-  private readonly SONNET_MODEL = 'claude-sonnet-4.5-20250929';
+  private dynamicAgent: DynamicAgent;
+  private readonly OPUS_MODEL = 'anthropic/claude-opus-4-6';
 
   constructor() {
-    // Uses OpenClaw Gateway for Claude access
-    // Ensure OpenClaw is running: openclaw gateway start
-    this.feasibilityAgent = new FeasibilityAgent();
-    this.alignmentAgent = new AlignmentAgent();
-    this.impactAgent = new ImpactAgent();
-    this.vaultService = new VaultService();
+    this.dynamicAgent = new DynamicAgent();
   }
 
   /**
-   * Validate an idea by running it through the AI Council
-   * Returns a comprehensive verdict with recommendation
+   * Run a single agent using its full CouncilMember definition.
    */
-  async validateIdea(idea: Idea, userContext?: string): Promise<CouncilVerdict> {
-    console.log(`AI Council evaluating idea: ${idea.title}`);
+  async runSingleAgent(
+    member: CouncilMember,
+    title: string,
+    description: string
+  ): Promise<AgentEvaluation> {
+    return this.dynamicAgent.evaluate(member, title, description);
+  }
 
-    // Run all 3 agents in parallel for efficiency
-    const [feasibilityEval, alignmentEval, impactEval] = await Promise.all([
-      this.feasibilityAgent.evaluate(idea.title, idea.description),
-      this.alignmentAgent.evaluate(idea.title, idea.description, userContext),
-      this.impactAgent.evaluate(idea.title, idea.description),
-    ]);
+  /**
+   * Validate with a set of council members (runs all in parallel, then synthesizes).
+   */
+  async validateWithCouncil(
+    title: string,
+    description: string,
+    members: CouncilMember[]
+  ): Promise<CouncilVerdict> {
+    console.log(`AI Council evaluating: ${title} with agents: ${members.map(m => m.agent_name).join(', ')}`);
 
-    console.log('Agent evaluations complete');
-    console.log(`- Feasibility: ${feasibilityEval.score}/10`);
-    console.log(`- Alignment: ${alignmentEval.score}/10`);
-    console.log(`- Impact: ${impactEval.score}/10`);
+    const evaluationPromises = members.map((m) => this.runSingleAgent(m, title, description));
+    const evaluations = await Promise.all(evaluationPromises);
 
-    // Synthesize the verdict
-    const verdict = await this.synthesizeVerdict(
-      idea,
-      [feasibilityEval, alignmentEval, impactEval]
-    );
+    evaluations.forEach((e) => console.log(`- ${e.agent_name}: ${e.score}/10`));
 
-    // Write verdict to vault
-    await this.writeVerdictToVault(idea, verdict);
-
+    const verdict = await this.synthesizeVerdict(title, description, evaluations);
     console.log(`Verdict: ${verdict.recommendation.toUpperCase()} (Score: ${verdict.overall_score}/10)`);
-
     return verdict;
   }
 
   /**
-   * Synthesize individual agent evaluations into a final verdict
-   * Uses Claude to create a coherent, balanced recommendation
+   * Synthesize verdict from pre-collected evaluations (public wrapper)
    */
-  private async synthesizeVerdict(
-    idea: Idea,
+  async synthesizeFromEvaluations(
+    title: string,
+    description: string,
     evaluations: AgentEvaluation[]
   ): Promise<CouncilVerdict> {
-    // Calculate overall score (weighted average)
-    const totalScore = evaluations.reduce((sum, evaluation) => sum + evaluation.score, 0);
+    return this.synthesizeVerdict(title, description, evaluations);
+  }
+
+  /**
+   * Synthesize individual agent evaluations into a final verdict
+   */
+  private async synthesizeVerdict(
+    title: string,
+    description: string,
+    evaluations: AgentEvaluation[]
+  ): Promise<CouncilVerdict> {
+    const totalScore = evaluations.reduce((sum, e) => sum + e.score, 0);
     const overallScore = Math.round((totalScore / evaluations.length) * 10) / 10;
 
-    // Determine recommendation based on scores and concerns
     let recommendation: 'approve' | 'reject' | 'needs-info';
-    const allConcerns = evaluations.flatMap(e => e.concerns);
-    const hasBlockingConcerns = evaluations.some(e => e.score < 4);
+    const hasBlockingConcerns = evaluations.some((e) => e.score < 4);
 
     if (overallScore >= 7 && !hasBlockingConcerns) {
       recommendation = 'approve';
@@ -90,15 +81,9 @@ export class AICouncil {
       recommendation = 'needs-info';
     }
 
-    // Use Claude to synthesize reasoning and next steps
     const systemPrompt = `You are the Head of the AI Council of Elders for Focus Flow.
 
-Your role is to synthesize evaluations from 3 specialized agents into a coherent verdict.
-
-The agents are:
-1. Feasibility Agent: Assesses technical viability
-2. Alignment Agent: Assesses goal alignment
-3. Impact Agent: Assesses ROI and value
+Your role is to synthesize evaluations from specialized agents into a coherent verdict.
 
 Provide:
 1. A synthesized reasoning that balances all perspectives
@@ -114,7 +99,7 @@ Respond ONLY with valid JSON in this exact format:
 
     const evaluationSummary = evaluations
       .map(
-        e => `${e.agent_name}:
+        (e) => `${e.agent_name}:
 Score: ${e.score}/10
 Reasoning: ${e.reasoning}
 Concerns: ${e.concerns.join(', ') || 'None'}`
@@ -123,29 +108,29 @@ Concerns: ${e.concerns.join(', ') || 'None'}`
 
     const userMessage = `Synthesize these evaluations into a final verdict:
 
-Idea: ${idea.title}
-Description: ${idea.description}
+## Project: ${title}
 
+## Council Brief
+${description}
+
+## Scores
 Overall Score: ${overallScore}/10
 Recommendation: ${recommendation}
 
-Agent Evaluations:
+## Agent Evaluations
 ${evaluationSummary}
 
-Provide synthesized reasoning and next steps.`;
+Provide synthesized reasoning and actionable next steps. Ground your synthesis in the full context above — reference specific details from the original submission and chat refinement, not just the agent scores.`;
 
     try {
       const responseText = await openClawClient.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.SONNET_MODEL,
-          maxTokens: 1000,
-          temperature: 0.5,
-        }
+        { model: this.OPUS_MODEL, maxTokens: 2000, temperature: 0.5 }
       );
 
-      const synthesis = JSON.parse(responseText);
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      const synthesis = JSON.parse(jsonMatch ? jsonMatch[0] : responseText);
 
       return {
         recommendation,
@@ -153,90 +138,35 @@ Provide synthesized reasoning and next steps.`;
         evaluations,
         synthesized_reasoning: synthesis.synthesized_reasoning,
         next_steps: synthesis.next_steps || [],
+        council_composition: evaluations.map((e) => e.agent_name),
       };
     } catch (error) {
-      // Fallback to basic synthesis if Claude fails
       console.error('Failed to synthesize with Claude, using fallback:', error);
 
       return {
         recommendation,
         overall_score: overallScore,
         evaluations,
-        synthesized_reasoning: this.generateFallbackReasoning(evaluations),
+        synthesized_reasoning: evaluations
+          .map((e) => `${e.agent_name} (${e.score}/10): ${e.reasoning}`)
+          .join('\n\n'),
         next_steps: this.generateFallbackNextSteps(recommendation),
+        council_composition: evaluations.map((e) => e.agent_name),
       };
     }
   }
 
-  /**
-   * Write the verdict to the appropriate vault location
-   * Approved/needs-info -> validated/, Rejected -> rejected/
-   */
-  private async writeVerdictToVault(idea: Idea, verdict: CouncilVerdict): Promise<void> {
-    // Update the idea with the verdict
-    const updatedIdea: Idea = {
-      ...idea,
-      status: verdict.recommendation === 'reject' ? 'rejected' : 'validated',
-      validated_at: new Date().toISOString(),
-      council_verdict: verdict,
-    };
-
-    // Determine target directory based on recommendation
-    const targetDir = verdict.recommendation === 'reject' ? 'rejected' : 'validated';
-
-    // Write to target directory
-    const targetPath = getVaultPath('03_ideas', targetDir, `${idea.id}.json`);
-    await writeJsonFile(targetPath, updatedIdea);
-
-    // Remove from inbox if it exists there
-    try {
-      const inboxPath = getVaultPath('03_ideas', 'inbox', `${idea.id}.json`);
-      await deleteFile(inboxPath);
-    } catch (error) {
-      // Inbox file may not exist, that's okay
-    }
-
-    console.log(`Verdict written to: ${targetPath}`);
-  }
-
-  /**
-   * Generate fallback reasoning if Claude synthesis fails
-   */
-  private generateFallbackReasoning(evaluations: AgentEvaluation[]): string {
-    const summaries = evaluations.map(e => `${e.agent_name} (${e.score}/10): ${e.reasoning}`);
-    return summaries.join('\n\n');
-  }
-
-  /**
-   * Generate fallback next steps if Claude synthesis fails
-   */
   private generateFallbackNextSteps(recommendation: 'approve' | 'reject' | 'needs-info'): string[] {
     switch (recommendation) {
       case 'approve':
-        return [
-          'Create a project plan with milestones',
-          'Identify required resources and dependencies',
-          'Set a timeline for implementation',
-          'Begin execution',
-        ];
+        return ['Proceed to PRD generation', 'Define core requirements', 'Set timeline'];
       case 'needs-info':
-        return [
-          'Address the concerns raised by the council',
-          'Gather additional information',
-          'Refine the idea and resubmit for evaluation',
-        ];
+        return ['Address concerns raised by council', 'Refine concept and resubmit'];
       case 'reject':
-        return [
-          'Consider alternative approaches',
-          'Archive this idea for future reference',
-          'Focus on higher-impact opportunities',
-        ];
+        return ['Consider alternative approaches', 'Focus on higher-impact opportunities'];
     }
   }
 
-  /**
-   * Health check to verify all agents are operational
-   */
   async healthCheck(): Promise<boolean> {
     try {
       return await openClawClient.healthCheck();
@@ -247,5 +177,4 @@ Provide synthesized reasoning and next steps.`;
   }
 }
 
-// Export a singleton instance
 export const aiCouncil = new AICouncil();
