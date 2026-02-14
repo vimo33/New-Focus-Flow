@@ -3,22 +3,22 @@
  *
  * Implements Mem0-style memory extraction and semantic search using:
  * - Qdrant for vector storage (already running on port 6333)
- * - OpenAI text-embedding-3-small for embeddings
- * - Anthropic Haiku for memory fact extraction from conversations
+ * - FastEmbed (BAAI/bge-small-en-v1.5) for local embeddings — no API calls
+ * - OpenClaw Haiku for memory fact extraction from conversations
  *
  * Graceful degradation: all methods return empty/null when unavailable.
  */
 
 import { QdrantClient } from '@qdrant/js-client-rest';
-import OpenAI from 'openai';
-import Anthropic from '@anthropic-ai/sdk';
+import { EmbeddingModel, FlagEmbedding } from 'fastembed';
 import crypto from 'crypto';
+import { openClawClient } from './openclaw-client.service';
 
 const LOG_PREFIX = '[Mem0]';
 const DEFAULT_USER = 'focus-flow-user';
 const DEFAULT_TOKEN_BUDGET = 4000;
 const COLLECTION_NAME = 'focus-flow-memories';
-const EMBEDDING_DIM = 1536;
+const EMBEDDING_DIM = 384; // BAAI/bge-small-en-v1.5
 
 export interface MemoryItem {
   id: string;
@@ -63,8 +63,7 @@ Example output:
 
 class Mem0Service {
   private qdrant: QdrantClient | null = null;
-  private openai: OpenAI | null = null;
-  private anthropic: Anthropic | null = null;
+  private embedder: FlagEmbedding | null = null;
   private available = false;
   private initPromise: Promise<void>;
 
@@ -73,29 +72,20 @@ class Mem0Service {
   }
 
   private async initialize(): Promise<void> {
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
-    const openaiKey = process.env.OPENAI_API_KEY;
-
-    if (!anthropicKey || anthropicKey.startsWith('placeholder')) {
-      console.warn(`${LOG_PREFIX} ANTHROPIC_API_KEY not configured — memory features disabled`);
-      return;
-    }
-    if (!openaiKey || openaiKey.startsWith('placeholder') || openaiKey.startsWith('your-')) {
-      console.warn(`${LOG_PREFIX} OPENAI_API_KEY not configured — memory features disabled`);
+    const openclawToken = process.env.OPENCLAW_AUTH_TOKEN;
+    if (!openclawToken) {
+      console.warn(`${LOG_PREFIX} OPENCLAW_AUTH_TOKEN not configured — memory features disabled`);
       return;
     }
 
     try {
-      // Initialize clients
       this.qdrant = new QdrantClient({ host: 'localhost', port: 6333 });
-      this.openai = new OpenAI({ apiKey: openaiKey });
-      this.anthropic = new Anthropic({ apiKey: anthropicKey });
-
-      // Ensure collection exists
+      this.embedder = await FlagEmbedding.init({
+        model: EmbeddingModel.BGESmallENV15,
+      });
       await this.ensureCollection();
-
       this.available = true;
-      console.log(`${LOG_PREFIX} Initialized successfully (Qdrant + Anthropic Haiku + OpenAI embeddings)`);
+      console.log(`${LOG_PREFIX} Initialized (OpenClaw Haiku + local FastEmbed BGE-small + Qdrant)`);
     } catch (error: any) {
       console.error(`${LOG_PREFIX} Failed to initialize:`, error.message);
       this.available = false;
@@ -107,17 +97,23 @@ class Mem0Service {
 
     try {
       const collections = await this.qdrant.getCollections();
-      const exists = collections.collections.some(c => c.name === COLLECTION_NAME);
+      const existing = collections.collections.find(c => c.name === COLLECTION_NAME);
 
-      if (!exists) {
-        await this.qdrant.createCollection(COLLECTION_NAME, {
-          vectors: {
-            size: EMBEDDING_DIM,
-            distance: 'Cosine',
-          },
-        });
-        console.log(`${LOG_PREFIX} Created Qdrant collection: ${COLLECTION_NAME}`);
+      if (existing) {
+        const info = await this.qdrant.getCollection(COLLECTION_NAME);
+        const currentDim = (info.config?.params?.vectors as any)?.size;
+        if (currentDim && currentDim !== EMBEDDING_DIM) {
+          console.log(`${LOG_PREFIX} Recreating collection (dim ${currentDim} → ${EMBEDDING_DIM})`);
+          await this.qdrant.deleteCollection(COLLECTION_NAME);
+        } else {
+          return;
+        }
       }
+
+      await this.qdrant.createCollection(COLLECTION_NAME, {
+        vectors: { size: EMBEDDING_DIM, distance: 'Cosine' },
+      });
+      console.log(`${LOG_PREFIX} Created Qdrant collection: ${COLLECTION_NAME} (${EMBEDDING_DIM}d)`);
     } catch (error: any) {
       console.error(`${LOG_PREFIX} Failed to ensure collection:`, error.message);
       throw error;
@@ -125,37 +121,23 @@ class Mem0Service {
   }
 
   private async embed(text: string): Promise<number[]> {
-    if (!this.openai) throw new Error('OpenAI not initialized');
-
-    const response = await this.openai.embeddings.create({
-      model: 'text-embedding-3-small',
-      input: text,
-    });
-
-    return response.data[0].embedding;
+    if (!this.embedder) throw new Error('Embedder not initialized');
+    const result = await this.embedder.queryEmbed(text);
+    return Array.from(result);
   }
 
   private async extractFacts(
     messages: Array<{ role: string; content: string }>
   ): Promise<string[]> {
-    if (!this.anthropic) throw new Error('Anthropic not initialized');
-
     const conversationText = messages
       .map(m => `${m.role}: ${m.content}`)
       .join('\n');
 
-    const response = await this.anthropic.messages.create({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 1000,
-      messages: [
-        {
-          role: 'user',
-          content: `${EXTRACTION_PROMPT}\n\nConversation:\n${conversationText}`,
-        },
-      ],
-    });
-
-    const text = response.content[0].type === 'text' ? response.content[0].text : '';
+    const text = await openClawClient.complete(
+      `${EXTRACTION_PROMPT}\n\nConversation:\n${conversationText}`,
+      undefined,
+      { maxTokens: 1000, temperature: 0.3 }
+    );
 
     if (text.trim() === 'NONE') return [];
 
