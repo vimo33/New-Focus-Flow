@@ -1,0 +1,60 @@
+{
+  "decision_type": "idea_validation",
+  "display_name": "Idea Validation",
+  "description": "Evaluate whether a product or feature idea is worth pursuing, covering feasibility, market fit, and user impact.",
+  "default_agent_count": 3,
+  "required_dimensions": ["feasibility", "market_fit", "user_impact", "differentiation"],
+  "optional_dimensions": ["monetization", "timing", "regulatory"],
+  "dimension_weights": {
+    "feasibility": 0.25,
+    "market_fit": 0.3,
+    "user_impact": 0.25,
+    "differentiation": 0.2
+  },
+  "agent_selection_prompt": "Analyze this idea and recommend 3 specialist evaluation agents tailored to it.\n\nIdea: {subject}\n\nContext: {context}\n\nEach agent must score these dimensions: feasibility, market_fit, user_impact, differentiation.\n\nRespond ONLY with a JSON array of agent definitions:\n[\n  {\n    \"agent_name\": \"Specific Name\",\n    \"role\": \"Area of Expertise\",\n    \"focus\": \"What this agent evaluates\",\n    \"evaluation_criteria\": [\"criterion 1\", \"criterion 2\", \"criterion 3\"]\n  }\n]",
+  "synthesis_prompt": "You are synthesizing an idea validation council verdict.\n\nProvide:\n1. An executive summary (2-3 sentences)\n2. A single key insight\n3. 3-5 recommended next actions with priorities\n4. Key risks\n5. Open questions that remain\n\nRespond ONLY with valid JSON:\n{\n  \"executive_summary\": \"...\",\n  \"key_insight\": \"...\",\n  \"recommended_actions\": [{\"action\": \"...\", \"priority\": \"high|medium|low\", \"category\": \"validation|development|research\", \"can_auto_create_task\": true}],\n  \"risks\": [\"risk 1\"],\n  \"open_questions\": [\"question 1\"]\n}",
+  "verdict_thresholds": {
+    "strong_proceed": 8.0,
+    "proceed_with_caution": 6.5,
+    "needs_more_info": 5.0,
+    "reconsider": 3.5
+  },
+  "action_templates": [
+    {
+      "action": "Create detailed PRD",
+      "priority": "high",
+      "category": "development",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Draft PRD for validated idea",
+        "description": "Create a detailed Product Requirements Document based on council feedback",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Conduct user interviews",
+      "priority": "medium",
+      "category": "validation",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Conduct 5 user interviews for concept validation",
+        "description": "Interview potential users to validate assumptions and gather feedback",
+        "category": "work",
+        "priority": "medium"
+      }
+    },
+    {
+      "action": "Competitive analysis deep-dive",
+      "priority": "medium",
+      "category": "research",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Deep competitive analysis",
+        "description": "Research competitors, alternatives, and market positioning",
+        "category": "work",
+        "priority": "medium"
+      }
+    }
+  ]
+}

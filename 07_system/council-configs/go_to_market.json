@@ -1,0 +1,72 @@
+{
+  "decision_type": "go_to_market",
+  "display_name": "Go-to-Market Strategy",
+  "description": "Evaluate go-to-market plans covering channel strategy, messaging, launch timing, and growth mechanics.",
+  "default_agent_count": 4,
+  "required_dimensions": ["channel_strategy", "messaging_clarity", "launch_readiness", "growth_mechanics"],
+  "optional_dimensions": ["brand_alignment", "partnership_potential", "content_strategy"],
+  "dimension_weights": {
+    "channel_strategy": 0.3,
+    "messaging_clarity": 0.2,
+    "launch_readiness": 0.25,
+    "growth_mechanics": 0.25
+  },
+  "agent_selection_prompt": "Analyze this go-to-market plan and recommend 4 specialist evaluation agents.\n\nSubject: {subject}\n\nContext: {context}\n\nEach agent must score these dimensions: channel_strategy, messaging_clarity, launch_readiness, growth_mechanics.\n\nRespond ONLY with a JSON array of agent definitions:\n[\n  {\n    \"agent_name\": \"Specific Name\",\n    \"role\": \"Area of Expertise\",\n    \"focus\": \"What this agent evaluates\",\n    \"evaluation_criteria\": [\"criterion 1\", \"criterion 2\", \"criterion 3\"]\n  }\n]",
+  "synthesis_prompt": "You are synthesizing a go-to-market strategy council verdict.\n\nProvide:\n1. An executive summary (2-3 sentences)\n2. A single key GTM insight\n3. 3-5 recommended launch actions with priorities\n4. Market entry risks\n5. Open questions about the GTM plan\n\nRespond ONLY with valid JSON:\n{\n  \"executive_summary\": \"...\",\n  \"key_insight\": \"...\",\n  \"recommended_actions\": [{\"action\": \"...\", \"priority\": \"high|medium|low\", \"category\": \"launch|marketing|partnerships\", \"can_auto_create_task\": true}],\n  \"risks\": [\"risk 1\"],\n  \"open_questions\": [\"question 1\"]\n}",
+  "verdict_thresholds": {
+    "strong_proceed": 7.5,
+    "proceed_with_caution": 6.0,
+    "needs_more_info": 4.5,
+    "reconsider": 3.0
+  },
+  "action_templates": [
+    {
+      "action": "Define launch checklist",
+      "priority": "high",
+      "category": "launch",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Create launch readiness checklist",
+        "description": "Define all pre-launch requirements, milestones, and go/no-go criteria",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Build landing page",
+      "priority": "high",
+      "category": "marketing",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Design and build landing page",
+        "description": "Create a conversion-optimized landing page with clear value proposition",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Identify launch partners",
+      "priority": "medium",
+      "category": "partnerships",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Research and reach out to launch partners",
+        "description": "Identify potential distribution partners and co-marketing opportunities",
+        "category": "work",
+        "priority": "medium"
+      }
+    },
+    {
+      "action": "Create content calendar",
+      "priority": "medium",
+      "category": "marketing",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Build pre-launch content calendar",
+        "description": "Plan social media, blog posts, and email campaigns leading up to launch",
+        "category": "work",
+        "priority": "medium"
+      }
+    }
+  ]
+}

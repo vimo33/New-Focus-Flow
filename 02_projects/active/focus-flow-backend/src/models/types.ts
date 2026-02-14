@@ -491,3 +491,100 @@ export interface VoiceCommandRequest {
     recent_items?: string[];
   };
 }
+
+// ============================================================================
+// Phase 4: Generalized Council Types
+// ============================================================================
+
+export type CouncilDecisionType =
+  | 'idea_validation' | 'architecture_review' | 'pricing'
+  | 'go_to_market' | 'risk_assessment' | string;
+
+export type VerdictLevel =
+  | 'strong_proceed' | 'proceed_with_caution' | 'needs_more_info'
+  | 'reconsider' | 'strong_reject';
+
+export interface DimensionScore {
+  dimension: string;
+  score: number;
+  weight: number;
+  reasoning: string;
+}
+
+export interface RecommendedAction {
+  action: string;
+  priority: 'high' | 'medium' | 'low';
+  category: string;
+  can_auto_create_task: boolean;
+  task_template?: {
+    title: string;
+    description: string;
+    category: 'work' | 'personal' | 'scheduled';
+    priority: 'low' | 'medium' | 'high';
+  };
+}
+
+export interface EnhancedAgentEvaluation extends AgentEvaluation {
+  dimension_scores: DimensionScore[];
+  confidence: number;
+  key_insight?: string;
+}
+
+export interface EnhancedCouncilVerdict {
+  id: string;
+  decision_type: CouncilDecisionType;
+  verdict: VerdictLevel;
+  confidence: number;
+  overall_score: number;
+  executive_summary: string;
+  key_insight: string;
+  dimension_scores: DimensionScore[];
+  evaluations: EnhancedAgentEvaluation[];
+  recommended_actions: RecommendedAction[];
+  risks: string[];
+  open_questions: string[];
+  consensus_areas: string[];
+  disagreement_areas: string[];
+  synthesized_reasoning: string;
+  council_composition: string[];
+  created_at: string;
+  project_id?: string;
+  subject_title: string;
+  subject_description: string;
+  // Backward compat fields
+  recommendation: 'approve' | 'reject' | 'needs-info';
+  next_steps: string[];
+}
+
+export interface CouncilDecisionConfig {
+  decision_type: CouncilDecisionType;
+  display_name: string;
+  description: string;
+  default_agent_count: number;
+  required_dimensions: string[];
+  optional_dimensions: string[];
+  dimension_weights: Record<string, number>;
+  agent_selection_prompt: string;
+  synthesis_prompt: string;
+  verdict_thresholds: {
+    strong_proceed: number;
+    proceed_with_caution: number;
+    needs_more_info: number;
+    reconsider: number;
+  };
+  action_templates: RecommendedAction[];
+}
+
+export interface CouncilPanelProposal {
+  decision_type: CouncilDecisionType;
+  proposed_agents: CouncilMember[];
+  reasoning: string;
+  context_summary: string;
+}
+
+export interface PanelModification {
+  action: 'add' | 'remove' | 'swap' | 'custom';
+  agent_name?: string;
+  new_agent?: CouncilMember;
+  description?: string;
+}

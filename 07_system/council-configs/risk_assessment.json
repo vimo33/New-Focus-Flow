@@ -1,0 +1,60 @@
+{
+  "decision_type": "risk_assessment",
+  "display_name": "Risk Assessment",
+  "description": "Evaluate risks across technical, business, legal, and operational dimensions for critical decisions.",
+  "default_agent_count": 4,
+  "required_dimensions": ["technical_risk", "business_risk", "operational_risk", "mitigation_quality"],
+  "optional_dimensions": ["legal_risk", "reputational_risk", "dependency_risk"],
+  "dimension_weights": {
+    "technical_risk": 0.25,
+    "business_risk": 0.3,
+    "operational_risk": 0.2,
+    "mitigation_quality": 0.25
+  },
+  "agent_selection_prompt": "Analyze this decision for risk assessment and recommend 4 specialist risk evaluation agents.\n\nSubject: {subject}\n\nContext: {context}\n\nEach agent must score these dimensions: technical_risk, business_risk, operational_risk, mitigation_quality.\nNote: For risk dimensions, higher scores mean LOWER risk (10 = minimal risk, 0 = critical risk).\n\nRespond ONLY with a JSON array of agent definitions:\n[\n  {\n    \"agent_name\": \"Specific Name\",\n    \"role\": \"Area of Expertise\",\n    \"focus\": \"What this agent evaluates\",\n    \"evaluation_criteria\": [\"criterion 1\", \"criterion 2\", \"criterion 3\"]\n  }\n]",
+  "synthesis_prompt": "You are synthesizing a risk assessment council verdict.\n\nProvide:\n1. An executive summary of the overall risk profile (2-3 sentences)\n2. A single key risk insight\n3. 3-5 risk mitigation actions with priorities\n4. Critical risks that could be blockers\n5. Open questions about risk exposure\n\nRespond ONLY with valid JSON:\n{\n  \"executive_summary\": \"...\",\n  \"key_insight\": \"...\",\n  \"recommended_actions\": [{\"action\": \"...\", \"priority\": \"high|medium|low\", \"category\": \"mitigation|monitoring|contingency\", \"can_auto_create_task\": true}],\n  \"risks\": [\"risk 1\"],\n  \"open_questions\": [\"question 1\"]\n}",
+  "verdict_thresholds": {
+    "strong_proceed": 7.5,
+    "proceed_with_caution": 6.0,
+    "needs_more_info": 4.5,
+    "reconsider": 3.0
+  },
+  "action_templates": [
+    {
+      "action": "Create risk register",
+      "priority": "high",
+      "category": "monitoring",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Create and maintain risk register",
+        "description": "Document all identified risks with likelihood, impact, and mitigation strategies",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Define contingency plans",
+      "priority": "high",
+      "category": "contingency",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Document contingency plans for critical risks",
+        "description": "Create fallback strategies for top 3 identified risks",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Set up risk monitoring",
+      "priority": "medium",
+      "category": "monitoring",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Implement risk monitoring dashboard",
+        "description": "Set up alerts and tracking for key risk indicators",
+        "category": "work",
+        "priority": "medium"
+      }
+    }
+  ]
+}

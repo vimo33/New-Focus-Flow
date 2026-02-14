@@ -33,6 +33,9 @@ import designRoutes from './routes/design.routes';
 import pipelineRoutes from './routes/pipeline.routes';
 import uploadRoutes from './routes/upload.routes';
 import decisionsRoutes from './routes/decisions.routes';
+import inferenceRoutes from './routes/inference.routes';
+import toolsRoutes from './routes/tools.routes';
+import councilRoutes from './routes/council.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -117,6 +120,9 @@ app.use('/api', designRoutes);
 app.use('/api', pipelineRoutes);
 app.use('/api', uploadRoutes);
 app.use('/api', decisionsRoutes);
+app.use('/api', inferenceRoutes);
+app.use('/api', toolsRoutes);
+app.use('/api', aiLimiter, councilRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

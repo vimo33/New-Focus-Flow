@@ -1,0 +1,60 @@
+{
+  "decision_type": "pricing",
+  "display_name": "Pricing Strategy",
+  "description": "Evaluate pricing models and strategies covering value capture, competitive positioning, and revenue sustainability.",
+  "default_agent_count": 3,
+  "required_dimensions": ["value_capture", "competitive_positioning", "revenue_sustainability", "customer_perception"],
+  "optional_dimensions": ["upsell_potential", "churn_impact", "market_segmentation"],
+  "dimension_weights": {
+    "value_capture": 0.3,
+    "competitive_positioning": 0.25,
+    "revenue_sustainability": 0.25,
+    "customer_perception": 0.2
+  },
+  "agent_selection_prompt": "Analyze this pricing decision and recommend 3 specialist evaluation agents.\n\nSubject: {subject}\n\nContext: {context}\n\nEach agent must score these dimensions: value_capture, competitive_positioning, revenue_sustainability, customer_perception.\n\nRespond ONLY with a JSON array of agent definitions:\n[\n  {\n    \"agent_name\": \"Specific Name\",\n    \"role\": \"Area of Expertise\",\n    \"focus\": \"What this agent evaluates\",\n    \"evaluation_criteria\": [\"criterion 1\", \"criterion 2\", \"criterion 3\"]\n  }\n]",
+  "synthesis_prompt": "You are synthesizing a pricing strategy council verdict.\n\nProvide:\n1. An executive summary (2-3 sentences)\n2. A single key pricing insight\n3. 3-5 recommended pricing actions with priorities\n4. Revenue risks\n5. Open questions about the pricing model\n\nRespond ONLY with valid JSON:\n{\n  \"executive_summary\": \"...\",\n  \"key_insight\": \"...\",\n  \"recommended_actions\": [{\"action\": \"...\", \"priority\": \"high|medium|low\", \"category\": \"pricing|research|testing\", \"can_auto_create_task\": true}],\n  \"risks\": [\"risk 1\"],\n  \"open_questions\": [\"question 1\"]\n}",
+  "verdict_thresholds": {
+    "strong_proceed": 7.5,
+    "proceed_with_caution": 6.0,
+    "needs_more_info": 4.5,
+    "reconsider": 3.0
+  },
+  "action_templates": [
+    {
+      "action": "Price sensitivity analysis",
+      "priority": "high",
+      "category": "research",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Conduct price sensitivity analysis",
+        "description": "Survey target users to determine willingness-to-pay and optimal price points",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Competitor pricing audit",
+      "priority": "medium",
+      "category": "research",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Audit competitor pricing models",
+        "description": "Research and document competitor pricing tiers, features, and positioning",
+        "category": "work",
+        "priority": "medium"
+      }
+    },
+    {
+      "action": "A/B test pricing tiers",
+      "priority": "medium",
+      "category": "testing",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Design pricing A/B test",
+        "description": "Create experiment to test different pricing tiers and measure conversion impact",
+        "category": "work",
+        "priority": "medium"
+      }
+    }
+  ]
+}

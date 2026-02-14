@@ -37,3 +37,7 @@ export function generateThreadId(): string {
 export function generateMessageId(): string {
   return generateId('msg');
 }
+
+export function generateVerdictId(): string {
+  return generateId('vrd');
+}
