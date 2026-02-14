@@ -19,7 +19,22 @@ export class DynamicAgent {
       ? `\nEvaluate specifically on these criteria:\n${member.evaluation_criteria.map((c, i) => `${i + 1}. ${c}`).join('\n')}`
       : '';
 
-    const systemPrompt = `You are the ${member.agent_name} in the AI Council of Elders for Focus Flow.
+    const jsonFormatInstructions = `
+
+After your research, respond ONLY with valid JSON in this exact format:
+{
+  "score": 0-10,
+  "reasoning": "detailed analysis from your perspective, citing specific findings from your research",
+  "concerns": ["concern 1", "concern 2", ...]
+}
+
+Be constructive but realistic. Ground your assessment in real data from your research.`;
+
+    // If custom system_prompt provided, use it + append scoring format
+    // Otherwise, use existing auto-generated prompt from agent_name/role/focus/criteria
+    const systemPrompt = member.system_prompt
+      ? `${member.system_prompt}${jsonFormatInstructions}`
+      : `You are the ${member.agent_name} in the AI Council of Elders for Focus Flow.
 
 Your role: ${member.role}
 Your focus: ${member.focus}
@@ -35,15 +50,7 @@ After researching, provide a score from 0-10:
 - 4-6: Significant concerns but workable
 - 7-8: Good with minor issues
 - 9-10: Excellent in your focus area
-
-After your research, respond ONLY with valid JSON in this exact format:
-{
-  "score": 0-10,
-  "reasoning": "detailed analysis from your perspective, citing specific findings from your research",
-  "concerns": ["concern 1", "concern 2", ...]
-}
-
-Be constructive but realistic. Ground your assessment in real data from your research.`;
+${jsonFormatInstructions}`;
 
     const userMessage = `Evaluate this concept from your perspective as ${member.role}:
 
@@ -57,7 +64,7 @@ Description: ${ideaDescription}`;
         systemPrompt,
         {
           model: this.MODEL,
-          maxTokens: 1500,
+          maxTokens: member.max_tokens || 1500,
           temperature: 0.5,
         }
       );

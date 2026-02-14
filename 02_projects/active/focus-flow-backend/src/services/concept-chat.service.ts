@@ -258,7 +258,7 @@ Be comprehensive. Use the specific details from the conversation. Do not omit im
     // Section 2: Original submission (first user message — could be a large spec/research doc)
     const firstUserMsg = allMessages.find(m => m.role === 'user');
     if (firstUserMsg && firstUserMsg.content.length > 200) {
-      const MAX_ORIGINAL = 20000;
+      const MAX_ORIGINAL = 50000;
       const original = firstUserMsg.content.length > MAX_ORIGINAL
         ? firstUserMsg.content.substring(0, MAX_ORIGINAL) + `\n\n... [original document truncated — ${firstUserMsg.content.length.toLocaleString()} chars total]`
         : firstUserMsg.content;

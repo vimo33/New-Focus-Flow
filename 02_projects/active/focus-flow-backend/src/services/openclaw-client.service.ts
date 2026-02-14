@@ -82,7 +82,7 @@ export class OpenClawClient {
       headers: {
         'Content-Type': 'application/json',
       },
-      timeout: 180000, // 3 minute timeout - multi-message AI completions with large context need time
+      timeout: 360000, // 6 minute timeout - Opus agents with web search on large docs need time
       maxRedirects: 0, // SECURITY: Disable redirects to prevent SSRF
     });
 

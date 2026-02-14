@@ -101,6 +101,8 @@ export interface CouncilMember {
   role: string;
   focus: string;
   evaluation_criteria?: string[];
+  system_prompt?: string;    // Override auto-generated system prompt
+  max_tokens?: number;       // Override default 1500 token limit
 }
 
 // Pipeline HITL types

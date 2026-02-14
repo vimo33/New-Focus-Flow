@@ -382,7 +382,7 @@ export class PipelineService {
     description: string,
     agents: CouncilMember[]
   ): void {
-    const TIMEOUT_MS = 5 * 60 * 1000; // 5 minutes (agents now do web research)
+    const TIMEOUT_MS = 10 * 60 * 1000; // 10 minutes (Opus agents with web research)
     let timedOut = false;
 
     console.log(`[Council Background] Starting ${agents.length} agents for project ${projectId}`);
