@@ -19,6 +19,8 @@ const DEFAULT_USER = 'focus-flow-user';
 const DEFAULT_TOKEN_BUDGET = 4000;
 const COLLECTION_NAME = 'focus-flow-memories';
 const EMBEDDING_DIM = 384; // BAAI/bge-small-en-v1.5
+const DEDUP_THRESHOLD = 0.92; // Cosine similarity above this = duplicate
+const CHARS_PER_TOKEN = 4; // Rough approximation for token counting
 
 export interface MemoryItem {
   id: string;
@@ -126,6 +128,45 @@ class Mem0Service {
     return Array.from(result);
   }
 
+  /**
+   * Check if a near-duplicate memory exists. If so, update it instead of creating new.
+   * Returns the existing point ID if a duplicate is found, null otherwise.
+   */
+  private async findDuplicate(
+    vector: number[],
+    userId: string,
+    projectId?: string
+  ): Promise<{ id: string; memory: string } | null> {
+    if (!this.qdrant) return null;
+
+    try {
+      const filter: any = {
+        must: [{ key: 'user_id', match: { value: userId } }],
+      };
+      if (projectId) {
+        filter.must.push({ key: 'project_id', match: { value: projectId } });
+      }
+
+      const results = await this.qdrant.search(COLLECTION_NAME, {
+        vector,
+        limit: 1,
+        filter,
+        with_payload: true,
+        score_threshold: DEDUP_THRESHOLD,
+      });
+
+      if (results.length > 0) {
+        return {
+          id: String(results[0].id),
+          memory: (results[0].payload as any)?.memory || '',
+        };
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
   private async extractFacts(
     messages: Array<{ role: string; content: string }>
   ): Promise<string[]> {
@@ -156,6 +197,7 @@ class Mem0Service {
   /**
    * Store conversation messages as memories.
    * Uses Haiku to extract key facts, then embeds and stores each.
+   * Deduplicates against existing memories — updates instead of creating duplicates.
    */
   async addMemories(
     messages: Array<{ role: string; content: string }>,
@@ -168,17 +210,21 @@ class Mem0Service {
       if (facts.length === 0) return { results: [] };
 
       const storedItems: MemoryItem[] = [];
+      const userId = options.userId || DEFAULT_USER;
 
       for (const fact of facts) {
-        const id = crypto.randomUUID();
         const vector = await this.embed(fact);
         const now = new Date().toISOString();
 
+        // Check for near-duplicate
+        const existing = await this.findDuplicate(vector, userId, options.projectId);
+
         const payload: Record<string, any> = {
           memory: fact,
-          user_id: options.userId || DEFAULT_USER,
-          created_at: now,
+          user_id: userId,
+          created_at: existing ? undefined : now, // preserve original created_at
           updated_at: now,
+          source: options.metadata?.source || 'conversation',
           ...options.metadata,
         };
 
@@ -186,11 +232,28 @@ class Mem0Service {
           payload.project_id = options.projectId;
         }
 
-        await this.qdrant!.upsert(COLLECTION_NAME, {
-          points: [{ id, vector, payload }],
-        });
+        let id: string;
+        if (existing) {
+          // Update existing memory — keep ID, refresh content and timestamp
+          id = existing.id;
+          delete payload.created_at; // don't overwrite original
+          await this.qdrant!.upsert(COLLECTION_NAME, {
+            points: [{ id, vector, payload }],
+          });
+        } else {
+          id = crypto.randomUUID();
+          payload.created_at = now;
+          await this.qdrant!.upsert(COLLECTION_NAME, {
+            points: [{ id, vector, payload }],
+          });
+        }
 
-        storedItems.push({ id, memory: fact, metadata: payload, created_at: now });
+        storedItems.push({
+          id,
+          memory: fact,
+          metadata: { ...payload, deduplicated: !!existing },
+          created_at: payload.created_at || now,
+        });
       }
 
       return { results: storedItems };
@@ -202,6 +265,7 @@ class Mem0Service {
 
   /**
    * Store an explicit fact/decision/preference as a memory.
+   * Deduplicates against existing memories.
    */
   async addExplicitMemory(
     content: string,
@@ -210,15 +274,18 @@ class Mem0Service {
     if (!(await this.ensureReady())) return null;
 
     try {
-      const id = crypto.randomUUID();
       const vector = await this.embed(content);
       const now = new Date().toISOString();
+      const userId = options.userId || DEFAULT_USER;
+
+      // Check for near-duplicate
+      const existing = await this.findDuplicate(vector, userId, options.projectId);
 
       const payload: Record<string, any> = {
         memory: content,
-        user_id: options.userId || DEFAULT_USER,
-        created_at: now,
+        user_id: userId,
         updated_at: now,
+        source: options.metadata?.source || 'explicit',
         ...options.metadata,
       };
 
@@ -229,11 +296,21 @@ class Mem0Service {
         payload.tags = options.tags;
       }
 
-      await this.qdrant!.upsert(COLLECTION_NAME, {
-        points: [{ id, vector, payload }],
-      });
+      let id: string;
+      if (existing) {
+        id = existing.id;
+        await this.qdrant!.upsert(COLLECTION_NAME, {
+          points: [{ id, vector, payload }],
+        });
+      } else {
+        id = crypto.randomUUID();
+        payload.created_at = now;
+        await this.qdrant!.upsert(COLLECTION_NAME, {
+          points: [{ id, vector, payload }],
+        });
+      }
 
-      return { results: [{ id, memory: content, metadata: payload, created_at: now }] };
+      return { results: [{ id, memory: content, metadata: { ...payload, deduplicated: !!existing }, created_at: payload.created_at || now }] };
     } catch (error: any) {
       console.error(`${LOG_PREFIX} Failed to add explicit memory:`, error.message);
       return null;
@@ -325,8 +402,34 @@ class Mem0Service {
   }
 
   /**
+   * Get all memories across all projects (for the Memory page).
+   */
+  async getAllMemories(limit = 100): Promise<MemoryItem[]> {
+    if (!(await this.ensureReady())) return [];
+
+    try {
+      const results = await this.qdrant!.scroll(COLLECTION_NAME, {
+        limit,
+        with_payload: true,
+      });
+
+      return (results.points || []).map(r => ({
+        id: String(r.id),
+        memory: (r.payload as any)?.memory || '',
+        metadata: r.payload as Record<string, any>,
+        created_at: (r.payload as any)?.created_at,
+        updated_at: (r.payload as any)?.updated_at,
+      }));
+    } catch (error: any) {
+      console.error(`${LOG_PREFIX} Failed to get all memories:`, error.message);
+      return [];
+    }
+  }
+
+  /**
    * Assemble a formatted context block from project memories.
    * Returns markdown ready to inject into AI system prompts.
+   * Uses rough token estimation (~4 chars per token) instead of raw char count.
    */
   async assembleContext(
     projectId: string,
@@ -343,19 +446,21 @@ class Mem0Service {
 
       if (memories.length === 0) return '';
 
-      const lines: string[] = ['## Project Memory Context\n'];
-      let charCount = lines[0].length;
+      const header = '## Project Memory Context\n';
+      const lines: string[] = [header];
+      let tokenCount = Math.ceil(header.length / CHARS_PER_TOKEN);
 
       for (const mem of memories) {
         const tags = mem.metadata?.tags
           ? ` [${(mem.metadata.tags as string[]).join(', ')}]`
           : '';
         const line = `- ${mem.memory}${tags}\n`;
+        const lineTokens = Math.ceil(line.length / CHARS_PER_TOKEN);
 
-        if (charCount + line.length > tokenBudget) break;
+        if (tokenCount + lineTokens > tokenBudget) break;
 
         lines.push(line);
-        charCount += line.length;
+        tokenCount += lineTokens;
       }
 
       return lines.join('');

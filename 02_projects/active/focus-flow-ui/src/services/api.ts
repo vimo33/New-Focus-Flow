@@ -1027,6 +1027,53 @@ export class VaultAPI {
     return this.request(`/uploads/${encodeURIComponent(filename)}`, { method: 'DELETE' });
   }
 
+  // ============================================================================
+  // Memory Methods
+  // ============================================================================
+
+  async getMemories(limit?: number): Promise<{ memories: MemoryItem[]; count: number }> {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/memory${params}`);
+  }
+
+  async searchMemories(query: string, limit?: number): Promise<{ results: MemoryItem[]; count: number }> {
+    const params = new URLSearchParams({ query });
+    if (limit) params.set('limit', String(limit));
+    return this.request(`/memory/search?${params.toString()}`);
+  }
+
+  async getProjectMemories(projectId: string, limit?: number): Promise<{ memories: MemoryItem[]; count: number }> {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/memory/project/${projectId}${params}`);
+  }
+
+  async addProjectMemory(projectId: string, content: string, tags?: string[]): Promise<{ result: any; status: string }> {
+    return this.request(`/memory/project/${projectId}`, {
+      method: 'POST',
+      body: JSON.stringify({ content, tags }),
+    });
+  }
+
+  async deleteMemory(id: string): Promise<{ status: string }> {
+    return this.request(`/memory/${id}`, { method: 'DELETE' });
+  }
+
+  async getMemoryHealth(): Promise<{ status: string; available: boolean }> {
+    return this.request('/memory/health');
+  }
+}
+
+// ============================================================================
+// Memory Types
+// ============================================================================
+
+export interface MemoryItem {
+  id: string;
+  memory: string;
+  score?: number;
+  metadata?: Record<string, any>;
+  created_at?: string;
+  updated_at?: string;
 }
 
 // ============================================================================
