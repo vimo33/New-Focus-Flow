@@ -111,6 +111,11 @@ class ToolRunnerService {
         return socialPublisher.publish(calEntry, input.channel || calEntry.channel);
       }
 
+      case 'youtube-indexer': {
+        const { youtubeIndexer } = await import('./youtube-indexer.service');
+        return youtubeIndexer.indexPlaylist(input.playlist_id);
+      }
+
       default:
         throw new Error(`No in-process handler for tool '${manifest.id}'`);
     }

@@ -45,6 +45,7 @@ import portfolioRoutes from './routes/portfolio.routes';
 import weeklyReportRoutes from './routes/weekly-report.routes';
 import marketingRoutes from './routes/marketing.routes';
 import confidenceRoutes from './routes/confidence.routes';
+import knowledgeRoutes from './routes/knowledge.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -141,6 +142,7 @@ app.use('/api', portfolioRoutes);
 app.use('/api', weeklyReportRoutes);
 app.use('/api', marketingRoutes);
 app.use('/api', confidenceRoutes);
+app.use('/api', knowledgeRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

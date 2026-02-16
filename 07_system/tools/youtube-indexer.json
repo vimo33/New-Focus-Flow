@@ -1,0 +1,28 @@
+{
+  "id": "youtube-indexer",
+  "name": "YouTube Indexer",
+  "version": "1.0.0",
+  "description": "Indexes YouTube playlists: extracts transcripts, summarizes with Haiku, stores in Mem0",
+  "capabilities": ["knowledge_ingestion", "youtube"],
+  "execution_type": "in-process",
+  "invocation": { "service": "youtubeIndexer", "method": "indexPlaylist" },
+  "input_schema": {
+    "type": "object",
+    "required": ["playlist_id"],
+    "properties": {
+      "playlist_id": { "type": "string", "description": "Internal playlist ID" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "indexed": { "type": "number" },
+      "skipped": { "type": "number" },
+      "failed": { "type": "number" }
+    }
+  },
+  "trust_level": "trusted",
+  "requires_approval": false,
+  "max_execution_seconds": 300,
+  "cost_estimate": "medium"
+}

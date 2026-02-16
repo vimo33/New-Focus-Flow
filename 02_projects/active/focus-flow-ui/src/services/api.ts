@@ -1479,6 +1479,38 @@ export class VaultAPI {
     const qs = actionType ? `?action_type=${encodeURIComponent(actionType)}` : '';
     return this.request(`/confidence/trust-evolution${qs}`);
   }
+
+  // ============================================================================
+  // YouTube / Knowledge Methods
+  // ============================================================================
+
+  async getYouTubePlaylists(): Promise<any> {
+    return this.request('/knowledge/youtube/playlists');
+  }
+
+  async registerYouTubePlaylist(data: { playlist_id: string; title?: string; tags?: string[] }): Promise<any> {
+    return this.request('/knowledge/youtube/playlists', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async indexYouTubePlaylist(id: string): Promise<any> {
+    return this.request(`/knowledge/youtube/playlists/${id}/index`, {
+      method: 'POST',
+    });
+  }
+
+  async getYouTubeVideos(playlistId?: string): Promise<any> {
+    const qs = playlistId ? `?playlist_id=${encodeURIComponent(playlistId)}` : '';
+    return this.request(`/knowledge/youtube/videos${qs}`);
+  }
+
+  async deleteYouTubePlaylist(id: string): Promise<any> {
+    return this.request(`/knowledge/youtube/playlists/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 // ============================================================================

@@ -1211,3 +1211,37 @@ export interface TrustEvolutionCandidate {
   meets_all_criteria: boolean;
   failing_criteria: string[];
 }
+
+// ============================================================================
+// Phase 6: YouTube Indexer / Knowledge Types
+// ============================================================================
+
+export interface YouTubePlaylist {
+  id: string;
+  playlist_id: string; // YouTube playlist ID
+  title: string;
+  description?: string;
+  tags: string[];
+  video_count: number;
+  indexed_count: number;
+  last_indexed_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface YouTubeVideo {
+  id: string;
+  video_id: string; // YouTube video ID
+  playlist_id: string; // Internal playlist ID
+  title: string;
+  channel?: string;
+  duration_seconds?: number;
+  transcript_path?: string;
+  summary?: string;
+  summary_word_count?: number;
+  mem0_id?: string;
+  status: 'pending' | 'indexed' | 'failed' | 'skipped';
+  error?: string;
+  indexed_at?: string;
+  created_at: string;
+}
