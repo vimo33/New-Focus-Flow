@@ -1,6 +1,6 @@
 # Inbox Component
 
-The Inbox Processing Center component for Focus Flow UI. This component provides a comprehensive interface for processing inbox items with filtering, search, batch actions, and AI-powered suggestions.
+The Inbox Processing Center component for Nitara UI. This component provides a comprehensive interface for processing inbox items with filtering, search, batch actions, and AI-powered suggestions.
 
 ## Features
 

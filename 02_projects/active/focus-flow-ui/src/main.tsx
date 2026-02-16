@@ -33,7 +33,7 @@ if ('serviceWorker' in navigator) {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 console.log('[SW] New service worker available. Refresh to update.');
                 // Optionally show a notification to the user
-                if (confirm('A new version of Focus Flow is available. Reload to update?')) {
+                if (confirm('A new version of Nitara is available. Reload to update?')) {
                   newWorker.postMessage({ type: 'SKIP_WAITING' });
                   window.location.reload();
                 }

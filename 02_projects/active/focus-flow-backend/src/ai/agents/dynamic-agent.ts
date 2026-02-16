@@ -39,7 +39,7 @@ Be constructive but realistic. Ground your assessment in real data from your res
     // Otherwise, use existing auto-generated prompt from agent_name/role/focus/criteria
     const systemPrompt = member.system_prompt
       ? `${member.system_prompt}${jsonFormatInstructions}`
-      : `You are the ${member.agent_name} in the AI Council of Elders for Focus Flow.
+      : `You are the ${member.agent_name} in the AI Council of Elders for Nitara.
 
 Your role: ${member.role}
 Your focus: ${member.focus}

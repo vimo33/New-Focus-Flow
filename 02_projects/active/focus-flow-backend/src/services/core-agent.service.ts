@@ -515,7 +515,7 @@ class CoreAgentService {
     try {
       const response = await cachedInference.complete(
         `${stateContext}\n\nUser message: ${message}`,
-        `You are the Co-CEO AI agent for Focus Flow, a venture portfolio management system. You help the founder manage their projects, prioritize work, and make strategic decisions. Be concise and actionable. If the user asks about project status, portfolio health, or next steps, use the context provided. For actions that would require executing tools, mention what you would recommend doing.`,
+        `You are Nitara, an AI business partner for solo entrepreneurs. You help the founder manage their projects, prioritize work, and make strategic decisions. Be concise and actionable. If the user asks about project status, portfolio health, or next steps, use the context provided. For actions that would require executing tools, mention what you would recommend doing.`,
         'conversation',
         'standard',
         { max_tokens: 1000, temperature: 0.6 }

@@ -1,6 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { VoiceControlFAB } from '../VoiceControl';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
 import { AgentPanel } from '../Agent/AgentPanel';
 import { useAgentStore } from '../../stores/agent';
@@ -68,7 +67,7 @@ export function Layout({ children }: LayoutProps) {
             {/* Logo/Brand */}
             <div className="flex h-16 flex-shrink-0 items-center px-6">
               <h1 className="text-xl font-semibold text-white">
-                Focus Flow
+                Nitara
               </h1>
             </div>
 
@@ -150,9 +149,6 @@ export function Layout({ children }: LayoutProps) {
             {children}
           </div>
         </main>
-
-        {/* Global Voice Control FAB - Show on all pages except /voice */}
-        {!location.pathname.startsWith('/voice') && !location.pathname.startsWith('/command') && <VoiceControlFAB />}
 
         {/* Agent Panel Toggle */}
         <button

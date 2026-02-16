@@ -1,4 +1,4 @@
-// Type definitions for Focus Flow OS
+// Type definitions for Nitara
 
 // ============================================================================
 // Thread / Conversation Types
@@ -94,6 +94,8 @@ export interface Task {
 
 export type ProjectPhase = 'concept' | 'spec' | 'design' | 'dev' | 'test' | 'deploy' | 'live';
 
+export type PlaybookType = 'software-build' | 'client-engagement' | 'content-course' | 'studio-project' | 'exploratory-idea';
+
 export type ConceptStep = 'refining' | 'council_selection' | 'council_running' | 'council_review' | 'prd_generation' | 'prd_review';
 
 export interface CouncilMember {
@@ -150,6 +152,7 @@ export interface Project {
   description?: string;
   status: 'active' | 'paused' | 'completed';
   phase?: ProjectPhase;
+  playbook_type?: PlaybookType;
   idea_id?: string;
   concept_thread_id?: string;
   created_at: string;

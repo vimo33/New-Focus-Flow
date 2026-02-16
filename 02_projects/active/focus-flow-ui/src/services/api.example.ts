@@ -63,7 +63,7 @@ async function exampleUsingSingleton() {
 
     // Create a project
     const newProject = await api.createProject({
-      title: 'Focus Flow Development',
+      title: 'Nitara Development',
       description: 'Personal productivity system',
       status: 'active',
     });

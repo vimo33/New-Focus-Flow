@@ -1,12 +1,12 @@
 ---
 name: validate-system
-description: Validate all Focus Flow services are healthy
+description: Validate all Nitara services are healthy
 allowed-tools: Bash, Read, Glob
 ---
 
-# Validate Focus Flow System
+# Validate Nitara System
 
-Run a comprehensive health check across all Focus Flow services.
+Run a comprehensive health check across all Nitara services.
 
 ## Checks
 

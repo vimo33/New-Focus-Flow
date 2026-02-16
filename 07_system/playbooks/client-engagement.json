@@ -1,0 +1,64 @@
+{
+  "id": "client-engagement",
+  "name": "Client Engagement",
+  "description": "End-to-end client project lifecycle from opportunity to close",
+  "phases": [
+    {
+      "id": "opportunity",
+      "name": "Opportunity",
+      "order": 1,
+      "substeps": ["Identify need", "Initial contact", "Qualify lead"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "proposal",
+      "name": "Proposal",
+      "order": 2,
+      "substeps": ["Scope definition", "Pricing", "Proposal draft"],
+      "approval_gate": true,
+      "tools": ["content-engine"]
+    },
+    {
+      "id": "negotiate",
+      "name": "Negotiate",
+      "order": 3,
+      "substeps": ["Terms discussion", "Contract review", "Agreement"],
+      "approval_gate": true,
+      "tools": []
+    },
+    {
+      "id": "engage",
+      "name": "Engage",
+      "order": 4,
+      "substeps": ["Kickoff", "Onboarding", "Setup"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "deliver",
+      "name": "Deliver",
+      "order": 5,
+      "substeps": ["Execute deliverables", "Status updates", "Milestone reviews"],
+      "approval_gate": true,
+      "tools": []
+    },
+    {
+      "id": "review",
+      "name": "Review",
+      "order": 6,
+      "substeps": ["Client feedback", "Quality check", "Adjustments"],
+      "approval_gate": true,
+      "tools": []
+    },
+    {
+      "id": "close",
+      "name": "Close",
+      "order": 7,
+      "substeps": ["Final delivery", "Invoice", "Retrospective"],
+      "approval_gate": false,
+      "tools": []
+    }
+  ],
+  "default_tools": ["content-engine"]
+}

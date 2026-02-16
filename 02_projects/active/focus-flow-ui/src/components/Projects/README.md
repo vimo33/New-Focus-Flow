@@ -1,6 +1,6 @@
 # Projects Component
 
-The Projects Management screen for Focus Flow UI.
+The Projects Management screen for Nitara UI.
 
 ## Features
 

@@ -7,7 +7,7 @@ user-invocable: true
 
 # Run Tests Skill
 
-Build all Focus Flow services and verify they are healthy.
+Build all Nitara services and verify they are healthy.
 
 ## Steps
 

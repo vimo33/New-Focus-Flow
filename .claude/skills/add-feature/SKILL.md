@@ -1,10 +1,10 @@
 ---
 name: add-feature
-description: Add a new feature to Focus Flow following project conventions
+description: Add a new feature to Nitara following project conventions
 allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
-# Add Feature to Focus Flow
+# Add Feature to Nitara
 
 Guide for adding a new feature following project conventions.
 

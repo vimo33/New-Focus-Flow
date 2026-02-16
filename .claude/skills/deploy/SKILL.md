@@ -1,12 +1,12 @@
 ---
 name: deploy
-description: Build and deploy Focus Flow services
+description: Build and deploy Nitara services
 allowed-tools: Bash, Read, Glob
 ---
 
-# Deploy Focus Flow
+# Deploy Nitara
 
-Build and deploy all Focus Flow services with health verification.
+Build and deploy all Nitara services with health verification.
 
 ## Steps
 

@@ -1,6 +1,6 @@
 # Claude SDK Client
 
-This module provides a TypeScript client for integrating Claude AI into the Focus Flow backend.
+This module provides a TypeScript client for integrating Claude AI into the Nitara backend.
 
 ## Features
 
@@ -52,7 +52,7 @@ const response = await claudeClient.generateResponse(
 
 ```typescript
 const evaluation = await claudeClient.evaluateIdea(
-  'Build a mobile app for Focus Flow',
+  'Build a mobile app for Nitara',
   'Feasibility, market fit, and resource requirements'
 );
 

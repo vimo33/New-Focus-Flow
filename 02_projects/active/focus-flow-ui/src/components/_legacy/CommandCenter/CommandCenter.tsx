@@ -238,7 +238,7 @@ export function CommandCenter() {
           {messages.length === 0 && (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <span className="material-symbols-outlined text-6xl text-gray-600 mb-4">terminal</span>
-              <h2 className="text-xl font-semibold text-gray-300 mb-2">Focus Flow Command Center</h2>
+              <h2 className="text-xl font-semibold text-gray-300 mb-2">Nitara Command Center</h2>
               <p className="text-gray-500 max-w-md mb-6">
                 Your AI orchestrator with full control over tasks, projects, ideas, and more.
                 Type or speak naturally.

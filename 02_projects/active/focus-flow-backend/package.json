@@ -1,7 +1,7 @@
 {
-  "name": "focus-flow-backend",
+  "name": "nitara-backend",
   "version": "1.0.0",
-  "description": "Backend API server for Focus Flow OS",
+  "description": "Backend API server for Nitara",
   "main": "dist/index.js",
   "scripts": {
     "dev": "nodemon --exec ts-node src/index.ts",
@@ -10,7 +10,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "focus-flow",
+    "nitara",
     "productivity",
     "api"
   ],

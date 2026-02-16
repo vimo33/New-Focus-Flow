@@ -38,7 +38,7 @@ export function RouteExample() {
     <div className="min-h-screen bg-background-dark">
       {/* Your app header/navigation */}
       <header className="p-4 bg-surface-dark">
-        <h1 className="text-white text-xl">Focus Flow</h1>
+        <h1 className="text-white text-xl">Nitara</h1>
       </header>
 
       {/* Capture component as main content */}
@@ -51,7 +51,7 @@ export function RouteExample() {
 
 /**
  * With Layout Component
- * Integrated with the Focus Flow layout
+ * Integrated with the Nitara layout
  */
 import { Layout } from '../Layout';
 

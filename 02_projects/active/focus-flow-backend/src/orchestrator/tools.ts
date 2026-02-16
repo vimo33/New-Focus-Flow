@@ -36,7 +36,7 @@ function tool(
 
 export const ORCHESTRATOR_TOOLS: OrchestratorTool[] = [
   // Capture & Inbox
-  tool('capture_item', 'Quick-capture text to the Focus Flow inbox.', {
+  tool('capture_item', 'Quick-capture text to the Nitara inbox.', {
     text: { type: 'string', description: 'The text to capture' },
     source: { type: 'string', enum: ['voice', 'text', 'api'], description: 'Source' },
   }, ['text']),

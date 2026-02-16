@@ -1,6 +1,6 @@
 #!/bin/bash
-# Stop hook: Verify builds compile after implementation work
-# This runs when Claude Code stops to ensure no broken builds are left behind
+# Stop hook: Verify builds compile after Nitara implementation work
+# Checks TypeScript compilation and verifies no stale "Focus Flow" branding in UI
 
 BACKEND_DIR="/srv/focus-flow/02_projects/active/focus-flow-backend"
 FRONTEND_DIR="/srv/focus-flow/02_projects/active/focus-flow-ui"
@@ -25,6 +25,13 @@ if [ -n "$frontend_changed" ]; then
   if [ $? -ne 0 ]; then
     errors+=("Frontend TypeScript compilation failed")
   fi
+fi
+
+# Branding guard: Check for stale "Focus Flow" in UI source
+stale_branding=$(grep -r "Focus Flow" "$FRONTEND_DIR/src/" 2>/dev/null | grep -v "_legacy/" | grep -v "node_modules/" || true)
+if [ -n "$stale_branding" ]; then
+  errors+=("Stale 'Focus Flow' branding found in frontend source (outside _legacy/)")
+  echo "$stale_branding"
 fi
 
 if [ ${#errors[@]} -gt 0 ]; then

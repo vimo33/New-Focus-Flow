@@ -19,7 +19,7 @@ export class VoiceCommandService {
    */
   async classifyCommand(request: VoiceCommandRequest): Promise<VoiceCommandIntent> {
     try {
-      const systemPrompt = `You are an AI assistant for Focus Flow, a productivity system with voice control capabilities.
+      const systemPrompt = `You are an AI assistant for Nitara, a productivity system with voice control capabilities.
 
 Your task is to analyze voice commands and classify them into structured intents for execution.
 

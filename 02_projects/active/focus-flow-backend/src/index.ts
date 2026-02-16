@@ -96,7 +96,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'focus-flow-backend',
+    service: 'nitara-backend',
     version: '1.0.0'
   });
 });
@@ -176,7 +176,7 @@ app.use((req: Request, res: Response) => {
 // Start server
 app.listen(PORT, () => {
   console.log('==========================================');
-  console.log('🚀 Focus Flow Backend API Server');
+  console.log('🚀 Nitara Backend API Server');
   console.log('==========================================');
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);

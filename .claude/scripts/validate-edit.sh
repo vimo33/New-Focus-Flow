@@ -1,5 +1,5 @@
 #!/bin/bash
-# Post-edit validation hook for Focus Flow
+# Post-edit validation hook for Nitara (formerly Focus Flow)
 # Checks TypeScript compilation and prevents secret leaks
 
 set -euo pipefail

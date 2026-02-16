@@ -1,5 +1,5 @@
 /**
- * Decision Log Service - Persistent decision tracking for Focus Flow OS
+ * Decision Log Service - Persistent decision tracking for Nitara
  *
  * Stores decisions as JSON files in the vault. Auto-syncs each decision
  * to Mem0 for semantic search and AI context assembly.

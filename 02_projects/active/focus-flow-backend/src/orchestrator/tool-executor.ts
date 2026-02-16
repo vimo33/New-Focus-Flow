@@ -15,7 +15,7 @@ import { specKitService } from '../services/spec-kit.service';
 import { coolifyService } from '../services/coolify.service';
 
 const vaultService = new VaultService();
-const DEFAULT_USER = 'focus-flow-user';
+const DEFAULT_USER = 'nitara-user';
 
 export interface ToolResult {
   success: boolean;

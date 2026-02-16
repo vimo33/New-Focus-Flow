@@ -1,0 +1,64 @@
+{
+  "id": "content-course",
+  "name": "Content / Course",
+  "description": "Content creation and course development lifecycle",
+  "phases": [
+    {
+      "id": "concept",
+      "name": "Concept",
+      "order": 1,
+      "substeps": ["Topic research", "Audience analysis", "Content strategy"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "outline",
+      "name": "Outline",
+      "order": 2,
+      "substeps": ["Structure", "Module breakdown", "Learning objectives"],
+      "approval_gate": true,
+      "tools": ["content-engine"]
+    },
+    {
+      "id": "create",
+      "name": "Create",
+      "order": 3,
+      "substeps": ["Write content", "Record media", "Build materials"],
+      "approval_gate": false,
+      "tools": ["content-engine"]
+    },
+    {
+      "id": "review",
+      "name": "Review",
+      "order": 4,
+      "substeps": ["Self-review", "Peer review", "Edit pass"],
+      "approval_gate": true,
+      "tools": ["council"]
+    },
+    {
+      "id": "publish",
+      "name": "Publish",
+      "order": 5,
+      "substeps": ["Platform setup", "Upload", "Go live"],
+      "approval_gate": true,
+      "tools": ["blog-publisher"]
+    },
+    {
+      "id": "promote",
+      "name": "Promote",
+      "order": 6,
+      "substeps": ["Social media", "Email campaign", "Community outreach"],
+      "approval_gate": false,
+      "tools": ["social-publisher", "gtm-orchestrator"]
+    },
+    {
+      "id": "iterate",
+      "name": "Iterate",
+      "order": 7,
+      "substeps": ["Analyze metrics", "Gather feedback", "Update content"],
+      "approval_gate": false,
+      "tools": []
+    }
+  ],
+  "default_tools": ["content-engine", "blog-publisher", "social-publisher"]
+}

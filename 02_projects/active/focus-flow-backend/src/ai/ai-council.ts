@@ -116,7 +116,7 @@ export class AICouncil {
       recommendation = 'needs-info';
     }
 
-    const systemPrompt = `You are the Head of the AI Council of Elders for Focus Flow.
+    const systemPrompt = `You are the Head of the AI Council of Elders for Nitara.
 
 Your role is to synthesize evaluations from specialized agents into a coherent verdict.
 

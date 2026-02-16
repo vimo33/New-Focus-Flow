@@ -1,7 +1,7 @@
 {
-  "name": "focus-flow-telegram-bot",
+  "name": "nitara-telegram-bot",
   "version": "1.0.0",
-  "description": "Telegram Bot for Focus Flow OS - Quick Capture and Inbox Management",
+  "description": "Telegram Bot for Nitara - Quick Capture and Inbox Management",
   "main": "dist/bot.js",
   "scripts": {
     "dev": "ts-node src/bot.ts",
@@ -13,11 +13,11 @@
   "keywords": [
     "telegram",
     "bot",
-    "focus-flow",
+    "nitara",
     "capture",
     "productivity"
   ],
-  "author": "Focus Flow OS",
+  "author": "Nitara",
   "license": "ISC",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.20.0",

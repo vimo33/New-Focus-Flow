@@ -1,4 +1,4 @@
-// Focus Flow API Client Service
+// Nitara API Client Service
 // Provides typed methods for all backend API endpoints
 
 import type {

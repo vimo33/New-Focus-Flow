@@ -12,7 +12,7 @@ import {
  * CodeGeneratorService - Generates React components and Express routes using OpenClaw Gateway
  *
  * Transforms technical specifications and design data into production-ready code
- * following Focus Flow's architectural patterns.
+ * following Nitara's architectural patterns.
  */
 export class CodeGeneratorService {
   constructor() {

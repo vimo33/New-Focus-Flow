@@ -49,7 +49,7 @@ export class ClaudeClient {
    */
   async classifyInboxItem(text: string): Promise<ClassificationResponse> {
     try {
-      const systemPrompt = `You are an AI assistant that classifies inbox items for a productivity system called Focus Flow.
+      const systemPrompt = `You are an AI assistant that classifies inbox items for a productivity system called Nitara.
 
 Your task is to analyze the text and classify it into one of three categories:
 - "work": Professional tasks, meetings, work-related items
@@ -103,7 +103,7 @@ Respond ONLY with valid JSON in this exact format:
    */
   async generateResponse(prompt: string, context?: string): Promise<GenerateResponse> {
     try {
-      const systemPrompt = `You are a helpful AI assistant for Focus Flow, a productivity and personal management system.
+      const systemPrompt = `You are a helpful AI assistant for Nitara, a productivity and personal management system.
 Provide clear, concise, and actionable responses.`;
 
       const userMessage = context
@@ -135,7 +135,7 @@ Provide clear, concise, and actionable responses.`;
    */
   async evaluateIdea(idea: string, criteria: string): Promise<IdeaEvaluationResponse> {
     try {
-      const systemPrompt = `You are a member of the "AI Council of Elders" for Focus Flow, a productivity system.
+      const systemPrompt = `You are a member of the "AI Council of Elders" for Nitara, a productivity system.
 Your role is to evaluate ideas critically and constructively.
 
 Evaluate ideas based on:

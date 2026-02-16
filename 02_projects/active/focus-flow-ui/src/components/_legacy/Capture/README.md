@@ -1,6 +1,6 @@
 # Capture Component
 
-Quick capture screen for Focus Flow UI that allows users to capture thoughts, tasks, and ideas with AI-powered auto-classification.
+Quick capture screen for Nitara UI that allows users to capture thoughts, tasks, and ideas with AI-powered auto-classification.
 
 ## Features
 
@@ -15,7 +15,7 @@ Quick capture screen for Focus Flow UI that allows users to capture thoughts, ta
   - `V` key to activate voice input
 - **Loading States**: Visual feedback during submission
 - **Error Handling**: Clear error messages for failed operations
-- **Dark Theme**: Consistent with Focus Flow design system (#137fec, #101922, #16202a, #1e2933)
+- **Dark Theme**: Consistent with Nitara design system (#137fec, #101922, #16202a, #1e2933)
 - **Responsive Design**: Mobile-first design with desktop optimizations
 
 ## Usage

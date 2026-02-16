@@ -1,29 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #137fec;
-  --color-background-light: #f6f7f8;
-  --color-background-dark: #101922;
-  --color-surface-dark: #16202a;
-  --color-card-dark: #1e2933;
+  /* Nitara Design System Tokens */
 
-  --font-display: 'Inter', sans-serif;
+  /* Base colors */
+  --color-base: #06080F;
+  --color-surface: #0C1220;
+  --color-elevated: #141E30;
+  --color-border: rgba(30, 48, 80, 0.4);
 
+  /* Primary palette */
+  --color-primary: #00E5FF;
+  --color-secondary: #FFB800;
+  --color-tertiary: #8B5CF6;
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+  --color-muted-teal: #3BBFB2;
+
+  /* Text colors */
+  --color-text-primary: #E8ECF1;
+  --color-text-secondary: #7B8FA3;
+  --color-text-tertiary: #4A5568;
+
+  /* Legacy compatibility */
+  --color-background-dark: #06080F;
+  --color-surface-dark: #0C1220;
+  --color-card-dark: #141E30;
+
+  /* Typography */
+  --font-display: 'Syncopate', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Border radius */
   --radius: 0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
   --radius-full: 9999px;
 }
 
 @layer base {
+  :root {
+    /* Glassmorphism tokens (not in @theme because they use non-standard values) */
+    --glass-bg: rgba(12, 18, 32, 0.7);
+    --glass-blur: blur(12px);
+    --glass-border: rgba(30, 48, 80, 0.3);
+  }
+
   body {
-    font-family: 'Inter', sans-serif;
+    font-family: 'DM Sans', sans-serif;
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
+    background-color: #06080F;
+    color: #E8ECF1;
   }
 }
 
@@ -41,6 +75,21 @@
     word-wrap: normal;
     direction: ltr;
     -webkit-font-smoothing: antialiased;
+  }
+
+  /* Glass card base */
+  .glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+  }
+
+  /* Tabular figures for financial data */
+  .tabular-nums {
+    font-feature-settings: 'tnum';
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -77,6 +126,53 @@
     animation: fade-in 0.3s ease-out;
   }
 
+  /* Breathing animation for conversation rail input */
+  @keyframes breathe {
+    0%, 100% {
+      border-color: rgba(0, 229, 255, 0.15);
+    }
+    50% {
+      border-color: rgba(0, 229, 255, 0.4);
+    }
+  }
+
+  .animate-breathe {
+    animation: breathe 3s ease-in-out infinite;
+  }
+
+  /* Canvas crossfade transition */
+  @keyframes canvas-enter {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-canvas-enter {
+    animation: canvas-enter 300ms ease;
+  }
+
+  /* Pipeline node pulse */
+  @keyframes node-pulse {
+    0%, 100% {
+      box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 12px 4px rgba(0, 229, 255, 0.2);
+    }
+  }
+
+  .animate-node-pulse {
+    animation: node-pulse 2s ease-in-out infinite;
+  }
+
+  /* Cyan glow for active sidebar items */
+  .glow-cyan {
+    box-shadow: 0 0 8px 2px rgba(0, 229, 255, 0.3);
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -87,7 +183,7 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #233648;
+    background: #1E3050;
     border-radius: 3px;
   }
 }

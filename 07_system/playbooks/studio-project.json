@@ -1,0 +1,64 @@
+{
+  "id": "studio-project",
+  "name": "Studio Project",
+  "description": "Professional services and studio project lifecycle from opportunity to retrospect",
+  "phases": [
+    {
+      "id": "opportunity",
+      "name": "Opportunity",
+      "order": 1,
+      "substeps": ["Inbound lead", "Outreach", "Initial assessment"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "scope",
+      "name": "Scope",
+      "order": 2,
+      "substeps": ["Requirements gathering", "Technical assessment", "Timeline estimate"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "evaluate",
+      "name": "Evaluate",
+      "order": 3,
+      "substeps": ["Profitability analysis", "Resource check", "Risk review"],
+      "approval_gate": true,
+      "tools": ["council"]
+    },
+    {
+      "id": "propose",
+      "name": "Propose",
+      "order": 4,
+      "substeps": ["Draft proposal", "Internal review", "Submit"],
+      "approval_gate": true,
+      "tools": ["content-engine"]
+    },
+    {
+      "id": "win-lose",
+      "name": "Win/Lose",
+      "order": 5,
+      "substeps": ["Await decision", "Contract negotiation", "Sign-off"],
+      "approval_gate": true,
+      "tools": []
+    },
+    {
+      "id": "deliver",
+      "name": "Deliver",
+      "order": 6,
+      "substeps": ["Execute project", "Client updates", "Quality assurance"],
+      "approval_gate": true,
+      "tools": []
+    },
+    {
+      "id": "retrospect",
+      "name": "Retrospect",
+      "order": 7,
+      "substeps": ["Final delivery", "Client debrief", "Lessons learned"],
+      "approval_gate": false,
+      "tools": []
+    }
+  ],
+  "default_tools": ["council", "content-engine"]
+}

@@ -1,5 +1,5 @@
 /**
- * Orchestrator Service - Central AI brain for Focus Flow
+ * Orchestrator Service - Central AI brain for Nitara
  *
  * Since OpenClaw doesn't forward tool definitions natively, we use
  * prompt-based tool invocation: tools are described in the system prompt,
@@ -15,7 +15,7 @@ import { ORCHESTRATOR_TOOLS } from './tools';
 import { executeTool, ToolResult } from './tool-executor';
 
 const threadService = new ThreadService();
-const DEFAULT_USER = 'focus-flow-user';
+const DEFAULT_USER = 'nitara-user';
 const MAX_TOOL_ROUNDS = 5;
 const CONTEXT_WINDOW = 20;
 
@@ -35,10 +35,10 @@ function buildToolDescriptions(): string {
 
 const TOOL_DESCRIPTIONS = buildToolDescriptions();
 
-const SYSTEM_PROMPT = `You are Focus Flow, a productivity AI assistant and central orchestrator.
+const SYSTEM_PROMPT = `You are Nitara, a productivity AI assistant and central orchestrator.
 
 ## Your Tools
-You have tools to interact with all Focus Flow systems. To use a tool, respond with ONLY a JSON block:
+You have tools to interact with all Nitara systems. To use a tool, respond with ONLY a JSON block:
 
 \`\`\`tool
 {"tool": "tool_name", "input": {param1: "value1"}}

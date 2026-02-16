@@ -1,6 +1,6 @@
-# Focus Flow API Client Service
+# Nitara API Client Service
 
-This directory contains the API client service for the Focus Flow UI frontend.
+This directory contains the API client service for the Nitara UI frontend.
 
 ## Files
 
@@ -9,7 +9,7 @@ This directory contains the API client service for the Focus Flow UI frontend.
 
 ## Overview
 
-The `VaultAPI` class provides a typed interface to all Focus Flow backend endpoints. It includes:
+The `VaultAPI` class provides a typed interface to all Nitara backend endpoints. It includes:
 
 - Full TypeScript type definitions
 - Automatic error handling

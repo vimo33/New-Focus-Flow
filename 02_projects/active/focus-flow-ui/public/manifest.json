@@ -1,13 +1,13 @@
 {
-  "name": "Focus Flow OS",
-  "short_name": "Focus Flow",
-  "description": "Personal productivity and wellbeing system",
+  "name": "Nitara",
+  "short_name": "Nitara",
+  "description": "Conversation-first AI business partner for solo entrepreneurs",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#101922",
-  "theme_color": "#137fec",
+  "background_color": "#06080F",
+  "theme_color": "#00E5FF",
   "categories": ["productivity"],
   "icons": [
     {

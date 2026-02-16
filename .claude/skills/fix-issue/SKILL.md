@@ -1,10 +1,10 @@
 ---
 name: fix-issue
-description: Debug and fix an issue in Focus Flow
+description: Debug and fix an issue in Nitara
 allowed-tools: Bash, Read, Edit, Write, Glob, Grep
 ---
 
-# Fix Issue in Focus Flow
+# Fix Issue in Nitara
 
 Systematic approach to debugging and fixing issues.
 
