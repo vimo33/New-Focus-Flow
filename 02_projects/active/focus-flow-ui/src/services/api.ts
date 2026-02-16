@@ -1061,6 +1061,170 @@ export class VaultAPI {
   async getMemoryHealth(): Promise<{ status: string; available: boolean }> {
     return this.request('/memory/health');
   }
+
+  // ============================================================================
+  // Profile Methods
+  // ============================================================================
+
+  async getProfile(): Promise<any> {
+    return this.request('/profile');
+  }
+
+  async saveProfile(data: any): Promise<any> {
+    return this.request('/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async extractProfile(text: string): Promise<any> {
+    return this.request('/profile/extract', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  }
+
+  async setArchetype(archetype: string): Promise<any> {
+    return this.request('/profile/archetype', {
+      method: 'PUT',
+      body: JSON.stringify({ archetype }),
+    });
+  }
+
+  async addProfileSkill(skill: any): Promise<any> {
+    return this.request('/profile/skills', {
+      method: 'POST',
+      body: JSON.stringify(skill),
+    });
+  }
+
+  async addProfileExperience(experience: any): Promise<any> {
+    return this.request('/profile/experience', {
+      method: 'POST',
+      body: JSON.stringify(experience),
+    });
+  }
+
+  // ============================================================================
+  // Financials Methods
+  // ============================================================================
+
+  async getPortfolioFinancials(): Promise<any> {
+    return this.request('/financials/portfolio');
+  }
+
+  async getFinancialGoals(): Promise<any> {
+    return this.request('/financials/goals');
+  }
+
+  async setFinancialGoals(goals: any): Promise<any> {
+    return this.request('/financials/goals', {
+      method: 'PUT',
+      body: JSON.stringify(goals),
+    });
+  }
+
+  async getProjectFinancials(projectId: string): Promise<any> {
+    return this.request(`/financials/${projectId}`);
+  }
+
+  async addRevenue(data: any): Promise<any> {
+    return this.request('/financials/revenue', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateRevenue(id: string, data: any): Promise<any> {
+    return this.request(`/financials/revenue/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteRevenue(id: string): Promise<{ status: string }> {
+    return this.request(`/financials/revenue/${id}`, { method: 'DELETE' });
+  }
+
+  async addCost(data: any): Promise<any> {
+    return this.request('/financials/cost', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateCost(id: string, data: any): Promise<any> {
+    return this.request(`/financials/cost/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCost(id: string): Promise<{ status: string }> {
+    return this.request(`/financials/cost/${id}`, { method: 'DELETE' });
+  }
+
+  async createFinancialSnapshot(): Promise<any> {
+    return this.request('/financials/snapshot', { method: 'POST' });
+  }
+
+  async getFinancialSnapshots(): Promise<any> {
+    return this.request('/financials/snapshots');
+  }
+
+  // ============================================================================
+  // Network Methods
+  // ============================================================================
+
+  async importLinkedInNetwork(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = `${this.baseURL}/network/import/linkedin`;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Import failed' }));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
+  async getNetworkContacts(search?: string, relationship?: string): Promise<{ contacts: any[]; count: number }> {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (relationship) params.set('relationship', relationship);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/network/contacts${qs}`);
+  }
+
+  async getNetworkContact(id: string): Promise<any> {
+    return this.request(`/network/contacts/${id}`);
+  }
+
+  async updateNetworkContact(id: string, data: any): Promise<any> {
+    return this.request(`/network/contacts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getNetworkGraph(): Promise<any> {
+    return this.request('/network/graph');
+  }
+
+  async getNetworkOpportunities(): Promise<{ opportunities: any[]; count: number }> {
+    return this.request('/network/opportunities');
+  }
+
+  async getImportJobStatus(jobId: string): Promise<any> {
+    return this.request(`/network/import/${jobId}`);
+  }
+
+  getImportSSEUrl(): string {
+    return `${this.baseURL}/network/import/status`;
+  }
 }
 
 // ============================================================================

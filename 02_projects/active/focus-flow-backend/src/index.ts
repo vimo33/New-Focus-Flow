@@ -37,6 +37,9 @@ import inferenceRoutes from './routes/inference.routes';
 import toolsRoutes from './routes/tools.routes';
 import councilRoutes from './routes/council.routes';
 import agentRoutes from './routes/agent.routes';
+import profileRoutes from './routes/profile.routes';
+import financialsRoutes from './routes/financials.routes';
+import networkRoutes from './routes/network.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -125,6 +128,9 @@ app.use('/api', inferenceRoutes);
 app.use('/api', toolsRoutes);
 app.use('/api', aiLimiter, councilRoutes);
 app.use('/api', agentRoutes);
+app.use('/api', profileRoutes);
+app.use('/api', financialsRoutes);
+app.use('/api', networkRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

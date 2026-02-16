@@ -727,3 +727,191 @@ export interface AgentResponse {
   actions_taken?: string[];
   state: CoreAgentState;
 }
+
+// ============================================================================
+// Phase 1: Founder Profile Types
+// ============================================================================
+
+export type ArchetypePreference = 'strategist' | 'cofounder' | 'critic';
+
+export interface FounderSkill {
+  id: string;
+  name: string;
+  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category: string;
+  added_at: string;
+}
+
+export interface FounderExperience {
+  id: string;
+  title: string;
+  company?: string;
+  description: string;
+  start_date?: string;
+  end_date?: string;
+  tags: string[];
+  added_at: string;
+}
+
+export interface FounderProfile {
+  id: string;
+  name: string;
+  bio?: string;
+  location?: string;
+  timezone?: string;
+  preferred_archetype: ArchetypePreference;
+  skills: FounderSkill[];
+  experience: FounderExperience[];
+  active_work: string[];
+  strategic_focus_tags: string[];
+  onboarding_completed: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================================================
+// Phase 1: Financials Types
+// ============================================================================
+
+export type RevenueType = 'recurring' | 'one_time' | 'retainer' | 'royalty' | 'equity';
+export type CostCategory = 'tools' | 'hosting' | 'contractors' | 'marketing' | 'office' | 'insurance' | 'other';
+
+export interface RevenueStream {
+  id: string;
+  project_id?: string;
+  source: string;
+  type: RevenueType;
+  amount_monthly: number;
+  currency: string;
+  start_date?: string;
+  end_date?: string;
+  active: boolean;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CostItem {
+  id: string;
+  name: string;
+  category: CostCategory;
+  amount_monthly: number;
+  currency: string;
+  active: boolean;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FinancialGoals {
+  income_goal: number;
+  safety_net_months: number;
+  runway_months?: number;
+  currency: string;
+  updated_at: string;
+}
+
+export interface PortfolioFinancials {
+  total_monthly_revenue: number;
+  total_monthly_costs: number;
+  net_monthly: number;
+  currency: string;
+  revenue_streams: RevenueStream[];
+  cost_items: CostItem[];
+  goals: FinancialGoals | null;
+  runway_months: number | null;
+}
+
+export interface FinancialSnapshot {
+  id: string;
+  month: string;
+  year: number;
+  total_revenue: number;
+  total_costs: number;
+  net: number;
+  currency: string;
+  revenue_breakdown: { source: string; amount: number }[];
+  cost_breakdown: { category: string; amount: number }[];
+  created_at: string;
+}
+
+// ============================================================================
+// Phase 1: Network Types
+// ============================================================================
+
+export type RelationshipType = 'colleague' | 'client' | 'investor' | 'mentor' | 'friend' | 'partner' | 'vendor' | 'other';
+export type RelationshipStrength = 'strong' | 'moderate' | 'weak' | 'dormant';
+export type BusinessValue = 'high' | 'medium' | 'low' | 'unknown';
+
+export interface NetworkContact {
+  id: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+  email?: string;
+  company?: string;
+  position?: string;
+  location?: string;
+  linkedin_url?: string;
+  relationship_type: RelationshipType;
+  relationship_strength: RelationshipStrength;
+  business_value: BusinessValue;
+  tags: string[];
+  notes?: string;
+  last_contacted?: string;
+  ai_summary?: string;
+  ai_tags?: string[];
+  imported_from?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export type ImportJobStatus = 'pending' | 'extracting' | 'enriching' | 'completed' | 'failed';
+
+export interface ImportJob {
+  id: string;
+  source: 'linkedin';
+  status: ImportJobStatus;
+  total_contacts: number;
+  processed_contacts: number;
+  created_contacts: number;
+  errors: string[];
+  started_at: string;
+  completed_at?: string;
+}
+
+// ============================================================================
+// Phase 1: Network Graph Types
+// ============================================================================
+
+export interface IndustryCluster {
+  industry: string;
+  count: number;
+  contacts: string[];
+}
+
+export interface GeographicDistribution {
+  location: string;
+  count: number;
+  contacts: string[];
+}
+
+export interface NetworkGraphSummary {
+  total_contacts: number;
+  industry_clusters: IndustryCluster[];
+  geographic_distribution: GeographicDistribution[];
+  relationship_breakdown: Record<RelationshipType, number>;
+  strength_breakdown: Record<RelationshipStrength, number>;
+  avg_business_value: number;
+}
+
+export interface NetworkOpportunity {
+  id: string;
+  type: 'reconnect' | 'introduction' | 'collaboration' | 'business_development';
+  title: string;
+  description: string;
+  contacts: string[];
+  priority: 'high' | 'medium' | 'low';
+  reasoning: string;
+  created_at: string;
+}
