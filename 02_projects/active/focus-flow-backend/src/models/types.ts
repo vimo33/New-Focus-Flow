@@ -628,6 +628,7 @@ export interface PendingApproval {
   status: 'pending' | 'approved' | 'rejected' | 'auto_executed' | 'cancelled';
   resolved_at?: string;
   feedback?: string;
+  predicted_confidence?: number;
 }
 
 export interface WorkPlanItem {
@@ -680,6 +681,7 @@ export interface DailyStats {
   notifications_sent: number;
   ai_calls_made: number;
   estimated_cost_usd: number;
+  confidence_records_created: number;
 }
 
 export interface CoreAgentState {
@@ -1155,4 +1157,57 @@ export interface PublishResult {
   error?: string;
   approval_required?: boolean;
   approval_id?: string;
+}
+
+// ============================================================================
+// Phase 5: Confidence Calibration Types
+// ============================================================================
+
+export type ConfidenceOutcome = 'success' | 'failure' | 'cancelled' | 'pending';
+
+export interface ConfidenceRecord {
+  id: string;
+  action_id: string;
+  action_type: string;
+  predicted_confidence: number;
+  outcome: ConfidenceOutcome;
+  actual_confidence?: number;
+  resolved_at?: string;
+  created_at: string;
+  metadata?: Record<string, any>;
+}
+
+export interface CalibrationBucket {
+  action_type: string;
+  total_instances: number;
+  successes: number;
+  failures: number;
+  cancelled: number;
+  pending: number;
+  avg_predicted_confidence: number;
+  actual_success_rate: number;
+  calibration_score: number;
+  qualifies_for_evolution: boolean;
+}
+
+export interface CalibrationReport {
+  generated_at: string;
+  period_start: string;
+  period_end: string;
+  total_records: number;
+  buckets: CalibrationBucket[];
+  overall_calibration: number;
+  trust_evolution_candidates: TrustEvolutionCandidate[];
+}
+
+export interface TrustEvolutionCandidate {
+  action_type: string;
+  current_tier: TrustTier;
+  proposed_tier: TrustTier;
+  instance_count: number;
+  avg_confidence: number;
+  approval_rate: number;
+  calibration_score: number;
+  meets_all_criteria: boolean;
+  failing_criteria: string[];
 }

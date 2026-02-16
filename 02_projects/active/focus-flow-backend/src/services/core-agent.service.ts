@@ -15,6 +15,7 @@ import {
 } from '../utils/file-operations';
 import { generateAgentActionId, generateActivityId, generateId } from '../utils/id-generator';
 import { trustGate } from './trust-gate.service';
+import { confidenceService } from './confidence.service';
 import { notificationRouter } from './notification-router.service';
 import { briefingGenerator } from './briefing-generator.service';
 import { cachedInference } from './cached-inference.service';
@@ -38,6 +39,7 @@ function defaultDailyStats(): DailyStats {
     notifications_sent: 0,
     ai_calls_made: 0,
     estimated_cost_usd: 0,
+    confidence_records_created: 0,
   };
 }
 
@@ -158,6 +160,7 @@ class CoreAgentService {
     for (const approval of expired) {
       console.log(`${LOG_PREFIX} Auto-executing Tier 2 action: ${approval.action.description}`);
       this.state.daily_stats.actions_executed++;
+      await confidenceService.recordOutcome(approval.action.id, 'success');
       await this.logActivity('auto_executed', `Auto-executed delayed action: ${approval.action.description}`, {
         action_type: approval.action.type,
         tier: 2,
@@ -320,6 +323,11 @@ class CoreAgentService {
   }
 
   async executeAction(action: AgentAction): Promise<void> {
+    // Confidence calibration: predict confidence and record
+    const predictedConfidence = await confidenceService.getConfidenceForActionType(action.type);
+    await confidenceService.recordAction(action, predictedConfidence);
+    this.state.daily_stats.confidence_records_created++;
+
     const tier = trustGate.classify(action.type);
 
     if (tier === 1) {
@@ -327,6 +335,7 @@ class CoreAgentService {
       console.log(`${LOG_PREFIX} Auto-executing Tier 1: ${action.description}`);
       const result = await this.executeApprovedAction(action);
       this.state.daily_stats.actions_executed++;
+      await confidenceService.recordOutcome(action.id, result ? 'success' : 'failure');
       await this.logActivity('auto_executed', `Auto-executed Tier 1: ${action.description}`, {
         action_type: action.type,
         project_id: action.project_id,
@@ -334,23 +343,24 @@ class CoreAgentService {
         result: result ? 'success' : 'failure',
       });
     } else {
-      // Create approval request
+      // Create approval request with confidence
       const approval = await trustGate.createApproval(
         action,
         `Agent wants to execute: ${action.description}`,
-        `Action type "${action.type}" is classified as Tier ${tier}`
+        `Action type "${action.type}" is classified as Tier ${tier}`,
+        predictedConfidence
       );
 
       this.state.pending_approvals.push(approval);
 
-      if (tier === 2) {
+      if (approval.tier === 2) {
         this.state.delayed_executions.push(approval);
       }
 
       await notificationRouter.send({
         type: 'approval_request',
-        priority: tier === 3 ? 'high' : 'medium',
-        title: `Approval needed (Tier ${tier})`,
+        priority: approval.tier === 3 ? 'high' : 'medium',
+        title: `Approval needed (Tier ${approval.tier})`,
         body: action.description,
         requires_response: true,
         approval_id: approval.id,
@@ -463,6 +473,7 @@ class CoreAgentService {
 
       // Execute the approved action
       const result = await this.executeApprovedAction(resolved.action);
+      await confidenceService.recordOutcome(resolved.action.id, result ? 'success' : 'failure');
       await this.logActivity('action_approved', `Approved and executed: ${resolved.action.description}`, {
         action_type: resolved.action.type,
         project_id: resolved.action.project_id,
@@ -472,6 +483,7 @@ class CoreAgentService {
     } else {
       this.state.daily_stats.actions_rejected++;
       console.log(`${LOG_PREFIX} Action rejected: ${resolved.action.description}`);
+      await confidenceService.recordOutcome(resolved.action.id, 'cancelled');
       await this.logActivity('action_rejected', `Rejected: ${resolved.action.description}`, {
         action_type: resolved.action.type,
         tier: resolved.tier,

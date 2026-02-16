@@ -1454,6 +1454,31 @@ export class VaultAPI {
       method: 'POST',
     });
   }
+
+  // ============================================================================
+  // Confidence Calibration Methods
+  // ============================================================================
+
+  async getCalibrationReport(): Promise<any> {
+    return this.request('/confidence/report');
+  }
+
+  async getConfidenceRecords(actionType?: string, limit?: number): Promise<any> {
+    const params = new URLSearchParams();
+    if (actionType) params.set('action_type', actionType);
+    if (limit) params.set('limit', String(limit));
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/confidence/records${qs}`);
+  }
+
+  async triggerCalibration(): Promise<any> {
+    return this.request('/confidence/calibrate', { method: 'POST' });
+  }
+
+  async getTrustEvolution(actionType?: string): Promise<any> {
+    const qs = actionType ? `?action_type=${encodeURIComponent(actionType)}` : '';
+    return this.request(`/confidence/trust-evolution${qs}`);
+  }
 }
 
 // ============================================================================
