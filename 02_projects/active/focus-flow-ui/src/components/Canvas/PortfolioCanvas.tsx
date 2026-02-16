@@ -30,6 +30,12 @@ interface PortfolioProject {
   completed_tasks: number;
   collaborators: string[];
   updated_at: string;
+  council_verdict?: {
+    overall_score: number;
+    recommendation: 'approve' | 'reject' | 'needs-info';
+    num_evaluations: number;
+    council_composition: string[];
+  };
 }
 
 interface RankedIdea {
@@ -72,7 +78,6 @@ const PLAYBOOK_BADGES: Record<string, { label: string; variant: 'active' | 'play
   'exploratory-idea': { label: 'EXPLORE', variant: 'paused' },
 };
 
-const PHASES = ['concept', 'spec', 'design', 'dev', 'test', 'deploy', 'live'];
 
 const HEALTH_COLORS: Record<string, string> = {
   thriving: 'bg-success',
@@ -81,11 +86,19 @@ const HEALTH_COLORS: Record<string, string> = {
   at_risk: 'bg-danger',
 };
 
+type FilterTab = 'all' | 'active' | 'ideas' | 'paused';
+
+const PIPELINE_PHASES = ['BRIEF', 'CONCEPT', 'SCOPE', 'DEV', 'QA', 'LAUNCH'];
+const PHASE_TO_PIPELINE: Record<string, number> = {
+  concept: 0, spec: 1, design: 2, dev: 3, test: 4, deploy: 5, live: 5,
+};
+
 export default function PortfolioCanvas() {
   const { setCanvas } = useCanvasStore();
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [loading, setLoading] = useState(true);
   const [evaluating, setEvaluating] = useState<string | null>(null);
+  const [filter, setFilter] = useState<FilterTab>('all');
 
   useEffect(() => {
     api.getPortfolioDashboard()
@@ -174,11 +187,41 @@ export default function PortfolioCanvas() {
         />
       </div>
 
+      {/* Filter Tabs */}
+      <div className="flex gap-2 mb-6">
+        {([
+          { key: 'all', label: 'All' },
+          { key: 'active', label: 'Active' },
+          { key: 'ideas', label: 'Ideas' },
+          { key: 'paused', label: 'Paused' },
+        ] as const).map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setFilter(tab.key)}
+            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-wider uppercase transition-colors ${
+              filter === tab.key
+                ? 'bg-primary text-base'
+                : 'bg-elevated/50 text-text-secondary hover:text-text-primary border border-[var(--glass-border)]'
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       {/* Projects Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
-        {dashboard.projects.map((project) => {
+        {dashboard.projects
+          .filter(p => {
+            if (filter === 'all') return true;
+            if (filter === 'active') return p.status === 'active';
+            if (filter === 'paused') return p.status === 'paused';
+            if (filter === 'ideas') return p.phase === 'concept';
+            return true;
+          })
+          .map((project) => {
           const badge = project.playbook_type ? PLAYBOOK_BADGES[project.playbook_type] : null;
-          const currentPhaseIdx = project.phase ? PHASES.indexOf(project.phase) : -1;
+          const pipelineIdx = project.phase ? (PHASE_TO_PIPELINE[project.phase] ?? -1) : -1;
           const healthColor = HEALTH_COLORS[project.health.status] || 'bg-text-tertiary';
 
           return (
@@ -195,44 +238,60 @@ export default function PortfolioCanvas() {
                   <div className={`w-2 h-2 rounded-full flex-shrink-0 ${healthColor}`} />
                   <h3 className="text-text-primary font-medium truncate">{project.title}</h3>
                 </div>
-                {badge && <Badge label={badge.label} variant={badge.variant} />}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  {project.council_verdict && (
+                    <span className={`font-mono text-xs font-bold px-1.5 py-0.5 rounded ${
+                      project.council_verdict.overall_score >= 7 ? 'bg-success/15 text-success' :
+                      project.council_verdict.overall_score >= 5 ? 'bg-secondary/15 text-secondary' :
+                      'bg-danger/15 text-danger'
+                    }`}>
+                      {project.council_verdict.overall_score?.toFixed(1) || '—'}/10
+                    </span>
+                  )}
+                  {badge && <Badge label={badge.label} variant={badge.variant} />}
+                </div>
               </div>
 
-              {/* Phase indicator */}
-              <div className="flex items-center gap-1 mb-3">
-                {PHASES.map((phase, i) => (
-                  <div
-                    key={phase}
-                    className={`h-1.5 flex-1 rounded-full ${
-                      i < currentPhaseIdx ? 'bg-primary/40' :
-                      i === currentPhaseIdx ? 'bg-primary' :
-                      'bg-text-tertiary/20'
-                    }`}
-                  />
+              {/* Pipeline dot visualization */}
+              <div className="flex items-center gap-2 mb-3">
+                {PIPELINE_PHASES.map((phase, i) => (
+                  <div key={phase} className="flex items-center gap-1">
+                    <div
+                      className={`w-2.5 h-2.5 rounded-full flex-shrink-0 transition-colors ${
+                        i < pipelineIdx ? 'bg-primary/50' :
+                        i === pipelineIdx ? 'bg-primary ring-2 ring-primary/30' :
+                        'bg-text-tertiary/20'
+                      }`}
+                    />
+                    <span className={`text-[9px] tracking-wider ${
+                      i === pipelineIdx ? 'text-primary font-semibold' : 'text-text-tertiary'
+                    }`}>
+                      {phase}
+                    </span>
+                    {i < PIPELINE_PHASES.length - 1 && (
+                      <div className={`w-3 h-px ${i < pipelineIdx ? 'bg-primary/30' : 'bg-text-tertiary/15'}`} />
+                    )}
+                  </div>
                 ))}
               </div>
 
               <div className="flex items-center justify-between text-sm">
                 <span className="text-text-secondary">
-                  {project.monthly_revenue > 0 && (
+                  {project.monthly_revenue > 0 ? (
                     <span className="font-mono">{dashboard.currency} {project.monthly_revenue.toLocaleString('en-US')}/mo</span>
+                  ) : (
+                    <span className="text-text-tertiary">No revenue yet</span>
                   )}
-                  {project.monthly_revenue === 0 && <span className="text-text-tertiary">No revenue yet</span>}
                 </span>
+                {project.monthly_costs > 0 && (
+                  <span className="text-text-tertiary font-mono text-xs">
+                    -{dashboard.currency} {project.monthly_costs.toLocaleString('en-US')}/mo
+                  </span>
+                )}
                 <span className="text-text-tertiary">
                   {project.completed_tasks}/{project.task_count} tasks
                 </span>
               </div>
-
-              {/* Task progress bar */}
-              {project.task_count > 0 && (
-                <div className="mt-2 h-1 bg-text-tertiary/20 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-primary/60 rounded-full transition-all"
-                    style={{ width: `${(project.completed_tasks / project.task_count) * 100}%` }}
-                  />
-                </div>
-              )}
             </GlassCard>
             </div>
           );

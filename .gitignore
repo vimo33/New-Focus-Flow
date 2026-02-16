@@ -10,6 +10,7 @@
 .env
 node_modules/
 dist/
+venv/
 local_cache/
 playwright-report/
 test-results/

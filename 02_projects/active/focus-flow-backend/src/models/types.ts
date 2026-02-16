@@ -1002,6 +1002,13 @@ export interface ProjectHealthIndicator {
   status: 'thriving' | 'healthy' | 'stalling' | 'at_risk';
 }
 
+export interface CouncilVerdictSummary {
+  overall_score: number;
+  recommendation: 'approve' | 'reject' | 'needs-info';
+  num_evaluations: number;
+  council_composition: string[];
+}
+
 export interface PortfolioProjectSummary {
   id: string;
   title: string;
@@ -1016,6 +1023,7 @@ export interface PortfolioProjectSummary {
   completed_tasks: number;
   collaborators: string[];
   updated_at: string;
+  council_verdict?: CouncilVerdictSummary;
 }
 
 export interface RankedIdea {

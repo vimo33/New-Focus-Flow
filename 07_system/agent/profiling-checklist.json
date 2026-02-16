@@ -1,0 +1,440 @@
+{
+  "last_updated": "2026-02-16",
+  "overall_completeness": 15,
+  "domains": {
+    "founder_identity": {
+      "label": "Founder Identity",
+      "completeness": 30,
+      "priority": "critical",
+      "items": [
+        {
+          "key": "full_name",
+          "label": "Full name",
+          "status": "known",
+          "source": "profile",
+          "notes": "Vikas Mohan (Vimo)"
+        },
+        {
+          "key": "location",
+          "label": "Location & residency status",
+          "status": "known",
+          "source": "profile",
+          "notes": "Zurich, Switzerland"
+        },
+        {
+          "key": "languages",
+          "label": "Languages with proficiency",
+          "status": "partial",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "education",
+          "label": "Education & credentials",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "personal_brand",
+          "label": "How they position themselves professionally",
+          "status": "partial",
+          "source": "profile",
+          "notes": "Cross-border builder/parent, hybrid founder/product strategist, technical architect, operator, educator"
+        },
+        {
+          "key": "energizers",
+          "label": "What type of work energizes vs. drains them",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "working_style",
+          "label": "Working hours, peak productivity, preferred cadence",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "risk_appetite",
+          "label": "Risk tolerance for business decisions",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "why_switzerland",
+          "label": "Why they moved to Switzerland, long-term plans",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "constraints",
+          "label": "Visa, family, health, commitments that shape decisions",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "skills_expertise": {
+      "label": "Skills & Expertise",
+      "completeness": 33,
+      "priority": "critical",
+      "items": [
+        {
+          "key": "technical_skills",
+          "label": "Technical skills with proficiency levels",
+          "status": "known",
+          "source": "profile",
+          "notes": "Expert: Product Strategy, Technical Architecture, Systems Thinking, Spec-First Development. Advanced: Multi-Agent System Design, Privacy & Compliance Engineering, Workflow Automation, Teaching & Curriculum Design, Self-Hosted Infrastructure"
+        },
+        {
+          "key": "business_skills",
+          "label": "Business/consulting skills",
+          "status": "partial",
+          "source": "profile",
+          "notes": "Product strategy documented, consulting experience implied but not detailed"
+        },
+        {
+          "key": "hourly_rates",
+          "label": "What they charge (or could charge) per skill",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "unique_combinations",
+          "label": "Unique skill combinations that create competitive advantage",
+          "status": "partial",
+          "source": "profile",
+          "notes": "14 strategic focus tags suggest combinations but not explicitly analyzed"
+        },
+        {
+          "key": "credentials_proof",
+          "label": "Certifications, portfolio pieces, social proof",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "skill_gaps",
+          "label": "Skills they want to develop or need to hire for",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "financial_reality": {
+      "label": "Financial Reality",
+      "completeness": 17,
+      "priority": "critical",
+      "items": [
+        {
+          "key": "revenue_streams",
+          "label": "Every active income stream with exact CHF amounts",
+          "status": "partial",
+          "source": "vault",
+          "notes": "2 streams: AI Course Creation CHF 3,500/mo, Explainer Video with FTR CHF 3,500/mo. Total ~CHF 7,000/mo. May be incomplete."
+        },
+        {
+          "key": "recurring_vs_onetime",
+          "label": "Recurring vs. one-time revenue split",
+          "status": "partial",
+          "source": "vault",
+          "notes": "Both current streams are marked one_time type"
+        },
+        {
+          "key": "monthly_expenses",
+          "label": "Business expenses (tools, infra, services)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "personal_burn",
+          "label": "Minimum personal monthly expenses (rent, insurance, living)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "savings_runway",
+          "label": "How many months of runway without new income",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "tax_situation",
+          "label": "Swiss tax setup (Einzelfirma, GmbH, etc.), tax rate estimate",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "income_target",
+          "label": "Monthly income target and by when",
+          "status": "partial",
+          "source": "vault",
+          "notes": ""
+        },
+        {
+          "key": "payment_terms",
+          "label": "Payment terms with existing clients, outstanding invoices",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "pricing_strategy",
+          "label": "How they price work (hourly, project, retainer, value-based)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "portfolio_depth": {
+      "label": "Portfolio Depth",
+      "completeness": 13,
+      "priority": "critical",
+      "items": [
+        {
+          "key": "project_honest_status",
+          "label": "For each project: what stage it's REALLY at (not just pipeline label)",
+          "status": "partial",
+          "source": "vault",
+          "notes": "16 projects exist with pipeline phases but honest depth is unknown for most"
+        },
+        {
+          "key": "project_blockers",
+          "label": "What's actually blocking each project right now",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "project_revenue_potential",
+          "label": "Realistic revenue potential per project with timeline",
+          "status": "partial",
+          "source": "vault",
+          "notes": "Some projects (Sentio, Focus Flow) have detailed financial models in PRD. Most do not."
+        },
+        {
+          "key": "project_time_invested",
+          "label": "Time invested vs. time remaining per project",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "project_restart_test",
+          "label": "Would you start this project again if you hadn't already?",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "project_emotional_vs_strategic",
+          "label": "Emotionally attached to vs. strategically committed to",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "project_dependencies",
+          "label": "Which projects depend on each other or share resources",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "kill_candidates",
+          "label": "Projects that should be parked or killed",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "network_intelligence": {
+      "label": "Network Intelligence",
+      "completeness": 0,
+      "priority": "high",
+      "items": [
+        {
+          "key": "key_relationships",
+          "label": "Top 10-15 most important professional relationships with context",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "partner_dynamics",
+          "label": "Partner dynamics with Savya — work split, revenue sharing, decision-making",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "weiterbildung",
+          "label": "Weiterbildung relationship — contract terms, renewal, expansion potential",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "client_relationships",
+          "label": "Active client relationships with satisfaction and renewal likelihood",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "dormant_valuable",
+          "label": "Dormant connections worth reactivating and why",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "aspirational_network",
+          "label": "People they want to meet but haven't yet",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "community_presence",
+          "label": "Communities, meetups, conferences they participate in",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "referral_sources",
+          "label": "Where new business comes from — referrals, inbound, outbound",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "strategic_context": {
+      "label": "Strategic Context",
+      "completeness": 7,
+      "priority": "high",
+      "items": [
+        {
+          "key": "vision_1yr",
+          "label": "Where they want to be in 1 year",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "vision_3yr",
+          "label": "Where they want to be in 3 years",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "business_type",
+          "label": "What kind of business they want (lifestyle, scale, exit, portfolio)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "past_attempts",
+          "label": "What they've tried before and why it didn't work",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "competitive_advantage",
+          "label": "What makes them uniquely positioned vs. competitors",
+          "status": "partial",
+          "source": "profile",
+          "notes": "Strategic focus tags and skill combinations suggest positioning but not explicitly articulated"
+        },
+        {
+          "key": "fears_concerns",
+          "label": "Biggest fears or concerns about their business trajectory",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "definition_of_success",
+          "label": "What success looks like to them personally (not just financially)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    },
+    "operational_reality": {
+      "label": "Operational Reality",
+      "completeness": 0,
+      "priority": "medium",
+      "items": [
+        {
+          "key": "daily_tools",
+          "label": "Tools and platforms used daily",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "time_allocation",
+          "label": "How time is actually spent each week (not aspirational)",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "biggest_time_sinks",
+          "label": "What takes the most time and shouldn't",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "procrastination",
+          "label": "What they consistently procrastinate on",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "bottlenecks",
+          "label": "Recurring operational bottlenecks",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "delegation_wishes",
+          "label": "What they wish someone else would handle",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        },
+        {
+          "key": "automation_opportunities",
+          "label": "Repetitive work that could be automated",
+          "status": "unknown",
+          "source": null,
+          "notes": ""
+        }
+      ]
+    }
+  }
+}

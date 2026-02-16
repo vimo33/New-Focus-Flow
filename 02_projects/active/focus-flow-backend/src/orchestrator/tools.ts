@@ -175,10 +175,89 @@ export const ORCHESTRATOR_TOOLS: OrchestratorTool[] = [
     project_id: { type: 'string', description: 'Project ID to generate specs for' },
   }, ['project_id']),
 
+  // Financials
+  tool('get_financials_summary', 'Get portfolio revenue, costs, runway, and financial goals.', {}),
+
+  tool('get_income_strategies', 'Get income planning strategies and goal-gap analysis.', {}),
+
+  // Intelligence & Reports
+  tool('get_weekly_report', 'Generate or retrieve the weekly summary with KPIs and momentum.', {
+    generate: { type: 'boolean', description: 'If true, generate a fresh report instead of returning the latest' },
+  }),
+
+  tool('get_morning_briefing', 'Generate or retrieve the daily morning briefing with priorities and opportunities.', {
+    generate: { type: 'boolean', description: 'If true, generate a fresh briefing instead of returning the latest' },
+  }),
+
+  // Pipeline
+  tool('start_pipeline', 'Start a project pipeline at the concept phase.', {
+    project_id: { type: 'string', description: 'Project ID to start pipeline for' },
+  }, ['project_id']),
+
+  tool('get_pipeline_status', 'Check pipeline progress for a project.', {
+    project_id: { type: 'string', description: 'Project ID to check pipeline for' },
+  }, ['project_id']),
+
+  // Network
+  tool('get_network_contacts', 'Get professional network graph summary with clusters and distribution.', {}),
+
+  tool('get_network_opportunities', 'Find networking opportunities based on contact analysis.', {}),
+
+  // Content & GTM
+  tool('draft_content', 'Draft marketing, blog, email, social, or proposal content.', {
+    content_type: { type: 'string', enum: ['blog_post', 'documentation', 'proposal', 'marketing_copy', 'social_post', 'email'], description: 'Type of content' },
+    brief: { type: 'string', description: 'Brief describing what to write' },
+    project_id: { type: 'string', description: 'Associated project ID' },
+    tone: { type: 'string', enum: ['professional', 'casual', 'technical', 'persuasive'], description: 'Desired tone' },
+  }, ['content_type', 'brief']),
+
+  tool('get_calendar_entries', 'Get upcoming content calendar entries for a project.', {
+    project_id: { type: 'string', description: 'Project ID to get calendar for' },
+  }, ['project_id']),
+
   // System
+  tool('update_capabilities', 'Add or update a capability in the dynamic registry.', {
+    domain: { type: 'string', description: 'Capability domain name' },
+    tool_name: { type: 'string', description: 'Tool name to add/update' },
+    description: { type: 'string', description: 'Tool description' },
+    tier: { type: 'number', description: 'Trust tier (1, 2, or 3)' },
+  }, ['domain', 'tool_name', 'description']),
+
   tool('get_dashboard_summary', 'Get an overview: inbox counts, active projects, pending tasks.', {}),
 
   tool('navigate', 'Tell the frontend to navigate to a specific page.', {
     route: { type: 'string', enum: ['/', '/capture', '/inbox', '/projects', '/ideas', '/calendar', '/wellbeing', '/command', '/sales', '/crm'] },
   }, ['route']),
+
+  // Research & Search
+  tool('web_search', 'Search the web for current information — market research, competitor analysis, industry trends, regulations, news, pricing data. Use this when you need real-time information.', {
+    query: { type: 'string', description: 'Search query' },
+    context: { type: 'string', description: 'Why you need this (helps refine results)' },
+  }, ['query']),
+
+  tool('deep_search', 'Search across ALL internal data — projects, ideas, contacts, deals, tasks, memories, threads, financials. Use this when you need to find specific information or cross-reference data across the platform.', {
+    query: { type: 'string', description: 'What to search for' },
+    scope: { type: 'string', enum: ['all', 'projects', 'ideas', 'contacts', 'deals', 'tasks', 'memories', 'threads', 'financials'], description: 'Which data domain to search (default: all)' },
+  }, ['query']),
+
+  // Strategic Directive
+  tool('update_directive', "Update Nitara's active strategic directive — the current focus area and behavioral priorities. Use when the founder changes strategic focus.", {
+    focus: { type: 'string', description: 'New primary focus area' },
+    details: { type: 'string', description: 'Detailed directive text' },
+  }, ['focus']),
+
+  // Profiling
+  tool('get_profiling_gaps', "Check what Nitara still doesn't know about the founder and their business. Returns the highest-priority unknown items grouped by domain. Use this to identify what to ask about next in conversation.", {
+    domain: { type: 'string', enum: ['all', 'founder_identity', 'skills_expertise', 'financial_reality', 'portfolio_depth', 'network_intelligence', 'strategic_context', 'operational_reality'], description: 'Which domain to check gaps for (default: all)' },
+  }),
+
+  tool('update_profile_data', "Store new information learned about the founder during conversation. Updates the profiling checklist AND writes structured data to the appropriate vault location (founder profile, project financials, network contacts, etc.).", {
+    domain: { type: 'string', enum: ['founder_identity', 'skills_expertise', 'financial_reality', 'portfolio_depth', 'network_intelligence', 'strategic_context', 'operational_reality'], description: 'Which knowledge domain this belongs to' },
+    item_key: { type: 'string', description: 'The specific checklist item key being updated (e.g., monthly_expenses, vision_1yr)' },
+    data: { type: 'object', description: 'Structured data to store. Shape depends on the domain and item.' },
+    notes: { type: 'string', description: 'Human-readable summary of what was learned' },
+    status: { type: 'string', enum: ['known', 'partial'], description: 'Whether this fully answers the item or is still partial' },
+  }, ['domain', 'item_key', 'notes', 'status']),
+
+  tool('get_profiling_summary', "Get a summary of how well Nitara knows the founder. Shows completeness by domain and overall. Use to report progress to the founder.", {}),
 ];

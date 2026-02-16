@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { GlassCard, StatCard, ActionCard, Badge } from '../shared';
 import { api } from '../../services/api';
+import { useConversationStore } from '../../stores/conversation';
 
 interface TaskItem {
   id: string;
@@ -33,19 +34,34 @@ interface ContentItem {
 }
 
 export default function MorningBriefing() {
-  const now = new Date();
-  const hour = now.getHours();
+  const [clockTime, setClockTime] = useState(new Date());
+  const hour = clockTime.getHours();
   const greeting = hour < 12 ? 'GOOD MORNING' : hour < 18 ? 'GOOD AFTERNOON' : 'GOOD EVENING';
-  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-  const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+  const timeStr = clockTime.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+  const dayStr = clockTime.toLocaleDateString('en-US', { weekday: 'long' }).toUpperCase();
+  const dateStr = clockTime.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
+  const [userName, setUserName] = useState('');
   const [financials, setFinancials] = useState<{ revenue: string; costs: string; net: string; currency: string } | null>(null);
   const [priorities, setPriorities] = useState<TaskItem[]>([]);
   const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
   const [networkLeads, setNetworkLeads] = useState<NetworkLead[]>([]);
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
+  const lastNitaraMsg = useConversationStore(s => [...s.messages].reverse().find(m => m.role === 'nitara'));
+
+  // Live clock
+  useEffect(() => {
+    const interval = setInterval(() => setClockTime(new Date()), 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
+    // Fetch user name
+    api.getProfile().then(p => {
+      const name = p?.name || p?.display_name || '';
+      if (name) setUserName(name.split(' ')[0].toUpperCase());
+    }).catch(console.error);
+
     // Financial pulse
     api.getPortfolioFinancials().then(fin => {
       if (fin) {
@@ -98,18 +114,25 @@ export default function MorningBriefing() {
   const activePriorities = priorities.filter(p => p.status !== 'completed');
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto relative">
+      {/* Clock Widget — top right */}
+      <div className="absolute top-6 right-6 lg:top-8 lg:right-8 text-right">
+        <p className="font-mono text-3xl lg:text-4xl text-text-primary tabular-nums tracking-tight" style={{ fontFeatureSettings: "'tnum'" }}>
+          {timeStr}
+        </p>
+        <p className="text-text-tertiary text-xs tracking-wider uppercase mt-1">
+          {dayStr} &middot; {dateStr}
+        </p>
+      </div>
+
       {/* Greeting Header */}
       <div className="mb-8">
-        <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight" style={{ fontFamily: 'var(--font-body)' }}>
-          {greeting}.
+        <h1
+          className="text-3xl lg:text-5xl font-bold text-text-primary tracking-[0.15em] uppercase"
+          style={{ fontFamily: 'Syncopate, var(--font-display), sans-serif' }}
+        >
+          {greeting}{userName ? `, ${userName}` : ''}.
         </h1>
-        <div className="flex items-center gap-4 mt-2">
-          <span className="font-mono text-text-secondary text-lg tabular-nums" style={{ fontFeatureSettings: "'tnum'" }}>
-            {timeStr}
-          </span>
-          <span className="text-text-tertiary text-sm">{dateStr}</span>
-        </div>
       </div>
 
       {/* Summary Line */}
@@ -260,6 +283,17 @@ export default function MorningBriefing() {
           </div>
         </GlassCard>
       </div>
+
+      {/* Nitara Proactive Strip */}
+      {lastNitaraMsg && (
+        <div className="mt-6 flex items-center gap-3 px-4 py-3 rounded-xl bg-primary/5 border border-primary/20">
+          <span className="text-primary text-lg">{'\u2726'}</span>
+          <p className="text-text-secondary text-sm flex-1 truncate">
+            {lastNitaraMsg.content}
+          </p>
+          <span className="text-text-tertiary text-xs tracking-wider uppercase flex-shrink-0">NITARA</span>
+        </div>
+      )}
     </div>
   );
 }

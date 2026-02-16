@@ -9,8 +9,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Load secrets from secure location (must happen after dotenv, before routes)
-import { loadOpenClawSecrets } from './config/load-secrets';
+import { loadOpenClawSecrets, loadLiveKitSecrets } from './config/load-secrets';
 loadOpenClawSecrets();
+loadLiveKitSecrets();
 
 // Import routes
 import inboxRoutes from './routes/inbox.routes';
@@ -46,6 +47,8 @@ import weeklyReportRoutes from './routes/weekly-report.routes';
 import marketingRoutes from './routes/marketing.routes';
 import confidenceRoutes from './routes/confidence.routes';
 import knowledgeRoutes from './routes/knowledge.routes';
+import livekitRoutes from './routes/livekit.routes';
+import { knowledgeDigestService } from './services/knowledge-digest.service';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -143,6 +146,7 @@ app.use('/api', weeklyReportRoutes);
 app.use('/api', marketingRoutes);
 app.use('/api', confidenceRoutes);
 app.use('/api', knowledgeRoutes);
+app.use('/api', livekitRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -191,10 +195,17 @@ app.use((req: Request, res: Response) => {
   });
 });
 
+// Initialize knowledge digest on startup
+knowledgeDigestService.initialize().then(() => {
+  console.log('[Startup] Knowledge digest service initialized');
+}).catch(err => {
+  console.error('[Startup] Knowledge digest init failed:', err.message);
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log('==========================================');
-  console.log('🚀 Nitara Backend API Server');
+  console.log('Nitara Backend API Server');
   console.log('==========================================');
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);

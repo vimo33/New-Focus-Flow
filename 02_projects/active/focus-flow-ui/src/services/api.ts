@@ -683,11 +683,14 @@ export class VaultAPI {
   async sendOrchestratorMessage(
     content: string,
     threadId?: string | null,
-    source: 'voice' | 'text' = 'text'
+    source: 'voice' | 'text' = 'text',
+    projectId?: string | null
   ): Promise<{ thread_id: string; content: string; tool_calls?: any[]; navigate_to?: string }> {
+    const body: Record<string, any> = { content, thread_id: threadId, source };
+    if (projectId) body.project_id = projectId;
     return this.request('/orchestrator/chat', {
       method: 'POST',
-      body: JSON.stringify({ content, thread_id: threadId, source }),
+      body: JSON.stringify(body),
     });
   }
 
@@ -1499,6 +1502,25 @@ export class VaultAPI {
     return this.request(`/knowledge/youtube/playlists/${id}/index`, {
       method: 'POST',
     });
+  }
+
+  // ============================================================================
+  // LiveKit Methods
+  // ============================================================================
+
+  async getLiveKitToken(params: {
+    threadId?: string;
+    voicePreset?: string;
+    roomName?: string;
+  }): Promise<{ token: string; roomName: string; wsUrl: string; identity: string }> {
+    return this.request('/livekit/token', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getLiveKitStatus(): Promise<{ configured: boolean; wsUrl: string | null }> {
+    return this.request('/livekit/status');
   }
 
   async getYouTubeVideos(playlistId?: string): Promise<any> {

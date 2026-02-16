@@ -39,6 +39,15 @@ class PortfolioDashboardService {
 
         const health = this.calculateHealth(project, projectTasks, { revenue: projectRevenue, costs: projectCosts });
 
+        // Extract council verdict summary if available
+        const cv = project.artifacts?.council_verdict;
+        const councilSummary = cv ? {
+          overall_score: cv.overall_score,
+          recommendation: cv.recommendation,
+          num_evaluations: cv.evaluations?.length || 0,
+          council_composition: cv.council_composition || cv.evaluations?.map(e => e.agent_name) || [],
+        } : undefined;
+
         return {
           id: project.id,
           title: project.title,
@@ -53,6 +62,7 @@ class PortfolioDashboardService {
           completed_tasks: projectTasks.filter(t => t.status === 'done').length,
           collaborators: [],
           updated_at: project.updated_at,
+          council_verdict: councilSummary,
         };
       })
     );

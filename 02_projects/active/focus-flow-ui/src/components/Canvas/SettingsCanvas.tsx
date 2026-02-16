@@ -27,6 +27,10 @@ export default function SettingsCanvas() {
   const [profile, setProfile] = useState<any>(null);
   const [saving, setSaving] = useState(false);
   const [memories, setMemories] = useState<any[]>([]);
+  const [voicePreset, setVoicePreset] = useState(() => localStorage.getItem('nitara-voice-preset') || 'nova');
+  const [inputMode, setInputMode] = useState<'push-to-talk' | 'voice-active'>(() =>
+    (localStorage.getItem('nitara-input-mode') as any) || 'push-to-talk'
+  );
 
   // Load profile on mount
   useEffect(() => {
@@ -167,20 +171,49 @@ export default function SettingsCanvas() {
             <label className="block text-text-secondary text-sm mb-2">Output Voice</label>
             <div className="grid grid-cols-3 gap-2 mb-4">
               {[
-                { name: 'Nova', desc: 'Neutral' },
-                { name: 'Atlas', desc: 'Direct' },
-                { name: 'Lyra', desc: 'Empathetic' },
+                { name: 'Nova', key: 'nova', desc: 'Neutral' },
+                { name: 'Atlas', key: 'atlas', desc: 'Direct' },
+                { name: 'Lyra', key: 'lyra', desc: 'Empathetic' },
               ].map((voice) => (
-                <button key={voice.name} className="p-2 rounded-lg border border-[var(--glass-border)] hover:border-primary text-center transition-colors">
+                <button
+                  key={voice.name}
+                  onClick={() => { setVoicePreset(voice.key); localStorage.setItem('nitara-voice-preset', voice.key); }}
+                  className={`p-2 rounded-lg border text-center transition-colors ${
+                    voicePreset === voice.key
+                      ? 'border-primary bg-primary/5'
+                      : 'border-[var(--glass-border)] hover:border-primary'
+                  }`}
+                >
                   <p className="text-text-primary text-sm">{voice.name}</p>
                   <p className="text-text-tertiary text-[10px]">{voice.desc}</p>
+                  {voicePreset === voice.key && (
+                    <p className="text-primary text-[9px] mt-1 tracking-wider font-semibold">SELECTED</p>
+                  )}
                 </button>
               ))}
             </div>
             <label className="block text-text-secondary text-sm mb-2">Input Mode</label>
             <div className="flex gap-2">
-              <button className="flex-1 py-2 rounded-lg bg-primary/10 border border-primary text-primary text-sm">Push-to-talk</button>
-              <button className="flex-1 py-2 rounded-lg border border-[var(--glass-border)] text-text-secondary text-sm">Voice Active</button>
+              <button
+                onClick={() => { setInputMode('push-to-talk'); localStorage.setItem('nitara-input-mode', 'push-to-talk'); }}
+                className={`flex-1 py-2 rounded-lg text-sm transition-colors ${
+                  inputMode === 'push-to-talk'
+                    ? 'bg-primary/10 border border-primary text-primary'
+                    : 'border border-[var(--glass-border)] text-text-secondary hover:border-primary'
+                }`}
+              >
+                Push-to-talk
+              </button>
+              <button
+                onClick={() => { setInputMode('voice-active'); localStorage.setItem('nitara-input-mode', 'voice-active'); }}
+                className={`flex-1 py-2 rounded-lg text-sm transition-colors ${
+                  inputMode === 'voice-active'
+                    ? 'bg-primary/10 border border-primary text-primary'
+                    : 'border border-[var(--glass-border)] text-text-secondary hover:border-primary'
+                }`}
+              >
+                Voice Active
+              </button>
             </div>
           </GlassCard>
         </div>
@@ -214,11 +247,21 @@ export default function SettingsCanvas() {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-text-secondary text-sm">Model</span>
-                <span className="text-text-primary text-sm font-mono">Claude Sonnet 4.5</span>
+                <span className="text-text-primary text-sm font-mono">
+                  {reasoningDepth < 0.3 ? 'Claude Haiku 4.5' : reasoningDepth < 0.7 ? 'Claude Sonnet 4.5' : 'Claude Opus 4.6'}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary text-sm">Context Window</span>
                 <span className="text-text-primary text-sm font-mono">200K tokens</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary text-sm">Voice Preset</span>
+                <span className="text-text-primary text-sm font-mono capitalize">{voicePreset}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-text-secondary text-sm">Input Mode</span>
+                <span className="text-text-primary text-sm font-mono capitalize">{inputMode.replace('-', ' ')}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-text-secondary text-sm">Last Sync</span>

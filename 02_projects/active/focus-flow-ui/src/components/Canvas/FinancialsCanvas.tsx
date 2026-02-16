@@ -232,29 +232,46 @@ export default function FinancialsCanvas() {
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase"
-            style={{ fontFamily: 'JetBrains Mono, monospace' }}>NITARA OBSERVATORY</h2>
+            style={{ fontFamily: 'JetBrains Mono, monospace' }}>
+          NITARA OBSERVATORY / FINANCIAL INTELLIGENCE UNIT // V2.5
+        </h2>
         <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight mt-1"
             style={{ fontFamily: 'var(--font-body)' }}>Financials & Income</h1>
       </div>
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <GlassCard>
-          <StatCard value={totalRevenue.toLocaleString('en-US')} label="Monthly Revenue" currency={currency} trend={{ direction: 'up', percentage: '/mo' }} />
-        </GlassCard>
-        <GlassCard>
-          <StatCard value={totalCosts.toLocaleString('en-US')} label="Monthly Costs" currency={currency} trend={{ direction: 'flat', percentage: '/mo' }} />
-        </GlassCard>
-        <GlassCard>
-          <StatCard value={netIncome.toLocaleString('en-US')} label="Net Income" currency={currency} trend={{ direction: netIncome >= 0 ? 'up' : 'down', percentage: '/mo' }} />
-        </GlassCard>
-        <GlassCard>
-          {goalProgress !== null ? (
-            <StatCard value={`${goalProgress}%`} label="Goal Progress" trend={{ direction: goalProgress >= 80 ? 'up' : 'flat', percentage: `of ${formatCHF(goals.income_goal, currency)}` }} />
-          ) : (
-            <StatCard value="—" label="Goal Progress" trend={{ direction: 'flat', percentage: 'No goal set' }} />
-          )}
-        </GlassCard>
+        <StatCard
+          value={totalRevenue.toLocaleString('en-US')}
+          label="Monthly Revenue"
+          currency={currency}
+          trend={{ direction: 'up', percentage: '/mo' }}
+        />
+        <StatCard
+          value={totalCosts.toLocaleString('en-US')}
+          label="Monthly Costs"
+          currency={currency}
+          trend={{ direction: 'flat', percentage: '/mo' }}
+        />
+        <StatCard
+          value={netIncome.toLocaleString('en-US')}
+          label="Net Income"
+          currency={currency}
+          trend={{ direction: netIncome >= 0 ? 'up' : 'down', percentage: '/mo' }}
+        />
+        {goalProgress !== null ? (
+          <StatCard
+            value={`${goalProgress}%`}
+            label="Goal Progress"
+            trend={{ direction: goalProgress >= 80 ? 'up' : 'flat', percentage: `of ${formatCHF(goals.income_goal, currency)}` }}
+          />
+        ) : (
+          <StatCard
+            value="—"
+            label="Goal Progress"
+            trend={{ direction: 'flat', percentage: 'No goal set' }}
+          />
+        )}
       </div>
 
       {/* Charts Row */}
@@ -324,18 +341,34 @@ export default function FinancialsCanvas() {
             <p className="text-text-tertiary text-sm py-8 text-center">No revenue data to chart</p>
           )}
 
-          {/* Revenue list with type badges */}
+          {/* Revenue list with type badges and % of target */}
           <div className="space-y-2 mt-3">
             {revenues.map((r) => (
-              <div key={r.id} className="flex items-center justify-between py-2 border-b border-[var(--glass-border)] last:border-0">
-                <div className="flex items-center gap-2">
-                  <p className="text-text-primary text-sm font-medium">{r.source}</p>
-                  <Badge label={TYPE_LABELS[r.type] || r.type.toUpperCase()} variant="active" />
+              <div key={r.id} className="py-2 border-b border-[var(--glass-border)] last:border-0">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <p className="text-text-primary text-sm font-medium">{r.source}</p>
+                    <Badge label={TYPE_LABELS[r.type] || r.type.toUpperCase()} variant="active" />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-primary font-mono text-sm">{formatCHF(r.amount_monthly, currency)}</span>
+                    <button onClick={() => handleDeleteRevenue(r.id)} className="text-text-tertiary hover:text-danger text-xs ml-1">&times;</button>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-mono text-sm">{formatCHF(r.amount_monthly, currency)}</span>
-                  <button onClick={() => handleDeleteRevenue(r.id)} className="text-text-tertiary hover:text-danger text-xs ml-1">&times;</button>
-                </div>
+                {/* % of target bar */}
+                {goals?.income_goal > 0 && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <div className="flex-1 h-1 bg-text-tertiary/10 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-primary/40 rounded-full"
+                        style={{ width: `${Math.min(100, (r.amount_monthly / goals.income_goal) * 100)}%` }}
+                      />
+                    </div>
+                    <span className="text-text-tertiary text-[10px] font-mono">
+                      {Math.round((r.amount_monthly / goals.income_goal) * 100)}%
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>

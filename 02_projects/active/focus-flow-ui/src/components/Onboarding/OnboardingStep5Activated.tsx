@@ -20,7 +20,7 @@ export default function OnboardingStep5Activated() {
     setActivating(true);
 
     try {
-      await api.post('/profile', { onboarding_completed: true });
+      await api.saveProfile({ onboarding_completed: true });
     } catch {
       // Continue anyway; we can mark onboarding completed later
     }

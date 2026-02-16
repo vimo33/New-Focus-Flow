@@ -36,8 +36,8 @@ interface CacheEntry<T> {
   expires: number;
 }
 
-const RESPONSE_CACHE_TTL_MS = 30_000;
-const CONTEXT_CACHE_TTL_MS = 60_000;
+const RESPONSE_CACHE_TTL_MS = 300_000; // 5 minutes — better cache hit rate
+const CONTEXT_CACHE_TTL_MS = 120_000; // 2 minutes
 const CLEANUP_INTERVAL_MS = 60_000;
 
 class CachedInferenceClient {

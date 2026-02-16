@@ -15,15 +15,33 @@ export function NitaraLayout() {
   // First-run detection: check if profile exists on mount
   useEffect(() => {
     const checkProfile = async () => {
-      try {
-        await api.getProfile();
-        // Profile exists, proceed normally
-      } catch {
-        // No profile (404) — redirect to onboarding
-        setCanvas('onboarding');
-      } finally {
-        setCheckedProfile(true);
+      const maxRetries = 3;
+      for (let attempt = 0; attempt < maxRetries; attempt++) {
+        try {
+          const profile = await api.getProfile();
+          if (profile && !profile.onboarding_completed) {
+            // Profile exists but onboarding not completed — redirect
+            setCanvas('onboarding');
+          }
+          // Profile exists and onboarding completed — proceed normally
+          setCheckedProfile(true);
+          return;
+        } catch (err: any) {
+          const is404 = err?.message?.includes('404');
+          if (is404) {
+            // No profile — redirect to onboarding
+            setCanvas('onboarding');
+            setCheckedProfile(true);
+            return;
+          }
+          // Network / server error — retry after brief delay
+          if (attempt < maxRetries - 1) {
+            await new Promise(r => setTimeout(r, 1000));
+          }
+        }
       }
+      // All retries exhausted — proceed to app rather than blocking user
+      setCheckedProfile(true);
     };
     checkProfile();
   }, []);
