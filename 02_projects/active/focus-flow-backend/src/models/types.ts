@@ -915,3 +915,113 @@ export interface NetworkOpportunity {
   reasoning: string;
   created_at: string;
 }
+
+// ============================================================================
+// Phase 2: Portfolio Dashboard Types
+// ============================================================================
+
+export interface ProjectHealthIndicator {
+  project_id: string;
+  score: number;
+  factors: {
+    pipeline_velocity: number;
+    task_completion_rate: number;
+    days_since_update: number;
+    has_overdue_tasks: boolean;
+    financial_health: number;
+  };
+  status: 'thriving' | 'healthy' | 'stalling' | 'at_risk';
+}
+
+export interface PortfolioProjectSummary {
+  id: string;
+  title: string;
+  playbook_type: PlaybookType | undefined;
+  phase: ProjectPhase | undefined;
+  phase_sub_state: PhaseSubState | undefined;
+  status: 'active' | 'paused' | 'completed';
+  health: ProjectHealthIndicator;
+  monthly_revenue: number;
+  monthly_costs: number;
+  task_count: number;
+  completed_tasks: number;
+  collaborators: string[];
+  updated_at: string;
+}
+
+export interface RankedIdea {
+  idea: Idea;
+  composite_score: number;
+  breakdown: {
+    council_score: number;
+    skill_alignment: number;
+    network_advantage: number;
+    financial_viability: number;
+    time_to_revenue: number;
+  };
+  evaluated: boolean;
+}
+
+export interface PortfolioDashboard {
+  projects: PortfolioProjectSummary[];
+  active_count: number;
+  paused_count: number;
+  completed_count: number;
+  total_monthly_revenue: number;
+  total_monthly_costs: number;
+  net_monthly: number;
+  currency: string;
+  ranked_ideas: RankedIdea[];
+  unevaluated_ideas_count: number;
+}
+
+// ============================================================================
+// Phase 2: Weekly Report Types
+// ============================================================================
+
+export interface WeeklyKPI {
+  label: string;
+  value: string;
+  trend_direction: 'up' | 'down' | 'flat';
+  trend_percentage: string;
+  spark_data: number[];
+}
+
+export interface WeeklyReport {
+  id: string;
+  week_start: string;
+  week_end: string;
+  overall_momentum: number;
+  kpis: WeeklyKPI[];
+  strategic_intelligence: string[];
+  activity_volume: number[];
+  retrospective: string;
+  created_at: string;
+}
+
+// ============================================================================
+// Phase 2: Partner Analysis Types
+// ============================================================================
+
+export interface ProjectCollaborator {
+  id: string;
+  project_id: string;
+  contact_id?: string;
+  name: string;
+  role: string;
+  email?: string;
+  company?: string;
+  added_at: string;
+}
+
+export interface PartnerAnalysis {
+  collaborator_id: string;
+  network_overlap: { shared_contacts: string[]; shared_industries: string[] };
+  business_possibilities: {
+    type: 'joint_venture' | 'referral_channel' | 'skill_complement' | 'market_access';
+    title: string;
+    description: string;
+    confidence: number;
+  }[];
+  analyzed_at: string;
+}

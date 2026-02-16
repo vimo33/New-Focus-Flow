@@ -40,6 +40,8 @@ import agentRoutes from './routes/agent.routes';
 import profileRoutes from './routes/profile.routes';
 import financialsRoutes from './routes/financials.routes';
 import networkRoutes from './routes/network.routes';
+import portfolioRoutes from './routes/portfolio.routes';
+import weeklyReportRoutes from './routes/weekly-report.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -131,6 +133,8 @@ app.use('/api', agentRoutes);
 app.use('/api', profileRoutes);
 app.use('/api', financialsRoutes);
 app.use('/api', networkRoutes);
+app.use('/api', portfolioRoutes);
+app.use('/api', weeklyReportRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

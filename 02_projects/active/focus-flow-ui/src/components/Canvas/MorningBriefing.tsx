@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { GlassCard, StatCard, ActionCard, Badge } from '../shared';
+import { api } from '../../services/api';
 
 interface TaskItem {
   id: string;
@@ -21,7 +23,24 @@ export default function MorningBriefing() {
   const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
-  // TODO: Replace with real API data
+  const [financials, setFinancials] = useState<{ revenue: string; costs: string; net: string; currency: string } | null>(null);
+
+  useEffect(() => {
+    Promise.all([
+      api.getPortfolioFinancials(),
+      api.getPortfolioDashboard().catch(() => null),
+    ]).then(([fin]) => {
+      if (fin) {
+        setFinancials({
+          revenue: fin.total_monthly_revenue?.toLocaleString('en-US') || '0',
+          costs: fin.total_monthly_costs?.toLocaleString('en-US') || '0',
+          net: fin.net_monthly?.toLocaleString('en-US') || '0',
+          currency: fin.currency || 'CHF',
+        });
+      }
+    }).catch(console.error);
+  }, []);
+
   const priorities: TaskItem[] = [
     { id: '1', title: 'Finalize Q1 pricing proposal', project: 'AI Consulting', status: 'active' },
     { id: '2', title: 'Review design system components', project: 'Nitara', status: 'active' },
@@ -104,25 +123,22 @@ export default function MorningBriefing() {
           <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Financial Pulse</h3>
           <div className="space-y-3">
             <StatCard
-              value="4,200"
+              value={financials?.revenue || '...'}
               label="Monthly Revenue"
-              currency="CHF"
-              trend={{ direction: 'up', percentage: '+12%' }}
-              sparkData={[3200, 3400, 3800, 3600, 4000, 4200]}
+              currency={financials?.currency || 'CHF'}
+              trend={{ direction: 'up', percentage: 'this month' }}
             />
             <StatCard
-              value="1,850"
+              value={financials?.costs || '...'}
               label="Monthly Costs"
-              currency="CHF"
-              trend={{ direction: 'down', percentage: '-3%' }}
-              sparkData={[2100, 2000, 1950, 1900, 1870, 1850]}
+              currency={financials?.currency || 'CHF'}
+              trend={{ direction: 'flat', percentage: 'this month' }}
             />
             <StatCard
-              value="2,350"
+              value={financials?.net || '...'}
               label="Net Income"
-              currency="CHF"
-              trend={{ direction: 'up', percentage: '+28%' }}
-              sparkData={[1100, 1400, 1850, 1700, 2130, 2350]}
+              currency={financials?.currency || 'CHF'}
+              trend={{ direction: Number(financials?.net?.replace(/,/g, '') || 0) >= 0 ? 'up' : 'down', percentage: 'net' }}
             />
           </div>
         </GlassCard>

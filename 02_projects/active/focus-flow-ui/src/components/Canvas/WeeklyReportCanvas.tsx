@@ -1,46 +1,126 @@
+import { useEffect, useState } from 'react';
 import { GlassCard, StatCard } from '../shared';
+import { api } from '../../services/api';
+
+interface WeeklyKPI {
+  label: string;
+  value: string;
+  trend_direction: 'up' | 'down' | 'flat';
+  trend_percentage: string;
+  spark_data: number[];
+}
+
+interface Report {
+  id: string;
+  week_start: string;
+  week_end: string;
+  overall_momentum: number;
+  kpis: WeeklyKPI[];
+  strategic_intelligence: string[];
+  activity_volume: number[];
+  retrospective: string;
+  created_at: string;
+}
 
 export default function WeeklyReportCanvas() {
-  const periodStart = 'Feb 10';
-  const periodEnd = 'Feb 16, 2026';
+  const [report, setReport] = useState<Report | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [generating, setGenerating] = useState(false);
 
-  // TODO: Pull from API
-  const kpis = [
-    { value: '2,400', label: 'Revenue (New Wins)', currency: 'CHF', trend: { direction: 'up' as const, percentage: '+18%' }, sparkData: [1800, 2000, 2100, 2200, 2400] },
-    { value: '87%', label: 'Efficiency', trend: { direction: 'up' as const, percentage: '+5%' }, sparkData: [78, 80, 82, 85, 87] },
-    { value: '12', label: 'New Network Nodes', trend: { direction: 'up' as const, percentage: '+3' }, sparkData: [5, 7, 8, 10, 12] },
-    { value: '6.5h', label: 'Time Saved (AI)', trend: { direction: 'up' as const, percentage: '+1.2h' }, sparkData: [4, 4.5, 5, 5.8, 6.5] },
-  ];
+  useEffect(() => {
+    api.getLatestWeeklyReport()
+      .then(setReport)
+      .catch(() => setReport(null))
+      .finally(() => setLoading(false));
+  }, []);
 
-  const intelligence = [
-    'AI Consulting project advanced from Spec to Dev phase — on track for March delivery.',
-    'Network expanded by 12 nodes this week. 3 identified as high-value connectors in Zurich fintech.',
-    'Monthly burn rate decreased 3% — infrastructure optimization from last sprint paying off.',
-  ];
+  const handleGenerate = async () => {
+    setGenerating(true);
+    try {
+      const newReport = await api.generateWeeklyReport();
+      setReport(newReport);
+    } catch (e) {
+      console.error('Failed to generate report:', e);
+    } finally {
+      setGenerating(false);
+    }
+  };
 
-  // Activity data for chart (Mon-Sun)
-  const activityData = [4, 7, 6, 8, 5, 3, 2];
   const days = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
-  const maxActivity = Math.max(...activityData);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-text-tertiary">Loading weekly report...</div>
+      </div>
+    );
+  }
+
+  if (!report) {
+    return (
+      <div className="p-6 lg:p-8 max-w-6xl mx-auto">
+        <div className="mb-8">
+          <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
+            WEEKLY PERFORMANCE REPORT
+          </h2>
+          <p className="text-text-secondary text-sm mt-2">No reports generated yet.</p>
+        </div>
+        <button
+          onClick={handleGenerate}
+          disabled={generating}
+          className="px-6 py-3 rounded-lg text-sm font-medium bg-primary text-base hover:bg-primary/80 transition-colors disabled:opacity-50"
+        >
+          {generating ? 'Generating...' : 'Generate Weekly Report'}
+        </button>
+      </div>
+    );
+  }
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  const activityData = report.activity_volume;
+  const maxActivity = Math.max(...activityData, 1);
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
-        <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
-          WEEKLY PERFORMANCE REPORT
-        </h2>
-        <p className="text-text-secondary text-sm mt-1">{periodStart} — {periodEnd}</p>
-        <div className="flex items-center gap-2 mt-2">
-          <span className="text-text-primary text-sm font-medium">Overall Momentum</span>
-          <span className="text-success font-mono text-sm">{'\u2191'} +14%</span>
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
+              WEEKLY PERFORMANCE REPORT
+            </h2>
+            <p className="text-text-secondary text-sm mt-1">{formatDate(report.week_start)} — {formatDate(report.week_end)}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <span className="text-text-primary text-sm font-medium">Overall Momentum</span>
+              <span className={`font-mono text-sm ${report.overall_momentum >= 0 ? 'text-success' : 'text-danger'}`}>
+                {report.overall_momentum >= 0 ? '\u2191' : '\u2193'} {report.overall_momentum >= 0 ? '+' : ''}{report.overall_momentum}%
+              </span>
+            </div>
+          </div>
+          <button
+            onClick={handleGenerate}
+            disabled={generating}
+            className="px-4 py-2 rounded-lg text-xs font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
+          >
+            {generating ? 'Generating...' : 'Regenerate'}
+          </button>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {kpis.map((kpi, i) => (
-          <StatCard key={i} {...kpi} />
+        {report.kpis.map((kpi, i) => (
+          <StatCard
+            key={i}
+            value={kpi.value}
+            label={kpi.label}
+            trend={{ direction: kpi.trend_direction, percentage: kpi.trend_percentage }}
+            sparkData={kpi.spark_data}
+          />
         ))}
       </div>
 
@@ -48,7 +128,7 @@ export default function WeeklyReportCanvas() {
       <GlassCard className="mb-8">
         <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Strategic Intelligence</h3>
         <div className="space-y-3">
-          {intelligence.map((item, i) => (
+          {report.strategic_intelligence.map((item, i) => (
             <div key={i} className="flex gap-3 items-start">
               <div className="w-0.5 h-full min-h-[20px] bg-primary rounded-full flex-shrink-0 mt-1" />
               <p className="text-text-secondary text-sm">{item}</p>
@@ -79,11 +159,7 @@ export default function WeeklyReportCanvas() {
           <span className="text-primary text-lg">{'\u2726'}</span>
           <div>
             <p className="text-text-tertiary text-[10px] font-semibold tracking-wider uppercase mb-1">NITARA RETROSPECTIVE</p>
-            <p className="text-text-secondary text-sm">
-              Strong week with meaningful progress across all projects. The network expansion in Zurich fintech opens
-              three potential consulting opportunities worth exploring next week. I recommend scheduling discovery calls
-              with the high-value connectors and finalizing the Q1 pricing proposal before the month closes.
-            </p>
+            <p className="text-text-secondary text-sm">{report.retrospective}</p>
           </div>
         </div>
       </GlassCard>

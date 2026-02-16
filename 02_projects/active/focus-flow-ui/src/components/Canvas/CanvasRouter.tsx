@@ -7,6 +7,8 @@ const CouncilEvaluationCanvas = lazy(() => import('./CouncilEvaluationCanvas'));
 const WeeklyReportCanvas = lazy(() => import('./WeeklyReportCanvas'));
 const SettingsCanvas = lazy(() => import('./SettingsCanvas'));
 const NetworkCanvas = lazy(() => import('./NetworkCanvas'));
+const PortfolioCanvas = lazy(() => import('./PortfolioCanvas'));
+const ProjectDetailCanvas = lazy(() => import('./ProjectDetailCanvas'));
 const OnboardingFlow = lazy(() => import('../Onboarding/OnboardingFlow'));
 
 // Placeholder for canvases not yet built
@@ -22,7 +24,7 @@ function ComingSoon({ name }: { name: string }) {
 }
 
 export default function CanvasRouter() {
-  const { activeCanvas, canvasParams } = useCanvasStore();
+  const { activeCanvas } = useCanvasStore();
   const [visible, setVisible] = useState(true);
   const prevCanvas = useRef(activeCanvas);
 
@@ -42,13 +44,13 @@ export default function CanvasRouter() {
       case 'morning_briefing':
         return <MorningBriefing />;
       case 'portfolio':
-        return <ComingSoon name="Portfolio" />;
+        return <PortfolioCanvas />;
       case 'network':
         return <NetworkCanvas />;
       case 'financials':
         return <ComingSoon name="Financials" />;
       case 'project_detail':
-        return <ComingSoon name={`Project: ${canvasParams.projectId || ''}`} />;
+        return <ProjectDetailCanvas />;
       case 'calendar':
         return <ComingSoon name="Calendar" />;
       case 'settings':

@@ -1225,6 +1225,66 @@ export class VaultAPI {
   getImportSSEUrl(): string {
     return `${this.baseURL}/network/import/status`;
   }
+
+  // ============================================================================
+  // Portfolio Methods
+  // ============================================================================
+
+  async getPortfolioDashboard(): Promise<any> {
+    return this.request('/portfolio/dashboard');
+  }
+
+  async getRankedIdeas(): Promise<any> {
+    return this.request('/portfolio/ideas/ranked');
+  }
+
+  async evaluateIdea(id: string): Promise<any> {
+    return this.request(`/portfolio/ideas/${id}/evaluate`, { method: 'POST' });
+  }
+
+  // ============================================================================
+  // Weekly Report Methods
+  // ============================================================================
+
+  async generateWeeklyReport(): Promise<any> {
+    return this.request('/reports/weekly/generate', { method: 'POST' });
+  }
+
+  async getLatestWeeklyReport(): Promise<any> {
+    return this.request('/reports/weekly/latest');
+  }
+
+  async getWeeklyReports(limit?: number): Promise<any> {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/reports/weekly${params}`);
+  }
+
+  // ============================================================================
+  // Collaborator Methods
+  // ============================================================================
+
+  async getCollaborators(projectId: string): Promise<{ collaborators: any[]; count: number }> {
+    return this.request(`/projects/${projectId}/collaborators`);
+  }
+
+  async addCollaborator(projectId: string, data: any): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async removeCollaborator(projectId: string, collaboratorId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators/${collaboratorId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async analyzeCollaborator(projectId: string, collaboratorId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators/${collaboratorId}/analyze`, {
+      method: 'POST',
+    });
+  }
 }
 
 // ============================================================================
