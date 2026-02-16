@@ -9,6 +9,8 @@ const SettingsCanvas = lazy(() => import('./SettingsCanvas'));
 const NetworkCanvas = lazy(() => import('./NetworkCanvas'));
 const PortfolioCanvas = lazy(() => import('./PortfolioCanvas'));
 const ProjectDetailCanvas = lazy(() => import('./ProjectDetailCanvas'));
+const FinancialsCanvas = lazy(() => import('./FinancialsCanvas'));
+const CalendarCanvas = lazy(() => import('./CalendarCanvas'));
 const OnboardingFlow = lazy(() => import('../Onboarding/OnboardingFlow'));
 
 // Placeholder for canvases not yet built
@@ -48,11 +50,11 @@ export default function CanvasRouter() {
       case 'network':
         return <NetworkCanvas />;
       case 'financials':
-        return <ComingSoon name="Financials" />;
+        return <FinancialsCanvas />;
       case 'project_detail':
         return <ProjectDetailCanvas />;
       case 'calendar':
-        return <ComingSoon name="Calendar" />;
+        return <CalendarCanvas />;
       case 'settings':
         return <SettingsCanvas />;
       case 'council_evaluation':

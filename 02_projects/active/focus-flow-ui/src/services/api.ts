@@ -1218,6 +1218,54 @@ export class VaultAPI {
     return this.request('/network/opportunities');
   }
 
+  // ============================================================================
+  // Agent State Methods
+  // ============================================================================
+
+  async getAgentState(): Promise<any> {
+    return this.request('/agent/state');
+  }
+
+  async approveAction(requestId: string): Promise<any> {
+    return this.request(`/agent/approve/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify({ approved: true }),
+    });
+  }
+
+  async rejectAction(requestId: string): Promise<any> {
+    return this.request(`/agent/approve/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify({ approved: false }),
+    });
+  }
+
+  // ============================================================================
+  // Council Verdict Methods
+  // ============================================================================
+
+  async getCouncilVerdict(verdictId: string): Promise<any> {
+    return this.request(`/council/verdicts/${verdictId}`);
+  }
+
+  async getCouncilVerdicts(projectId?: string): Promise<any> {
+    const url = projectId
+      ? `/council/verdicts?project_id=${encodeURIComponent(projectId)}`
+      : '/council/verdicts';
+    return this.request(url);
+  }
+
+  async applyCouncilActions(verdictId: string): Promise<any> {
+    return this.request(`/council/${verdictId}/apply-actions`, { method: 'POST' });
+  }
+
+  async runCouncilEvaluation(projectId: string): Promise<any> {
+    return this.request(`/council/evaluate`, {
+      method: 'POST',
+      body: JSON.stringify({ project_id: projectId }),
+    });
+  }
+
   async getImportJobStatus(jobId: string): Promise<any> {
     return this.request(`/network/import/${jobId}`);
   }

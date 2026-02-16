@@ -16,6 +16,22 @@ interface ApprovalItem {
   type: 'edit' | 'approve';
 }
 
+interface NetworkLead {
+  id?: string;
+  contact_name?: string;
+  name?: string;
+  company?: string;
+  opportunity_type?: string;
+  description?: string;
+  score?: number;
+}
+
+interface ContentItem {
+  id: string;
+  title: string;
+  status: string;
+}
+
 export default function MorningBriefing() {
   const now = new Date();
   const hour = now.getHours();
@@ -24,12 +40,14 @@ export default function MorningBriefing() {
   const dateStr = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
 
   const [financials, setFinancials] = useState<{ revenue: string; costs: string; net: string; currency: string } | null>(null);
+  const [priorities, setPriorities] = useState<TaskItem[]>([]);
+  const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
+  const [networkLeads, setNetworkLeads] = useState<NetworkLead[]>([]);
+  const [contentItems, setContentItems] = useState<ContentItem[]>([]);
 
   useEffect(() => {
-    Promise.all([
-      api.getPortfolioFinancials(),
-      api.getPortfolioDashboard().catch(() => null),
-    ]).then(([fin]) => {
+    // Financial pulse
+    api.getPortfolioFinancials().then(fin => {
       if (fin) {
         setFinancials({
           revenue: fin.total_monthly_revenue?.toLocaleString('en-US') || '0',
@@ -39,18 +57,45 @@ export default function MorningBriefing() {
         });
       }
     }).catch(console.error);
+
+    // Priorities from tasks API
+    api.getTasks('work').then(res => {
+      const mapped = (res.tasks || []).slice(0, 5).map(t => ({
+        id: t.id,
+        title: t.title,
+        project: t.project_id || 'General',
+        status: (t.status === 'done' ? 'completed' : 'active') as TaskItem['status'],
+      }));
+      setPriorities(mapped);
+    }).catch(console.error);
+
+    // Pending approvals from agent state
+    api.getAgentState().then(state => {
+      const mapped = (state.pending_approvals || []).map((a: any) => ({
+        id: a.request_id || a.id,
+        title: a.title || a.action_type || 'Pending Action',
+        description: a.description || '',
+        type: (a.action_type === 'edit' ? 'edit' : 'approve') as ApprovalItem['type'],
+      }));
+      setApprovals(mapped);
+    }).catch(console.error);
+
+    // Network intel
+    api.getNetworkOpportunities().then(data => {
+      setNetworkLeads((data.opportunities || []).slice(0, 3));
+    }).catch(console.error);
+
+    // Content calendar from scheduled/content tasks
+    api.getTasks('scheduled').then(res => {
+      setContentItems((res.tasks || []).slice(0, 4).map(t => ({
+        id: t.id,
+        title: t.title,
+        status: t.status === 'done' ? 'DONE' : t.status === 'in_progress' ? 'DRAFTED' : 'PLANNED',
+      })));
+    }).catch(console.error);
   }, []);
 
-  const priorities: TaskItem[] = [
-    { id: '1', title: 'Finalize Q1 pricing proposal', project: 'AI Consulting', status: 'active' },
-    { id: '2', title: 'Review design system components', project: 'Nitara', status: 'active' },
-    { id: '3', title: 'Schedule call with Zurich partners', project: 'Network', status: 'blocked' },
-  ];
-
-  const approvals: ApprovalItem[] = [
-    { id: '1', title: 'Blog post: "AI Strategy for SMBs"', description: 'Draft ready for review — 1,200 words', type: 'edit' },
-    { id: '2', title: 'Outreach email to Thomas Weber', description: 'Follow-up on consulting proposal', type: 'approve' },
-  ];
+  const activePriorities = priorities.filter(p => p.status !== 'completed');
 
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto">
@@ -69,8 +114,19 @@ export default function MorningBriefing() {
 
       {/* Summary Line */}
       <p className="text-text-secondary text-sm mb-8">
-        You have <span className="text-primary font-medium">3 priorities</span> today,{' '}
-        <span className="text-secondary font-medium">2 approvals</span> pending, and a warm lead from your network.
+        {activePriorities.length > 0 && (
+          <>You have <span className="text-primary font-medium">{activePriorities.length} priorit{activePriorities.length === 1 ? 'y' : 'ies'}</span> today</>
+        )}
+        {approvals.length > 0 && (
+          <>{activePriorities.length > 0 ? ', ' : 'You have '}<span className="text-secondary font-medium">{approvals.length} approval{approvals.length !== 1 ? 's' : ''}</span> pending</>
+        )}
+        {networkLeads.length > 0 && (
+          <>{(activePriorities.length > 0 || approvals.length > 0) ? ', and ' : ''}a warm lead from your network</>
+        )}
+        {activePriorities.length === 0 && approvals.length === 0 && networkLeads.length === 0 && (
+          <>All clear — no urgent items right now.</>
+        )}
+        .
       </p>
 
       {/* Widget Grid — asymmetric */}
@@ -79,9 +135,12 @@ export default function MorningBriefing() {
         <GlassCard className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">Today's Focus</h3>
-            <Badge label="3 ACTIVE" variant="active" />
+            <Badge label={`${activePriorities.length} ACTIVE`} variant="active" />
           </div>
           <div className="space-y-3">
+            {priorities.length === 0 && (
+              <p className="text-text-tertiary text-sm py-2">No work tasks yet — capture some ideas to get started.</p>
+            )}
             {priorities.map((task) => (
               <div key={task.id} className="flex items-center gap-3 py-2">
                 <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
@@ -101,15 +160,24 @@ export default function MorningBriefing() {
         <GlassCard>
           <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Pending Approvals</h3>
           <div className="space-y-3">
+            {approvals.length === 0 && (
+              <p className="text-text-tertiary text-sm py-2">No pending approvals</p>
+            )}
             {approvals.map((item) => (
               <ActionCard key={item.id} accent="amber">
                 <p className="text-text-primary text-sm font-medium">{item.title}</p>
                 <p className="text-text-secondary text-xs mt-1">{item.description}</p>
                 <div className="flex gap-2 mt-3">
-                  <button className="px-3 py-1 rounded-md text-xs font-medium border border-[var(--glass-border)] text-text-secondary hover:text-text-primary transition-colors">
-                    Edit
+                  <button
+                    onClick={() => api.rejectAction(item.id).then(() => setApprovals(a => a.filter(x => x.id !== item.id))).catch(console.error)}
+                    className="px-3 py-1 rounded-md text-xs font-medium border border-[var(--glass-border)] text-text-secondary hover:text-text-primary transition-colors"
+                  >
+                    Reject
                   </button>
-                  <button className="px-3 py-1 rounded-md text-xs font-medium bg-secondary text-base hover:bg-secondary/80 transition-colors">
+                  <button
+                    onClick={() => api.approveAction(item.id).then(() => setApprovals(a => a.filter(x => x.id !== item.id))).catch(console.error)}
+                    className="px-3 py-1 rounded-md text-xs font-medium bg-secondary text-base hover:bg-secondary/80 transition-colors"
+                  >
                     Approve
                   </button>
                 </div>
@@ -146,40 +214,49 @@ export default function MorningBriefing() {
         {/* Network Intel */}
         <GlassCard>
           <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Network Intel</h3>
-          <div className="flex items-start gap-3 mb-3">
-            <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-sm font-medium flex-shrink-0">
-              TW
-            </div>
-            <div>
-              <p className="text-text-primary text-sm font-medium">Thomas Weber</p>
-              <p className="text-text-secondary text-xs">CTO, Alpine Digital</p>
-            </div>
-          </div>
-          <p className="text-text-secondary text-sm mb-3">
-            Mentioned budget approval for Q2 consulting. <span className="text-primary">High-value warm lead</span> — last contact 3 days ago.
-          </p>
-          <button className="w-full px-3 py-2 rounded-lg text-xs font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors">
-            Draft Message
-          </button>
+          {networkLeads.length === 0 ? (
+            <p className="text-text-tertiary text-sm py-2">No network opportunities right now</p>
+          ) : (
+            networkLeads.map((lead, i) => {
+              const name = lead.contact_name || lead.name || 'Contact';
+              const initials = name.split(' ').map((w: string) => w[0]).join('').toUpperCase().slice(0, 2);
+              return (
+                <div key={lead.id || i} className="mb-4 last:mb-0">
+                  <div className="flex items-start gap-3 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-sm font-medium flex-shrink-0">
+                      {initials}
+                    </div>
+                    <div>
+                      <p className="text-text-primary text-sm font-medium">{name}</p>
+                      {lead.company && <p className="text-text-secondary text-xs">{lead.company}</p>}
+                    </div>
+                  </div>
+                  {lead.description && (
+                    <p className="text-text-secondary text-sm mb-2">{lead.description}</p>
+                  )}
+                </div>
+              );
+            })
+          )}
         </GlassCard>
 
         {/* Content Calendar */}
         <GlassCard>
           <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Content Calendar</h3>
           <div className="space-y-3">
-            {[
-              { title: 'AI Strategy for SMBs', status: 'DRAFTED' as const },
-              { title: 'Newsletter: Feb Edition', status: 'PLANNED' as const },
-              { title: 'LinkedIn: Case Study Post', status: 'QUEUE' as const },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center justify-between py-1">
-                <span className="text-text-primary text-sm truncate flex-1 mr-2">{item.title}</span>
-                <Badge
-                  label={item.status}
-                  variant={item.status === 'DRAFTED' ? 'completed' : item.status === 'PLANNED' ? 'active' : 'paused'}
-                />
-              </div>
-            ))}
+            {contentItems.length === 0 ? (
+              <p className="text-text-tertiary text-sm py-2">No content scheduled</p>
+            ) : (
+              contentItems.map((item) => (
+                <div key={item.id} className="flex items-center justify-between py-1">
+                  <span className="text-text-primary text-sm truncate flex-1 mr-2">{item.title}</span>
+                  <Badge
+                    label={item.status}
+                    variant={item.status === 'DONE' ? 'completed' : item.status === 'DRAFTED' ? 'active' : 'paused'}
+                  />
+                </div>
+              ))
+            )}
           </div>
         </GlassCard>
       </div>

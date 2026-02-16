@@ -765,6 +765,12 @@ export interface FounderProfile {
   active_work: string[];
   strategic_focus_tags: string[];
   onboarding_completed: boolean;
+  settings?: {
+    reasoning_depth?: number;
+    auto_drafting?: boolean;
+    network_alerts?: boolean;
+    risk_monitoring?: boolean;
+  };
   created_at: string;
   updated_at: string;
 }

@@ -1,7 +1,8 @@
 import { Command } from 'cmdk';
 import { useCommandPalette } from '../../hooks/useCommandPalette';
 import { useCanvasStore } from '../../stores/canvas';
-import { Sparkles, LayoutGrid, Network, Clock, Settings, Hash, AtSign, Slash } from 'lucide-react';
+import { api } from '../../services/api';
+import { Sparkles, LayoutGrid, Network, Clock, Settings, Hash, AtSign, Slash, DollarSign } from 'lucide-react';
 
 import './command-palette.css';
 
@@ -11,6 +12,33 @@ export default function CommandPalette() {
   const suggestedActions = getSuggestedActions(activeCanvas);
 
   if (!open) return null;
+
+  const handleQuickAction = async (action: string) => {
+    setOpen(false);
+    switch (action) {
+      case 'New Project': {
+        const res = await api.createProject({ title: 'Untitled Project' }).catch(console.error);
+        if (res?.project?.id) {
+          setCanvas('project_detail', { projectId: res.project.id });
+        }
+        break;
+      }
+      case 'New Idea': {
+        await api.createIdea({ title: 'New Idea', description: '' }).catch(console.error);
+        setCanvas('portfolio');
+        break;
+      }
+      case 'Import LinkedIn contacts': {
+        setCanvas('network');
+        break;
+      }
+      case 'Run council evaluation': {
+        // Navigate to portfolio where user can pick a project to evaluate
+        setCanvas('portfolio');
+        break;
+      }
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50">
@@ -79,6 +107,7 @@ export default function CommandPalette() {
                 { label: 'Morning Briefing', icon: Sparkles, canvas: 'morning_briefing' as const },
                 { label: 'Portfolio', icon: LayoutGrid, canvas: 'portfolio' as const },
                 { label: 'Network', icon: Network, canvas: 'network' as const },
+                { label: 'Financials', icon: DollarSign, canvas: 'financials' as const },
                 { label: 'Calendar', icon: Clock, canvas: 'calendar' as const },
                 { label: 'Settings', icon: Settings, canvas: 'settings' as const },
               ].map((item) => (
@@ -108,7 +137,7 @@ export default function CommandPalette() {
                 <Command.Item
                   key={action}
                   value={action}
-                  onSelect={() => setOpen(false)}
+                  onSelect={() => handleQuickAction(action)}
                   className="flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer text-sm text-text-secondary data-[selected=true]:bg-[rgba(0,229,255,0.08)] data-[selected=true]:text-text-primary"
                 >
                   <span className="text-text-tertiary text-xs">+</span>

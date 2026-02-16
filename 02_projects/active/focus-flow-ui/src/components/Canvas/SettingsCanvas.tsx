@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { api } from '../../services/api';
 import { GlassCard } from '../shared';
 
 type Archetype = 'strategist' | 'cofounder' | 'critic';
@@ -23,6 +24,54 @@ export default function SettingsCanvas() {
   const [autoDrafting, setAutoDrafting] = useState(true);
   const [networkAlerts, setNetworkAlerts] = useState(true);
   const [riskMonitoring, setRiskMonitoring] = useState(true);
+  const [profile, setProfile] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
+  const [memories, setMemories] = useState<any[]>([]);
+
+  // Load profile on mount
+  useEffect(() => {
+    api.getProfile().then(p => {
+      setProfile(p);
+      if (p.preferred_archetype) setSelectedArchetype(p.preferred_archetype);
+      if (p.settings) {
+        if (p.settings.reasoning_depth !== undefined) setReasoningDepth(p.settings.reasoning_depth);
+        if (p.settings.auto_drafting !== undefined) setAutoDrafting(p.settings.auto_drafting);
+        if (p.settings.network_alerts !== undefined) setNetworkAlerts(p.settings.network_alerts);
+        if (p.settings.risk_monitoring !== undefined) setRiskMonitoring(p.settings.risk_monitoring);
+      }
+    }).catch(console.error);
+
+    api.getMemories(10).then(res => {
+      setMemories(res.memories || []);
+    }).catch(console.error);
+  }, []);
+
+  const handleArchetypeChange = async (archetype: Archetype) => {
+    setSelectedArchetype(archetype);
+    await api.setArchetype(archetype).catch(console.error);
+  };
+
+  const saveSettings = async () => {
+    setSaving(true);
+    await api.saveProfile({
+      settings: {
+        reasoning_depth: reasoningDepth,
+        auto_drafting: autoDrafting,
+        network_alerts: networkAlerts,
+        risk_monitoring: riskMonitoring,
+      },
+    }).catch(console.error);
+    setSaving(false);
+  };
+
+  const handleDeleteMemory = async (id: string) => {
+    await api.deleteMemory(id).catch(console.error);
+    setMemories(m => m.filter(x => x.id !== id));
+  };
+
+  const displayName = profile?.name || 'Founder';
+  const location = profile?.location || '';
+  const skills = profile?.skills?.map((s: any) => s.name || s) || profile?.strategic_focus_tags || [];
 
   return (
     <div className="p-6 lg:p-8 max-w-6xl mx-auto">
@@ -41,7 +90,7 @@ export default function SettingsCanvas() {
               {archetypes.map((arch) => (
                 <button
                   key={arch.id}
-                  onClick={() => setSelectedArchetype(arch.id)}
+                  onClick={() => handleArchetypeChange(arch.id)}
                   className={`w-full text-left p-3 rounded-lg border transition-colors ${
                     selectedArchetype === arch.id
                       ? 'border-primary bg-primary/5'
@@ -101,6 +150,15 @@ export default function SettingsCanvas() {
                 </button>
               </div>
             ))}
+
+            {/* Save button */}
+            <button
+              onClick={saveSettings}
+              disabled={saving}
+              className="mt-4 w-full px-3 py-2 rounded-lg text-xs font-medium bg-primary text-base hover:bg-primary/80 transition-colors disabled:opacity-50"
+            >
+              {saving ? 'Saving...' : 'Save Settings'}
+            </button>
           </GlassCard>
 
           {/* Voice & Audio */}
@@ -134,22 +192,19 @@ export default function SettingsCanvas() {
             <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Identity</h3>
             <div className="flex items-center gap-4 mb-4">
               <div className="w-14 h-14 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-lg font-medium">
-                V
+                {displayName[0]?.toUpperCase() || 'F'}
               </div>
               <div>
-                <p className="text-text-primary font-medium">Founder</p>
-                <p className="text-text-secondary text-sm">Zurich, Switzerland</p>
+                <p className="text-text-primary font-medium">{displayName}</p>
+                {location && <p className="text-text-secondary text-sm">{location}</p>}
               </div>
             </div>
             <div className="flex flex-wrap gap-2 mb-4">
-              {['AI Strategy', 'Consulting', 'Product Dev'].map((tag) => (
+              {skills.slice(0, 5).map((tag: string) => (
                 <span key={tag} className="px-2 py-1 rounded-full bg-primary/10 text-primary text-xs border border-primary/20">
                   {tag}
                 </span>
               ))}
-              <button className="px-2 py-1 rounded-full border border-dashed border-text-tertiary text-text-tertiary text-xs hover:border-primary hover:text-primary transition-colors">
-                + Add Tag
-              </button>
             </div>
           </GlassCard>
 
@@ -172,22 +227,26 @@ export default function SettingsCanvas() {
             </div>
           </GlassCard>
 
-          {/* Memory Review */}
+          {/* Memory Review — live from API */}
           <GlassCard>
             <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Memory Review</h3>
             <p className="text-text-secondary text-xs mb-3">What Nitara has learned about you:</p>
             <div className="space-y-2">
-              {[
-                'Prefers morning deep work sessions',
-                'AI consulting is primary revenue stream',
-                'Risk tolerance: moderate',
-                'Preferred currency: CHF',
-              ].map((memory, i) => (
-                <div key={i} className="flex items-center justify-between py-1.5 border-b border-[var(--glass-border)] last:border-0">
-                  <span className="text-text-secondary text-sm">{memory}</span>
-                  <button className="text-text-tertiary hover:text-danger text-xs transition-colors">{'\u00D7'}</button>
-                </div>
-              ))}
+              {memories.length === 0 ? (
+                <p className="text-text-tertiary text-sm">No memories stored yet</p>
+              ) : (
+                memories.map((memory) => (
+                  <div key={memory.id} className="flex items-center justify-between py-1.5 border-b border-[var(--glass-border)] last:border-0">
+                    <span className="text-text-secondary text-sm">{memory.memory}</span>
+                    <button
+                      onClick={() => handleDeleteMemory(memory.id)}
+                      className="text-text-tertiary hover:text-danger text-xs transition-colors"
+                    >
+                      {'\u00D7'}
+                    </button>
+                  </div>
+                ))
+              )}
             </div>
           </GlassCard>
         </div>
