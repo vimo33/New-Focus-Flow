@@ -1172,6 +1172,39 @@ export class VaultAPI {
     return this.request('/financials/snapshots');
   }
 
+  // Income Strategy Methods
+  async getIncomeStrategies(): Promise<any> {
+    return this.request('/income/strategies');
+  }
+
+  async generateIncomeStrategies(): Promise<any> {
+    return this.request('/income/strategies/generate', { method: 'POST' });
+  }
+
+  async updateStrategyStatus(id: string, status: string): Promise<any> {
+    return this.request(`/income/strategies/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async getGoalGapAnalysis(): Promise<any> {
+    return this.request('/income/goal-gap');
+  }
+
+  async getInferenceCosts(days?: number): Promise<any> {
+    const qs = days ? `?days=${days}` : '';
+    return this.request(`/financials/inference-costs${qs}`);
+  }
+
+  async scanOpportunities(): Promise<any> {
+    return this.request('/financials/scan-opportunities', { method: 'POST' });
+  }
+
+  async getOpportunities(): Promise<any> {
+    return this.request('/financials/opportunities');
+  }
+
   // ============================================================================
   // Network Methods
   // ============================================================================

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from 'express';
 import { financialsService } from '../services/financials.service';
+import { opportunityScanner } from '../services/opportunity-scanner.service';
 
 const router = Router();
 
@@ -112,6 +113,37 @@ router.get('/financials/snapshots', async (req: Request, res: Response) => {
   try {
     const snapshots = await financialsService.getSnapshots();
     res.json({ snapshots, count: snapshots.length });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/financials/scan-opportunities — trigger opportunity scan
+router.post('/financials/scan-opportunities', async (req: Request, res: Response) => {
+  try {
+    const result = await opportunityScanner.scan();
+    res.json(result);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/financials/opportunities — get latest scan results
+router.get('/financials/opportunities', async (req: Request, res: Response) => {
+  try {
+    const result = await opportunityScanner.getLatestScan();
+    res.json(result || { opportunities: [], scanned_at: null, summary: 'No scan data available' });
+  } catch (error: any) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/financials/inference-costs
+router.get('/financials/inference-costs', async (req: Request, res: Response) => {
+  try {
+    const days = parseInt(String(req.query.days)) || 30;
+    const costs = await financialsService.getInferenceCosts(days);
+    res.json(costs);
   } catch (error: any) {
     res.status(500).json({ error: error.message });
   }

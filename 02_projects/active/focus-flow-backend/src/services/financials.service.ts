@@ -2,6 +2,8 @@ import * as fs from 'fs/promises';
 import * as path from 'path';
 import { getVaultPath } from '../utils/file-operations';
 import { generateId } from '../utils/id-generator';
+import { inferenceLogger } from './inference-logger.service';
+import { mem0Service } from './mem0.service';
 
 export type RevenueType = 'recurring' | 'one_time' | 'retainer' | 'royalty' | 'equity';
 export type CostCategory = 'tools' | 'hosting' | 'contractors' | 'marketing' | 'office' | 'insurance' | 'other';
@@ -50,6 +52,11 @@ export interface PortfolioFinancials {
   cost_items: CostItem[];
   goals: FinancialGoals | null;
   runway_months: number | null;
+  inference_costs?: {
+    total_cost_usd: number;
+    daily_average_usd: number;
+    monthly_estimate_usd: number;
+  };
 }
 
 export interface FinancialSnapshot {
@@ -113,6 +120,30 @@ export class FinancialsService {
     }
   }
 
+  async getInferenceCosts(days: number = 30): Promise<{
+    total_cost_usd: number;
+    daily_average_usd: number;
+    by_model: Record<string, { requests: number; cost_usd: number }>;
+    by_caller: Record<string, { requests: number; cost_usd: number }>;
+    period_days: number;
+  }> {
+    const stats = await inferenceLogger.getStats(days);
+    const total_cost_usd = stats.totals.total_cost_usd;
+    const daily_average_usd = days > 0 ? total_cost_usd / days : 0;
+
+    const by_model: Record<string, { requests: number; cost_usd: number }> = {};
+    for (const [model, s] of Object.entries(stats.totals.by_model)) {
+      by_model[model] = { requests: s.requests, cost_usd: s.cost_usd };
+    }
+
+    const by_caller: Record<string, { requests: number; cost_usd: number }> = {};
+    for (const [caller, s] of Object.entries(stats.totals.by_caller)) {
+      by_caller[caller] = { requests: s.requests, cost_usd: s.cost_usd };
+    }
+
+    return { total_cost_usd, daily_average_usd, by_model, by_caller, period_days: days };
+  }
+
   async getPortfolioFinancials(): Promise<PortfolioFinancials> {
     const revenue_streams = await this.getAllRevenue();
     const cost_items = await this.getAllCosts();
@@ -134,6 +165,19 @@ export class FinancialsService {
       runway_months = 0;
     }
 
+    // Fire-and-forget inference cost enrichment
+    let inference_costs: PortfolioFinancials['inference_costs'];
+    try {
+      const ic = await this.getInferenceCosts(30);
+      inference_costs = {
+        total_cost_usd: ic.total_cost_usd,
+        daily_average_usd: ic.daily_average_usd,
+        monthly_estimate_usd: ic.daily_average_usd * 30,
+      };
+    } catch {
+      // Graceful degradation — inference costs are optional
+    }
+
     return {
       total_monthly_revenue,
       total_monthly_costs,
@@ -143,6 +187,7 @@ export class FinancialsService {
       cost_items,
       goals,
       runway_months,
+      inference_costs,
     };
   }
 
@@ -314,7 +359,24 @@ export class FinancialsService {
 
     const filePath = path.join(getVaultPath(), SNAPSHOTS_DIR, `${snapshot.id}.json`);
     await fs.writeFile(filePath, JSON.stringify(snapshot, null, 2));
+
+    // Fire-and-forget Mem0 financial summary
+    this.storeFinancialSummary(snapshot).catch(() => {});
+
     return snapshot;
+  }
+
+  private async storeFinancialSummary(snapshot: FinancialSnapshot): Promise<void> {
+    const goals = await this.getGoals();
+    const goalText = goals
+      ? `Income goal: ${goals.currency} ${goals.income_goal}/mo. `
+      : '';
+    const summary = `Financial snapshot ${snapshot.month}/${snapshot.year}: Revenue ${snapshot.currency} ${snapshot.total_revenue}/mo, Costs ${snapshot.currency} ${snapshot.total_costs}/mo, Net ${snapshot.currency} ${snapshot.net}/mo. ${goalText}Top revenue: ${snapshot.revenue_breakdown.slice(0, 3).map(r => `${r.source} (${r.amount})`).join(', ')}.`;
+
+    await mem0Service.addExplicitMemory(summary, {
+      metadata: { source: 'financials' },
+      tags: ['financial'],
+    });
   }
 
   async getSnapshots(): Promise<FinancialSnapshot[]> {

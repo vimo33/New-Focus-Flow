@@ -669,6 +669,7 @@ export interface Briefing {
   pending_approvals_summary: { id: string; action: string; tier: TrustTier; created_at: string }[];
   cost_estimate: { estimated_tokens: number; estimated_cost_usd: number };
   ai_summary: string;
+  financial_insights?: { top_opportunities: Opportunity[]; summary: string };
 }
 
 export interface DailyStats {
@@ -826,6 +827,11 @@ export interface PortfolioFinancials {
   cost_items: CostItem[];
   goals: FinancialGoals | null;
   runway_months: number | null;
+  inference_costs?: {
+    total_cost_usd: number;
+    daily_average_usd: number;
+    monthly_estimate_usd: number;
+  };
 }
 
 export interface FinancialSnapshot {
@@ -839,6 +845,61 @@ export interface FinancialSnapshot {
   revenue_breakdown: { source: string; amount: number }[];
   cost_breakdown: { category: string; amount: number }[];
   created_at: string;
+}
+
+// ============================================================================
+// Phase 3: Income Strategy & Opportunity Types
+// ============================================================================
+
+export type StrategyType = 'retainer' | 'productized_service' | 'digital_product' | 'consulting' | 'saas' | 'course' | 'licensing';
+export type StrategyStatus = 'suggested' | 'exploring' | 'dismissed' | 'active';
+
+export interface IncomeStrategy {
+  id: string;
+  title: string;
+  description: string;
+  type: StrategyType;
+  estimated_monthly_revenue: number;
+  estimated_effort_hours: number;
+  confidence: number; // 0-1
+  time_to_revenue_weeks: number;
+  leveraged_skills: string[];
+  prerequisites: string[];
+  status: StrategyStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GoalGapAnalysis {
+  income_goal: number;
+  current_revenue: number;
+  gap: number;
+  gap_percentage: number;
+  currency: string;
+  strategies_to_close: IncomeStrategy[];
+  projected_with_strategies: number;
+  analysis_text: string;
+}
+
+export type OpportunityType = 'pricing_gap' | 'high_cost_ratio' | 'stagnant_revenue' | 'underutilized_skill' | 'network_leverage';
+
+export interface Opportunity {
+  id: string;
+  type: OpportunityType;
+  title: string;
+  description: string;
+  impact_score: number; // 1-10
+  effort_score: number; // 1-10
+  confidence: number; // 0-1
+  related_project_id?: string;
+  suggested_action: string;
+  created_at: string;
+}
+
+export interface ScanResult {
+  opportunities: Opportunity[];
+  scanned_at: string;
+  summary: string;
 }
 
 // ============================================================================

@@ -17,6 +17,7 @@ import { mem0Service } from './mem0.service';
 import { cachedInference } from './cached-inference.service';
 import { councilFramework } from '../ai/council-framework';
 import { trustGate } from './trust-gate.service';
+import { opportunityScanner } from './opportunity-scanner.service';
 
 const LOG_PREFIX = '[BriefingGenerator]';
 
@@ -200,7 +201,10 @@ Write 2-3 sentences summarizing today's priorities and key observations. Be conc
       return sum + (match ? parseInt(match[1]) : 500);
     }, 0);
 
-    const aiSummary = await this.generateNarrativeSummary(portfolio, workPlan, stalledItems);
+    const [aiSummary, financialInsights] = await Promise.all([
+      this.generateNarrativeSummary(portfolio, workPlan, stalledItems),
+      opportunityScanner.getBriefingInsights().catch(() => ({ top_opportunities: [], summary: '' })),
+    ]);
 
     const today = new Date().toISOString().split('T')[0];
     const briefing: Briefing = {
@@ -216,6 +220,7 @@ Write 2-3 sentences summarizing today's priorities and key observations. Be conc
         estimated_cost_usd: estimatedTokens * 0.000015, // rough estimate
       },
       ai_summary: aiSummary,
+      financial_insights: financialInsights.top_opportunities.length > 0 ? financialInsights : undefined,
     };
 
     // Persist briefing
