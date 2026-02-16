@@ -885,6 +885,13 @@ export class PipelineService {
       };
       project.pipeline!.updated_at = new Date().toISOString();
       await this.saveProject(project);
+
+      // Fire-and-forget GTM initialization (dynamic import avoids circular dep)
+      import('./gtm-orchestrator.service').then(({ gtmOrchestrator }) => {
+        gtmOrchestrator.onProjectLive(project.id, project.title, project.description || '')
+          .catch(err => console.error('[Pipeline] GTM init failed:', err.message));
+      });
+
       return project;
     }
 

@@ -141,6 +141,59 @@ export class CRMService {
     }
   }
 
+  // ============================================================================
+  // Lead Methods (Phase 4: GTM)
+  // ============================================================================
+
+  async createLeadFromEngagement(data: {
+    name: string;
+    email?: string;
+    company?: string;
+    channel: string;
+    project_id: string;
+    notes?: string;
+  }): Promise<Contact> {
+    const contact = await this.createContact({
+      name: data.name,
+      email: data.email,
+      company: data.company,
+      tags: ['lead', `source:${data.channel}`, 'auto-created'],
+      project_ids: [data.project_id],
+      notes: data.notes,
+    });
+
+    await this.addInteraction({
+      contact_id: contact.id,
+      type: 'note',
+      subject: `Lead captured from ${data.channel}`,
+      content: data.notes || `Auto-created lead from ${data.channel} engagement`,
+    });
+
+    return contact;
+  }
+
+  async flagAsWarmLead(contactId: string, reason: string): Promise<Contact | null> {
+    const contact = await this.getContact(contactId);
+    if (!contact) return null;
+
+    const tags = contact.tags.filter(t => t !== 'warm-lead');
+    tags.push('warm-lead');
+
+    const timestamp = new Date().toISOString();
+    const existingNotes = contact.notes || '';
+    const newNotes = `${existingNotes}\n[${timestamp}] Flagged as warm lead: ${reason}`.trim();
+
+    return this.updateContact(contactId, { tags, notes: newNotes });
+  }
+
+  async getLeadsByProject(projectId: string): Promise<Contact[]> {
+    const contacts = await this.getContacts();
+    return contacts.filter(c =>
+      c.project_ids.includes(projectId) &&
+      (c.tags.includes('lead') || c.tags.includes('warm-lead'))
+    );
+  }
+
   async getInteractions(contactId?: string): Promise<Interaction[]> {
     await this.ensureDirs();
     const dir = path.join(getVaultPath(), INTERACTIONS_DIR);

@@ -1362,6 +1362,73 @@ export class VaultAPI {
   }
 
   // ============================================================================
+  // Marketing / GTM Methods
+  // ============================================================================
+
+  async getMarketingDashboard(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/dashboard`);
+  }
+
+  async getGTMStrategy(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`);
+  }
+
+  async generateGTMStrategy(projectId: string, councilVerdictId?: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`, {
+      method: 'POST',
+      body: JSON.stringify({ generate: true, council_verdict_id: councilVerdictId }),
+    });
+  }
+
+  async updateGTMStrategy(projectId: string, updates: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async getCalendarEntries(projectId: string, filters?: { status?: string; channel?: string }): Promise<any> {
+    const params = new URLSearchParams();
+    if (filters?.status) params.set('status', filters.status);
+    if (filters?.channel) params.set('channel', filters.channel);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/marketing/${projectId}/calendar${qs}`);
+  }
+
+  async createCalendarEntry(projectId: string, data: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async generateCalendar(projectId: string, weeksAhead?: number): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar`, {
+      method: 'POST',
+      body: JSON.stringify({ generate: true, weeks_ahead: weeksAhead || 4 }),
+    });
+  }
+
+  async updateCalendarEntry(projectId: string, entryId: string, updates: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar/${entryId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async deleteCalendarEntry(projectId: string, entryId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar/${entryId}`, { method: 'DELETE' });
+  }
+
+  async draftDueEntries(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/draft-due`, { method: 'POST' });
+  }
+
+  async publishCalendarEntry(projectId: string, entryId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/publish/${entryId}`, { method: 'POST' });
+  }
+
+  // ============================================================================
   // Collaborator Methods
   // ============================================================================
 

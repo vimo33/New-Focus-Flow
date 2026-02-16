@@ -34,7 +34,7 @@ interface Collaborator {
 }
 
 export default function ProjectDetailCanvas() {
-  const { canvasParams, goBack } = useCanvasStore();
+  const { canvasParams, goBack, setCanvas } = useCanvasStore();
   const projectId = canvasParams.projectId;
 
   const [project, setProject] = useState<(Project & { tasks: Task[]; progress: number }) | null>(null);
@@ -406,6 +406,22 @@ export default function ProjectDetailCanvas() {
               </div>
             )}
           </GlassCard>
+
+          {/* GTM & Marketing (visible when live) */}
+          {currentPhase === 'live' && (
+            <GlassCard>
+              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-3">GTM & Marketing</h3>
+              <p className="text-text-secondary text-xs mb-3">
+                Your project is live. Manage your go-to-market strategy, content calendar, and publishing.
+              </p>
+              <button
+                onClick={() => setCanvas('marketing', { projectId: project.id })}
+                className="w-full px-3 py-2 rounded-lg text-sm font-medium bg-primary text-base hover:bg-primary/80 transition-colors"
+              >
+                Open Marketing
+              </button>
+            </GlassCard>
+          )}
 
           {/* Nitara Insight */}
           {memories.length > 0 && (

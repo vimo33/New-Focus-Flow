@@ -12,6 +12,7 @@ const ProjectDetailCanvas = lazy(() => import('./ProjectDetailCanvas'));
 const FinancialsCanvas = lazy(() => import('./FinancialsCanvas'));
 const CalendarCanvas = lazy(() => import('./CalendarCanvas'));
 const OnboardingFlow = lazy(() => import('../Onboarding/OnboardingFlow'));
+const MarketingCanvas = lazy(() => import('./MarketingCanvas'));
 
 // Placeholder for canvases not yet built
 function ComingSoon({ name }: { name: string }) {
@@ -63,6 +64,8 @@ export default function CanvasRouter() {
         return <WeeklyReportCanvas />;
       case 'onboarding':
         return <OnboardingFlow />;
+      case 'marketing':
+        return <MarketingCanvas />;
       default:
         return <ComingSoon name="Unknown Canvas" />;
     }

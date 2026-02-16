@@ -43,6 +43,12 @@ const TIER_MAP: Record<string, TrustTier> = {
   merge_to_main: 3,
   advance_pipeline: 3,
   high_cost_operation: 3,
+
+  // Phase 4: GTM & Marketing
+  publish_blog: 3,
+  publish_social: 3,
+  generate_gtm_strategy: 1,
+  draft_content: 1,
 };
 
 interface AgentConfig {

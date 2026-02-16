@@ -1092,3 +1092,67 @@ export interface PartnerAnalysis {
   }[];
   analyzed_at: string;
 }
+
+// ============================================================================
+// Phase 4: GTM & Marketing Types
+// ============================================================================
+
+export type ContentChannel = 'blog' | 'twitter' | 'linkedin' | 'email' | 'newsletter';
+export type CalendarEntryStatus = 'planned' | 'drafted' | 'approved' | 'published' | 'skipped';
+export type GTMStrategyStatus = 'planned' | 'active' | 'paused' | 'completed';
+
+// Re-export canonical content types from content-engine
+export type { ContentType, ContentTone } from '../services/content-engine.service';
+
+export interface GTMStrategy {
+  id: string;
+  project_id: string;
+  status: GTMStrategyStatus;
+  council_verdict_id?: string;
+  target_audience: string;
+  value_proposition: string;
+  channels: ContentChannel[];
+  messaging_pillars: string[];
+  launch_date?: string;
+  kpis: { name: string; target: number; current?: number }[];
+  playbook_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContentCalendarEntry {
+  id: string;
+  project_id: string;
+  title: string;
+  content_type: string;
+  brief: string;
+  tone: string;
+  channel: ContentChannel;
+  scheduled_date: string;
+  status: CalendarEntryStatus;
+  draft_content?: string;
+  published_url?: string;
+  published_at?: string;
+  approval_id?: string;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GTMDashboard {
+  strategy: GTMStrategy | null;
+  calendar_entries: ContentCalendarEntry[];
+  upcoming_count: number;
+  drafted_count: number;
+  published_count: number;
+  leads_generated: number;
+}
+
+export interface PublishResult {
+  success: boolean;
+  channel: ContentChannel;
+  url?: string;
+  error?: string;
+  approval_required?: boolean;
+  approval_id?: string;
+}

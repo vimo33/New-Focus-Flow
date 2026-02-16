@@ -43,6 +43,7 @@ import incomeStrategyRoutes from './routes/income-strategy.routes';
 import networkRoutes from './routes/network.routes';
 import portfolioRoutes from './routes/portfolio.routes';
 import weeklyReportRoutes from './routes/weekly-report.routes';
+import marketingRoutes from './routes/marketing.routes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -137,6 +138,7 @@ app.use('/api', incomeStrategyRoutes);
 app.use('/api', networkRoutes);
 app.use('/api', portfolioRoutes);
 app.use('/api', weeklyReportRoutes);
+app.use('/api', marketingRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
