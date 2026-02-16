@@ -143,13 +143,21 @@ export class FounderProfileService {
   async extractProfileFromText(text: string): Promise<Partial<FounderProfile>> {
     const result = await cachedInference.complete(
       `Extract founder profile information from this text. Return JSON with fields: name, bio, location, skills (array of {name, level, category}), active_work (array of strings), strategic_focus_tags (array of strings). Only include fields you can confidently extract.\n\nText: ${text}`,
-      'You are a profile extraction assistant. Return ONLY valid JSON, no markdown.',
+      'You are a profile extraction assistant. Return ONLY valid JSON, no markdown fences.',
       'fast_classification',
       'economy'
     );
 
     try {
-      const extracted = JSON.parse(result);
+      // Strip markdown code fences if present
+      const cleaned = result
+        .replace(/^```(?:json)?\s*\n?/i, '')
+        .replace(/\n?```\s*$/i, '')
+        .trim();
+      // Find the JSON object in the response
+      const jsonMatch = cleaned.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) return {};
+      const extracted = JSON.parse(jsonMatch[0]);
       return extracted;
     } catch {
       return {};
