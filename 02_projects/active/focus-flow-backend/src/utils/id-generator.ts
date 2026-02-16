@@ -41,3 +41,23 @@ export function generateMessageId(): string {
 export function generateVerdictId(): string {
   return generateId('vrd');
 }
+
+export function generateApprovalId(): string {
+  return generateId('apr');
+}
+
+export function generateNotificationId(): string {
+  return generateId('ntf');
+}
+
+export function generateBriefingId(): string {
+  return generateId('brf');
+}
+
+export function generateAgentActionId(): string {
+  return generateId('act');
+}
+
+export function generateActivityId(): string {
+  return generateId('atv');
+}

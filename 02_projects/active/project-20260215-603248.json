@@ -1,0 +1,621 @@
+{
+  "id": "project-20260215-603248",
+  "title": "AURA AI Travel Guide",
+  "description": "PRD: AURA — The Zurich Discovery Engine (2026 Pilot)Status: Final Specification for Agent BuildVersion: 3.0 (Post-Council Audit & Feb 2026 Stack Integration)Lead Engineering Team: Claude Code Opus 4.6 (Orchestrator) + sub-agents in tmux mode1. Executive Summary & VisionAURA is an \"Intelligent Discovery Engine\" designed to shift urban tourism from passive observation to narrative-driven participation. Utilizing the 2026 \"Flash-Reasoning\" paradigm, AURA enables a \"point-discover-converse\" loop where users engage in real-time, historically accurate roleplays with AI-powered figures directly anchored to physical landmarks.Core Strategic PillarsExperiential Innovation: Moving users from spectators to characters in a city-wide interactive storyscape.Privacy-First Architecture: On-device processing ensures sensitive visual and location data never leave the device for core operations.Unimpeachable Credibility: A \"Walled Garden\" RAG protocol backed by foundational partnerships with academic institutions.2. Target User Segments (Pilot Focus)PersonaPrimary MotivationPain Point Addressedbehavior ReplacedQuinn (Technophile)Autonomy & Privacy Distrust of data harvesting and high roaming costs.Replaces generic Google Lens and cloud-heavy guides.Max (Short-Stay)Efficiency & FOMO Inflexible 3-hour tours that don't fit tight schedules.Replaces linear, non-interactive audio walks.Kris (Local)Novelty & Discovery The belief that they \"already know\" the city.Replaces standard \"tourist trap\" information tools.Pat (Family)Edutainment Difficulty engaging teenagers with static museum plaques.Replaces social isolation of traditional headsets.3. 2026 \"Flash-Reasoning\" Technical StackThe stack is architected for \"On-Device First\" execution to ensure sub-200ms latency and total data residency.3.1 Core Model SpecificationReasoning Orchestrator: MobileLLM-Pro (P1).Spec: 1.08B parameters, distilled from Llama 4-Scout.Capabilities: 128k context window allows for deep \"historical memory\" during multi-stop journeys.Vision & Landmark Grounding: Qwen3-VL (Nano).Spec: Native multimodal architecture.Capabilities: Supports 3D Grounding, predicting real-world size and depth to anchor future AR overlays with centimeter precision.Dynamic Speech Engine: NeuTTS-Nano.Spec: 120M active parameters, GGUF format.Capabilities: Real-time, unscripted speech synthesis with zero-shot voice cloning (e.g., specific Swiss-German accents for historical authenticity).Production Fallback (2022+ Hardware): Gemma 3n 1B.Rationale: Specifically optimized for 4GB RAM devices; provides 2500+ tok/sec prefill latency on LiteRT.3.2 Framework & DeploymentInference Engine: Google AI Edge (LiteRT).Rationale: Native wrappers for iOS/Android provide superior thermal management compared to WebGPU previews for high-stakes ML workloads.Quantization: SpinQuant (4-bit W+A+KV).Effect: Reduces memory traffic per token by 4x while maintaining <3% accuracy loss.Local Storage: SQLite.Usage: Stores the encrypted \"City Pack\" containing landmark IDs, character \"Constitutions,\" and vetted historical nodes.4. Content Architecture: The Extractive-Safe PivotTo resolve the \"hallucination vs. emergent dialogue\" paradox, AURA adopts a multi-layered content strategy.Walled Garden RAG: The LLM is restricted to rephrasing expert-vetted narrative nodes. It is physically unable to access the internet during the core loop.Character Constitution: Each figure (e.g., Zwingli) has a hard-coded \"Persona Barrier.\" If a user asks an out-of-scope question, the character is prompted to decline in-character (e.g., \"I know nothing of this 'internet'; I speak only of the Word of God\").AI-Assisted Synthesis: Historians provide primary sources; AI drafts narrative branches which are then human-reviewed, maintaining a <$500/landmark production cost.5. Privacy Architecture & Compliance5.1 PrivacyEnforcer ModuleImplemented as a Native Socket Interceptor, this module actively kills any outgoing network calls during the \"Core Discovery Loop\". It provides compile-time verification that third-party SDKs (e.g., analytics) are disabled during active sessions.5.2 Dual-Tier TransparencyThe \"Consent Modal\": Users entering \"Deep Conversation\" (Premium Cloud Mode) must toggle an active consent button. The UI must clearly differentiate between \"Private On-Device\" (Green Reticle) and \"Cloud-Enhanced\" (Blue Reticle) modes.Data Minimization: Only anonymized text strings are sent to the cloud for premium reasoning; no biometric or visual metadata is transmitted.6. Business & Sustainability ModelFreemium Flywheel: Unlimited on-device visual recognition and \"Snapshot\" stories are free (Zero marginal cost).Explorer Pass ($14.99): A 72-hour one-time pass for short-stay tourists, reframing the app as a \"Digital Tour Ticket\".Premium Subscription ($9.99/mo): Recurring revenue from local enthusiasts unlocking monthly content drops and cloud reasoning.Strategic Subsidy: Pilot incentivization for the Swiss National Museum via a 10% revenue-sharing model on Explorer Passes sold on-site.7. MVP Roadmap & Success MetricsPhase 1: Local Foundation & Privacy GuardrailsEstablish SQLite schema and PrivacyEnforcer runtime.Validate Gemma 3n 1B fallback performance on 2022-era mid-range devices.Phase 2: Multimodal Loop IntegrationIntegrate Qwen3-VL (Nano) for landmark ID (<150ms target).Implement NeuTTS-Nano for streaming conversational audio.Phase 3: Pilot Content & Partnership ValidationDeploy 5 landmarks (Altstadt focus) and 2 characters (Zwingli, Gaius Valerius).Sign LOI with Swiss National Museum for content verification.Key Performance Indicators (KPIs)Accuracy: >95% landmark identification rate in varied light conditions.Engagement: >5 conversational turns per user interaction turn.Conversion: >5% free-to-paid conversion (Targeting the Explorer Pass).Approved for Build: AI Council Strategist TeamDate: February 15, 2026",
+  "status": "active",
+  "created_at": "2026-02-15T17:30:03.248Z",
+  "updated_at": "2026-02-15T17:41:22.638Z",
+  "pipeline": {
+    "current_phase": "concept",
+    "phases": {
+      "concept": {
+        "phase": "concept",
+        "sub_state": "review",
+        "started_at": "2026-02-15T17:30:03.250Z",
+        "step": "council_review"
+      }
+    },
+    "run_id": "pipeline-1771176603250-7d20",
+    "updated_at": "2026-02-15T17:41:22.636Z"
+  },
+  "phase": "concept",
+  "concept_thread_id": "thread-20260215-603252",
+  "artifacts": {
+    "refined_concept": "# AURA Concept Summary — Zurich Discovery Engine\n\n## 1. Problem Statement\n\nUrban tourism is trapped in a passive consumption model where visitors are spectators rather than participants. Current solutions force users to choose between:\n- **Privacy invasion**: Cloud-heavy guides that harvest location/visual data and incur roaming costs\n- **Inflexibility**: Linear 3-hour tours that don't accommodate varied schedules or interests\n- **Shallow engagement**: Static plaques and fragmented search results that fail to create cohesive narratives\n- **Low immersion**: Text-based or audio-only experiences that don't leverage modern AI capabilities\n\nThis creates frustration across tourist segments—from technophiles who distrust data harvesting to families struggling to engage teenagers with museum content.\n\n## 2. Target Users\n\n**Four validated personas (pilot focus):**\n\n| Persona | Primary Motivation | Pain Point | Behavior Replaced |\n|---------|-------------------|------------|-------------------|\n| **Quinn** (Technophile) | Autonomy & Privacy | Distrust of data harvesting, high roaming costs | Google Lens, cloud-heavy guides |\n| **Max** (Short-Stay) | Efficiency & FOMO | Inflexible 3-hour tours that don't fit schedules | Linear, non-interactive audio walks |\n| **Kris** (Local) | Novelty & Discovery | Belief they \"already know\" the city | Standard \"tourist trap\" info tools |\n| **Pat** (Family) | Edutainment | Difficulty engaging teenagers with static content | Social isolation of traditional headsets |\n\n## 3. Proposed Solution\n\n**AURA is an on-device AI discovery engine** that enables a \"point-discover-converse\" loop anchored to physical landmarks. Users aim their phone at a building, instantly identify it via vision AI, then engage in real-time, historically accurate roleplays with AI-powered historical figures (e.g., Zwingli, Roman soldiers) tied to that location.\n\n**Core mechanism:**\n- **Vision grounding**: Qwen3-VL (Nano) identifies landmarks with 3D spatial precision (<150ms latency)\n- **Conversational AI**: MobileLLM-Pro (1.08B params, 128k context) powers emergent dialogue\n- **Dynamic voice**: NeuTTS-Nano synthesizes unscripted responses with zero-shot accent cloning (Swiss-German authenticity)\n- **Privacy-first architecture**: All core processing happens on-device; a \"PrivacyEnforcer\" module physically blocks network calls during discovery sessions\n\n## 4. Key Features\n\n- **Instant landmark identification**: Point camera → AI recognizes location in sub-200ms\n- **Interactive historical characters**: Converse with era-appropriate figures (voice + text)\n- **\"Walled Garden\" RAG**: AI restricted to expert-vetted historical content (no hallucinations)\n- **Dual-mode privacy**:\n  - Green Reticle (on-device): Zero data leaves phone\n  - Blue Reticle (cloud-enhanced): Optional premium reasoning with explicit consent\n- **Thermal management**: Model swap protocol unloads vision AI post-identification to prevent throttling\n- **Fallback support**: Gemma 3n 1B optimized for 2022-era 4GB RAM devices\n- **\"Skeleton Overlay\"**: Visual guide to help users aim correctly in poor lighting\n- **Hands-free immersion**: Audio-first design for walking navigation\n\n## 5. Differentiation\n\n**vs. Rick Steves Audio Europe**: Linear, non-interactive; cannot ask questions; app crashes during photo-taking  \n**vs. Google Lens / Arts & Culture**: Fragmented search results lack narrative coherence and institutional vetting  \n**vs. izi.TRAVEL**: Quantity-over-quality content library with generic storytelling  \n**vs. Questo**: Text-based gamification without audio depth or AI character engagement  \n**vs. Zürich City Guide (Official)**: Clunky UI, inaccurate maps, purely transactional (lacks \"wow factor\")\n\n**AURA's blue ocean**: First privacy-first, AI-native discovery engine with institutionally vetted historical accuracy and emergent dialogue.\n\n## 6. Success Criteria\n\n**KPIs (Pilot Phase):**\n- **Accuracy**: >95% landmark identification in varied light conditions\n- **Engagement**: >5 conversational turns per user interaction\n- **Conversion**: >5% free-to-paid conversion rate (Explorer Pass target)\n\n**Qualitative:**\n- Letter of Intent signed with Swiss National Museum for content verification\n- Positive user feedback on \"magic moment\" of first character conversation\n\n## 7. Scope & Constraints\n\n**MVP Scope (Pilot):**\n- **Geography**: Altstadt (Zurich Old Town)\n- **Content**: 5 landmarks, 2 historical characters (Zwingli, Gaius Valerius)\n- **Timeline**: 3-phase roadmap\n  - Phase 1: Privacy guardrails + SQLite schema + Gemma 3n fallback validation\n  - Phase 2: Qwen3-VL + NeuTTS integration\n  - Phase 3: Pilot deployment + museum partnership\n\n**Technical Constraints:**\n- Must run on 2022+ mid-range devices (4GB RAM minimum)\n- Sub-200ms latency requirement for \"instant\" feel\n- <$500/landmark content production cost\n- 2026 \"Flash-Reasoning\" stack (MobileLLM-Pro, Qwen3-VL Nano, NeuTTS-Nano)\n\n**Out of Scope (Pilot):**\n- AR overlays (foundation laid via 3D grounding, deferred to post-pilot)\n- Multi-city expansion\n- User-generated content\n- Real-time translation (Swiss-German accents only)\n\n## 8. Risks & Mitigations\n\n| Risk Category | Description | Mitigation Strategy |\n|---------------|-------------|---------------------|\n| **Technical** | Landmark ID drops <95% in rain/night | Skeleton Overlay to guide user aim; Manual Map Selection fallback for low-confidence scores |\n| **Technical** | Thermal throttling during 15+ min sessions | Model Swap Protocol: unload vision models post-ID to prioritize conversational engine |\n| **Partnership** | Swiss National Museum partnership fails | Pivot to Public Domain: Open Data Zurich APIs + Wikipedia/Gutenberg sources |\n| **Accuracy** | \"Walled Garden\" LLM still hallucinates | Hard-coded Persona Barrier: characters decline unvetted queries in-character (\"I know nothing of this\") |\n| **Adoption** | 5% conversion rate over-ambitious | Frictionless $14.99 Explorer Pass (72-hour one-time) overcomes subscription fatigue for tourists |\n\n## 9. Business Model\n\n**Freemium flywheel:**\n- **Free tier**: Unlimited on-device landmark ID + \"Snapshot\" stories (zero marginal cost)\n- **Explorer Pass**: $14.99 one-time (72 hours) — positioned as \"Digital Tour Ticket\" for short-stay tourists\n- **Premium Subscription**: $9.99/month — recurring revenue from locals; unlocks monthly content drops + cloud reasoning\n\n**Strategic partnership:**\n- 10% revenue share with Swiss National Museum on Explorer Passes sold on-site\n- Museum gains digital engagement tool; AURA gains institutional credibility + distribution\n\n**Unit economics assumption:**\n- <$500/landmark content production (AI-assisted synthesis + human review)\n- Pilot targets 5 landmarks = $2,500 content investment\n- Break-even at ~167 Explorer Pass sales (achievable with museum foot traffic)\n\n---\n\n**Status**: Council-ready. All 9 evaluation criteria met. Engineering team (Claude Code Opus 4.6 + sub-agents) approved to proceed with Phase 1 build.",
+    "selected_council": [
+      {
+        "agent_name": "Mobile AI Performance Engineer",
+        "role": "On-Device ML Optimization",
+        "focus": "Evaluates whether the 2026 Flash-Reasoning stack (Qwen3-VL Nano + MobileLLM-Pro 1.08B + NeuTTS-Nano) can realistically achieve <200ms latency on 4GB RAM devices while managing thermal throttling during 15+ minute sessions. Assesses the model swap protocol and fallback to Gemma 3n 1B.",
+        "evaluation_criteria": [
+          "Latency feasibility: Can sub-200ms landmark ID be achieved on target hardware?",
+          "Thermal management: Will the model swap protocol prevent throttling during typical 20-min sessions?",
+          "Memory footprint: Can all three models (vision, LLM, TTS) coexist on 4GB RAM devices?",
+          "Fallback robustness: Is Gemma 3n a viable alternative for 2022-era devices?",
+          "Battery impact: Will on-device inference drain batteries faster than competing cloud solutions?"
+        ]
+      },
+      {
+        "agent_name": "Privacy Architecture Auditor",
+        "role": "Privacy Engineering & Compliance",
+        "focus": "Validates the 'PrivacyEnforcer' network-blocking mechanism and dual-mode (Green/Blue Reticle) UX. Assesses whether privacy claims withstand technical scrutiny, GDPR compliance for tourist data, and clarity of consent flows when switching to cloud-enhanced mode.",
+        "evaluation_criteria": [
+          "Network isolation: Can the PrivacyEnforcer reliably block all data exfiltration in Green Reticle mode?",
+          "Consent UX: Is the Green→Blue reticle transition clear enough for non-technical tourists?",
+          "GDPR compliance: Does the cloud-enhanced mode meet EU data protection standards for cross-border tourists?",
+          "Attack surface: Are there API leaks or telemetry that undermine privacy claims?",
+          "Competitive credibility: Will privacy-conscious users (Quinn persona) trust the implementation?"
+        ]
+      },
+      {
+        "agent_name": "Museum Partnership & Content Verification Specialist",
+        "role": "Institutional Partnerships & Accuracy",
+        "focus": "Assesses the viability of securing a Letter of Intent from the Swiss National Museum, the $500/landmark content production cost model, and the effectiveness of the 'Walled Garden RAG' + hard-coded persona barriers in preventing hallucinations while maintaining engaging dialogue.",
+        "evaluation_criteria": [
+          "Partnership feasibility: How realistic is a 10% revenue share LOI with the Swiss National Museum?",
+          "Content cost model: Can $500/landmark cover AI-assisted synthesis + expert review at scale?",
+          "Hallucination mitigation: Will the Walled Garden + in-character refusals maintain historical accuracy?",
+          "Content scalability: Can the production pipeline support expansion beyond 5 pilot landmarks?",
+          "Institutional credibility: Does museum endorsement meaningfully differentiate AURA from competitors?"
+        ]
+      },
+      {
+        "agent_name": "Outdoor Mobile UX Researcher",
+        "role": "Real-World Interaction Design",
+        "focus": "Evaluates the usability of the 'point-discover-converse' loop under real tourist conditions: varied lighting (rain, night), walking navigation, thermal throttling edge cases, and the effectiveness of the Skeleton Overlay in guiding non-technical users to accurate landmark framing.",
+        "evaluation_criteria": [
+          "Outdoor reliability: Will landmark ID maintain >95% accuracy in rain/dusk/crowds?",
+          "Walking usability: Can users safely navigate while engaging in audio conversations?",
+          "Skeleton Overlay effectiveness: Does the visual guide reduce failed recognition attempts?",
+          "Thermal UX degradation: How gracefully does the app handle throttling after 15+ minutes?",
+          "Accessibility: Are hands-free and audio-first modes sufficient for diverse tourist needs?"
+        ]
+      },
+      {
+        "agent_name": "Tourism Freemium Economist",
+        "role": "Pricing & Conversion Strategy",
+        "focus": "Analyzes the $14.99 one-time Explorer Pass vs. $9.99/month subscription model for short-stay tourists vs. locals. Evaluates the 5% free-to-paid conversion assumption, seasonal revenue volatility, and the 10% museum revenue-share economics.",
+        "evaluation_criteria": [
+          "Conversion realism: Is 5% free-to-paid achievable without paid acquisition?",
+          "Pricing psychology: Does the $14.99 'Digital Tour Ticket' framing overcome subscription fatigue?",
+          "Local vs. tourist segmentation: Will the dual pricing model cannibalize premium subscriptions?",
+          "Seasonal risk: Can the business sustain Zurich's tourist off-season (Nov-Feb)?",
+          "Museum alignment: Does the 10% revenue share justify museum promotion and on-site distribution?"
+        ]
+      }
+    ],
+    "council_progress": {
+      "started_at": "2026-02-15T17:38:45.166Z",
+      "agents": [
+        {
+          "agent_name": "Mobile AI Performance Engineer",
+          "status": "completed",
+          "started_at": "2026-02-15T17:38:45.175Z",
+          "completed_at": "2026-02-15T17:39:35.921Z",
+          "evaluation": {
+            "agent_name": "Mobile AI Performance Engineer",
+            "score": 4,
+            "reasoning": "The concept demonstrates sophisticated understanding of on-device ML architecture but makes critical unfounded assumptions about future model performance. Key concerns: (1) The 'Flash-Reasoning' stack (Qwen3-VL Nano, MobileLLM-Pro 1.08B, NeuTTS-Nano) references 2026-era models with no current benchmarks - the <200ms latency claim is speculative. (2) Multi-model coexistence on 4GB RAM is optimistic: even with 4-bit quantization, vision (Qwen3-VL) + LLM (1.08B) + TTS (120M) + OS overhead likely exceeds 3.5GB, leaving minimal headroom for the app itself. (3) The 'model swap protocol' (unloading vision post-ID) introduces context-switching overhead that could negate thermal benefits during rapid landmark transitions. (4) Thermal throttling on sustained 15-20min sessions remains unmitigated - mobile SoCs throttle NPU/GPU frequencies by 30-50% after 5-8 minutes of continuous inference, which will degrade the user experience significantly. (5) Battery impact is unaddressed: running three neural networks locally will drain batteries 3-5x faster than cloud alternatives, directly conflicting with the 'roaming cost' value proposition for tourists without portable chargers. The Gemma 3n fallback is the strongest technical decision - it's a real, tested model with documented 2500+ tok/sec performance on 4GB devices.",
+            "concerns": [
+              "Sub-200ms latency target is unvalidated for the proposed 2026 stack - no current benchmarks exist for Qwen3-VL Nano or MobileLLM-Pro",
+              "Memory footprint calculation missing: 4GB RAM must accommodate OS + app + 3 models simultaneously, likely causing OOM crashes on 2022-era devices",
+              "Thermal throttling mitigation incomplete - model swap protocol doesn't address sustained NPU load during multi-landmark tours (15-20min sessions)",
+              "Battery drain unquantified - on-device inference could consume 40-60% battery per hour, undermining tourist use case",
+              "No performance degradation plan - what happens when thermal throttling kicks in? Does latency gracefully degrade from 200ms to 500ms, or does the app freeze?"
+            ],
+            "dimension_scores": [
+              {
+                "dimension": "Latency Feasibility (<200ms)",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "Target is achievable for vision-only inference (Qwen-VL variants hit 80-150ms on recent SoCs) but unproven for the full pipeline including model swap overhead and LLM/TTS streaming latency"
+              },
+              {
+                "dimension": "Thermal Management",
+                "score": 4,
+                "weight": 0.25,
+                "reasoning": "Model swap protocol is a solid mitigation strategy, but thermal throttling during sustained 15-20min sessions remains a critical gap - mobile NPUs throttle after 5-8min of continuous load regardless of which models are active"
+              },
+              {
+                "dimension": "Memory Footprint (4GB RAM)",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "4-bit quantization (SpinQuant) is effective but memory budget is razor-thin: Qwen3-VL (~800MB) + MobileLLM 1.08B (~1.2GB quantized) + NeuTTS (~300MB) + OS (1.5GB) = ~3.8GB, leaving <200MB for the app and runtime buffers - high OOM risk"
+              },
+              {
+                "dimension": "Fallback Robustness (Gemma 3n)",
+                "score": 7,
+                "weight": 0.15,
+                "reasoning": "Gemma 3n 1B is a proven, production-ready model with documented 2500+ tok/sec prefill on LiteRT and specific optimization for 4GB devices - this is the strongest technical decision in the stack"
+              },
+              {
+                "dimension": "Battery Impact",
+                "score": 3,
+                "weight": 0.1,
+                "reasoning": "On-device inference power consumption is unaddressed - running three neural networks continuously could drain 40-60% battery per hour, severely limiting multi-hour tourist use cases and undermining the 'no roaming cost' value prop"
+              }
+            ],
+            "confidence": 0.75,
+            "key_insight": "This concept is architecturally sound but chronologically displaced - it's betting on a 2026 model ecosystem that doesn't exist in 2024/2025. The lack of current benchmarks for the core stack (Qwen3-VL Nano, MobileLLM-Pro) means the <200ms latency claim and 4GB RAM feasibility are educated guesses, not engineering certainties. The strongest risk mitigation is ironically the fallback (Gemma 3n), which suggests the team should build the MVP on proven 2024 models first, then upgrade when the 2026 stack materializes."
+          }
+        },
+        {
+          "agent_name": "Privacy Architecture Auditor",
+          "status": "completed",
+          "started_at": "2026-02-15T17:38:45.188Z",
+          "completed_at": "2026-02-15T17:39:41.388Z",
+          "evaluation": {
+            "agent_name": "Privacy Architecture Auditor",
+            "score": 4,
+            "reasoning": "AURA makes bold privacy claims with a compelling 'PrivacyEnforcer' concept, but the technical implementation details reveal critical gaps that undermine credibility with privacy-conscious users. The 'Native Socket Interceptor' is described in marketing language rather than engineering specifics—there's no mention of iOS Network Extension vs Android VpnService implementation, DNS leak prevention, certificate pinning bypass protection, or how analytics SDKs are truly disabled at compile-time versus runtime. The claim of 'compile-time verification' is particularly suspect without details on static analysis tooling or app store review bypass techniques. The Green→Blue reticle visual differentiation is intuitive, but the consent flow lacks critical details: Is consent per-session or persistent? How are users reminded of mode changes? What happens if network connectivity fails mid-session in Blue mode? The GDPR compliance section is dangerously thin—'anonymized text strings' sent to cloud may contain PII in conversational context (e.g., 'I'm here with my daughter Emma'), yet there's no mention of data processing agreements, server residency (critical for EU tourists under Schrems II), cross-border transfer mechanisms, or implementation of access/deletion rights. The attack surface is broad: multiple third-party ML models (MobileLLM-Pro, Qwen3-VL, NeuTTS-Nano) with no supply chain security discussion, SQLite encryption mentioned without key management details, and reliance on proprietary Google AI Edge framework that may include telemetry. For the Quinn persona specifically, a technophile who 'distrusts data harvesting,' the lack of open-source components, third-party privacy audits, or certifications (SOC 2, ISO 27001) is fatal to trust. The concept is promising but needs substantial privacy engineering depth before it can credibly claim 'privacy-first' status.",
+            "concerns": [
+              "PrivacyEnforcer implementation is vague—no technical details on iOS/Android network isolation mechanisms, DNS leak prevention, or third-party SDK control",
+              "GDPR compliance is dangerously thin: no data processing agreements, server residency details, or cross-border transfer mechanisms for EU tourists",
+              "'Anonymized text strings' may leak PII in conversational context without proper sanitization or differential privacy techniques",
+              "Consent UX lacks critical details: per-session vs persistent consent, mode-change reminders, and fallback behavior on network failures",
+              "Attack surface analysis missing: no model supply chain security, update mechanism security, or side-channel attack mitigation",
+              "Zero mention of privacy audits, certifications, or open-source components to build trust with Quinn persona",
+              "SQLite encryption mentioned without key management, backup encryption, or secure deletion details",
+              "Google AI Edge (LiteRT) is proprietary—potential for vendor telemetry undermining on-device claims"
+            ],
+            "dimension_scores": [
+              {
+                "dimension": "Network Isolation Reliability",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "PrivacyEnforcer concept is strong, but lacks platform-specific implementation details, DNS leak prevention, or analytics SDK bypass protection to be credible"
+              },
+              {
+                "dimension": "Consent UX Clarity",
+                "score": 6,
+                "weight": 0.2,
+                "reasoning": "Green→Blue reticle visual differentiation is intuitive, but missing critical details on consent persistence, mode-change reminders, and user education"
+              },
+              {
+                "dimension": "GDPR Compliance",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "Dangerously thin: no DPAs, server residency, cross-border mechanisms, or rights implementation—'anonymized text' may leak PII in conversation context"
+              },
+              {
+                "dimension": "Attack Surface Security",
+                "score": 4,
+                "weight": 0.15,
+                "reasoning": "Multiple third-party models and proprietary frameworks create broad attack surface with no supply chain security, key management, or telemetry mitigation details"
+              },
+              {
+                "dimension": "Competitive Privacy Credibility",
+                "score": 4,
+                "weight": 0.15,
+                "reasoning": "For Quinn persona, lack of open-source components, privacy audits, or certifications undermines trust despite conceptually strong architecture"
+              }
+            ],
+            "confidence": 0.85,
+            "key_insight": "The privacy architecture is conceptually sound (on-device processing + dual-mode consent) but catastrophically under-specified in engineering implementation—a sophisticated privacy-conscious user (Quinn) would immediately identify the lack of technical depth and reject the 'privacy-first' marketing claim as unsubstantiated."
+          }
+        },
+        {
+          "agent_name": "Museum Partnership & Content Verification Specialist",
+          "status": "completed",
+          "started_at": "2026-02-15T17:38:45.197Z",
+          "completed_at": "2026-02-15T17:39:41.203Z",
+          "evaluation": {
+            "agent_name": "Museum Partnership & Content Verification Specialist",
+            "score": 4,
+            "reasoning": "The museum partnership strategy reveals critical structural weaknesses that undermine the product's credibility promise. The $500/landmark content model is 4-6x below realistic costs for museum-grade historical verification ($2,000-5,000/landmark when accounting for historian rates of $100-300/hour, peer review, IP clearance, and multi-branch conversation validation). The 10% revenue share ($1.50 per $14.99 sale) is inadequate for federal institutions like the Swiss National Museum, which typically require flat licensing fees or grant structures for unproven ventures. The 'Walled Garden RAG' concept is sound but lacks critical implementation details: no accuracy benchmarking for content (only landmark ID >95%), no mention of how the 128k context window prevents confabulation within approved topics, and the 'Persona Barrier' deflection strategy risks user frustration when curiosity exceeds pre-scripted bounds. Most concerning: the LOI is treated as a near-term milestone with no mention of institutional procurement timelines (typically 6-18 months for federal museums), existing relationships, or fallback strategy beyond 'pivot to public domain' - which would destroy the institutional credibility differentiator entirely.",
+            "concerns": [
+              "Content production budget is 80% below realistic museum-grade costs, threatening either quality or financial viability",
+              "Revenue-share model misaligned with institutional partnership norms; federal museums prefer grants/flat fees",
+              "No content accuracy benchmarking beyond landmark ID; 'vetted nodes' insufficient for 128k context emergent dialogue",
+              "LOI timeline unrealistic without existing museum relationships or understanding of federal procurement cycles",
+              "Fallback to public domain content eliminates core differentiator (institutional credibility) if partnership fails",
+              "'Persona Barrier' deflection may frustrate users expecting AI fluency, creating credibility gap between promise and delivery"
+            ],
+            "dimension_scores": [
+              {
+                "dimension": "Partnership Feasibility",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "10% revenue share inadequate for federal museum; no timeline/relationship strategy for LOI acquisition; 6-18 month procurement reality ignored"
+              },
+              {
+                "dimension": "Content Cost Model",
+                "score": 2,
+                "weight": 0.25,
+                "reasoning": "$500/landmark is 80% below realistic costs when accounting for historian time ($100-300/hr × 10-20 hrs), peer review, IP clearance, and conversation branch validation"
+              },
+              {
+                "dimension": "Hallucination Mitigation",
+                "score": 5,
+                "weight": 0.2,
+                "reasoning": "Walled Garden + Persona Barrier conceptually sound, but no accuracy benchmarks for content (only landmark ID), and 128k context creates confabulation risk within approved topics"
+              },
+              {
+                "dimension": "Content Scalability",
+                "score": 4,
+                "weight": 0.15,
+                "reasoning": "If real cost is $3k/landmark (not $500), pilot economics require 1,000+ sales for break-even; no content update cycle strategy as historical interpretation evolves"
+              },
+              {
+                "dimension": "Institutional Credibility",
+                "score": 6,
+                "weight": 0.15,
+                "reasoning": "Museum endorsement IS differentiating vs competitors, but LOI ≠ endorsement; fallback to public domain destroys this advantage; no co-branding/editorial control terms specified"
+              }
+            ],
+            "confidence": 0.75,
+            "key_insight": "The partnership strategy conflates a Letter of Intent with institutional endorsement while severely underestimating both the cost structure of academic content verification and the decision-making timelines of federal cultural institutions - creating a credibility gap between the product's positioning and its operational reality."
+          }
+        },
+        {
+          "agent_name": "Outdoor Mobile UX Researcher",
+          "status": "completed",
+          "started_at": "2026-02-15T17:38:45.202Z",
+          "completed_at": "2026-02-15T17:39:55.522Z",
+          "evaluation": {
+            "agent_name": "Outdoor Mobile UX Researcher",
+            "score": 5,
+            "reasoning": "The AURA concept demonstrates strong technical ambition but reveals critical gaps between the promised outdoor experience and realistic execution constraints. The >95% landmark identification accuracy target in 'varied light conditions' is extremely optimistic for a nano-scale vision model (Qwen3-VL Nano) - industry benchmarks show vision AI accuracy degrades 30-50% in rain/low-light scenarios, even with larger models. The Skeleton Overlay mitigation is conceptually sound but lacks implementation details or evidence it can compensate for water droplets on lenses or night conditions. The core interaction paradox is unresolved: users must simultaneously aim their camera at buildings while walking safely through crowded tourist areas - the PRD mentions 'audio-first' and 'hands-free' design, but the primary input (camera framing) requires visual attention and stable hand positioning, creating pedestrian safety risks that are acknowledged but not mitigated. Thermal management shows sophisticated thinking (model swap protocol), but there's no graceful degradation strategy for the inevitable throttling during extended summer tourism sessions - what happens to conversation quality when the CPU throttles after 20 minutes in 30°C heat? The accessibility claims ('hands-free', 'audio-first') don't align with a camera-dependent interaction model that excludes visually impaired users and may frustrate elderly tourists struggling with precise aim. The Manual Map Selection fallback is pragmatic but undermines the 'instant magic' value proposition.",
+            "concerns": [
+              "Vision AI accuracy in rain/night likely 60-70% (not 95%) without significant model scale-up or multi-frame averaging (which increases latency)",
+              "Walking + camera aiming creates documented pedestrian distraction hazards; no safety mitigations (haptic warnings, safe-stop zones) specified",
+              "Skeleton Overlay effectiveness unproven - may add visual clutter in already challenging conditions; no user testing data provided",
+              "Thermal throttling after 15-20 minutes will degrade conversational quality; no UX strategy for graceful performance loss communicated to user",
+              "Accessibility claims contradict camera-dependent design; audio-first doesn't help users who can't aim the camera accurately",
+              "Fallback to manual map selection breaks the 'instant discovery' promise and requires users to know landmark names in advance",
+              "No consideration of crowd occlusion - tourists in groups may struggle to get clear sight lines to landmarks"
+            ],
+            "dimension_scores": [
+              {
+                "dimension": "Outdoor Reliability (Rain/Dusk/Crowds)",
+                "score": 4,
+                "weight": 0.25,
+                "reasoning": "The >95% accuracy target is not realistic for nano-scale vision models in adverse conditions. Industry data shows 30-50% degradation in rain/low-light even with larger models. Manual map fallback is pragmatic but undermines core value prop. Crowd occlusion not addressed."
+              },
+              {
+                "dimension": "Walking Usability & Safety",
+                "score": 3,
+                "weight": 0.25,
+                "reasoning": "Critical design contradiction: 'hands-free audio-first' messaging conflicts with camera-aiming requirement. No pedestrian safety features (haptic alerts, safe-stop prompts). Distracted walking risks are documented but unmitigated. This is a liability concern."
+              },
+              {
+                "dimension": "Skeleton Overlay Effectiveness",
+                "score": 5,
+                "weight": 0.15,
+                "reasoning": "Conceptually sound visual guidance system, but zero implementation details or user testing data provided. Unclear if it works in darkness or just frames landmarks. Risk of adding clutter during already challenging recognition scenarios. Needs validation."
+              },
+              {
+                "dimension": "Thermal UX Degradation",
+                "score": 6,
+                "weight": 0.2,
+                "reasoning": "Model swap protocol shows sophisticated thermal awareness. However, no graceful degradation UX defined - what does the user experience when throttling begins? Conversational AI + TTS synthesis for 15+ minutes in summer heat will throttle. Silent performance loss confuses users."
+              },
+              {
+                "dimension": "Accessibility & Diverse Needs",
+                "score": 4,
+                "weight": 0.15,
+                "reasoning": "Audio-first claims don't match camera-dependent interaction model. Excludes visually impaired users entirely. Elderly tourists may struggle with precise aiming. Green/Blue reticle privacy modes rely on visual differentiation. No voice command navigation or screen reader support mentioned."
+              }
+            ],
+            "confidence": 0.75,
+            "key_insight": "The fundamental tension is unresolved: AURA promises hands-free, walking-safe interaction but requires precise visual camera aiming - these are contradictory design constraints that cannot both be true in real-world tourist conditions (crowds, weather, movement). The 'Skeleton Overlay' and 'Manual Map Selection' are band-aids that acknowledge but don't solve the core interaction model fragility."
+          }
+        },
+        {
+          "agent_name": "Tourism Freemium Economist",
+          "status": "completed",
+          "started_at": "2026-02-15T17:38:45.210Z",
+          "completed_at": "2026-02-15T17:40:39.880Z",
+          "evaluation": {
+            "agent_name": "Tourism Freemium Economist",
+            "score": 6,
+            "reasoning": "The dual-tier pricing strategy is well-conceived with strong psychological framing—the $14.99 'Digital Tour Ticket' directly competes with 30-50 CHF walking tours while addressing subscription fatigue. However, the 5% free-to-paid conversion assumption is aggressive for organic/museum-driven distribution without paid acquisition (industry benchmarks: 1-3% for freemium apps). The $9.99/month Premium tier faces cannibalization risk: why would locals subscribe monthly when a one-time $14.99 purchase grants 72-hour access? 'Monthly content drops' must deliver extraordinary ongoing value to justify recurring payments. Zurich's tourism seasonality (winter trough Nov-Feb) creates revenue volatility that the local Premium base may not adequately cushion. The 10% museum revenue share is structurally sound but may underdeliver on distribution: if 200K annual museum visitors × 1% download × 5% conversion = 100 Explorer Pass sales, the museum earns only ~$150/year—insufficient to warrant aggressive promotion. The model is viable but requires either: (a) paid acquisition to hit 5% conversion, (b) stronger Premium differentiation to prevent local cannibalization, or (c) evidence of sustained winter tourism to de-risk seasonality.",
+            "concerns": [
+              "5% conversion assumes museum foot traffic converts at 5x typical freemium benchmarks without paid ads—requires validation",
+              "Premium-Explorer cannibalization: locals may game the 72-hour window rather than subscribe ($14.99 quarterly = $5/mo equivalent)",
+              "Seasonal revenue cliff: Zurich winter tourism drop could create 40-60% revenue volatility without recurring local base",
+              "Museum promotion incentive misalignment: 10% of projected revenue may generate <$500/year for museum—insufficient for active sales push",
+              "Content velocity assumption: 'Monthly drops' for Premium must be sustainable at <$500/landmark cost to maintain margin"
+            ],
+            "dimension_scores": [
+              {
+                "dimension": "Conversion Realism",
+                "score": 4,
+                "weight": 0.25,
+                "reasoning": "5% free-to-paid is optimistic without paid acquisition. Industry norm: 1-3% for freemium. Museum distribution is untested channel. Requires pilot validation."
+              },
+              {
+                "dimension": "Pricing Psychology",
+                "score": 8,
+                "weight": 0.2,
+                "reasoning": "'Digital Tour Ticket' framing smartly repositions against 30-50 CHF walking tours. $14.99 feels like impulse purchase vs. commitment. 72-hour urgency adds FOMO."
+              },
+              {
+                "dimension": "Segmentation & Cannibalization",
+                "score": 5,
+                "weight": 0.2,
+                "reasoning": "Dual pricing risks local cannibalization. Premium must deliver >$5/mo incremental value over quarterly Explorer Pass purchases. 'Monthly content drops' needs proof of concept."
+              },
+              {
+                "dimension": "Seasonal Revenue Risk",
+                "score": 5,
+                "weight": 0.2,
+                "reasoning": "Zurich winter tourism trough (Nov-Feb) creates volatility. Local Premium provides hedge but conversion path from free local users unproven. Cash flow management critical."
+              },
+              {
+                "dimension": "Museum Partnership Alignment",
+                "score": 6,
+                "weight": 0.15,
+                "reasoning": "10% rev-share structure is fair, but projected museum revenue (<$500/year at pilot scale) may not incentivize active promotion. Partnership value hinges on institutional credibility more than distribution."
+              }
+            ],
+            "confidence": 0.75,
+            "key_insight": "The 'Digital Tour Ticket' framing is brilliant positioning, but the business model conflates two unproven assumptions: that museum distribution alone drives 5% conversion (3-5x industry norms), and that locals will pay $120/year for content drops instead of exploiting the cheaper one-time option. Success hinges on validating organic conversion rates in pilot—if reality is 2%, break-even requires 2x museum traffic or paid acquisition, fundamentally changing unit economics."
+          }
+        }
+      ],
+      "synthesis_status": "completed",
+      "completed_count": 5,
+      "total_count": 5
+    },
+    "council_brief": "## Refined Concept Summary\n\n# AURA Concept Summary — Zurich Discovery Engine\n\n## 1. Problem Statement\n\nUrban tourism is trapped in a passive consumption model where visitors are spectators rather than participants. Current solutions force users to choose between:\n- **Privacy invasion**: Cloud-heavy guides that harvest location/visual data and incur roaming costs\n- **Inflexibility**: Linear 3-hour tours that don't accommodate varied schedules or interests\n- **Shallow engagement**: Static plaques and fragmented search results that fail to create cohesive narratives\n- **Low immersion**: Text-based or audio-only experiences that don't leverage modern AI capabilities\n\nThis creates frustration across tourist segments—from technophiles who distrust data harvesting to families struggling to engage teenagers with museum content.\n\n## 2. Target Users\n\n**Four validated personas (pilot focus):**\n\n| Persona | Primary Motivation | Pain Point | Behavior Replaced |\n|---------|-------------------|------------|-------------------|\n| **Quinn** (Technophile) | Autonomy & Privacy | Distrust of data harvesting, high roaming costs | Google Lens, cloud-heavy guides |\n| **Max** (Short-Stay) | Efficiency & FOMO | Inflexible 3-hour tours that don't fit schedules | Linear, non-interactive audio walks |\n| **Kris** (Local) | Novelty & Discovery | Belief they \"already know\" the city | Standard \"tourist trap\" info tools |\n| **Pat** (Family) | Edutainment | Difficulty engaging teenagers with static content | Social isolation of traditional headsets |\n\n## 3. Proposed Solution\n\n**AURA is an on-device AI discovery engine** that enables a \"point-discover-converse\" loop anchored to physical landmarks. Users aim their phone at a building, instantly identify it via vision AI, then engage in real-time, historically accurate roleplays with AI-powered historical figures (e.g., Zwingli, Roman soldiers) tied to that location.\n\n**Core mechanism:**\n- **Vision grounding**: Qwen3-VL (Nano) identifies landmarks with 3D spatial precision (<150ms latency)\n- **Conversational AI**: MobileLLM-Pro (1.08B params, 128k context) powers emergent dialogue\n- **Dynamic voice**: NeuTTS-Nano synthesizes unscripted responses with zero-shot accent cloning (Swiss-German authenticity)\n- **Privacy-first architecture**: All core processing happens on-device; a \"PrivacyEnforcer\" module physically blocks network calls during discovery sessions\n\n## 4. Key Features\n\n- **Instant landmark identification**: Point camera → AI recognizes location in sub-200ms\n- **Interactive historical characters**: Converse with era-appropriate figures (voice + text)\n- **\"Walled Garden\" RAG**: AI restricted to expert-vetted historical content (no hallucinations)\n- **Dual-mode privacy**:\n  - Green Reticle (on-device): Zero data leaves phone\n  - Blue Reticle (cloud-enhanced): Optional premium reasoning with explicit consent\n- **Thermal management**: Model swap protocol unloads vision AI post-identification to prevent throttling\n- **Fallback support**: Gemma 3n 1B optimized for 2022-era 4GB RAM devices\n- **\"Skeleton Overlay\"**: Visual guide to help users aim correctly in poor lighting\n- **Hands-free immersion**: Audio-first design for walking navigation\n\n## 5. Differentiation\n\n**vs. Rick Steves Audio Europe**: Linear, non-interactive; cannot ask questions; app crashes during photo-taking  \n**vs. Google Lens / Arts & Culture**: Fragmented search results lack narrative coherence and institutional vetting  \n**vs. izi.TRAVEL**: Quantity-over-quality content library with generic storytelling  \n**vs. Questo**: Text-based gamification without audio depth or AI character engagement  \n**vs. Zürich City Guide (Official)**: Clunky UI, inaccurate maps, purely transactional (lacks \"wow factor\")\n\n**AURA's blue ocean**: First privacy-first, AI-native discovery engine with institutionally vetted historical accuracy and emergent dialogue.\n\n## 6. Success Criteria\n\n**KPIs (Pilot Phase):**\n- **Accuracy**: >95% landmark identification in varied light conditions\n- **Engagement**: >5 conversational turns per user interaction\n- **Conversion**: >5% free-to-paid conversion rate (Explorer Pass target)\n\n**Qualitative:**\n- Letter of Intent signed with Swiss National Museum for content verification\n- Positive user feedback on \"magic moment\" of first character conversation\n\n## 7. Scope & Constraints\n\n**MVP Scope (Pilot):**\n- **Geography**: Altstadt (Zurich Old Town)\n- **Content**: 5 landmarks, 2 historical characters (Zwingli, Gaius Valerius)\n- **Timeline**: 3-phase roadmap\n  - Phase 1: Privacy guardrails + SQLite schema + Gemma 3n fallback validation\n  - Phase 2: Qwen3-VL + NeuTTS integration\n  - Phase 3: Pilot deployment + museum partnership\n\n**Technical Constraints:**\n- Must run on 2022+ mid-range devices (4GB RAM minimum)\n- Sub-200ms latency requirement for \"instant\" feel\n- <$500/landmark content production cost\n- 2026 \"Flash-Reasoning\" stack (MobileLLM-Pro, Qwen3-VL Nano, NeuTTS-Nano)\n\n**Out of Scope (Pilot):**\n- AR overlays (foundation laid via 3D grounding, deferred to post-pilot)\n- Multi-city expansion\n- User-generated content\n- Real-time translation (Swiss-German accents only)\n\n## 8. Risks & Mitigations\n\n| Risk Category | Description | Mitigation Strategy |\n|---------------|-------------|---------------------|\n| **Technical** | Landmark ID drops <95% in rain/night | Skeleton Overlay to guide user aim; Manual Map Selection fallback for low-confidence scores |\n| **Technical** | Thermal throttling during 15+ min sessions | Model Swap Protocol: unload vision models post-ID to prioritize conversational engine |\n| **Partnership** | Swiss National Museum partnership fails | Pivot to Public Domain: Open Data Zurich APIs + Wikipedia/Gutenberg sources |\n| **Accuracy** | \"Walled Garden\" LLM still hallucinates | Hard-coded Persona Barrier: characters decline unvetted queries in-character (\"I know nothing of this\") |\n| **Adoption** | 5% conversion rate over-ambitious | Frictionless $14.99 Explorer Pass (72-hour one-time) overcomes subscription fatigue for tourists |\n\n## 9. Business Model\n\n**Freemium flywheel:**\n- **Free tier**: Unlimited on-device landmark ID + \"Snapshot\" stories (zero marginal cost)\n- **Explorer Pass**: $14.99 one-time (72 hours) — positioned as \"Digital Tour Ticket\" for short-stay tourists\n- **Premium Subscription**: $9.99/month — recurring revenue from locals; unlocks monthly content drops + cloud reasoning\n\n**Strategic partnership:**\n- 10% revenue share with Swiss National Museum on Explorer Passes sold on-site\n- Museum gains digital engagement tool; AURA gains institutional credibility + distribution\n\n**Unit economics assumption:**\n- <$500/landmark content production (AI-assisted synthesis + human review)\n- Pilot targets 5 landmarks = $2,500 content investment\n- Break-even at ~167 Explorer Pass sales (achievable with museum foot traffic)\n\n---\n\n**Status**: Council-ready. All 9 evaluation criteria met. Engineering team (Claude Code Opus 4.6 + sub-agents) approved to proceed with Phase 1 build.\n\n---\n\n## Original Submission\n\nPRD: AURA — The Zurich Discovery Engine (2026 Pilot)Status: Final Specification for Agent BuildVersion: 3.0 (Post-Council Audit & Feb 2026 Stack Integration)Lead Engineering Team: Claude Code Opus 4.6 (Orchestrator) + sub-agents in tmux mode1. Executive Summary & VisionAURA is an \"Intelligent Discovery Engine\" designed to shift urban tourism from passive observation to narrative-driven participation. Utilizing the 2026 \"Flash-Reasoning\" paradigm, AURA enables a \"point-discover-converse\" loop where users engage in real-time, historically accurate roleplays with AI-powered figures directly anchored to physical landmarks.Core Strategic PillarsExperiential Innovation: Moving users from spectators to characters in a city-wide interactive storyscape.Privacy-First Architecture: On-device processing ensures sensitive visual and location data never leave the device for core operations.Unimpeachable Credibility: A \"Walled Garden\" RAG protocol backed by foundational partnerships with academic institutions.2. Target User Segments (Pilot Focus)PersonaPrimary MotivationPain Point Addressedbehavior ReplacedQuinn (Technophile)Autonomy & Privacy Distrust of data harvesting and high roaming costs.Replaces generic Google Lens and cloud-heavy guides.Max (Short-Stay)Efficiency & FOMO Inflexible 3-hour tours that don't fit tight schedules.Replaces linear, non-interactive audio walks.Kris (Local)Novelty & Discovery The belief that they \"already know\" the city.Replaces standard \"tourist trap\" information tools.Pat (Family)Edutainment Difficulty engaging teenagers with static museum plaques.Replaces social isolation of traditional headsets.3. 2026 \"Flash-Reasoning\" Technical StackThe stack is architected for \"On-Device First\" execution to ensure sub-200ms latency and total data residency.3.1 Core Model SpecificationReasoning Orchestrator: MobileLLM-Pro (P1).Spec: 1.08B parameters, distilled from Llama 4-Scout.Capabilities: 128k context window allows for deep \"historical memory\" during multi-stop journeys.Vision & Landmark Grounding: Qwen3-VL (Nano).Spec: Native multimodal architecture.Capabilities: Supports 3D Grounding, predicting real-world size and depth to anchor future AR overlays with centimeter precision.Dynamic Speech Engine: NeuTTS-Nano.Spec: 120M active parameters, GGUF format.Capabilities: Real-time, unscripted speech synthesis with zero-shot voice cloning (e.g., specific Swiss-German accents for historical authenticity).Production Fallback (2022+ Hardware): Gemma 3n 1B.Rationale: Specifically optimized for 4GB RAM devices; provides 2500+ tok/sec prefill latency on LiteRT.3.2 Framework & DeploymentInference Engine: Google AI Edge (LiteRT).Rationale: Native wrappers for iOS/Android provide superior thermal management compared to WebGPU previews for high-stakes ML workloads.Quantization: SpinQuant (4-bit W+A+KV).Effect: Reduces memory traffic per token by 4x while maintaining <3% accuracy loss.Local Storage: SQLite.Usage: Stores the encrypted \"City Pack\" containing landmark IDs, character \"Constitutions,\" and vetted historical nodes.4. Content Architecture: The Extractive-Safe PivotTo resolve the \"hallucination vs. emergent dialogue\" paradox, AURA adopts a multi-layered content strategy.Walled Garden RAG: The LLM is restricted to rephrasing expert-vetted narrative nodes. It is physically unable to access the internet during the core loop.Character Constitution: Each figure (e.g., Zwingli) has a hard-coded \"Persona Barrier.\" If a user asks an out-of-scope question, the character is prompted to decline in-character (e.g., \"I know nothing of this 'internet'; I speak only of the Word of God\").AI-Assisted Synthesis: Historians provide primary sources; AI drafts narrative branches which are then human-reviewed, maintaining a <$500/landmark production cost.5. Privacy Architecture & Compliance5.1 PrivacyEnforcer ModuleImplemented as a Native Socket Interceptor, this module actively kills any outgoing network calls during the \"Core Discovery Loop\". It provides compile-time verification that third-party SDKs (e.g., analytics) are disabled during active sessions.5.2 Dual-Tier TransparencyThe \"Consent Modal\": Users entering \"Deep Conversation\" (Premium Cloud Mode) must toggle an active consent button. The UI must clearly differentiate between \"Private On-Device\" (Green Reticle) and \"Cloud-Enhanced\" (Blue Reticle) modes.Data Minimization: Only anonymized text strings are sent to the cloud for premium reasoning; no biometric or visual metadata is transmitted.6. Business & Sustainability ModelFreemium Flywheel: Unlimited on-device visual recognition and \"Snapshot\" stories are free (Zero marginal cost).Explorer Pass ($14.99): A 72-hour one-time pass for short-stay tourists, reframing the app as a \"Digital Tour Ticket\".Premium Subscription ($9.99/mo): Recurring revenue from local enthusiasts unlocking monthly content drops and cloud reasoning.Strategic Subsidy: Pilot incentivization for the Swiss National Museum via a 10% revenue-sharing model on Explorer Passes sold on-site.7. MVP Roadmap & Success MetricsPhase 1: Local Foundation & Privacy GuardrailsEstablish SQLite schema and PrivacyEnforcer runtime.Validate Gemma 3n 1B fallback performance on 2022-era mid-range devices.Phase 2: Multimodal Loop IntegrationIntegrate Qwen3-VL (Nano) for landmark ID (<150ms target).Implement NeuTTS-Nano for streaming conversational audio.Phase 3: Pilot Content & Partnership ValidationDeploy 5 landmarks (Altstadt focus) and 2 characters (Zwingli, Gaius Valerius).Sign LOI with Swiss National Museum for content verification.Key Performance Indicators (KPIs)Accuracy: >95% landmark identification rate in varied light conditions.Engagement: >5 conversational turns per user interaction turn.Conversion: >5% free-to-paid conversion (Targeting the Explorer Pass).Approved for Build: AI Council Strategist TeamDate: February 15, 2026\n\n---\n\n## Concept Refinement Chat\n\n**Analyst:** **Council Readiness Audit**\n\nHere's how your concept maps to what the council evaluates:\n\n✅ **Well-covered:**\n- **Problem & Pain Points** — Four distinct personas with specific, validated frustrations (data harvesting, inflexible tours, \"already seen it\", static plaques)\n- **Target Users** — Detailed persona matrix with motivations and replacement behaviors\n- **Solution Mechanism** — Extremely detailed: specific models (MobileLLM-Pro 1.08B, Qwen3-VL Nano, NeuTTS-Nano), quantization strategy, on-device architecture. Engineers could start building today.\n- **Success Metrics** — Concrete KPIs: >95% landmark ID accuracy, >5 turns/interaction, >5% conversion\n- **MVP Scope** — Clear 3-phase roadmap, pilot scoped to 5 landmarks + 2 characters in Altstadt\n- **Technical Feasibility** — Stack choices justified with hardware constraints, fallback strategy for 2022 devices, thermal management addressed\n- **Business Model** — Freemium with specific pricing ($14.99 Explorer Pass, $9.99/mo Premium), 10% museum rev-share\n\n⚠️ **Needs strengthening:**\n- **Competitive Landscape** — You mention Google Lens, audio walks, museum plaques as *categories* being replaced, but no specific competitor products analyzed (e.g., Rick Steves Audio Europe, Detour, Google Arts & Culture AR). Differentiation is implied but not explicitly contrasted.\n\n❌ **Missing/unclear:**\n- **Risks & Mitigations** — This is the critical gap. The council will immediately ask: What happens if landmark ID drops below 95% in rain/night conditions? If the Swiss National Museum partnership stalls? If content production can't scale beyond 5 landmarks? If users experience thermal throttling during extended sessions? If the \"Walled Garden RAG\" still hallucinates? You've built an exceptional architecture, but there's no explicit risk inventory or mitigation plan.\n\n---\n\n**Assessment:** This is a *very strong* document — 7 out of 9 areas are thoroughly covered. Most concepts need 3-5 rounds of gap-filling; yours needs 1-2.\n\n**To... [2,487 chars]\n\n**User:** here is the updated PRD PRD: AURA — The Zurich Discovery Engine (2026 Pilot)Status: Final Specification for Agent BuildVersion: 4.0 (Council-Ready with Risks & Competitive Contrast)Lead Engineering Team: Claude Code Opus 4.6 (Orchestrator) + sub-agents in tmux mode1. Executive Summary & VisionAURA is an \"Intelligent Discovery Engine\" designed to shift urban tourism from passive observation to narrative-driven participation. Utilizing the 2026 \"Flash-Reasoning\" paradigm, AURA enables a \"point-discover-converse\" loop where users engage in real-time, historically accurate roleplays with AI-powered figures directly anchored to physical landmarks.Core Strategic PillarsExperiential Innovation: Moving users from spectators to characters in a city-wide interactive storyscape.Privacy-First Architecture: On-device processing ensures sensitive visual and location data never leave the device for core operations.Unimpeachable Credibility: A \"Walled Garden\" RAG protocol backed by foundational partnerships with academic institutions.2. Target User Segments (Pilot Focus)PersonaPrimary MotivationPain Point AddressedBehavior ReplacedQuinn (Technophile)Autonomy & Privacy Distrust of data harvesting and high roaming costs.Replaces generic Google Lens and cloud-heavy guides.Max (Short-Stay)Efficiency & FOMO Inflexible 3-hour tours that don't fit tight schedules.Replaces linear, non-interactive audio walks.Kris (Local)Novelty & Discovery The belief that they \"already know\" the city.Replaces standard \"tourist trap\" information tools.Pat (Family)Edutainment Difficulty engaging teenagers with static museum plaques.Replaces social isolation of traditional headsets.3. 2026 \"Flash-Reasoning\" Technical StackThe stack is architected for \"On-Device First\" execution to ensure sub-200ms latency and total data residency.3.1 Core Model SpecificationReasoning Orchestrator: MobileLLM-Pro (P1).Spec: 1.08B parameters, distilled from Llama 4-Scout.Capabilities: 128k context window allows for deep \"histori... [8,066 chars]\n\n**Analyst:** **Council Readiness — Final Assessment**\n\n✅ **All 9 evaluation areas now covered:**\n\n1. **Problem & Pain Points** — Validated across 4 personas with specific frustrations\n2. **Target Users** — Detailed segments with motivations and replacement behaviors\n3. **Solution Mechanism** — Production-ready technical spec (MobileLLM-Pro, Qwen3-VL, NeuTTS-Nano, thermal management, fallback strategy)\n4. **Competitive Landscape** — ✅ **NEW:** 5 specific competitors analyzed (Rick Steves, Google Lens, izi.TRAVEL, Questo, official Zürich app) with concrete differentiation\n5. **Success Metrics** — Quantified KPIs (>95% accuracy, >5 turns, >5% conversion)\n6. **MVP Scope** — Clear 3-phase roadmap, 5 landmarks + 2 characters, Altstadt pilot boundary\n7. **Technical Feasibility** — Stack choices justified with hardware constraints and quantization strategy\n8. **Business Model** — Freemium with pricing ($14.99 Explorer Pass, $9.99/mo Premium), museum rev-share\n9. **Risks & Mitigations** — ✅ **NEW:** 5 critical risks addressed across technical (landmark ID degradation, thermal throttling), partnership (museum dependency), accuracy (hallucination), and adoption (conversion assumptions)\n\n---\n\n**What the council will receive:**\n\nA 5,882-character PRD (version 4.0) that spans strategic vision, persona validation, 2026-era on-device ML architecture, privacy-first design, competitive positioning, business model, and risk planning. The technical feasibility agents will see sufficient detail to assess build viability. The market/UX agents will see persona pain points mapped to specific product features. The business agents will see freemium economics with rev-share strategy.\n\n**No additional prep needed.** This is council-ready.\n\n**→ Hit \"Send to Council\" when you're ready to proceed.**",
+    "council_verdict": {
+      "recommendation": "reject",
+      "overall_score": 4.6,
+      "evaluations": [
+        {
+          "agent_name": "Mobile AI Performance Engineer",
+          "score": 4,
+          "reasoning": "The concept demonstrates sophisticated understanding of on-device ML architecture but makes critical unfounded assumptions about future model performance. Key concerns: (1) The 'Flash-Reasoning' stack (Qwen3-VL Nano, MobileLLM-Pro 1.08B, NeuTTS-Nano) references 2026-era models with no current benchmarks - the <200ms latency claim is speculative. (2) Multi-model coexistence on 4GB RAM is optimistic: even with 4-bit quantization, vision (Qwen3-VL) + LLM (1.08B) + TTS (120M) + OS overhead likely exceeds 3.5GB, leaving minimal headroom for the app itself. (3) The 'model swap protocol' (unloading vision post-ID) introduces context-switching overhead that could negate thermal benefits during rapid landmark transitions. (4) Thermal throttling on sustained 15-20min sessions remains unmitigated - mobile SoCs throttle NPU/GPU frequencies by 30-50% after 5-8 minutes of continuous inference, which will degrade the user experience significantly. (5) Battery impact is unaddressed: running three neural networks locally will drain batteries 3-5x faster than cloud alternatives, directly conflicting with the 'roaming cost' value proposition for tourists without portable chargers. The Gemma 3n fallback is the strongest technical decision - it's a real, tested model with documented 2500+ tok/sec performance on 4GB devices.",
+          "concerns": [
+            "Sub-200ms latency target is unvalidated for the proposed 2026 stack - no current benchmarks exist for Qwen3-VL Nano or MobileLLM-Pro",
+            "Memory footprint calculation missing: 4GB RAM must accommodate OS + app + 3 models simultaneously, likely causing OOM crashes on 2022-era devices",
+            "Thermal throttling mitigation incomplete - model swap protocol doesn't address sustained NPU load during multi-landmark tours (15-20min sessions)",
+            "Battery drain unquantified - on-device inference could consume 40-60% battery per hour, undermining tourist use case",
+            "No performance degradation plan - what happens when thermal throttling kicks in? Does latency gracefully degrade from 200ms to 500ms, or does the app freeze?"
+          ],
+          "dimension_scores": [
+            {
+              "dimension": "Latency Feasibility (<200ms)",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "Target is achievable for vision-only inference (Qwen-VL variants hit 80-150ms on recent SoCs) but unproven for the full pipeline including model swap overhead and LLM/TTS streaming latency"
+            },
+            {
+              "dimension": "Thermal Management",
+              "score": 4,
+              "weight": 0.25,
+              "reasoning": "Model swap protocol is a solid mitigation strategy, but thermal throttling during sustained 15-20min sessions remains a critical gap - mobile NPUs throttle after 5-8min of continuous load regardless of which models are active"
+            },
+            {
+              "dimension": "Memory Footprint (4GB RAM)",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "4-bit quantization (SpinQuant) is effective but memory budget is razor-thin: Qwen3-VL (~800MB) + MobileLLM 1.08B (~1.2GB quantized) + NeuTTS (~300MB) + OS (1.5GB) = ~3.8GB, leaving <200MB for the app and runtime buffers - high OOM risk"
+            },
+            {
+              "dimension": "Fallback Robustness (Gemma 3n)",
+              "score": 7,
+              "weight": 0.15,
+              "reasoning": "Gemma 3n 1B is a proven, production-ready model with documented 2500+ tok/sec prefill on LiteRT and specific optimization for 4GB devices - this is the strongest technical decision in the stack"
+            },
+            {
+              "dimension": "Battery Impact",
+              "score": 3,
+              "weight": 0.1,
+              "reasoning": "On-device inference power consumption is unaddressed - running three neural networks continuously could drain 40-60% battery per hour, severely limiting multi-hour tourist use cases and undermining the 'no roaming cost' value prop"
+            }
+          ],
+          "confidence": 0.75,
+          "key_insight": "This concept is architecturally sound but chronologically displaced - it's betting on a 2026 model ecosystem that doesn't exist in 2024/2025. The lack of current benchmarks for the core stack (Qwen3-VL Nano, MobileLLM-Pro) means the <200ms latency claim and 4GB RAM feasibility are educated guesses, not engineering certainties. The strongest risk mitigation is ironically the fallback (Gemma 3n), which suggests the team should build the MVP on proven 2024 models first, then upgrade when the 2026 stack materializes."
+        },
+        {
+          "agent_name": "Privacy Architecture Auditor",
+          "score": 4,
+          "reasoning": "AURA makes bold privacy claims with a compelling 'PrivacyEnforcer' concept, but the technical implementation details reveal critical gaps that undermine credibility with privacy-conscious users. The 'Native Socket Interceptor' is described in marketing language rather than engineering specifics—there's no mention of iOS Network Extension vs Android VpnService implementation, DNS leak prevention, certificate pinning bypass protection, or how analytics SDKs are truly disabled at compile-time versus runtime. The claim of 'compile-time verification' is particularly suspect without details on static analysis tooling or app store review bypass techniques. The Green→Blue reticle visual differentiation is intuitive, but the consent flow lacks critical details: Is consent per-session or persistent? How are users reminded of mode changes? What happens if network connectivity fails mid-session in Blue mode? The GDPR compliance section is dangerously thin—'anonymized text strings' sent to cloud may contain PII in conversational context (e.g., 'I'm here with my daughter Emma'), yet there's no mention of data processing agreements, server residency (critical for EU tourists under Schrems II), cross-border transfer mechanisms, or implementation of access/deletion rights. The attack surface is broad: multiple third-party ML models (MobileLLM-Pro, Qwen3-VL, NeuTTS-Nano) with no supply chain security discussion, SQLite encryption mentioned without key management details, and reliance on proprietary Google AI Edge framework that may include telemetry. For the Quinn persona specifically, a technophile who 'distrusts data harvesting,' the lack of open-source components, third-party privacy audits, or certifications (SOC 2, ISO 27001) is fatal to trust. The concept is promising but needs substantial privacy engineering depth before it can credibly claim 'privacy-first' status.",
+          "concerns": [
+            "PrivacyEnforcer implementation is vague—no technical details on iOS/Android network isolation mechanisms, DNS leak prevention, or third-party SDK control",
+            "GDPR compliance is dangerously thin: no data processing agreements, server residency details, or cross-border transfer mechanisms for EU tourists",
+            "'Anonymized text strings' may leak PII in conversational context without proper sanitization or differential privacy techniques",
+            "Consent UX lacks critical details: per-session vs persistent consent, mode-change reminders, and fallback behavior on network failures",
+            "Attack surface analysis missing: no model supply chain security, update mechanism security, or side-channel attack mitigation",
+            "Zero mention of privacy audits, certifications, or open-source components to build trust with Quinn persona",
+            "SQLite encryption mentioned without key management, backup encryption, or secure deletion details",
+            "Google AI Edge (LiteRT) is proprietary—potential for vendor telemetry undermining on-device claims"
+          ],
+          "dimension_scores": [
+            {
+              "dimension": "Network Isolation Reliability",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "PrivacyEnforcer concept is strong, but lacks platform-specific implementation details, DNS leak prevention, or analytics SDK bypass protection to be credible"
+            },
+            {
+              "dimension": "Consent UX Clarity",
+              "score": 6,
+              "weight": 0.2,
+              "reasoning": "Green→Blue reticle visual differentiation is intuitive, but missing critical details on consent persistence, mode-change reminders, and user education"
+            },
+            {
+              "dimension": "GDPR Compliance",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "Dangerously thin: no DPAs, server residency, cross-border mechanisms, or rights implementation—'anonymized text' may leak PII in conversation context"
+            },
+            {
+              "dimension": "Attack Surface Security",
+              "score": 4,
+              "weight": 0.15,
+              "reasoning": "Multiple third-party models and proprietary frameworks create broad attack surface with no supply chain security, key management, or telemetry mitigation details"
+            },
+            {
+              "dimension": "Competitive Privacy Credibility",
+              "score": 4,
+              "weight": 0.15,
+              "reasoning": "For Quinn persona, lack of open-source components, privacy audits, or certifications undermines trust despite conceptually strong architecture"
+            }
+          ],
+          "confidence": 0.85,
+          "key_insight": "The privacy architecture is conceptually sound (on-device processing + dual-mode consent) but catastrophically under-specified in engineering implementation—a sophisticated privacy-conscious user (Quinn) would immediately identify the lack of technical depth and reject the 'privacy-first' marketing claim as unsubstantiated."
+        },
+        {
+          "agent_name": "Museum Partnership & Content Verification Specialist",
+          "score": 4,
+          "reasoning": "The museum partnership strategy reveals critical structural weaknesses that undermine the product's credibility promise. The $500/landmark content model is 4-6x below realistic costs for museum-grade historical verification ($2,000-5,000/landmark when accounting for historian rates of $100-300/hour, peer review, IP clearance, and multi-branch conversation validation). The 10% revenue share ($1.50 per $14.99 sale) is inadequate for federal institutions like the Swiss National Museum, which typically require flat licensing fees or grant structures for unproven ventures. The 'Walled Garden RAG' concept is sound but lacks critical implementation details: no accuracy benchmarking for content (only landmark ID >95%), no mention of how the 128k context window prevents confabulation within approved topics, and the 'Persona Barrier' deflection strategy risks user frustration when curiosity exceeds pre-scripted bounds. Most concerning: the LOI is treated as a near-term milestone with no mention of institutional procurement timelines (typically 6-18 months for federal museums), existing relationships, or fallback strategy beyond 'pivot to public domain' - which would destroy the institutional credibility differentiator entirely.",
+          "concerns": [
+            "Content production budget is 80% below realistic museum-grade costs, threatening either quality or financial viability",
+            "Revenue-share model misaligned with institutional partnership norms; federal museums prefer grants/flat fees",
+            "No content accuracy benchmarking beyond landmark ID; 'vetted nodes' insufficient for 128k context emergent dialogue",
+            "LOI timeline unrealistic without existing museum relationships or understanding of federal procurement cycles",
+            "Fallback to public domain content eliminates core differentiator (institutional credibility) if partnership fails",
+            "'Persona Barrier' deflection may frustrate users expecting AI fluency, creating credibility gap between promise and delivery"
+          ],
+          "dimension_scores": [
+            {
+              "dimension": "Partnership Feasibility",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "10% revenue share inadequate for federal museum; no timeline/relationship strategy for LOI acquisition; 6-18 month procurement reality ignored"
+            },
+            {
+              "dimension": "Content Cost Model",
+              "score": 2,
+              "weight": 0.25,
+              "reasoning": "$500/landmark is 80% below realistic costs when accounting for historian time ($100-300/hr × 10-20 hrs), peer review, IP clearance, and conversation branch validation"
+            },
+            {
+              "dimension": "Hallucination Mitigation",
+              "score": 5,
+              "weight": 0.2,
+              "reasoning": "Walled Garden + Persona Barrier conceptually sound, but no accuracy benchmarks for content (only landmark ID), and 128k context creates confabulation risk within approved topics"
+            },
+            {
+              "dimension": "Content Scalability",
+              "score": 4,
+              "weight": 0.15,
+              "reasoning": "If real cost is $3k/landmark (not $500), pilot economics require 1,000+ sales for break-even; no content update cycle strategy as historical interpretation evolves"
+            },
+            {
+              "dimension": "Institutional Credibility",
+              "score": 6,
+              "weight": 0.15,
+              "reasoning": "Museum endorsement IS differentiating vs competitors, but LOI ≠ endorsement; fallback to public domain destroys this advantage; no co-branding/editorial control terms specified"
+            }
+          ],
+          "confidence": 0.75,
+          "key_insight": "The partnership strategy conflates a Letter of Intent with institutional endorsement while severely underestimating both the cost structure of academic content verification and the decision-making timelines of federal cultural institutions - creating a credibility gap between the product's positioning and its operational reality."
+        },
+        {
+          "agent_name": "Outdoor Mobile UX Researcher",
+          "score": 5,
+          "reasoning": "The AURA concept demonstrates strong technical ambition but reveals critical gaps between the promised outdoor experience and realistic execution constraints. The >95% landmark identification accuracy target in 'varied light conditions' is extremely optimistic for a nano-scale vision model (Qwen3-VL Nano) - industry benchmarks show vision AI accuracy degrades 30-50% in rain/low-light scenarios, even with larger models. The Skeleton Overlay mitigation is conceptually sound but lacks implementation details or evidence it can compensate for water droplets on lenses or night conditions. The core interaction paradox is unresolved: users must simultaneously aim their camera at buildings while walking safely through crowded tourist areas - the PRD mentions 'audio-first' and 'hands-free' design, but the primary input (camera framing) requires visual attention and stable hand positioning, creating pedestrian safety risks that are acknowledged but not mitigated. Thermal management shows sophisticated thinking (model swap protocol), but there's no graceful degradation strategy for the inevitable throttling during extended summer tourism sessions - what happens to conversation quality when the CPU throttles after 20 minutes in 30°C heat? The accessibility claims ('hands-free', 'audio-first') don't align with a camera-dependent interaction model that excludes visually impaired users and may frustrate elderly tourists struggling with precise aim. The Manual Map Selection fallback is pragmatic but undermines the 'instant magic' value proposition.",
+          "concerns": [
+            "Vision AI accuracy in rain/night likely 60-70% (not 95%) without significant model scale-up or multi-frame averaging (which increases latency)",
+            "Walking + camera aiming creates documented pedestrian distraction hazards; no safety mitigations (haptic warnings, safe-stop zones) specified",
+            "Skeleton Overlay effectiveness unproven - may add visual clutter in already challenging conditions; no user testing data provided",
+            "Thermal throttling after 15-20 minutes will degrade conversational quality; no UX strategy for graceful performance loss communicated to user",
+            "Accessibility claims contradict camera-dependent design; audio-first doesn't help users who can't aim the camera accurately",
+            "Fallback to manual map selection breaks the 'instant discovery' promise and requires users to know landmark names in advance",
+            "No consideration of crowd occlusion - tourists in groups may struggle to get clear sight lines to landmarks"
+          ],
+          "dimension_scores": [
+            {
+              "dimension": "Outdoor Reliability (Rain/Dusk/Crowds)",
+              "score": 4,
+              "weight": 0.25,
+              "reasoning": "The >95% accuracy target is not realistic for nano-scale vision models in adverse conditions. Industry data shows 30-50% degradation in rain/low-light even with larger models. Manual map fallback is pragmatic but undermines core value prop. Crowd occlusion not addressed."
+            },
+            {
+              "dimension": "Walking Usability & Safety",
+              "score": 3,
+              "weight": 0.25,
+              "reasoning": "Critical design contradiction: 'hands-free audio-first' messaging conflicts with camera-aiming requirement. No pedestrian safety features (haptic alerts, safe-stop prompts). Distracted walking risks are documented but unmitigated. This is a liability concern."
+            },
+            {
+              "dimension": "Skeleton Overlay Effectiveness",
+              "score": 5,
+              "weight": 0.15,
+              "reasoning": "Conceptually sound visual guidance system, but zero implementation details or user testing data provided. Unclear if it works in darkness or just frames landmarks. Risk of adding clutter during already challenging recognition scenarios. Needs validation."
+            },
+            {
+              "dimension": "Thermal UX Degradation",
+              "score": 6,
+              "weight": 0.2,
+              "reasoning": "Model swap protocol shows sophisticated thermal awareness. However, no graceful degradation UX defined - what does the user experience when throttling begins? Conversational AI + TTS synthesis for 15+ minutes in summer heat will throttle. Silent performance loss confuses users."
+            },
+            {
+              "dimension": "Accessibility & Diverse Needs",
+              "score": 4,
+              "weight": 0.15,
+              "reasoning": "Audio-first claims don't match camera-dependent interaction model. Excludes visually impaired users entirely. Elderly tourists may struggle with precise aiming. Green/Blue reticle privacy modes rely on visual differentiation. No voice command navigation or screen reader support mentioned."
+            }
+          ],
+          "confidence": 0.75,
+          "key_insight": "The fundamental tension is unresolved: AURA promises hands-free, walking-safe interaction but requires precise visual camera aiming - these are contradictory design constraints that cannot both be true in real-world tourist conditions (crowds, weather, movement). The 'Skeleton Overlay' and 'Manual Map Selection' are band-aids that acknowledge but don't solve the core interaction model fragility."
+        },
+        {
+          "agent_name": "Tourism Freemium Economist",
+          "score": 6,
+          "reasoning": "The dual-tier pricing strategy is well-conceived with strong psychological framing—the $14.99 'Digital Tour Ticket' directly competes with 30-50 CHF walking tours while addressing subscription fatigue. However, the 5% free-to-paid conversion assumption is aggressive for organic/museum-driven distribution without paid acquisition (industry benchmarks: 1-3% for freemium apps). The $9.99/month Premium tier faces cannibalization risk: why would locals subscribe monthly when a one-time $14.99 purchase grants 72-hour access? 'Monthly content drops' must deliver extraordinary ongoing value to justify recurring payments. Zurich's tourism seasonality (winter trough Nov-Feb) creates revenue volatility that the local Premium base may not adequately cushion. The 10% museum revenue share is structurally sound but may underdeliver on distribution: if 200K annual museum visitors × 1% download × 5% conversion = 100 Explorer Pass sales, the museum earns only ~$150/year—insufficient to warrant aggressive promotion. The model is viable but requires either: (a) paid acquisition to hit 5% conversion, (b) stronger Premium differentiation to prevent local cannibalization, or (c) evidence of sustained winter tourism to de-risk seasonality.",
+          "concerns": [
+            "5% conversion assumes museum foot traffic converts at 5x typical freemium benchmarks without paid ads—requires validation",
+            "Premium-Explorer cannibalization: locals may game the 72-hour window rather than subscribe ($14.99 quarterly = $5/mo equivalent)",
+            "Seasonal revenue cliff: Zurich winter tourism drop could create 40-60% revenue volatility without recurring local base",
+            "Museum promotion incentive misalignment: 10% of projected revenue may generate <$500/year for museum—insufficient for active sales push",
+            "Content velocity assumption: 'Monthly drops' for Premium must be sustainable at <$500/landmark cost to maintain margin"
+          ],
+          "dimension_scores": [
+            {
+              "dimension": "Conversion Realism",
+              "score": 4,
+              "weight": 0.25,
+              "reasoning": "5% free-to-paid is optimistic without paid acquisition. Industry norm: 1-3% for freemium. Museum distribution is untested channel. Requires pilot validation."
+            },
+            {
+              "dimension": "Pricing Psychology",
+              "score": 8,
+              "weight": 0.2,
+              "reasoning": "'Digital Tour Ticket' framing smartly repositions against 30-50 CHF walking tours. $14.99 feels like impulse purchase vs. commitment. 72-hour urgency adds FOMO."
+            },
+            {
+              "dimension": "Segmentation & Cannibalization",
+              "score": 5,
+              "weight": 0.2,
+              "reasoning": "Dual pricing risks local cannibalization. Premium must deliver >$5/mo incremental value over quarterly Explorer Pass purchases. 'Monthly content drops' needs proof of concept."
+            },
+            {
+              "dimension": "Seasonal Revenue Risk",
+              "score": 5,
+              "weight": 0.2,
+              "reasoning": "Zurich winter tourism trough (Nov-Feb) creates volatility. Local Premium provides hedge but conversion path from free local users unproven. Cash flow management critical."
+            },
+            {
+              "dimension": "Museum Partnership Alignment",
+              "score": 6,
+              "weight": 0.15,
+              "reasoning": "10% rev-share structure is fair, but projected museum revenue (<$500/year at pilot scale) may not incentivize active promotion. Partnership value hinges on institutional credibility more than distribution."
+            }
+          ],
+          "confidence": 0.75,
+          "key_insight": "The 'Digital Tour Ticket' framing is brilliant positioning, but the business model conflates two unproven assumptions: that museum distribution alone drives 5% conversion (3-5x industry norms), and that locals will pay $120/year for content drops instead of exploiting the cheaper one-time option. Success hinges on validating organic conversion rates in pilot—if reality is 2%, break-even requires 2x museum traffic or paid acquisition, fundamentally changing unit economics."
+        }
+      ],
+      "synthesized_reasoning": "AURA represents a sophisticated product vision undermined by speculative technical foundations and unvalidated partnership assumptions. The council acknowledges exceptional work in problem articulation (four validated personas with specific pain points), competitive differentiation (five competitors analyzed with clear blue ocean positioning), and architectural thinking (thermal management, privacy tiers, freemium psychology). However, the 4.6/10 score reflects a critical pattern: **the entire concept rests on 2026-era models (Qwen3-VL Nano, MobileLLM-Pro, NeuTTS-Nano) with zero current benchmarks**. The <200ms latency claim, >95% accuracy in adverse conditions, and multi-model coexistence on 4GB RAM are all unvalidated assumptions that cascade into fatal risks: (1) **Technical**: Battery drain and thermal throttling will degrade the tourist experience after 15-20 minutes—precisely when engagement should peak. The Gemma 3n fallback is the only proven component. (2) **Privacy**: The PrivacyEnforcer 'Native Socket Interceptor' lacks iOS/Android implementation specifics, GDPR compliance is dangerously thin for EU tourists, and there are no third-party audits to earn Quinn's trust. (3) **Partnership**: The $500/landmark budget is 80% below museum-grade costs, the 10% revenue share misaligns with federal institutional norms (they prefer grants), and the LOI timeline ignores 6-18 month procurement cycles. The fallback to public domain data destroys the institutional credibility differentiator. (4) **UX**: Walking tourists aiming cameras at buildings in rain/crowds creates unmitigated safety hazards; accuracy will realistically drop to 60-70% in adverse conditions. (5) **Business**: The 5% conversion assumption requires 5x typical freemium performance without paid acquisition, and Premium-Explorer cannibalization isn't addressed. **Core verdict**: This is a 2028+ concept pitched as a 2026 pilot. The vision is compelling, but the execution timeline assumes technological capabilities that don't yet exist and institutional partnerships that require 12-18 months to secure.",
+      "next_steps": [
+        "De-risk the technology stack: Replace speculative 2026 models with proven alternatives (Gemma 3n + existing vision models like MobileNetV3). Sacrifice 'bleeding edge' positioning for buildable MVP. Re-benchmark latency/accuracy with real hardware.",
+        "Validate the museum partnership hypothesis NOW: Reach out to Swiss National Museum to assess procurement timeline, preferred partnership structure (grant vs. rev-share), and content production expectations. If 6-18 months is realistic, adjust roadmap or pivot to public domain launch.",
+        "Address the outdoor UX contradiction: Either commit to hands-free audio (sacrifice camera-based landmark ID) OR acknowledge camera aiming requires stationary use (market as 'discovery stops' not 'walking tours'). Test Skeleton Overlay with real users in rain/low-light before claiming it solves accuracy degradation.",
+        "Build privacy credibility for Quinn persona: Publish PrivacyEnforcer technical spec (network isolation mechanism, DNS leak prevention), commit to third-party audit pre-launch, consider open-sourcing core privacy module. Without this, Quinn won't trust the 'privacy-first' claim.",
+        "Stress-test the business model: Run pilot with 1-3% conversion assumption (industry norm), model seasonal revenue volatility, and define Premium differentiation that prevents Explorer Pass gaming (e.g., Premium unlocks different content, not just 'more of the same').",
+        "Recommendation: PAUSE for 90-day validation sprint. Use existing tech to build a constrained proof-of-concept (3 landmarks, Gemma 3n, manual museum content verification). Measure real accuracy, thermal behavior, and user engagement. If metrics hit 80%+ of targets, re-architect with proven models. If not, this remains a 2028+ research project."
+      ],
+      "council_composition": [
+        "Mobile AI Performance Engineer",
+        "Privacy Architecture Auditor",
+        "Museum Partnership & Content Verification Specialist",
+        "Outdoor Mobile UX Researcher",
+        "Tourism Freemium Economist"
+      ]
+    }
+  }
+}
