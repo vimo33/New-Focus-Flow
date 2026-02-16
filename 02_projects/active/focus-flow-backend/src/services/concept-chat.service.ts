@@ -1,6 +1,8 @@
 import { ThreadService } from './thread.service';
-import { openClawClient, OpenClawMessage } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
+import { OpenClawMessage } from './openclaw-client.service';
 import { ThreadMessage, CouncilMember } from '../models/types';
+import { mem0Service } from './mem0.service';
 
 export const DEFAULT_COUNCIL: CouncilMember[] = [
   {
@@ -102,25 +104,33 @@ export class ConceptChatService {
       source: 'text',
     });
 
+    // Retrieve project memory context (graceful — returns '' if unavailable)
+    let memoryContext = '';
+    try {
+      memoryContext = await mem0Service.assembleContext(projectId, concept);
+    } catch (e: any) {
+      console.error('[ConceptChat] Memory context retrieval failed:', e.message);
+    }
+
+    const systemPromptWithMemory = memoryContext
+      ? `${CONCEPT_ANALYST_PROMPT}\n\n${memoryContext}`
+      : CONCEPT_ANALYST_PROMPT;
+
     // Send the FULL concept to the analyst — no truncation.
     // Claude Sonnet 4.5 has a 200k token context window; even a 70k char doc is ~18k tokens.
-    const messages: OpenClawMessage[] = [
-      { role: 'system', content: CONCEPT_ANALYST_PROMPT },
-      {
+    const result = await cachedInference.chat(
+      systemPromptWithMemory,
+      [{
         role: 'user',
         content: `Here is my project concept for council evaluation:\n\nTitle: ${title}\n\n${concept}`,
-      },
-    ];
-
-    const response = await openClawClient.chatCompletion({
-      model: 'openclaw:main',
-      messages,
-      max_tokens: 2048,
-      temperature: 0.5,
-    });
+      }],
+      'conversation',
+      'standard',
+      { max_tokens: 2048, temperature: 0.5, project_id: projectId }
+    );
 
     const aiContent =
-      response.choices[0]?.message?.content ||
+      result.content ||
       "I've received your concept. Let me audit it against the council evaluation criteria and identify any gaps.";
 
     const aiMsg = await this.threadService.addMessage(thread.id, {
@@ -128,6 +138,15 @@ export class ConceptChatService {
       content: aiContent,
       source: 'text',
     });
+
+    // Store conversation in Mem0 for cross-session context
+    mem0Service.addMemories(
+      [
+        { role: 'user', content: `Concept for "${title}": ${concept.substring(0, 500)}` },
+        { role: 'assistant', content: aiContent.substring(0, 500) },
+      ],
+      { projectId }
+    ).catch(e => console.error('[ConceptChat] Failed to store memories:', e.message));
 
     return {
       thread_id: thread.id,
@@ -152,37 +171,59 @@ export class ConceptChatService {
     // Build conversation context
     const recentMessages = await this.threadService.getMessages(threadId, CONTEXT_WINDOW);
 
-    const messages: OpenClawMessage[] = [
-      { role: 'system', content: CONCEPT_ANALYST_PROMPT },
-      ...recentMessages.map((m, idx) => {
-        const isLatest = idx === recentMessages.length - 1;
-        const limit = isLatest ? MAX_CURRENT_MSG_CHARS : MAX_MSG_CHARS;
-        const truncated = m.content.length > limit
-          ? m.content.substring(0, limit) + `\n... [truncated — full message is ${m.content.length.toLocaleString()} chars]`
-          : m.content;
-        return {
-          role: m.role as 'user' | 'assistant',
-          content: truncated,
-        };
-      }),
-    ];
+    // Retrieve project memory context from thread's project
+    const thread = await this.threadService.getThread(threadId);
+    let sendMemoryContext = '';
+    if (thread?.project_id) {
+      try {
+        sendMemoryContext = await mem0Service.assembleContext(thread.project_id, content);
+      } catch (e: any) {
+        console.error('[ConceptChat] Memory context retrieval failed:', e.message);
+      }
+    }
 
-    const response = await openClawClient.chatCompletion({
-      model: 'openclaw:main',
-      messages,
-      max_tokens: 1024,
-      temperature: 0.7,
+    const sendSystemPrompt = sendMemoryContext
+      ? `${CONCEPT_ANALYST_PROMPT}\n\n${sendMemoryContext}`
+      : CONCEPT_ANALYST_PROMPT;
+
+    const chatMessages: OpenClawMessage[] = recentMessages.map((m, idx) => {
+      const isLatest = idx === recentMessages.length - 1;
+      const limit = isLatest ? MAX_CURRENT_MSG_CHARS : MAX_MSG_CHARS;
+      const truncated = m.content.length > limit
+        ? m.content.substring(0, limit) + `\n... [truncated — full message is ${m.content.length.toLocaleString()} chars]`
+        : m.content;
+      return {
+        role: m.role as 'user' | 'assistant',
+        content: truncated,
+      };
     });
 
-    const aiContent =
-      response.choices[0]?.message?.content ||
-      'Could you tell me more about that?';
+    const result = await cachedInference.chat(
+      sendSystemPrompt,
+      chatMessages,
+      'conversation',
+      'standard',
+      { max_tokens: 1024, temperature: 0.7, project_id: thread?.project_id }
+    );
+
+    const aiContent = result.content || 'Could you tell me more about that?';
 
     const assistantMessage = await this.threadService.addMessage(threadId, {
       role: 'assistant',
       content: aiContent,
       source: 'text',
     });
+
+    // Store in Mem0
+    if (thread?.project_id) {
+      mem0Service.addMemories(
+        [
+          { role: 'user', content: content.substring(0, 500) },
+          { role: 'assistant', content: aiContent.substring(0, 500) },
+        ],
+        { projectId: thread.project_id }
+      ).catch(e => console.error('[ConceptChat] Failed to store memories:', e.message));
+    }
 
     return { user_message: userMessage, assistant_message: assistantMessage };
   }
@@ -220,10 +261,12 @@ export class ConceptChatService {
 Be comprehensive. Use the specific details from the conversation. Do not omit important details — this summary feeds into council evaluation and PRD generation.`;
 
     try {
-      const response = await openClawClient.complete(
+      const response = await cachedInference.complete(
         `Summarize this concept refinement conversation:\n\n${conversationText}`,
         systemPrompt,
-        { maxTokens: 4000, temperature: 0.3 }
+        'summarization',
+        'standard',
+        { max_tokens: 4000, temperature: 0.3 }
       );
       return response;
     } catch (error: any) {
@@ -323,10 +366,12 @@ Respond ONLY with valid JSON — an array of 3-5 agent definitions:
 ]`;
 
     try {
-      const response = await openClawClient.complete(
+      const response = await cachedInference.complete(
         `Recommend evaluation perspectives for this concept:\n\n${conceptSummary}`,
         systemPrompt,
-        { maxTokens: 1500, temperature: 0.5 }
+        'evaluation',
+        'standard',
+        { max_tokens: 1500, temperature: 0.5 }
       );
 
       const jsonMatch = response.match(/\[[\s\S]*\]/);

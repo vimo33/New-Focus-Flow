@@ -1,4 +1,4 @@
-import { openClawClient, OpenClawMessage } from '../services/openclaw-client.service';
+import { cachedInference } from '../services/cached-inference.service';
 import { AIClassification } from '../models/types';
 
 // Type definitions for Claude AI responses
@@ -28,12 +28,8 @@ export interface IdeaEvaluationResponse {
 }
 
 export class ClaudeClient {
-  private readonly HAIKU_MODEL = 'claude-haiku-4.5-20250514';
-  private readonly SONNET_MODEL = 'claude-sonnet-4.5-20250929';
-
   constructor() {
-    // Uses OpenClaw Gateway for Claude access
-    // Ensure OpenClaw is running: openclaw gateway start
+    // Uses CachedInferenceClient → OpenClaw Gateway for Claude access
   }
 
   /**
@@ -79,14 +75,11 @@ Respond ONLY with valid JSON in this exact format:
 
       const userMessage = `Classify this inbox item:\n\n"${text}"`;
 
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.HAIKU_MODEL,
-          maxTokens: 500,
-          temperature: 0.3,
-        }
+        'fast_classification',
+        'economy',
       );
 
       // Parse the JSON response (model may wrap in markdown code fences)
@@ -117,14 +110,11 @@ Provide clear, concise, and actionable responses.`;
         ? `Context:\n${context}\n\nQuestion:\n${prompt}`
         : prompt;
 
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.SONNET_MODEL,
-          maxTokens: 2000,
-          temperature: 0.7,
-        }
+        'conversation',
+        'standard',
       );
 
       return {
@@ -174,14 +164,11 @@ Respond ONLY with valid JSON in this exact format:
 
       const userMessage = `Evaluate this idea:\n\n"${idea}"\n\nCriteria:\n${criteria}`;
 
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.SONNET_MODEL,
-          maxTokens: 1500,
-          temperature: 0.5,
-        }
+        'evaluation',
+        'standard',
       );
 
       // Parse the JSON response (model may wrap in markdown code fences)
@@ -247,6 +234,7 @@ Respond ONLY with valid JSON in this exact format:
    */
   async healthCheck(): Promise<boolean> {
     try {
+      const { openClawClient } = await import('../services/openclaw-client.service');
       return await openClawClient.healthCheck();
     } catch (error) {
       console.error('OpenClaw health check failed:', error);

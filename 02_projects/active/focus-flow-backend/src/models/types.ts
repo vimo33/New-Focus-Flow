@@ -265,6 +265,27 @@ export interface DashboardSummary {
 }
 
 // ============================================================================
+// Decision Log Types
+// ============================================================================
+
+export type DecisionType = 'council_response' | 'pipeline_gate' | 'strategic' | 'technical' | 'override';
+export type DecisionOutcome = 'pending' | 'succeeded' | 'failed' | 'revised';
+export type DecisionSource = 'user' | 'council' | 'agent';
+
+export interface DecisionEntry {
+  id: string;
+  project_id: string;
+  timestamp: string;
+  decision_type: DecisionType;
+  context: string;
+  decision: string;
+  reasoning: string;
+  alternatives: string[];
+  outcome: DecisionOutcome;
+  source: DecisionSource;
+}
+
+// ============================================================================
 // Orchestrator Types - PRD to Code Pipeline
 // ============================================================================
 
@@ -469,4 +490,237 @@ export interface VoiceCommandRequest {
     current_route?: string;
     recent_items?: string[];
   };
+}
+
+// ============================================================================
+// Phase 4: Generalized Council Types
+// ============================================================================
+
+export type CouncilDecisionType =
+  | 'idea_validation' | 'architecture_review' | 'pricing'
+  | 'go_to_market' | 'risk_assessment' | string;
+
+export type VerdictLevel =
+  | 'strong_proceed' | 'proceed_with_caution' | 'needs_more_info'
+  | 'reconsider' | 'strong_reject';
+
+export interface DimensionScore {
+  dimension: string;
+  score: number;
+  weight: number;
+  reasoning: string;
+}
+
+export interface RecommendedAction {
+  action: string;
+  priority: 'high' | 'medium' | 'low';
+  category: string;
+  can_auto_create_task: boolean;
+  task_template?: {
+    title: string;
+    description: string;
+    category: 'work' | 'personal' | 'scheduled';
+    priority: 'low' | 'medium' | 'high';
+  };
+}
+
+export interface EnhancedAgentEvaluation extends AgentEvaluation {
+  dimension_scores: DimensionScore[];
+  confidence: number;
+  key_insight?: string;
+}
+
+export interface EnhancedCouncilVerdict {
+  id: string;
+  decision_type: CouncilDecisionType;
+  verdict: VerdictLevel;
+  confidence: number;
+  overall_score: number;
+  executive_summary: string;
+  key_insight: string;
+  dimension_scores: DimensionScore[];
+  evaluations: EnhancedAgentEvaluation[];
+  recommended_actions: RecommendedAction[];
+  risks: string[];
+  open_questions: string[];
+  consensus_areas: string[];
+  disagreement_areas: string[];
+  synthesized_reasoning: string;
+  council_composition: string[];
+  created_at: string;
+  project_id?: string;
+  subject_title: string;
+  subject_description: string;
+  // Backward compat fields
+  recommendation: 'approve' | 'reject' | 'needs-info';
+  next_steps: string[];
+}
+
+export interface CouncilDecisionConfig {
+  decision_type: CouncilDecisionType;
+  display_name: string;
+  description: string;
+  default_agent_count: number;
+  required_dimensions: string[];
+  optional_dimensions: string[];
+  dimension_weights: Record<string, number>;
+  agent_selection_prompt: string;
+  synthesis_prompt: string;
+  verdict_thresholds: {
+    strong_proceed: number;
+    proceed_with_caution: number;
+    needs_more_info: number;
+    reconsider: number;
+  };
+  action_templates: RecommendedAction[];
+}
+
+export interface CouncilPanelProposal {
+  decision_type: CouncilDecisionType;
+  proposed_agents: CouncilMember[];
+  reasoning: string;
+  context_summary: string;
+}
+
+export interface PanelModification {
+  action: 'add' | 'remove' | 'swap' | 'custom';
+  agent_name?: string;
+  new_agent?: CouncilMember;
+  description?: string;
+}
+
+// ============================================================================
+// Phase 5: Co-CEO Core Agent Types
+// ============================================================================
+
+export type AgentStatus = 'idle' | 'generating_briefing' | 'awaiting_approval'
+  | 'executing' | 'paused' | 'end_of_day';
+
+export type TrustTier = 1 | 2 | 3;
+
+export type NotificationType =
+  | 'daily_briefing' | 'work_plan' | 'progress_update' | 'stalled_pipeline'
+  | 'approval_request' | 'verdict_delivered' | 'task_overdue'
+  | 'implementation_complete' | 'test_results' | 'deploy_ready'
+  | 'agent_status' | 'cost_alert' | 'end_of_day_summary';
+
+export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent';
+
+export interface AgentAction {
+  id: string;
+  type: string;
+  project_id?: string;
+  description: string;
+  parameters?: Record<string, any>;
+}
+
+export interface PendingApproval {
+  id: string;
+  tier: TrustTier;
+  action: AgentAction;
+  context: string;
+  reasoning: string;
+  created_at: string;
+  expires_at?: string;
+  status: 'pending' | 'approved' | 'rejected' | 'auto_executed' | 'cancelled';
+  resolved_at?: string;
+  feedback?: string;
+}
+
+export interface WorkPlanItem {
+  id: string;
+  project_id: string;
+  action: string;
+  description: string;
+  trust_tier: TrustTier;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  estimated_cost?: string;
+  auto_approved: boolean;
+  status: 'pending' | 'executing' | 'completed' | 'failed' | 'skipped';
+}
+
+export interface WorkPlan {
+  id: string;
+  date: string;
+  items: WorkPlanItem[];
+  approved: boolean;
+  approved_at?: string;
+  created_at: string;
+}
+
+export interface PortfolioOverview {
+  total_projects: number;
+  active_projects: { id: string; title: string; phase: string; sub_state: string; updated_at: string }[];
+  overdue_tasks: Task[];
+  pending_council_verdicts: any[];
+  cross_project_context: string;
+}
+
+export interface Briefing {
+  id: string;
+  date: string;
+  generated_at: string;
+  portfolio_overview: PortfolioOverview;
+  work_plan: WorkPlanItem[];
+  stalled_items: { project_id: string; title: string; phase: string; stalled_since: string; reason: string }[];
+  pending_approvals_summary: { id: string; action: string; tier: TrustTier; created_at: string }[];
+  cost_estimate: { estimated_tokens: number; estimated_cost_usd: number };
+  ai_summary: string;
+}
+
+export interface DailyStats {
+  actions_executed: number;
+  actions_approved: number;
+  actions_rejected: number;
+  briefings_generated: number;
+  notifications_sent: number;
+  ai_calls_made: number;
+  estimated_cost_usd: number;
+}
+
+export interface CoreAgentState {
+  status: AgentStatus;
+  current_briefing_id: string | null;
+  active_work_plan: WorkPlan | null;
+  pending_approvals: PendingApproval[];
+  delayed_executions: PendingApproval[];
+  last_briefing_at: string | null;
+  last_heartbeat_at: string | null;
+  daily_stats: DailyStats;
+  activityLog: AgentActivityEntry[];
+  updated_at: string;
+}
+
+export interface Notification {
+  id: string;
+  type: NotificationType;
+  priority: NotificationPriority;
+  title: string;
+  body: string;
+  data?: Record<string, any>;
+  action_url?: string;
+  requires_response?: boolean;
+  approval_id?: string;
+  created_at: string;
+  read_at?: string;
+  dismissed_at?: string;
+}
+
+export interface AgentActivityEntry {
+  id: string;
+  timestamp: string;
+  type: 'action_executed' | 'action_approved' | 'action_rejected' | 'briefing_generated'
+    | 'work_plan_approved' | 'message_sent' | 'state_change' | 'tool_executed' | 'auto_executed';
+  description: string;
+  action_type?: string;
+  project_id?: string;
+  tier?: TrustTier;
+  result?: 'success' | 'failure';
+  metadata?: Record<string, any>;
+}
+
+export interface AgentResponse {
+  message: string;
+  actions_taken?: string[];
+  state: CoreAgentState;
 }

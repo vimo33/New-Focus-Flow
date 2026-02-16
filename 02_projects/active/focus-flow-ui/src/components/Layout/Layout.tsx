@@ -1,7 +1,9 @@
-import type { ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { VoiceControlFAB } from '../VoiceControl';
 import { PWAInstallPrompt } from '../PWAInstallPrompt';
+import { AgentPanel } from '../Agent/AgentPanel';
+import { useAgentStore } from '../../stores/agent';
 
 interface LayoutProps {
   children: ReactNode;
@@ -23,12 +25,35 @@ const navItems: NavItem[] = [
   { name: 'Sales', path: '/sales', icon: 'monetization_on' },
   { name: 'CRM', path: '/crm', icon: 'contacts' },
   { name: 'Voice', path: '/voice', icon: 'mic' },
+  { name: 'Memory', path: '/memory', icon: 'psychology' },
   { name: 'Uploads', path: '/uploads', icon: 'upload_file' },
+  { name: 'Agent', path: '/agent', icon: 'smart_toy' },
   { name: 'Command', path: '/command', icon: 'terminal' },
 ];
 
 export function Layout({ children }: LayoutProps) {
   const location = useLocation();
+  const [agentPanelOpen, setAgentPanelOpen] = useState(false);
+  const { unreadCount, connectSSE, fetchNotifications } = useAgentStore();
+
+  useEffect(() => {
+    connectSSE();
+    fetchNotifications(true);
+  }, []);
+
+  // Ctrl+. keyboard shortcut to toggle agent panel
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === '.') {
+        const tag = (e.target as HTMLElement)?.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (e.target as HTMLElement)?.isContentEditable) return;
+        e.preventDefault();
+        setAgentPanelOpen(prev => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -128,6 +153,22 @@ export function Layout({ children }: LayoutProps) {
 
         {/* Global Voice Control FAB - Show on all pages except /voice */}
         {!location.pathname.startsWith('/voice') && !location.pathname.startsWith('/command') && <VoiceControlFAB />}
+
+        {/* Agent Panel Toggle */}
+        <button
+          onClick={() => setAgentPanelOpen(!agentPanelOpen)}
+          className="fixed bottom-20 md:bottom-6 right-6 z-40 bg-primary hover:bg-primary/80 text-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center transition-colors"
+        >
+          <span className="material-symbols-outlined">smart_toy</span>
+          {unreadCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+              {unreadCount > 9 ? '9+' : unreadCount}
+            </span>
+          )}
+        </button>
+
+        {/* Agent Panel */}
+        <AgentPanel open={agentPanelOpen} onClose={() => setAgentPanelOpen(false)} />
 
         {/* PWA Install Prompt */}
         <PWAInstallPrompt />

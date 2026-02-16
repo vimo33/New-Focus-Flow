@@ -1,0 +1,36 @@
+{
+  "id": "content-engine",
+  "name": "Content Engine",
+  "version": "1.0.0",
+  "description": "AI-powered content generation service producing blog posts, documentation, proposals, marketing copy, social posts, and emails informed by project context via Mem0.",
+  "capabilities": ["content_creation", "document_generation"],
+  "execution_type": "in-process",
+  "invocation": {
+    "service": "contentEngine",
+    "method": "generate"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["content_type", "brief"],
+    "properties": {
+      "content_type": { "type": "string", "enum": ["blog_post", "documentation", "proposal", "marketing_copy", "social_post", "email"] },
+      "brief": { "type": "string", "description": "What to write about" },
+      "project_id": { "type": "string", "description": "Optional project ID for Mem0 context injection" },
+      "tone": { "type": "string", "enum": ["professional", "casual", "technical", "persuasive"], "default": "professional" },
+      "max_length": { "type": "number", "default": 2000, "description": "Maximum word count" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "content": { "type": "string" },
+      "content_type": { "type": "string" },
+      "word_count": { "type": "number" },
+      "model_used": { "type": "string" }
+    }
+  },
+  "trust_level": "trusted",
+  "requires_approval": false,
+  "max_execution_seconds": 60,
+  "cost_estimate": "medium"
+}

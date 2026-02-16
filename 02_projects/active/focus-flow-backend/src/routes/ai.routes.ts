@@ -3,6 +3,8 @@ import { AICouncil } from '../ai/ai-council';
 import { ClassificationService } from '../services/classification.service';
 import { VaultService } from '../services/vault.service';
 import { Idea, InboxItem, CouncilVerdict } from '../models/types';
+import { councilFramework } from '../ai/council-framework';
+import { councilComposer } from '../ai/council-composer';
 
 const router = Router();
 const aiCouncil = new AICouncil();
@@ -42,13 +44,20 @@ router.post('/ideas/:id/validate', async (req: Request, res: Response) => {
       });
     }
 
-    // Run AI Council validation
+    // Run AI Council validation — use config-driven auto-compose when available
     console.log(`Running AI Council validation for idea: ${ideaId}`);
-    const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
+    const ideaConfig = await councilFramework.getConfig('idea_validation');
+    let council;
+    if (ideaConfig) {
+      council = await councilComposer.autoCompose('idea_validation', idea.title, idea.description || '');
+    } else {
+      const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
+      council = DEFAULT_COUNCIL;
+    }
     const verdict = await aiCouncil.validateWithCouncil(
       idea.title,
       idea.description || '',
-      DEFAULT_COUNCIL
+      council
     );
 
     res.status(200).json({

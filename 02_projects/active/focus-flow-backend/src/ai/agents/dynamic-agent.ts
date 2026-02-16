@@ -1,15 +1,14 @@
-import { openClawClient } from '../../services/openclaw-client.service';
-import { AgentEvaluation, CouncilMember } from '../../models/types';
+import { cachedInference } from '../../services/cached-inference.service';
+import { AgentEvaluation, CouncilMember, DimensionScore } from '../../models/types';
 
 /**
  * DynamicAgent — generic council agent executor.
  *
  * Takes a CouncilMember definition (name, role, focus, evaluation_criteria)
  * and produces an AgentEvaluation via web-search-enabled OpenClaw call.
+ * Enhanced in Phase 4 to return dimension_scores, confidence, and key_insight.
  */
 export class DynamicAgent {
-  private readonly MODEL = 'anthropic/claude-opus-4-6';
-
   async evaluate(
     member: CouncilMember,
     ideaTitle: string,
@@ -25,9 +24,15 @@ After your research, respond ONLY with valid JSON in this exact format:
 {
   "score": 0-10,
   "reasoning": "detailed analysis from your perspective, citing specific findings from your research",
-  "concerns": ["concern 1", "concern 2", ...]
+  "concerns": ["concern 1", "concern 2", ...],
+  "confidence": 0.0-1.0,
+  "key_insight": "single most important finding from your analysis",
+  "dimension_scores": [
+    { "dimension": "dimension_name", "score": 0-10, "weight": 0.0-1.0, "reasoning": "brief justification" }
+  ]
 }
 
+The dimension_scores should cover each of your evaluation criteria as a scored dimension.
 Be constructive but realistic. Ground your assessment in real data from your research.`;
 
     // If custom system_prompt provided, use it + append scoring format
@@ -59,12 +64,13 @@ Title: ${ideaTitle}
 Description: ${ideaDescription}`;
 
     try {
-      const responseText = await openClawClient.completeWithResearch(
+      const responseText = await cachedInference.completeWithResearch(
         userMessage,
         systemPrompt,
+        'evaluation',
+        'standard',
         {
-          model: this.MODEL,
-          maxTokens: member.max_tokens || 1500,
+          max_tokens: member.max_tokens || 1500,
           temperature: 0.5,
         }
       );
@@ -75,12 +81,23 @@ Description: ${ideaDescription}`;
       }
       const response = JSON.parse(jsonMatch[0]);
 
+      // Build dimension_scores: use model's response or synthesize from criteria + overall score
+      const dimensionScores: DimensionScore[] = response.dimension_scores
+        && Array.isArray(response.dimension_scores)
+        && response.dimension_scores.length > 0
+        ? response.dimension_scores
+        : this.synthesizeDimensionScores(response.score, member.evaluation_criteria);
+
       return {
         agent_name: member.agent_name,
         score: response.score,
         reasoning: response.reasoning,
         concerns: response.concerns || [],
-      };
+        // Enhanced fields (EnhancedAgentEvaluation extends AgentEvaluation)
+        dimension_scores: dimensionScores,
+        confidence: typeof response.confidence === 'number' ? response.confidence : 0.7,
+        key_insight: response.key_insight || undefined,
+      } as AgentEvaluation;
     } catch (error) {
       if (error instanceof SyntaxError) {
         console.error(`[DynamicAgent:${member.agent_name}] JSON parse failed`);
@@ -88,5 +105,25 @@ Description: ${ideaDescription}`;
       }
       throw error;
     }
+  }
+
+  /**
+   * Fallback: synthesize dimension scores from the overall score and evaluation criteria.
+   * Used when the model doesn't return structured dimension_scores.
+   */
+  private synthesizeDimensionScores(
+    overallScore: number,
+    criteria?: string[]
+  ): DimensionScore[] {
+    if (!criteria || criteria.length === 0) {
+      return [{ dimension: 'overall', score: overallScore, weight: 1.0, reasoning: 'Single overall assessment' }];
+    }
+    const weight = 1.0 / criteria.length;
+    return criteria.map(criterion => ({
+      dimension: criterion.toLowerCase().replace(/\s+/g, '_'),
+      score: overallScore,
+      weight: Math.round(weight * 100) / 100,
+      reasoning: `Derived from overall score for ${criterion}`,
+    }));
   }
 }

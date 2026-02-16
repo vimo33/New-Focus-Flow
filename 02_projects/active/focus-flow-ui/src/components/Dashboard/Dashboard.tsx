@@ -464,6 +464,89 @@ function QuickActions({ onNewCapture, onViewInbox, onNewProject }: QuickActionsP
   );
 }
 
+interface AgentBriefCardProps {
+  loading: boolean;
+}
+
+function AgentBriefCard({ loading }: AgentBriefCardProps) {
+  const navigate = useNavigate();
+  const [briefing, setBriefing] = useState<any>(null);
+  const [agentState, setAgentState] = useState<any>(null);
+
+  useEffect(() => {
+    const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    Promise.all([
+      fetch(`${API_BASE}/agent/briefing`).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch(`${API_BASE}/agent/state`).then(r => r.ok ? r.json() : null).catch(() => null),
+    ]).then(([b, s]) => {
+      setBriefing(b);
+      setAgentState(s);
+    });
+  }, []);
+
+  if (loading || (!briefing && !agentState)) {
+    return null; // Graceful fallback: don't show card if no data
+  }
+
+  const statusColors: Record<string, string> = {
+    idle: 'bg-gray-500',
+    generating_briefing: 'bg-blue-500',
+    awaiting_approval: 'bg-yellow-500',
+    executing: 'bg-green-500',
+    paused: 'bg-orange-500',
+  };
+
+  const pendingCount = agentState?.pending_approvals?.filter((a: any) => a.status === 'pending').length || 0;
+  const stats = agentState?.daily_stats;
+
+  return (
+    <div className="col-span-1 md:col-span-1 lg:col-span-1 xl:col-span-6">
+      <div
+        className="bg-white dark:bg-card-dark rounded-xl border border-slate-200 dark:border-white/5 p-6 h-full cursor-pointer hover:border-primary/30 transition-colors"
+        onClick={() => navigate('/agent')}
+        data-testid="agent-brief-card"
+      >
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${statusColors[agentState?.status || 'idle']}`} />
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white">Co-CEO Agent</h3>
+          </div>
+          <span className="text-xs text-slate-500 capitalize">{agentState?.status?.replace(/_/g, ' ') || 'idle'}</span>
+        </div>
+
+        {briefing?.ai_summary && (
+          <p className="text-sm text-slate-600 dark:text-slate-300 line-clamp-2 mb-4">
+            {briefing.ai_summary}
+          </p>
+        )}
+
+        {pendingCount > 0 && (
+          <div className="text-sm text-yellow-500 mb-3">
+            {pendingCount} pending {pendingCount === 1 ? 'approval' : 'approvals'}
+          </div>
+        )}
+
+        {stats && (
+          <div className="flex gap-4 text-center">
+            <div>
+              <p className="text-lg font-bold text-slate-900 dark:text-white">{stats.actions_executed}</p>
+              <p className="text-xs text-slate-500">Executed</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-slate-900 dark:text-white">{stats.briefings_generated}</p>
+              <p className="text-xs text-slate-500">Briefings</p>
+            </div>
+            <div>
+              <p className="text-lg font-bold text-slate-900 dark:text-white">{stats.ai_calls_made}</p>
+              <p className="text-xs text-slate-500">AI Calls</p>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export function Dashboard() {
   const navigate = useNavigate();
   const { refreshInboxCount } = useAppStore();
@@ -577,6 +660,7 @@ export function Dashboard() {
         <ActiveProjects projects={projects} loading={loading} />
         <RecentActivity summary={summary} loading={loading} />
         <IdeasPipeline ideas={ideas} loading={loading} />
+        <AgentBriefCard loading={loading} />
       </div>
     </div>
   );

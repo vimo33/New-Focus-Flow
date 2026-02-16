@@ -6,12 +6,10 @@
  * Claude responds with JSON tool calls, we execute them, and loop.
  */
 
-import {
-  openClawClient,
-  OpenClawMessage,
-} from '../services/openclaw-client.service';
+import { cachedInference } from '../services/cached-inference.service';
+import { OpenClawMessage } from '../services/openclaw-client.service';
 import { ThreadService } from '../services/thread.service';
-import { memoryService } from '../services/memory.service';
+import { mem0Service } from '../services/mem0.service';
 import { PromptSanitizer } from '../utils/prompt-sanitizer';
 import { ORCHESTRATOR_TOOLS } from './tools';
 import { executeTool, ToolResult } from './tool-executor';
@@ -111,15 +109,24 @@ export class OrchestratorService {
       content: m.content,
     }));
 
-    // 4. Search mem0 for relevant context
+    // 4. Search mem0 for relevant context (project-scoped when available)
     let memoryContext = '';
-    if (memoryService.isAvailable) {
-      const memories = await memoryService.searchMemory(content, DEFAULT_USER, 3);
-      if (memories.length > 0) {
-        memoryContext =
-          '\n\nRelevant context from your memory:\n' +
-          memories.map(m => `- ${m.memory}`).join('\n');
+    try {
+      const threadData = await threadService.getThread(threadId);
+      const projectId = threadData?.project_id;
+
+      if (projectId) {
+        memoryContext = await mem0Service.assembleContext(projectId, content);
+      } else if (mem0Service.isAvailable) {
+        const memories = await mem0Service.searchMemories(content, { limit: 5 });
+        if (memories.length > 0) {
+          memoryContext =
+            '\n\nRelevant context from your memory:\n' +
+            memories.map(m => `- ${m.memory}`).join('\n');
+        }
       }
+    } catch (e: any) {
+      console.error('[Orchestrator] Memory retrieval failed:', e.message);
     }
 
     // 5. Build messages
@@ -135,10 +142,12 @@ export class OrchestratorService {
     let finalContent = '';
 
     for (let round = 0; round < MAX_TOOL_ROUNDS; round++) {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         apiMessages[apiMessages.length - 1].content,
         systemPrompt,
-        { maxTokens: 2048, temperature: 0.5 }
+        'conversation',
+        'standard',
+        { max_tokens: 2048, temperature: 0.5 }
       );
 
       // Check if response contains a tool call
@@ -208,14 +217,24 @@ export class OrchestratorService {
       await threadService.updateThread(threadId, { title });
     }
 
-    // 9. Store in mem0
-    if (memoryService.isAvailable) {
+    // 9. Store in mem0 (project-scoped when available)
+    try {
+      const threadForMemory = await threadService.getThread(threadId);
       const summary = allToolCalls.length > 0
         ? `User: "${content}" → Tools: ${allToolCalls.map(tc => tc.tool).join(', ')}`
         : `User: "${content}"`;
-      memoryService.addMemory(summary, DEFAULT_USER).catch(err =>
+
+      mem0Service.addMemories(
+        [
+          { role: 'user', content: content.substring(0, 500) },
+          { role: 'assistant', content: (finalContent || summary).substring(0, 500) },
+        ],
+        { projectId: threadForMemory?.project_id }
+      ).catch(err =>
         console.error('[Orchestrator] Failed to store memory:', err.message)
       );
+    } catch (err: any) {
+      console.error('[Orchestrator] Failed to store memory:', err.message);
     }
 
     return {

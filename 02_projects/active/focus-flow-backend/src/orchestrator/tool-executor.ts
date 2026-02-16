@@ -6,7 +6,7 @@
  */
 
 import { VaultService } from '../services/vault.service';
-import { memoryService } from '../services/memory.service';
+import { mem0Service } from '../services/mem0.service';
 import { aiCouncil } from '../ai/ai-council';
 import { classificationService } from '../services/classification.service';
 import { crmService } from '../services/crm.service';
@@ -341,7 +341,10 @@ export async function executeTool(
 
       // ==================== Memory ====================
       case 'search_memory': {
-        const memories = await memoryService.searchMemory(input.query, DEFAULT_USER);
+        const memories = await mem0Service.searchMemories(input.query, {
+          userId: DEFAULT_USER,
+          limit: input.limit || 10,
+        });
         return {
           success: true,
           data: {

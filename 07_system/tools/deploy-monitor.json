@@ -1,0 +1,33 @@
+{
+  "id": "deploy-monitor",
+  "name": "Deploy Monitor",
+  "version": "1.0.0",
+  "description": "Deployment orchestration and monitoring tool for managing systemd services, running health checks, and tracking deployment status.",
+  "capabilities": ["deployment", "monitoring"],
+  "execution_type": "cli",
+  "invocation": {
+    "command": "systemctl status"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["action"],
+    "properties": {
+      "action": { "type": "string", "enum": ["status", "deploy", "rollback", "health-check"], "description": "Deployment action to perform" },
+      "service": { "type": "string", "description": "Target service name" },
+      "version": { "type": "string", "description": "Version to deploy" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "status": { "type": "string" },
+      "service": { "type": "string" },
+      "uptime": { "type": "string" },
+      "health": { "type": "boolean" }
+    }
+  },
+  "trust_level": "privileged",
+  "requires_approval": true,
+  "max_execution_seconds": 120,
+  "cost_estimate": "free"
+}

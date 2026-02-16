@@ -1,0 +1,60 @@
+{
+  "decision_type": "architecture_review",
+  "display_name": "Architecture Review",
+  "description": "Evaluate architectural decisions covering scalability, maintainability, security, and performance trade-offs.",
+  "default_agent_count": 4,
+  "required_dimensions": ["scalability", "maintainability", "security", "performance"],
+  "optional_dimensions": ["cost_efficiency", "developer_experience", "observability"],
+  "dimension_weights": {
+    "scalability": 0.25,
+    "maintainability": 0.25,
+    "security": 0.3,
+    "performance": 0.2
+  },
+  "agent_selection_prompt": "Analyze this architecture decision and recommend 4 specialist review agents.\n\nSubject: {subject}\n\nContext: {context}\n\nEach agent must score these dimensions: scalability, maintainability, security, performance.\n\nRespond ONLY with a JSON array of agent definitions:\n[\n  {\n    \"agent_name\": \"Specific Name\",\n    \"role\": \"Area of Expertise\",\n    \"focus\": \"What this agent evaluates\",\n    \"evaluation_criteria\": [\"criterion 1\", \"criterion 2\", \"criterion 3\"]\n  }\n]",
+  "synthesis_prompt": "You are synthesizing an architecture review council verdict.\n\nProvide:\n1. An executive summary (2-3 sentences)\n2. A single key architectural insight\n3. 3-5 recommended actions with priorities\n4. Architectural risks and technical debt concerns\n5. Open questions about the design\n\nRespond ONLY with valid JSON:\n{\n  \"executive_summary\": \"...\",\n  \"key_insight\": \"...\",\n  \"recommended_actions\": [{\"action\": \"...\", \"priority\": \"high|medium|low\", \"category\": \"architecture|security|performance\", \"can_auto_create_task\": true}],\n  \"risks\": [\"risk 1\"],\n  \"open_questions\": [\"question 1\"]\n}",
+  "verdict_thresholds": {
+    "strong_proceed": 8.0,
+    "proceed_with_caution": 6.5,
+    "needs_more_info": 5.0,
+    "reconsider": 3.0
+  },
+  "action_templates": [
+    {
+      "action": "Create architecture decision record (ADR)",
+      "priority": "high",
+      "category": "architecture",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Document architecture decision record",
+        "description": "Create ADR documenting the reviewed architecture decision and council recommendations",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Security threat modeling",
+      "priority": "high",
+      "category": "security",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Conduct security threat modeling",
+        "description": "Perform STRIDE analysis on the proposed architecture",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Performance benchmark plan",
+      "priority": "medium",
+      "category": "performance",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Design performance benchmarks",
+        "description": "Define key metrics and create benchmark tests for the architecture",
+        "category": "work",
+        "priority": "medium"
+      }
+    }
+  ]
+}

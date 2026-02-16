@@ -1,4 +1,4 @@
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 import { PRDDocument, Specification } from '../models/types';
 
 
@@ -9,11 +9,8 @@ import { PRDDocument, Specification } from '../models/types';
  * including frontend components, backend endpoints, and data models.
  */
 export class SpecGeneratorService {
-  private readonly MODEL = 'claude-sonnet-4.5-20250929';
-
   constructor() {
-    // Uses OpenClaw Gateway for Claude access
-    // Ensure OpenClaw is running: openclaw gateway start
+    // Uses CachedInferenceClient → OpenClaw Gateway for Claude access
   }
 
   /**
@@ -71,14 +68,12 @@ ${prd.constraints ? `Constraints:\n${prd.constraints.join('\n')}` : ''}
 ${prd.success_metrics ? `Success Metrics:\n${prd.success_metrics.join('\n')}` : ''}`;
 
     try {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.MODEL,
-          maxTokens: 4000,
-          temperature: 0.3, // Lower for consistency
-        }
+        'code_generation',
+        'standard',
+        { max_tokens: 4000, temperature: 0.3 }
       );
 
       const specs = JSON.parse(responseText) as Specification[];
@@ -116,14 +111,12 @@ ${JSON.stringify(specs, null, 2)}
 User Feedback: ${feedback}`;
 
     try {
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.MODEL,
-          maxTokens: 4000,
-          temperature: 0.3,
-        }
+        'code_generation',
+        'standard',
+        { max_tokens: 4000, temperature: 0.3 }
       );
 
       const refined = JSON.parse(responseText) as Specification[];

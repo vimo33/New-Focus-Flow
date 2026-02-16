@@ -20,6 +20,8 @@ const CRMDetail = lazy(() => import('./components/CRM/CRMDetail').then(module =>
 const Voice = lazy(() => import('./components/Voice/Voice').then(module => ({ default: module.Voice })))
 const Settings = lazy(() => import('./components/Settings/Settings').then(module => ({ default: module.Settings })))
 const Upload = lazy(() => import('./components/Upload/Upload').then(module => ({ default: module.Upload })))
+const Memory = lazy(() => import('./components/Memory/Memory').then(module => ({ default: module.Memory })))
+const AgentBriefing = lazy(() => import('./components/Agent/BriefingView').then(module => ({ default: module.BriefingView })))
 
 function App() {
   return (
@@ -44,6 +46,8 @@ function App() {
             <Route path="/voice" element={<Voice />} />
             <Route path="/voice/:threadId" element={<Voice />} />
             <Route path="/uploads" element={<Upload />} />
+            <Route path="/memory" element={<Memory />} />
+            <Route path="/agent" element={<AgentBriefing />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </Suspense>

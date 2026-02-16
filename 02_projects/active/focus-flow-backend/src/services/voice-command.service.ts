@@ -1,9 +1,7 @@
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 import { VoiceCommandIntent, VoiceCommandRequest } from '../models/types';
 
 export class VoiceCommandService {
-  private readonly SONNET_MODEL = 'claude-sonnet-4.5-20250929';
-
   /**
    * Extract JSON from a response that may be wrapped in markdown code fences
    */
@@ -91,14 +89,12 @@ Respond ONLY with valid JSON in this exact format:
 
       const userMessage = `${contextInfo}Classify this voice command:\n\n"${request.command}"`;
 
-      const responseText = await openClawClient.complete(
+      const responseText = await cachedInference.complete(
         userMessage,
         systemPrompt,
-        {
-          model: this.SONNET_MODEL,
-          maxTokens: 800,
-          temperature: 0.3,
-        }
+        'fast_classification',
+        'standard',
+        { max_tokens: 800, temperature: 0.3 }
       );
 
       // Parse the JSON response
@@ -148,6 +144,7 @@ Respond ONLY with valid JSON in this exact format:
    */
   async healthCheck(): Promise<boolean> {
     try {
+      const { openClawClient } = await import('./openclaw-client.service');
       return await openClawClient.healthCheck();
     } catch (error) {
       console.error('Voice command service health check failed:', error);

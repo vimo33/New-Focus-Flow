@@ -1,6 +1,7 @@
 import { ThreadMessage } from '../models/types';
 import { ThreadService } from './thread.service';
-import { openClawClient, OpenClawMessage } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
+import { OpenClawMessage } from './openclaw-client.service';
 
 const SYSTEM_PROMPT = `You are Focus Flow, a helpful AI assistant for productivity and life management. You help the user manage their tasks, projects, schedule, and well-being.
 
@@ -39,24 +40,21 @@ export class ThreadChatService {
     // Build conversation context from recent messages
     const recentMessages = await this.threadService.getMessages(threadId, CONTEXT_WINDOW);
 
-    const messages: OpenClawMessage[] = [
-      { role: 'system', content: SYSTEM_PROMPT },
-      ...recentMessages.map((m) => ({
-        role: m.role as 'user' | 'assistant',
-        content: m.content,
-      })),
-    ];
+    const chatMessages: OpenClawMessage[] = recentMessages.map((m) => ({
+      role: m.role as 'user' | 'assistant',
+      content: m.content,
+    }));
 
-    // Call AI
-    const response = await openClawClient.chatCompletion({
-      model: 'openclaw:main',
-      messages,
-      max_tokens: 1024,
-      temperature: 0.7,
-    });
+    // Call AI via cached inference
+    const result = await cachedInference.chat(
+      SYSTEM_PROMPT,
+      chatMessages,
+      'conversation',
+      'standard',
+      { max_tokens: 1024, temperature: 0.7 }
+    );
 
-    const assistantContent =
-      response.choices[0]?.message?.content || 'Sorry, I could not generate a response.';
+    const assistantContent = result.content || 'Sorry, I could not generate a response.';
 
     // Save assistant message
     const assistantMessage = await this.threadService.addMessage(threadId, {
@@ -76,10 +74,12 @@ export class ThreadChatService {
 
   private async autoTitle(threadId: string, firstMessage: string): Promise<void> {
     try {
-      const title = await openClawClient.complete(
+      const title = await cachedInference.complete(
         `Generate a very short title (3-6 words, no quotes) for a conversation that starts with: "${firstMessage.slice(0, 200)}"`,
         'You generate short conversation titles. Respond with ONLY the title, nothing else.',
-        { maxTokens: 30, temperature: 0.5 }
+        'summarization',
+        'economy',
+        { max_tokens: 30, temperature: 0.5 }
       );
       const cleanTitle = title.trim().replace(/^["']|["']$/g, '').slice(0, 60);
       if (cleanTitle) {

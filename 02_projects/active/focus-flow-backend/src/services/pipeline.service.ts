@@ -5,7 +5,7 @@ import { DesignParserService } from './design-parser.service';
 import { CodeGeneratorService } from './code-generator.service';
 import { ValidatorService } from './validator.service';
 import { DeployerService } from './deployer.service';
-import { openClawClient } from './openclaw-client.service';
+import { cachedInference } from './cached-inference.service';
 import { designService } from './design.service';
 import { conceptChatService } from './concept-chat.service';
 import { aiCouncil } from '../ai/ai-council';
@@ -927,10 +927,13 @@ Respond with JSON:
 }`;
 
     try {
-      const response = await openClawClient.complete(userMessage, systemPrompt, {
-        maxTokens: 3000,
-        temperature: 0.4,
-      });
+      const response = await cachedInference.complete(
+        userMessage,
+        systemPrompt,
+        'content_creation',
+        'standard',
+        { max_tokens: 3000, temperature: 0.4 }
+      );
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as PRDDocument;
@@ -966,10 +969,13 @@ User Feedback: ${feedback}
 Respond with the updated specs array in the same JSON format.`;
 
     try {
-      const response = await openClawClient.complete(userMessage, systemPrompt, {
-        maxTokens: 4000,
-        temperature: 0.3,
-      });
+      const response = await cachedInference.complete(
+        userMessage,
+        systemPrompt,
+        'code_generation',
+        'standard',
+        { max_tokens: 4000, temperature: 0.3 }
+      );
       const jsonMatch = response.match(/\[[\s\S]*\]/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as Specification[];
@@ -1006,10 +1012,13 @@ Respond with JSON:
 }`;
 
     try {
-      const response = await openClawClient.complete(userMessage, systemPrompt, {
-        maxTokens: 3000,
-        temperature: 0.5,
-      });
+      const response = await cachedInference.complete(
+        userMessage,
+        systemPrompt,
+        'content_creation',
+        'standard',
+        { max_tokens: 3000, temperature: 0.5 }
+      );
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as DesignSystem;
@@ -1053,10 +1062,13 @@ Feedback: ${feedback}
 Respond with the updated design system as JSON.`;
 
     try {
-      const response = await openClawClient.complete(userMessage, systemPrompt, {
-        maxTokens: 3000,
-        temperature: 0.5,
-      });
+      const response = await cachedInference.complete(
+        userMessage,
+        systemPrompt,
+        'content_creation',
+        'standard',
+        { max_tokens: 3000, temperature: 0.5 }
+      );
       const jsonMatch = response.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         return JSON.parse(jsonMatch[0]) as DesignSystem;
