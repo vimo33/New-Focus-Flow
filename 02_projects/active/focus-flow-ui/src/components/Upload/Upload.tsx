@@ -2,8 +2,8 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { api } from '../../services/api';
 import type { UploadedFile } from '../../services/api';
 
-const ACCEPTED_TYPES = '.docx,.pdf,.md,.txt,.json,.csv,.png,.jpg,.jpeg,.svg';
-const MAX_SIZE_MB = 10;
+const ACCEPTED_TYPES = '.docx,.pdf,.md,.txt,.json,.csv,.png,.jpg,.jpeg,.svg,.zip,.html';
+const MAX_SIZE_MB = 50;
 
 function formatBytes(bytes: number): string {
   if (bytes === 0) return '0 B';

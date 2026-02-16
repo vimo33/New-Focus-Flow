@@ -13,7 +13,7 @@ if (!fs.existsSync(UPLOAD_DIR)) {
 }
 
 // Allowed file extensions
-const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.md', '.txt', '.json', '.csv', '.png', '.jpg', '.jpeg', '.svg'];
+const ALLOWED_EXTENSIONS = ['.docx', '.pdf', '.md', '.txt', '.json', '.csv', '.png', '.jpg', '.jpeg', '.svg', '.zip', '.html'];
 
 // Configure multer disk storage
 const storage = multer.diskStorage({
@@ -30,7 +30,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage,
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
   fileFilter: (_req, file, cb) => {
     const ext = path.extname(file.originalname).toLowerCase();
     if (ALLOWED_EXTENSIONS.includes(ext)) {
