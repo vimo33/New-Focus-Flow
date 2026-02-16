@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import { openClawClient, OpenClawMessage, OpenClawResponse } from './openclaw-client.service';
 import { modelRouter, TaskType, BudgetTier } from './model-router.service';
-import { inferenceLogger, InferenceLogEntry } from './inference-logger.service';
+import { inferenceLogger, InferenceLogEntry, estimateCost } from './inference-logger.service';
 import { mem0Service } from './mem0.service';
 
 export interface InferenceRequest {
@@ -15,6 +15,7 @@ export interface InferenceRequest {
   temperature?: number;
   model?: string;
   _internal?: boolean;
+  caller?: string;
 }
 
 export interface InferenceResult {
@@ -83,10 +84,17 @@ class CachedInferenceClient {
 
     // If tools present, skip response cache (tool calls are non-deterministic)
     if (request.tools && request.tools.length > 0) {
-      const result = await this.callWithTools(model, messages, max_tokens, temperature, request.tools, request._internal);
-      const latency_ms = Date.now() - startTime;
-      this.logRequest(request, model, result, latency_ms, false);
-      return { ...result, latency_ms, cached: false };
+      try {
+        const result = await this.callWithTools(model, messages, max_tokens, temperature, request.tools, request._internal);
+        const latency_ms = Date.now() - startTime;
+        this.logRequest(request, model, result, latency_ms, false, true);
+        return { ...result, latency_ms, cached: false };
+      } catch (err: any) {
+        const latency_ms = Date.now() - startTime;
+        const failResult: InferenceResult = { content: '', model, usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }, cached: false, latency_ms };
+        this.logRequest(request, model, failResult, latency_ms, false, false, err.message);
+        throw err;
+      }
     }
 
     // Check response cache
@@ -95,22 +103,29 @@ class CachedInferenceClient {
     if (cached && cached.expires > Date.now()) {
       this.cacheHits++;
       const latency_ms = Date.now() - startTime;
-      this.logRequest(request, model, cached.value, latency_ms, true);
+      this.logRequest(request, model, cached.value, latency_ms, true, true);
       return { ...cached.value, latency_ms, cached: true };
     }
 
     // Call OpenClaw
-    const result = await this.callOpenClaw(model, messages, max_tokens, temperature, request._internal);
-    const latency_ms = Date.now() - startTime;
+    try {
+      const result = await this.callOpenClaw(model, messages, max_tokens, temperature, request._internal);
+      const latency_ms = Date.now() - startTime;
 
-    // Store in cache
-    this.responseCache.set(cacheKey, {
-      value: result,
-      expires: Date.now() + RESPONSE_CACHE_TTL_MS,
-    });
+      // Store in cache
+      this.responseCache.set(cacheKey, {
+        value: result,
+        expires: Date.now() + RESPONSE_CACHE_TTL_MS,
+      });
 
-    this.logRequest(request, model, result, latency_ms, false);
-    return { ...result, latency_ms, cached: false };
+      this.logRequest(request, model, result, latency_ms, false, true);
+      return { ...result, latency_ms, cached: false };
+    } catch (err: any) {
+      const latency_ms = Date.now() - startTime;
+      const failResult: InferenceResult = { content: '', model, usage: { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 }, cached: false, latency_ms };
+      this.logRequest(request, model, failResult, latency_ms, false, false, err.message);
+      throw err;
+    }
   }
 
   /**
@@ -121,7 +136,7 @@ class CachedInferenceClient {
     systemPrompt: string,
     taskType: TaskType,
     budgetTier: BudgetTier,
-    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string }
+    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string; caller?: string }
   ): Promise<string> {
     const result = await this.infer({
       task_type: taskType,
@@ -132,6 +147,7 @@ class CachedInferenceClient {
       temperature: options?.temperature,
       model: options?.model,
       project_id: options?.project_id,
+      caller: options?.caller,
       _internal: true,
     });
     return result.content;
@@ -145,7 +161,7 @@ class CachedInferenceClient {
     messages: OpenClawMessage[],
     taskType: TaskType,
     budgetTier: BudgetTier,
-    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string; _internal?: boolean }
+    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string; _internal?: boolean; caller?: string }
   ): Promise<InferenceResult> {
     return this.infer({
       task_type: taskType,
@@ -157,6 +173,7 @@ class CachedInferenceClient {
       model: options?.model,
       project_id: options?.project_id,
       _internal: options?._internal,
+      caller: options?.caller,
     });
   }
 
@@ -168,7 +185,7 @@ class CachedInferenceClient {
     systemPrompt: string,
     taskType: TaskType,
     budgetTier: BudgetTier,
-    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string }
+    options?: { max_tokens?: number; temperature?: number; model?: string; project_id?: string; caller?: string }
   ): Promise<string> {
     const result = await this.infer({
       task_type: taskType,
@@ -182,6 +199,7 @@ class CachedInferenceClient {
       temperature: options?.temperature,
       model: options?.model,
       project_id: options?.project_id,
+      caller: options?.caller,
       _internal: true,
     });
     return result.content;
@@ -284,7 +302,9 @@ class CachedInferenceClient {
     model: string,
     result: InferenceResult,
     latency_ms: number,
-    cached: boolean
+    cached: boolean,
+    success: boolean = true,
+    error?: string
   ): void {
     const entry: InferenceLogEntry = {
       timestamp: new Date().toISOString(),
@@ -297,6 +317,10 @@ class CachedInferenceClient {
       latency_ms,
       cached,
       project_id: request.project_id,
+      caller: request.caller,
+      estimated_cost_usd: cached ? 0 : estimateCost(model, result.usage.prompt_tokens, result.usage.completion_tokens),
+      success,
+      error,
     };
     inferenceLogger.log(entry);
   }

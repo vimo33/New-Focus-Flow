@@ -94,7 +94,7 @@ Respond ONLY with valid JSON in this exact format:
         systemPrompt,
         'fast_classification',
         'standard',
-        { max_tokens: 800, temperature: 0.3 }
+        { max_tokens: 800, temperature: 0.3, caller: 'voice-command' }
       );
 
       // Parse the JSON response

@@ -163,7 +163,7 @@ Provide synthesized reasoning and actionable next steps. Ground your synthesis i
         systemPrompt,
         'synthesis',
         'standard',
-        { max_tokens: 2000, temperature: 0.5 }
+        { max_tokens: 2000, temperature: 0.5, caller: 'council' }
       );
 
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);

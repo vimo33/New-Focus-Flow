@@ -147,7 +147,7 @@ export class OrchestratorService {
         systemPrompt,
         'conversation',
         'standard',
-        { max_tokens: 2048, temperature: 0.5 }
+        { max_tokens: 2048, temperature: 0.5, caller: 'orchestrator' }
       );
 
       // Check if response contains a tool call

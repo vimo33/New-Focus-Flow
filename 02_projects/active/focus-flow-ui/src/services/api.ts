@@ -1275,6 +1275,27 @@ export class VaultAPI {
   }
 
   // ============================================================================
+  // Usage / Inference Cost Methods
+  // ============================================================================
+
+  async getUsageSummary(days?: number, caller?: string): Promise<any> {
+    const params = new URLSearchParams();
+    if (days) params.set('days', String(days));
+    if (caller) params.set('caller', caller);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/usage/summary${qs}`);
+  }
+
+  async getUsageRaw(limit?: number, offset?: number, caller?: string): Promise<any> {
+    const params = new URLSearchParams();
+    if (limit) params.set('limit', String(limit));
+    if (offset) params.set('offset', String(offset));
+    if (caller) params.set('caller', caller);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/usage/raw${qs}`);
+  }
+
+  // ============================================================================
   // Portfolio Methods
   // ============================================================================
 
