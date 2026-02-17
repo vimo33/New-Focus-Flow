@@ -239,7 +239,7 @@ class OrchestratorLLMStream(llm.LLMStream):
             async with session.post(
                 url,
                 json=payload,
-                timeout=aiohttp.ClientTimeout(total=120),
+                timeout=aiohttp.ClientTimeout(total=600),  # 10 min — matches council pipeline timeout
             ) as resp:
                 if resp.status >= 400:
                     error_text = await resp.text()
@@ -276,7 +276,7 @@ class OrchestratorLLMStream(llm.LLMStream):
             )
 
         except asyncio.TimeoutError:
-            logger.error("Orchestrator request timed out after 120s")
+            logger.error("Orchestrator request timed out after 600s")
             self._event_ch.send_nowait(
                 llm.ChatChunk(
                     id="orchestrator-timeout",
