@@ -239,7 +239,7 @@ class OrchestratorLLMStream(llm.LLMStream):
             async with session.post(
                 url,
                 json=payload,
-                timeout=aiohttp.ClientTimeout(total=30),
+                timeout=aiohttp.ClientTimeout(total=120),
             ) as resp:
                 if resp.status >= 400:
                     error_text = await resp.text()
@@ -276,13 +276,13 @@ class OrchestratorLLMStream(llm.LLMStream):
             )
 
         except asyncio.TimeoutError:
-            logger.error("Orchestrator request timed out")
+            logger.error("Orchestrator request timed out after 120s")
             self._event_ch.send_nowait(
                 llm.ChatChunk(
                     id="orchestrator-timeout",
                     delta=llm.ChoiceDelta(
                         role="assistant",
-                        content="That's taking longer than expected. Let me try a simpler approach.",
+                        content="That council evaluation is still processing. You can check the results in your dashboard, or ask me again in a moment.",
                     ),
                 )
             )
@@ -378,18 +378,34 @@ async def entrypoint(ctx: JobContext):
 
     # Build STT with keyword boosting if Deepgram plugin is available
     stt_instance = None
+    using_sttv2 = False
     if HAS_DEEPGRAM_PLUGIN:
         keywords = await fetch_keywords()
-        if keywords:
-            logger.info(f"Loaded {len(keywords)} keywords for STT boosting")
+        # keyterm expects plain strings (no ":2" boost suffix)
+        clean_keywords = [k.split(":")[0] for k in keywords if k]
+
+        if clean_keywords:
+            logger.info(f"Loaded {len(clean_keywords)} keywords for STT boosting")
+
+        try:
+            # Try Flux (streaming, semantic endpointing, better conversational accuracy)
+            stt_instance = deepgram_plugin.STTv2(
+                model="flux-general-en",
+                keyterm=clean_keywords or None,
+            )
+            using_sttv2 = True
+            logger.info("Using Deepgram Flux STTv2")
+        except Exception as e:
+            logger.warning(f"Flux STTv2 init failed, falling back to Nova-3: {e}")
             try:
                 stt_instance = deepgram_plugin.STT(
                     model="nova-3",
                     language="en",
-                    keywords=keywords,
+                    keyterm=clean_keywords or None,
                 )
-            except Exception as e:
-                logger.warning(f"Deepgram plugin init failed, falling back: {e}")
+                logger.info("Using Deepgram Nova-3 with keyterm boosting")
+            except Exception as e2:
+                logger.warning(f"Deepgram plugin init failed: {e2}")
 
     agent = NitaraAssistant(
         voice_preset=voice_preset,
@@ -399,11 +415,21 @@ async def entrypoint(ctx: JobContext):
         stt_instance=stt_instance,
     )
 
-    session = AgentSession(
-        vad=ctx.proc.userdata["vad"],
-        min_endpointing_delay=0.5,
-        max_endpointing_delay=5.0,
-    )
+    if using_sttv2:
+        # Flux STTv2 supports semantic turn detection — let the STT decide
+        # when the user is done speaking instead of pure VAD silence
+        session = AgentSession(
+            vad=ctx.proc.userdata["vad"],
+            turn_detection="stt",
+            min_endpointing_delay=0.3,
+            max_endpointing_delay=3.0,
+        )
+    else:
+        session = AgentSession(
+            vad=ctx.proc.userdata["vad"],
+            min_endpointing_delay=0.5,
+            max_endpointing_delay=5.0,
+        )
 
     await session.start(
         room=ctx.room,
