@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { GlassCard, StatCard, Badge, NitaraInsightCard } from '../shared';
 import { api } from '../../services/api';
 
@@ -9,25 +9,252 @@ export default function NetworkCanvas() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
 
+  // Import panel state
+  const [showImportPanel, setShowImportPanel] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [importProgress, setImportProgress] = useState<{ status: string; processed: number; total: number; created: number } | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
+
+  // PDL enrichment state
+  const [enrichBudget, setEnrichBudget] = useState<{ used: number; limit: number; remaining: number } | null>(null);
+  const [enriching, setEnriching] = useState(false);
+  const [enrichProgress, setEnrichProgress] = useState<{ status: string; processed: number; total: number; enriched: number } | null>(null);
+
+  const refreshData = useCallback(async () => {
+    try {
+      const [contactsRes, graphRes, oppsRes] = await Promise.all([
+        api.getNetworkContacts(),
+        api.getNetworkGraph(),
+        api.getNetworkOpportunities(),
+      ]);
+      setContacts(contactsRes.contacts || []);
+      setGraph(graphRes);
+      setOpportunities(oppsRes.opportunities || []);
+    } catch (err) {
+      console.error('Failed to load network data:', err);
+    }
+    // Fetch PDL budget (non-blocking)
+    api.getEnrichBudget().then(b => setEnrichBudget(b)).catch(() => {});
+  }, []);
+
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const [contactsRes, graphRes, oppsRes] = await Promise.all([
-          api.getNetworkContacts(),
-          api.getNetworkGraph(),
-          api.getNetworkOpportunities(),
-        ]);
-        setContacts(contactsRes.contacts || []);
-        setGraph(graphRes);
-        setOpportunities(oppsRes.opportunities || []);
-      } catch (err) {
-        console.error('Failed to load network data:', err);
-      } finally {
-        setLoading(false);
-      }
+      await refreshData();
+      setLoading(false);
     };
     fetchData();
+  }, [refreshData]);
+
+  // Cleanup SSE on unmount
+  useEffect(() => {
+    return () => {
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
+      }
+    };
   }, []);
+
+  const handleImport = async (file: File, source: 'linkedin' | 'google') => {
+    setImporting(true);
+    setImportError(null);
+    setImportProgress(null);
+
+    // Connect to SSE BEFORE starting upload so we don't miss fast events
+    const es = new EventSource(api.getImportSSEUrl());
+    eventSourceRef.current = es;
+    let jobId: string | null = null;
+
+    es.addEventListener('import_progress', (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        setImportProgress({
+          status: data.status,
+          processed: data.processed,
+          total: data.total,
+          created: data.created,
+        });
+
+        if (data.status === 'completed' || data.status === 'failed') {
+          es.close();
+          eventSourceRef.current = null;
+          setImporting(false);
+          if (data.status === 'completed') {
+            setShowImportPanel(true);
+            refreshData();
+          }
+          if (data.status === 'failed') {
+            setImportError('Import failed. Please check the file and try again.');
+          }
+        }
+      } catch { /* ignore parse errors */ }
+    });
+
+    es.onerror = () => {
+      es.close();
+      eventSourceRef.current = null;
+      // If we didn't get a completion event, poll the job status
+      if (jobId) {
+        const pollJob = async () => {
+          try {
+            const job = await api.getImportJobStatus(jobId!);
+            if (job.status === 'completed') {
+              setImportProgress({ status: 'completed', processed: job.processed_contacts, total: job.total_contacts, created: job.created_contacts });
+              setImporting(false);
+              setShowImportPanel(true);
+              refreshData();
+            } else if (job.status === 'failed') {
+              setImportError('Import failed. Please check the file and try again.');
+              setImporting(false);
+            }
+          } catch { /* ignore */ }
+        };
+        setTimeout(pollJob, 2000);
+      }
+    };
+
+    try {
+      const result = source === 'linkedin'
+        ? await api.importLinkedInNetwork(file)
+        : await api.importGoogleContacts(file);
+      jobId = result.job?.id || null;
+    } catch (err: any) {
+      es.close();
+      eventSourceRef.current = null;
+      setImportError(err.message || 'Import failed');
+      setImporting(false);
+    }
+  };
+
+  const handleEnrich = async () => {
+    setEnriching(true);
+    setEnrichProgress(null);
+
+    // Listen for SSE progress
+    const es = new EventSource(api.getImportSSEUrl());
+    const enrichES = es;
+
+    es.addEventListener('enrich_progress', (event: MessageEvent) => {
+      try {
+        const data = JSON.parse(event.data);
+        setEnrichProgress({
+          status: data.status,
+          processed: data.processed,
+          total: data.total,
+          enriched: data.enriched,
+        });
+
+        if (data.status === 'completed' || data.status === 'budget_exhausted' || data.status === 'rate_limited') {
+          enrichES.close();
+          setEnriching(false);
+          refreshData();
+        }
+      } catch { /* ignore */ }
+    });
+
+    es.onerror = () => {
+      enrichES.close();
+      setEnriching(false);
+      refreshData();
+    };
+
+    try {
+      await api.enrichNetworkContacts();
+    } catch {
+      enrichES.close();
+      setEnriching(false);
+    }
+  };
+
+  const ImportPanel = () => (
+    <GlassCard className="mb-6">
+      <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">
+        IMPORT CONTACTS
+      </h3>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+        {/* LinkedIn drop zone */}
+        <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-[var(--glass-border)] rounded-xl cursor-pointer hover:border-primary/50 hover:bg-elevated/30 transition-all">
+          <span className="material-symbols-rounded text-3xl text-text-tertiary">cloud_upload</span>
+          <span className="text-text-primary text-sm font-medium">LinkedIn Export</span>
+          <span className="text-text-tertiary text-xs">.zip file</span>
+          <input
+            type="file"
+            accept=".zip"
+            className="hidden"
+            disabled={importing}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleImport(file, 'linkedin');
+              e.target.value = '';
+            }}
+          />
+        </label>
+
+        {/* Google drop zone */}
+        <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-[var(--glass-border)] rounded-xl cursor-pointer hover:border-primary/50 hover:bg-elevated/30 transition-all">
+          <span className="material-symbols-rounded text-3xl text-text-tertiary">contacts</span>
+          <span className="text-text-primary text-sm font-medium">Google Contacts</span>
+          <span className="text-text-tertiary text-xs">.csv file</span>
+          <input
+            type="file"
+            accept=".csv"
+            className="hidden"
+            disabled={importing}
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) handleImport(file, 'google');
+              e.target.value = '';
+            }}
+          />
+        </label>
+      </div>
+
+      {/* Progress bar */}
+      {importing && importProgress && (
+        <div className="mb-2">
+          <div className="flex items-center justify-between text-xs text-text-tertiary mb-1">
+            <span className="capitalize">{importProgress.status === 'extracting' ? 'Reading file...' : importProgress.status === 'enriching' ? 'Processing contacts...' : importProgress.status}...</span>
+            <span>{importProgress.processed} / {importProgress.total}</span>
+          </div>
+          <div className="h-2 bg-elevated rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-300"
+              style={{ width: `${importProgress.total > 0 ? (importProgress.processed / importProgress.total) * 100 : 0}%` }}
+            />
+          </div>
+        </div>
+      )}
+
+      {importing && !importProgress && (
+        <div className="text-text-tertiary text-xs text-center py-2">
+          Uploading file...
+        </div>
+      )}
+
+      {/* Completion message */}
+      {!importing && importProgress?.status === 'completed' && (
+        <div className="flex items-center gap-2 text-sm text-primary py-2">
+          <span className="material-symbols-rounded text-base">check_circle</span>
+          <span>{importProgress.created} contacts imported — Done</span>
+        </div>
+      )}
+
+      {/* Error */}
+      {importError && (
+        <div className="flex items-center gap-2 text-sm text-secondary py-2">
+          <span className="material-symbols-rounded text-base">error</span>
+          <span>{importError}</span>
+          <button
+            onClick={() => { setImportError(null); setImportProgress(null); }}
+            className="ml-auto text-xs text-text-tertiary hover:text-text-primary transition-colors"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+    </GlassCard>
+  );
 
   if (loading) {
     return (
@@ -77,16 +304,7 @@ export default function NetworkCanvas() {
           </p>
         </div>
 
-        <GlassCard>
-          <div className="flex flex-col items-center justify-center py-12 text-center">
-            <p className="text-text-secondary text-sm mb-2">
-              No contacts yet. Import your LinkedIn network to get started.
-            </p>
-            <p className="text-text-tertiary text-xs">
-              Use the onboarding flow to connect your accounts and import contacts.
-            </p>
-          </div>
-        </GlassCard>
+        <ImportPanel />
       </div>
     );
   }
@@ -98,13 +316,82 @@ export default function NetworkCanvas() {
         <h2 className="text-xs font-semibold tracking-wider uppercase text-text-secondary mb-2">
           NETWORK
         </h2>
-        <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">
-          Your Constellation
-        </h1>
-        <p className="text-text-tertiary text-sm">
-          Map and nurture your professional relationships.
-        </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">
+              Your Constellation
+            </h1>
+            <p className="text-text-tertiary text-sm">
+              Map and nurture your professional relationships.
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            {enrichBudget && enrichBudget.remaining > 0 && (
+              <button
+                onClick={handleEnrich}
+                disabled={enriching}
+                className="flex flex-col items-center gap-0 px-3 py-1.5 text-sm text-text-secondary bg-elevated/50 border border-[var(--glass-border)] rounded-lg hover:text-text-primary hover:border-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                title={enrichBudget.remaining === 0 ? 'Budget exhausted' : `Enrich contacts with People Data Labs (${enrichBudget.remaining} lookups remaining)`}
+              >
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-rounded text-base">auto_awesome</span>
+                  {enriching ? 'Enriching...' : 'Enrich Contacts'}
+                </span>
+                <span className="text-[10px] text-text-tertiary">{enrichBudget.remaining}/{enrichBudget.limit} remaining</span>
+              </button>
+            )}
+            {enrichBudget && enrichBudget.remaining === 0 && (
+              <span className="flex flex-col items-center px-3 py-1.5 text-sm text-text-tertiary bg-elevated/30 border border-[var(--glass-border)] rounded-lg opacity-60 cursor-not-allowed" title="PDL monthly budget exhausted">
+                <span className="flex items-center gap-1.5">
+                  <span className="material-symbols-rounded text-base">auto_awesome</span>
+                  Budget Exhausted
+                </span>
+                <span className="text-[10px]">0/{enrichBudget.limit} remaining</span>
+              </span>
+            )}
+            <button
+              onClick={() => setShowImportPanel(!showImportPanel)}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-text-secondary bg-elevated/50 border border-[var(--glass-border)] rounded-lg hover:text-text-primary hover:border-primary/50 transition-all"
+            >
+              <span className="material-symbols-rounded text-base">upload</span>
+              Import Contacts
+            </button>
+          </div>
+        </div>
       </div>
+
+      {/* Import Panel (togglable) */}
+      {showImportPanel && <ImportPanel />}
+
+      {/* PDL Enrichment Progress */}
+      {enriching && enrichProgress && (
+        <GlassCard className="mb-6">
+          <div className="flex items-center justify-between text-xs text-text-tertiary mb-1">
+            <span>
+              {enrichProgress.status === 'enriching' ? 'Enriching contacts with PDL...' :
+               enrichProgress.status === 'budget_exhausted' ? 'Budget exhausted' :
+               enrichProgress.status === 'completed' ? 'Enrichment complete' : enrichProgress.status}
+            </span>
+            <span>{enrichProgress.processed} / {enrichProgress.total} ({enrichProgress.enriched} enriched)</span>
+          </div>
+          <div className="h-2 bg-elevated rounded-full overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-300"
+              style={{ width: `${enrichProgress.total > 0 ? (enrichProgress.processed / enrichProgress.total) * 100 : 0}%` }}
+            />
+          </div>
+        </GlassCard>
+      )}
+
+      {!enriching && enrichProgress?.status === 'completed' && (
+        <GlassCard className="mb-6">
+          <div className="flex items-center gap-2 text-sm text-primary">
+            <span className="material-symbols-rounded text-base">check_circle</span>
+            <span>{enrichProgress.enriched} contacts enriched with PDL data</span>
+            <button onClick={() => setEnrichProgress(null)} className="ml-auto text-xs text-text-tertiary hover:text-text-primary">Dismiss</button>
+          </div>
+        </GlassCard>
+      )}
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">

@@ -983,7 +983,7 @@ export type ImportJobStatus = 'pending' | 'extracting' | 'enriching' | 'complete
 
 export interface ImportJob {
   id: string;
-  source: 'linkedin';
+  source: 'linkedin' | 'google';
   status: ImportJobStatus;
   total_contacts: number;
   processed_contacts: number;

@@ -9,9 +9,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Load secrets from secure location (must happen after dotenv, before routes)
-import { loadOpenClawSecrets, loadLiveKitSecrets } from './config/load-secrets';
+import { loadOpenClawSecrets, loadLiveKitSecrets, loadPDLSecrets } from './config/load-secrets';
 loadOpenClawSecrets();
 loadLiveKitSecrets();
+loadPDLSecrets();
 
 // Import routes
 import inboxRoutes from './routes/inbox.routes';

@@ -4,7 +4,9 @@ import path from 'path';
 import fs from 'fs';
 import { networkImporterService } from '../services/network-importer.service';
 import { networkGraphService } from '../services/network-graph.service';
+import { pdlEnrichmentService } from '../services/pdl-enrichment.service';
 import { sseManager } from '../services/sse-manager.service';
+import { generateId } from '../utils/id-generator';
 
 const router = Router();
 
@@ -39,6 +41,19 @@ const upload = multer({
   },
 });
 
+const csvUpload = multer({
+  storage,
+  limits: { fileSize: 50 * 1024 * 1024 },
+  fileFilter: (_req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext === '.csv') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only .csv files are accepted for Google Contacts import'));
+    }
+  },
+});
+
 // POST /api/network/import/linkedin — Upload LinkedIn ZIP
 router.post('/network/import/linkedin', upload.single('file'), async (req: Request, res: Response) => {
   try {
@@ -53,6 +68,24 @@ router.post('/network/import/linkedin', upload.single('file'), async (req: Reque
     res.status(201).json({ status: 'importing', job });
   } catch (error: any) {
     console.error('Error starting LinkedIn import:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/network/import/google — Upload Google Contacts CSV
+router.post('/network/import/google', csvUpload.single('file'), async (req: Request, res: Response) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ error: 'No CSV file provided' });
+    }
+
+    const sseClientId = req.body.sse_client_id || undefined;
+    const job = await networkImporterService.importGoogleCSV(file.path, sseClientId);
+
+    res.status(201).json({ status: 'importing', job });
+  } catch (error: any) {
+    console.error('Error starting Google Contacts import:', error);
     res.status(500).json({ error: error.message });
   }
 });
@@ -169,6 +202,52 @@ router.get('/network/intros/:contactId', async (req: Request, res: Response) => 
     res.json(result);
   } catch (error: any) {
     console.error('Error finding intro paths:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/network/enrich/budget — PDL enrichment budget
+router.get('/network/enrich/budget', async (_req: Request, res: Response) => {
+  try {
+    const usage = await pdlEnrichmentService.getUsage();
+    res.json(usage);
+  } catch (error: any) {
+    console.error('Error fetching PDL budget:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/network/enrich — Enrich contacts with PDL
+router.post('/network/enrich', async (req: Request, res: Response) => {
+  try {
+    if (!process.env.PDL_API_KEY) {
+      return res.status(503).json({ error: 'PDL API key not configured' });
+    }
+
+    const { contact_ids } = req.body || {};
+    const jobId = generateId('enr');
+
+    let contacts;
+    if (contact_ids && Array.isArray(contact_ids) && contact_ids.length > 0) {
+      // Enrich specific contacts
+      const all = await Promise.all(
+        contact_ids.map((id: string) => networkImporterService.getContact(id))
+      );
+      contacts = all.filter(Boolean) as any[];
+    } else {
+      // Enrich all unenriched contacts
+      contacts = await networkImporterService.getContacts();
+    }
+
+    const budget = await pdlEnrichmentService.getUsage();
+    res.json({ status: 'enriching', job_id: jobId, budget: { used: budget.used, remaining: budget.remaining } });
+
+    // Run enrichment in background
+    pdlEnrichmentService.enrichBatch(contacts).catch(err => {
+      console.error('[PDL] Batch enrichment error:', err.message);
+    });
+  } catch (error: any) {
+    console.error('Error starting PDL enrichment:', error);
     res.status(500).json({ error: error.message });
   }
 });

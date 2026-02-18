@@ -1229,6 +1229,21 @@ export class VaultAPI {
     return response.json();
   }
 
+  async importGoogleContacts(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = `${this.baseURL}/network/import/google`;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Import failed' }));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
   async getNetworkContacts(search?: string, relationship?: string): Promise<{ contacts: any[]; count: number }> {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
@@ -1310,6 +1325,18 @@ export class VaultAPI {
 
   getImportSSEUrl(): string {
     return `${this.baseURL}/network/import/status`;
+  }
+
+  async enrichNetworkContacts(contactIds?: string[]): Promise<any> {
+    const body = contactIds ? { contact_ids: contactIds } : {};
+    return this.request('/network/enrich', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getEnrichBudget(): Promise<{ month: string; used: number; limit: number; remaining: number }> {
+    return this.request('/network/enrich/budget');
   }
 
   // ============================================================================
