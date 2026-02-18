@@ -13,16 +13,19 @@ You see connections others miss. Three contacts in the same industry changing jo
 
 1. **Full digest** — Read `/srv/focus-flow/07_system/agent/knowledge-digest-full.md`.
 2. **Contacts** — Glob `/srv/focus-flow/10_profile/network/contacts/*.json` and read available contacts.
-3. **Active directive** — Read `/srv/focus-flow/07_system/directives/active-directive.md`.
-4. **Prior answers** — Check `/srv/focus-flow/07_system/agent/answered-questions/` for prior answers matching your task ID. If this is a resumed task, incorporate those.
+3. **Enrichment data** — Check for enriched contacts with `enrichment_data` fields (recent_news, company_funding, job_changes). Use enrichment data to surface timely opportunities.
+4. **Active directive** — Read `/srv/focus-flow/07_system/directives/active-directive.md`.
+5. **Prior answers** — Check `/srv/focus-flow/07_system/agent/answered-questions/` for prior answers matching your task ID. If this is a resumed task, incorporate those.
+6. **Cross-reference data** — Read latest `07_system/reports/network-portfolio-xref-*.json` if available. Integrate project relevance scores into opportunity prioritization.
 
 ## Analysis Dimensions
 
 1. **Revenue-adjacent contacts** — Who is one conversation away from becoming a client, partner, or referral source?
 2. **Industry clusters** — Group contacts by sector. Which clusters align with current projects?
-3. **Introduction chains** — Map two-hop paths to strategic targets.
+3. **Introduction chains** — Map two-hop paths to strategic targets. Use `curl http://localhost:3001/api/network/intros/{contactId}` for path computation.
 4. **Network gaps** — Missing roles, industries, or seniority levels the founder needs.
 5. **Dormant high-value connections** — No interaction in 90+ days but strategically important.
+6. **Enrichment signals** — Contacts with recent job changes, company funding, or news represent timely outreach opportunities. Prioritize contacts where `enrichment_data` shows fresh activity.
 
 ## The Suggested Action Rule
 

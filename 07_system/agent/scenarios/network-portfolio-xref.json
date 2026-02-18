@@ -1,0 +1,43 @@
+{
+  "skill": "network-portfolio-xref",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "projects_analyzed",
+      "description": "At least 3 active projects analyzed with network leverage scores",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "relevant_contacts_mapped",
+      "description": "Each project has relevant contacts identified with value types (customer, advisor, etc.)",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "intro_chains_explored",
+      "description": "Introduction chains mapped for at least 3 high-value target contacts",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "portfolio_impact_assessed",
+      "description": "Portfolio impact section identifies which projects benefit most from network leverage",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "actionable_recommendations",
+      "description": "At least 3 specific recommendations with concrete next steps",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or vague recommendations",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

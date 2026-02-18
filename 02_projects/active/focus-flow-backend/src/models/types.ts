@@ -913,25 +913,68 @@ export type RelationshipType = 'colleague' | 'client' | 'investor' | 'mentor' | 
 export type RelationshipStrength = 'strong' | 'moderate' | 'weak' | 'dormant';
 export type BusinessValue = 'high' | 'medium' | 'low' | 'unknown';
 
+export type SeniorityLevel = 'c_suite' | 'vp' | 'director' | 'manager' | 'individual_contributor' | 'founder' | 'unknown';
+
 export interface NetworkContact {
   id: string;
   first_name: string;
   last_name: string;
   full_name: string;
+
+  // Identity (multi-value, cross-source dedup)
   email?: string;
+  emails?: string[];
+  phone?: string;
+  phones?: string[];
   company?: string;
   position?: string;
   location?: string;
   linkedin_url?: string;
+  imported_from?: string;
+  import_sources?: string[];    // e.g., ['linkedin', 'gmail', 'manual']
+
+  // Professional
+  industry?: string;
+  seniority?: SeniorityLevel;
+  skills?: string[];
+  company_size?: string;        // e.g., '1-10', '11-50', '51-200', '201-1000', '1000+'
+
+  // Relationship
   relationship_type: RelationshipType;
   relationship_strength: RelationshipStrength;
   business_value: BusinessValue;
+  warmth_score?: number;        // 0-100, time-decaying
+  warmth_last_computed?: string;
+  communication_frequency?: 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'dormant';
+  last_contacted?: string;
+
+  // Strategic value
+  project_relevance?: Record<string, number>;  // projectId → relevance score 0-10
+  potential_value_type?: string[];              // e.g., ['customer', 'advisor', 'beta_tester', 'distributor']
+  intro_chain_available?: boolean;
+  intro_chain_path?: string[];                  // contact IDs forming an introduction chain
+
+  // Interaction history (summarized)
+  interaction_summary?: string;
+  conversation_topics?: string[];
+  commitments?: string[];       // pending follow-ups, promises made
+  last_interaction_type?: string;
+
+  // Enrichment
+  enrichment_date?: string;
+  enrichment_data?: {
+    recent_news?: string[];
+    company_funding?: string;
+    job_changes?: string[];
+    outreach_angle?: string;
+  };
+
+  // AI classification
   tags: string[];
   notes?: string;
-  last_contacted?: string;
   ai_summary?: string;
   ai_tags?: string[];
-  imported_from?: string;
+
   created_at: string;
   updated_at: string;
 }

@@ -20,15 +20,16 @@ You embody Nitara's analytical side: calm intensity, Swiss precision, and provoc
 
 ## Scoring Framework
 
-Score each project on five dimensions (0-10):
+Score each project on six dimensions (0-10):
 
 | Dimension | Weight | What It Measures |
 |---|---|---|
-| **Revenue Proximity** | 30% | How close is this to generating income? (10 = invoicing next week, 0 = years away) |
-| **Market Validation** | 20% | Evidence of demand: paying customers, waitlist, search volume, competitor revenue |
-| **Skill Alignment** | 15% | How well does this leverage the founder's existing skills vs requiring new ones? |
-| **Effort-to-Revenue Ratio** | 20% | Revenue per hour invested (10 = high leverage, 0 = grueling manual work) |
-| **Strategic Fit** | 15% | Alignment with active directive, portfolio balance, synergies with other projects |
+| **Revenue Proximity** | 27% | How close is this to generating income? (10 = invoicing next week, 0 = years away) |
+| **Market Validation** | 18% | Evidence of demand: paying customers, waitlist, search volume, competitor revenue |
+| **Skill Alignment** | 13% | How well does this leverage the founder's existing skills vs requiring new ones? |
+| **Effort-to-Revenue Ratio** | 18% | Revenue per hour invested (10 = high leverage, 0 = grueling manual work) |
+| **Strategic Fit** | 14% | Alignment with active directive, portfolio balance, synergies with other projects |
+| **Network Leverage** | 10% | Warm paths to customers, advisors, partners. Use `curl http://localhost:3001/api/network/leverage/{projectId}` to compute. A project with warm paths to early design partners scores materially higher on feasibility than one with zero. |
 
 **Composite Score** = weighted average, rounded to one decimal.
 
@@ -85,7 +86,7 @@ After scoring individual projects:
   "projects": [
     {
       "name": "",
-      "scores": { "revenue_proximity": 0, "market_validation": 0, "skill_alignment": 0, "effort_to_revenue": 0, "strategic_fit": 0 },
+      "scores": { "revenue_proximity": 0, "market_validation": 0, "skill_alignment": 0, "effort_to_revenue": 0, "strategic_fit": 0, "network_leverage": 0 },
       "composite_score": 0.0,
       "recommendation": "build-next|invest|pivot|park|kill",
       "rationale": "",

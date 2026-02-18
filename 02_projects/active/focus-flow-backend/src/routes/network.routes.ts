@@ -140,6 +140,39 @@ router.get('/network/opportunities', async (req: Request, res: Response) => {
   }
 });
 
+// GET /api/network/xref/:projectId — Cross-reference contacts with a project
+router.get('/network/xref/:projectId', async (req: Request, res: Response) => {
+  try {
+    const result = await networkGraphService.getContactsForProject(String(req.params.projectId));
+    res.json(result);
+  } catch (error: any) {
+    console.error('Error cross-referencing network:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/network/leverage/:projectId — Network leverage score for a project
+router.get('/network/leverage/:projectId', async (req: Request, res: Response) => {
+  try {
+    const result = await networkGraphService.getNetworkLeverageScore(String(req.params.projectId));
+    res.json(result);
+  } catch (error: any) {
+    console.error('Error computing network leverage:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/network/intros/:contactId — Introduction paths to a target contact
+router.get('/network/intros/:contactId', async (req: Request, res: Response) => {
+  try {
+    const result = await networkGraphService.getIntroductionPaths(String(req.params.contactId));
+    res.json(result);
+  } catch (error: any) {
+    console.error('Error finding intro paths:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Multer error handling
 router.use((err: any, _req: Request, res: Response, next: any) => {
   if (err instanceof multer.MulterError) {

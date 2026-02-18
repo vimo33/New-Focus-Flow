@@ -78,5 +78,21 @@
     "priority": "medium",
     "trust_tier": 1,
     "description": "Morning briefing narrative weekdays at 7:30am"
+  },
+  {
+    "skill": "network-enrich",
+    "arguments": "",
+    "cron": "0 22 * * 4",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Network enrichment — triage + deep enrich top 20% every Thursday at 10pm"
+  },
+  {
+    "skill": "network-portfolio-xref",
+    "arguments": "",
+    "cron": "0 10 * * 3",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Cross-reference contacts with projects every Wednesday at 10am"
   }
 ]

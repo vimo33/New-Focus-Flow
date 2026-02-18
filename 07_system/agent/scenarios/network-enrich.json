@@ -1,0 +1,43 @@
+{
+  "skill": "network-enrich",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "triage_scores_computed",
+      "description": "Triage scores computed for at least 80% of contacts with project_relevance populated",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "deep_enrichment_done",
+      "description": "At least 5 contacts deep-enriched with enrichment_data containing recent_news or outreach_angle",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "gap_analysis_present",
+      "description": "Network gaps section identifies missing roles, industries, or geographies with suggested actions",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "external_sources_used",
+      "description": "Deep enrichment references external data (web search results, news, funding)",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "contacts_updated",
+      "description": "Contact records actually updated via API (not just report — contacts_triaged > 0)",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or generic outreach angles",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}
