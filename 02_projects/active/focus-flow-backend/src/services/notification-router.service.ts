@@ -16,6 +16,7 @@ import { generateNotificationId } from '../utils/id-generator';
 import { sseManager } from './sse-manager.service';
 import { pushNotificationService } from './push-notification.service';
 import { telegramHitlService } from './telegram-hitl.service';
+import { voiceSessionService } from './voice-session.service';
 
 const LOG_PREFIX = '[NotificationRouter]';
 
@@ -75,6 +76,19 @@ class NotificationRouterService {
       telegramHitlService.sendNotification(
         `✦ *${options.title}*\n${options.body}`
       ).catch(err => console.error(`${LOG_PREFIX} Telegram failed:`, err));
+    }
+
+    // Voice call for urgent notifications that require response
+    if (options.priority === 'urgent' && options.requires_response) {
+      const founderPhone = process.env.FOUNDER_PHONE_NUMBER;
+      if (founderPhone && process.env.SIP_OUTBOUND_TRUNK_ID) {
+        voiceSessionService.makeOutboundCall({
+          phone_number: founderPhone,
+          persona: 'nitara-main',
+          reason: `urgent_notification: ${options.title}`,
+          priority: 'critical',
+        }).catch(err => console.error(`${LOG_PREFIX} Voice call failed:`, err.message));
+      }
     }
 
     console.log(`${LOG_PREFIX} Sent ${notification.type} notification: ${notification.title}`);

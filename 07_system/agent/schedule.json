@@ -62,5 +62,21 @@
     "priority": "low",
     "trust_tier": 2,
     "description": "Self-improvement analysis biweekly on Sundays at 6am"
+  },
+  {
+    "skill": "voice-profiling",
+    "arguments": "",
+    "cron": "0 14 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Voice profiling call weekdays at 2pm (if completeness < 80%)"
+  },
+  {
+    "skill": "voice-briefing",
+    "arguments": "text",
+    "cron": "30 7 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Morning briefing narrative weekdays at 7:30am"
   }
 ]
