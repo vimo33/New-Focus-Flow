@@ -15,6 +15,7 @@ import {
 import { generateNotificationId } from '../utils/id-generator';
 import { sseManager } from './sse-manager.service';
 import { pushNotificationService } from './push-notification.service';
+import { telegramHitlService } from './telegram-hitl.service';
 
 const LOG_PREFIX = '[NotificationRouter]';
 
@@ -69,6 +70,11 @@ class NotificationRouterService {
         options.body,
         options.action_url
       ).catch(err => console.error(`${LOG_PREFIX} Push failed:`, err.message));
+
+      // Also send via Telegram
+      telegramHitlService.sendNotification(
+        `✦ *${options.title}*\n${options.body}`
+      ).catch(err => console.error(`${LOG_PREFIX} Telegram failed:`, err));
     }
 
     console.log(`${LOG_PREFIX} Sent ${notification.type} notification: ${notification.title}`);

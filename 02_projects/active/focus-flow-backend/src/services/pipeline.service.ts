@@ -9,6 +9,8 @@ import { cachedInference } from './cached-inference.service';
 import { designService } from './design.service';
 import { conceptChatService } from './concept-chat.service';
 import { aiCouncil } from '../ai/ai-council';
+import { sseManager } from './sse-manager.service';
+import { notificationRouter } from './notification-router.service';
 import {
   Project,
   ProjectPhase,
@@ -433,6 +435,10 @@ export class PipelineService {
           entry.started_at = new Date().toISOString();
         }
         await this.saveProject(p);
+        sseManager.broadcast('council_progress', {
+          project_id: projectId, agent_name: agentName, status: 'running',
+          completed_count: progress?.completed_count ?? 0, total_count: progress?.total_count ?? agents.length,
+        });
       } finally {
         releaseStart();
       }
@@ -457,6 +463,10 @@ export class PipelineService {
           progress.completed_count = progress.agents.filter(a => a.status === 'completed').length;
           await this.saveProject(p);
           console.log(`[Council Background] ${agentName}: ${evaluation.score}/10`);
+          sseManager.broadcast('council_progress', {
+            project_id: projectId, agent_name: agentName, status: 'completed',
+            score: evaluation.score, completed_count: progress.completed_count, total_count: progress.total_count,
+          });
         } finally {
           releaseDone();
         }
@@ -478,6 +488,10 @@ export class PipelineService {
           ).length;
           await this.saveProject(p);
           console.error(`[Council Background] ${agentName} failed:`, err.message);
+          sseManager.broadcast('council_progress', {
+            project_id: projectId, agent_name: agentName, status: 'failed',
+            error: err.message, completed_count: progress.completed_count, total_count: progress.total_count,
+          });
         } finally {
           releaseFail();
         }
@@ -549,6 +563,9 @@ export class PipelineService {
           progress.synthesis_status = 'failed';
         }
         await this.saveProject(p);
+        sseManager.broadcast('council_completed', {
+          project_id: projectId, title, status: 'failed', error: 'Synthesis failed',
+        });
       } finally {
         release2();
       }
@@ -573,6 +590,21 @@ export class PipelineService {
       pipeline.updated_at = new Date().toISOString();
       await this.saveProject(p);
       console.log(`[Council Background] Council complete for ${projectId}: ${verdict.recommendation} (${verdict.overall_score}/10)`);
+
+      sseManager.broadcast('council_completed', {
+        project_id: projectId, title,
+        recommendation: verdict.recommendation, overall_score: verdict.overall_score,
+        synthesized_reasoning: verdict.synthesized_reasoning?.substring(0, 200),
+      });
+
+      notificationRouter.send({
+        type: 'verdict_delivered',
+        priority: 'high',
+        title: `Council: ${verdict.recommendation.toUpperCase()} (${verdict.overall_score}/10)`,
+        body: `Council evaluation for "${title}" is complete.`,
+        data: { project_id: projectId, recommendation: verdict.recommendation, score: verdict.overall_score },
+        action_url: `/projects/${projectId}`,
+      });
     } finally {
       release3();
     }

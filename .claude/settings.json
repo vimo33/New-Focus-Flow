@@ -1,12 +1,50 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/safety-gate.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/safety-gate.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/cost-gate.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
-            "command": "/srv/focus-flow/.claude/scripts/validate-edit.sh"
+            "command": "/srv/focus-flow/.claude/scripts/validate-edit.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/cost-tracker.sh",
+            "timeout": 5
           }
         ]
       }
@@ -17,7 +55,23 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/srv/focus-flow/.claude/scripts/verify-builds.sh"
+            "command": "/srv/focus-flow/.claude/scripts/verify-builds.sh",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/task-result-writer.sh",
+            "timeout": 15
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/validate-analysis.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/telegram-notify.sh",
+            "timeout": 15
           }
         ]
       }

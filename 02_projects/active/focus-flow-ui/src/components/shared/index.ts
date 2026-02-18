@@ -7,3 +7,4 @@ export { SparkLine } from './SparkLine';
 export { PipelineNode } from './PipelineNode';
 export { ConfidenceRing } from './ConfidenceRing';
 export { RelationshipDots } from './RelationshipDots';
+export { MarkdownContent } from './MarkdownContent';

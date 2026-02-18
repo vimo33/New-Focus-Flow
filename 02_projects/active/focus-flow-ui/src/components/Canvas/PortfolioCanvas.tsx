@@ -38,24 +38,6 @@ interface PortfolioProject {
   };
 }
 
-interface RankedIdea {
-  idea: {
-    id: string;
-    title: string;
-    description: string;
-    status: string;
-    council_verdict?: { overall_score: number; recommendation: string };
-  };
-  composite_score: number;
-  breakdown: {
-    council_score: number;
-    skill_alignment: number;
-    network_advantage: number;
-    financial_viability: number;
-    time_to_revenue: number;
-  };
-  evaluated: boolean;
-}
 
 interface Dashboard {
   projects: PortfolioProject[];
@@ -66,8 +48,6 @@ interface Dashboard {
   total_monthly_costs: number;
   net_monthly: number;
   currency: string;
-  ranked_ideas: RankedIdea[];
-  unevaluated_ideas_count: number;
 }
 
 const PLAYBOOK_BADGES: Record<string, { label: string; variant: 'active' | 'playbook' | 'council' | 'completed' | 'paused' }> = {
@@ -86,18 +66,17 @@ const HEALTH_COLORS: Record<string, string> = {
   at_risk: 'bg-danger',
 };
 
-type FilterTab = 'all' | 'active' | 'ideas' | 'paused';
+type FilterTab = 'all' | 'active' | 'paused';
 
-const PIPELINE_PHASES = ['BRIEF', 'CONCEPT', 'SCOPE', 'DEV', 'QA', 'LAUNCH'];
+const PIPELINE_PHASES = ['CONCEPT', 'SPEC', 'DESIGN', 'DEV', 'TEST', 'DEPLOY', 'LIVE'];
 const PHASE_TO_PIPELINE: Record<string, number> = {
-  concept: 0, spec: 1, design: 2, dev: 3, test: 4, deploy: 5, live: 5,
+  concept: 0, spec: 1, design: 2, dev: 3, test: 4, deploy: 5, live: 6,
 };
 
 export default function PortfolioCanvas() {
   const { setCanvas } = useCanvasStore();
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [loading, setLoading] = useState(true);
-  const [evaluating, setEvaluating] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterTab>('all');
 
   useEffect(() => {
@@ -106,30 +85,6 @@ export default function PortfolioCanvas() {
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
-
-  const handleEvaluate = async (ideaId: string) => {
-    setEvaluating(ideaId);
-    try {
-      await api.evaluateIdea(ideaId);
-      // Refresh dashboard
-      const updated = await api.getPortfolioDashboard();
-      setDashboard(updated);
-    } catch (e) {
-      console.error('Evaluation failed:', e);
-    } finally {
-      setEvaluating(null);
-    }
-  };
-
-  const handlePromote = async (ideaId: string) => {
-    try {
-      await api.promoteIdea(ideaId);
-      const updated = await api.getPortfolioDashboard();
-      setDashboard(updated);
-    } catch (e) {
-      console.error('Promotion failed:', e);
-    }
-  };
 
   if (loading) {
     return (
@@ -162,7 +117,7 @@ export default function PortfolioCanvas() {
       </div>
 
       {/* Top Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
           value={String(dashboard.active_count)}
           label="Active Projects"
@@ -192,7 +147,6 @@ export default function PortfolioCanvas() {
         {([
           { key: 'all', label: 'All' },
           { key: 'active', label: 'Active' },
-          { key: 'ideas', label: 'Ideas' },
           { key: 'paused', label: 'Paused' },
         ] as const).map(tab => (
           <button
@@ -216,7 +170,6 @@ export default function PortfolioCanvas() {
             if (filter === 'all') return true;
             if (filter === 'active') return p.status === 'active';
             if (filter === 'paused') return p.status === 'paused';
-            if (filter === 'ideas') return p.phase === 'concept';
             return true;
           })
           .map((project) => {
@@ -298,76 +251,6 @@ export default function PortfolioCanvas() {
         })}
       </div>
 
-      {/* Idea Backlog */}
-      <GlassCard>
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
-            IDEA BACKLOG
-          </h3>
-          <Badge label={`${dashboard.ranked_ideas.length} IDEAS`} variant="council" />
-        </div>
-
-        {dashboard.ranked_ideas.length === 0 ? (
-          <p className="text-text-tertiary text-sm">No ideas yet. Capture some ideas to get started.</p>
-        ) : (
-          <div className="space-y-3">
-            {dashboard.ranked_ideas.map((ranked) => (
-              <div
-                key={ranked.idea.id}
-                className="flex items-center gap-3 py-2 border-b border-[var(--glass-border)] last:border-0"
-              >
-                {/* Composite score badge */}
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 font-mono text-sm font-bold ${
-                  ranked.composite_score >= 70 ? 'bg-success/15 text-success' :
-                  ranked.composite_score >= 40 ? 'bg-primary/15 text-primary' :
-                  'bg-text-tertiary/15 text-text-tertiary'
-                }`}>
-                  {ranked.composite_score}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <p className="text-text-primary text-sm font-medium truncate">{ranked.idea.title}</p>
-                  <p className="text-text-tertiary text-xs truncate">{ranked.idea.description}</p>
-                </div>
-
-                <div className="flex items-center gap-2 flex-shrink-0">
-                  {!ranked.evaluated && (
-                    <Badge label="UNEVALUATED" variant="paused" />
-                  )}
-                  {ranked.idea.status === 'validated' && (
-                    <Badge label="VALIDATED" variant="active" />
-                  )}
-
-                  {!ranked.evaluated && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handleEvaluate(ranked.idea.id); }}
-                      disabled={evaluating === ranked.idea.id}
-                      className="px-3 py-1 rounded-md text-xs font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors disabled:opacity-50"
-                    >
-                      {evaluating === ranked.idea.id ? 'Evaluating...' : 'Evaluate'}
-                    </button>
-                  )}
-
-                  {ranked.evaluated && ranked.idea.status === 'validated' && !ranked.idea.council_verdict && (
-                    <button
-                      onClick={(e) => { e.stopPropagation(); handlePromote(ranked.idea.id); }}
-                      className="px-3 py-1 rounded-md text-xs font-medium bg-primary text-base hover:bg-primary/80 transition-colors"
-                    >
-                      Promote
-                    </button>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-
-        {dashboard.unevaluated_ideas_count > 0 && (
-          <p className="text-text-tertiary text-xs mt-3">
-            {dashboard.unevaluated_ideas_count} idea(s) awaiting evaluation
-          </p>
-        )}
-      </GlassCard>
     </div>
   );
 }

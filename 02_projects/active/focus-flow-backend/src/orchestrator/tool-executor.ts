@@ -24,6 +24,8 @@ import { pipelineService } from '../services/pipeline.service';
 import { networkGraphService } from '../services/network-graph.service';
 import { contentEngine } from '../services/content-engine.service';
 import { gtmOrchestrator } from '../services/gtm-orchestrator.service';
+import { sseManager } from '../services/sse-manager.service';
+import { notificationRouter } from '../services/notification-router.service';
 
 const vaultService = new VaultService();
 const DEFAULT_USER = 'nitara-user';
@@ -34,11 +36,82 @@ export interface ToolResult {
   error?: string;
   /** If the tool triggers a frontend navigation */
   navigate_to?: string;
+  /** If the tool should open a canvas on the frontend */
+  open_canvas?: { canvas: string; params: Record<string, string> };
 }
+
+/**
+ * Run a council evaluation in the background and save the verdict to the idea.
+ * Fire-and-forget — errors are logged but not propagated.
+ */
+async function runIdeaCouncilInBackground(ideaId: string, ideaTitle: string, ideaDescription: string): Promise<void> {
+  try {
+    const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
+    console.log(`[ToolExecutor] Background council started for idea "${ideaTitle}" (${ideaId})`);
+    const verdict = await aiCouncil.validateWithCouncil(ideaTitle, ideaDescription, DEFAULT_COUNCIL);
+    await vaultService.updateIdea(ideaId, {
+      council_verdict: verdict,
+      council_evaluated_at: new Date().toISOString(),
+    } as any);
+    console.log(`[ToolExecutor] Background council completed for idea "${ideaTitle}": ${verdict.recommendation} (${verdict.overall_score}/10)`);
+
+    sseManager.broadcast('council_completed', {
+      idea_id: ideaId,
+      idea_title: ideaTitle,
+      recommendation: verdict.recommendation,
+      overall_score: verdict.overall_score,
+      synthesized_reasoning: verdict.synthesized_reasoning?.substring(0, 200),
+    });
+
+    notificationRouter.send({
+      type: 'verdict_delivered',
+      priority: 'high',
+      title: `Council: ${verdict.recommendation.toUpperCase()} (${verdict.overall_score}/10)`,
+      body: `Evaluation for "${ideaTitle}" is complete.`,
+      data: { idea_id: ideaId, recommendation: verdict.recommendation, score: verdict.overall_score },
+    });
+  } catch (err: any) {
+    console.error(`[ToolExecutor] Background council failed for idea ${ideaId}:`, err.message);
+    sseManager.broadcast('council_completed', {
+      idea_id: ideaId, idea_title: ideaTitle, status: 'failed', error: err.message,
+    });
+  }
+}
+
+// Read-only tools that don't need SSE broadcast
+const READ_ONLY_TOOLS = new Set([
+  'list_tasks', 'list_projects', 'get_project', 'list_ideas', 'get_idea',
+  'list_inbox', 'list_contacts', 'list_deals', 'get_sales_pipeline',
+  'get_financials_summary', 'get_income_strategies', 'get_pipeline_status',
+  'get_network_contacts', 'get_network_opportunities', 'get_calendar_entries',
+  'get_profiling_gaps', 'get_profiling_summary', 'get_dashboard_summary',
+  'search_memory', 'web_search', 'deep_search', 'navigate',
+]);
 
 export async function executeTool(
   toolName: string,
-  input: Record<string, any>
+  input: Record<string, any>,
+  options?: { source?: 'voice' | 'text' }
+): Promise<ToolResult> {
+  const result = await executeToolInner(toolName, input, options);
+
+  // Broadcast completion for all mutating tools
+  if (!READ_ONLY_TOOLS.has(toolName)) {
+    sseManager.broadcast('tool_completed', {
+      tool: toolName,
+      success: result.success,
+      data: result.data,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  return result;
+}
+
+async function executeToolInner(
+  toolName: string,
+  input: Record<string, any>,
+  options?: { source?: 'voice' | 'text' }
 ): Promise<ToolResult> {
   try {
     switch (toolName) {
@@ -49,7 +122,14 @@ export async function executeTool(
           source: input.source || 'api',
         });
         // Background classification
-        classificationService.classifyInboxItemAsync(item.id).catch(err =>
+        classificationService.classifyInboxItemAsync(item.id).then(() => {
+          sseManager.broadcast('tool_completed', {
+            tool: 'classify_inbox_item',
+            success: true,
+            data: { item_id: item.id },
+            timestamp: new Date().toISOString(),
+          });
+        }).catch(err =>
           console.error('[ToolExecutor] classification error:', err.message)
         );
         return {
@@ -170,7 +250,7 @@ export async function executeTool(
         const project = await vaultService.createProject({
           title: input.title,
           description: input.description,
-          phase: input.phase || 'idea',
+          phase: input.phase || 'concept',
         });
         return {
           success: true,
@@ -289,6 +369,27 @@ export async function executeTool(
         if (!ideaToValidate) {
           return { success: false, error: `Idea ${input.id} not found` };
         }
+
+        // Voice mode: fire-and-forget council, return immediately with open_canvas
+        if (options?.source === 'voice') {
+          runIdeaCouncilInBackground(
+            ideaToValidate.id,
+            ideaToValidate.title,
+            ideaToValidate.description || ''
+          );
+          return {
+            success: true,
+            data: {
+              message: `Starting the council evaluation for "${ideaToValidate.title}". I've opened it on your screen — you'll see the verdict when it's ready.`,
+            },
+            open_canvas: {
+              canvas: 'council_evaluation',
+              params: { ideaId: ideaToValidate.id, ideaName: ideaToValidate.title },
+            },
+          };
+        }
+
+        // Text mode: synchronous council (existing behavior)
         const { DEFAULT_COUNCIL } = await import('../services/concept-chat.service');
         const verdict = await aiCouncil.validateWithCouncil(
           ideaToValidate.title,

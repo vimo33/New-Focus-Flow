@@ -684,10 +684,12 @@ export class VaultAPI {
     content: string,
     threadId?: string | null,
     source: 'voice' | 'text' = 'text',
-    projectId?: string | null
+    projectId?: string | null,
+    attachments?: Array<{ filename: string; url: string }>
   ): Promise<{ thread_id: string; content: string; tool_calls?: any[]; navigate_to?: string }> {
     const body: Record<string, any> = { content, thread_id: threadId, source };
     if (projectId) body.project_id = projectId;
+    if (attachments && attachments.length > 0) body.attachments = attachments;
     return this.request('/orchestrator/chat', {
       method: 'POST',
       body: JSON.stringify(body),
@@ -1362,6 +1364,26 @@ export class VaultAPI {
   async getWeeklyReports(limit?: number): Promise<any> {
     const params = limit ? `?limit=${limit}` : '';
     return this.request(`/reports/weekly${params}`);
+  }
+
+  // ============================================================================
+  // Report Viewer Methods
+  // ============================================================================
+
+  async getReports(type?: string, limit?: number): Promise<{ reports: any[]; count: number }> {
+    const params = new URLSearchParams();
+    if (type) params.set('type', type);
+    if (limit) params.set('limit', String(limit));
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/reports${qs}`);
+  }
+
+  async getReport(id: string): Promise<any> {
+    return this.request(`/reports/${id}`);
+  }
+
+  async getReportTypes(): Promise<{ types: string[] }> {
+    return this.request('/reports/types');
   }
 
   // ============================================================================

@@ -224,9 +224,11 @@ export class VaultService {
       title: project.title || 'Untitled Project',
       description: project.description,
       status: project.status || 'active',
+      phase: (project as any).phase || 'concept',
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      metadata: project.metadata
+      metadata: project.metadata,
+      ...(project as any).idea_id ? { idea_id: (project as any).idea_id } : {},
     };
 
     const filePath = getVaultPath('02_projects', 'active', `${id}.json`);

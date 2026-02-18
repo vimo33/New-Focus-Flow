@@ -310,6 +310,8 @@ export interface OrchestratorResponse {
     result: ToolResult;
   }>;
   navigate_to?: string;
+  /** If a tool requested the frontend to open a canvas */
+  open_canvas?: { canvas: string; params: Record<string, string> };
   voice_approval?: VoiceApproval;
 }
 
@@ -332,10 +334,16 @@ function getToolTier(toolName: string): 1 | 2 | 3 {
 // --- Pending voice actions (per thread) ---
 const pendingVoiceActions = new Map<string, { tool: string; input: Record<string, any> }>();
 
+export interface ChatAttachment {
+  filename: string;
+  url: string;
+}
+
 export interface ChatOptions {
   intent?: string;
   project_id?: string;
   deep_mode?: boolean;
+  attachments?: ChatAttachment[];
 }
 
 export class OrchestratorService {
@@ -345,7 +353,7 @@ export class OrchestratorService {
     source: 'voice' | 'text' = 'text',
     options: ChatOptions = {}
   ): Promise<OrchestratorResponse> {
-    const { intent, project_id, deep_mode } = options;
+    const { intent, project_id, deep_mode, attachments } = options;
 
     // Detect deep mode from message content
     const detectedDeepMode = deep_mode || (source === 'voice' && DEEP_MODE_TRIGGERS.test(content));
@@ -373,7 +381,7 @@ export class OrchestratorService {
 
       if (isConfirm) {
         pendingVoiceActions.delete(threadId);
-        const result = await executeTool(pending.tool, pending.input);
+        const result = await executeTool(pending.tool, pending.input, { source });
         const msg = result.success
           ? `Done. ${result.data?.message || `${pending.tool} completed.`}`
           : `That didn't work: ${result.error}`;
@@ -389,8 +397,15 @@ export class OrchestratorService {
       pendingVoiceActions.delete(threadId);
     }
 
-    // 2. Sanitize input & check for injection
-    const sanitized = PromptSanitizer.sanitize(content);
+    // 2. Append attachment references to content
+    let enrichedContent = content;
+    if (attachments && attachments.length > 0) {
+      const refs = attachments.map(a => `[User attached: ${a.filename} (download: ${a.url})]`).join('\n');
+      enrichedContent = `${content}\n\n${refs}`;
+    }
+
+    // 2b. Sanitize input & check for injection
+    const sanitized = PromptSanitizer.sanitize(enrichedContent);
     const injection = PromptSanitizer.detectInjection(sanitized);
     if (injection.isSuspicious) {
       console.warn(`[Orchestrator] Prompt injection detected: ${injection.reasons.join(', ')}`);
@@ -468,6 +483,7 @@ export class OrchestratorService {
     // 7. Tool execution loop
     const allToolCalls: OrchestratorResponse['tool_calls'] = [];
     let navigateTo: string | undefined;
+    let openCanvas: OrchestratorResponse['open_canvas'] | undefined;
     let finalContent = '';
     let voiceApproval: VoiceApproval | undefined;
 
@@ -513,9 +529,10 @@ export class OrchestratorService {
               break;
             } else if (tier === 2) {
               // Soft gate — announce and proceed
-              const result = await executeTool(toolName, toolInput);
+              const result = await executeTool(toolName, toolInput, { source });
               allToolCalls.push({ tool: toolName, input: toolInput, result });
               if (result.navigate_to) navigateTo = result.navigate_to;
+              if (result.open_canvas) openCanvas = result.open_canvas;
 
               apiMessages.push({ role: 'assistant', content: responseText });
               apiMessages.push({
@@ -527,7 +544,7 @@ export class OrchestratorService {
           }
 
           // Tier 1 or text mode — execute immediately
-          const result = await executeTool(toolName, toolInput);
+          const result = await executeTool(toolName, toolInput, { source });
 
           allToolCalls.push({
             tool: toolName,
@@ -537,6 +554,9 @@ export class OrchestratorService {
 
           if (result.navigate_to) {
             navigateTo = result.navigate_to;
+          }
+          if (result.open_canvas) {
+            openCanvas = result.open_canvas;
           }
 
           // Add assistant's tool call and the result to conversation
@@ -608,6 +628,7 @@ export class OrchestratorService {
       content: finalContent,
       tool_calls: allToolCalls.length > 0 ? allToolCalls : undefined,
       navigate_to: navigateTo,
+      open_canvas: openCanvas,
     };
 
     if (voiceApproval) {

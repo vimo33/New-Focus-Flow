@@ -28,6 +28,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.2.1",
     "fastembed": "^2.1.0",
+    "grammy": "^1.40.0",
     "helmet": "^8.1.0",
     "livekit-server-sdk": "^2.15.0",
     "multer": "^2.0.2",

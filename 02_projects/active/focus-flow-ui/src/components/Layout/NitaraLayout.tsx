@@ -55,12 +55,12 @@ export function NitaraLayout() {
   }
 
   return (
-    <div className="h-screen bg-base text-text-primary overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] bg-base text-text-primary overflow-hidden">
       {/* Icon Rail — hidden during onboarding */}
       {!isOnboarding && <IconRail />}
 
       {/* Canvas Area */}
-      <main className={`h-full ${isOnboarding ? '' : 'ml-12 pb-24'} overflow-y-auto`}>
+      <main className={`h-full ${isOnboarding ? '' : 'md:ml-12 pb-20 md:pb-24'} overflow-y-auto`}>
         <Suspense
           fallback={
             <div className="flex items-center justify-center h-64">

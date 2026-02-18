@@ -56,6 +56,7 @@
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
+    min-height: 100dvh;
     background-color: #06080F;
     color: #E8ECF1;
   }

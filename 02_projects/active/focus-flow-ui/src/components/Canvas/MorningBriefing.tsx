@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
+import { FileText } from 'lucide-react';
 import { GlassCard, StatCard, ActionCard, Badge } from '../shared';
 import { api } from '../../services/api';
 import { useConversationStore } from '../../stores/conversation';
+import { useCanvasStore } from '../../stores/canvas';
 
 interface TaskItem {
   id: string;
@@ -47,6 +49,8 @@ export default function MorningBriefing() {
   const [approvals, setApprovals] = useState<ApprovalItem[]>([]);
   const [networkLeads, setNetworkLeads] = useState<NetworkLead[]>([]);
   const [contentItems, setContentItems] = useState<ContentItem[]>([]);
+  const [recentReports, setRecentReports] = useState<any[]>([]);
+  const { setCanvas } = useCanvasStore();
   const lastNitaraMsg = useConversationStore(s => [...s.messages].reverse().find(m => m.role === 'nitara'));
 
   // Live clock
@@ -109,15 +113,20 @@ export default function MorningBriefing() {
         status: t.status === 'done' ? 'DONE' : t.status === 'in_progress' ? 'DRAFTED' : 'PLANNED',
       })));
     }).catch(console.error);
+
+    // Recent reports
+    api.getReports(undefined, 5).then(data => {
+      setRecentReports(data.reports || []);
+    }).catch(console.error);
   }, []);
 
   const activePriorities = priorities.filter(p => p.status !== 'completed');
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto relative">
-      {/* Clock Widget — top right */}
-      <div className="absolute top-6 right-6 lg:top-8 lg:right-8 text-right">
-        <p className="font-mono text-3xl lg:text-4xl text-text-primary tabular-nums tracking-tight" style={{ fontFeatureSettings: "'tnum'" }}>
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto relative">
+      {/* Clock Widget — stacked on mobile, absolute on desktop */}
+      <div className="static md:absolute md:top-6 md:right-6 lg:top-8 lg:right-8 text-left md:text-right mb-4 md:mb-0">
+        <p className="font-mono text-2xl md:text-3xl lg:text-4xl text-text-primary tabular-nums tracking-tight" style={{ fontFeatureSettings: "'tnum'" }}>
           {timeStr}
         </p>
         <p className="text-text-tertiary text-xs tracking-wider uppercase mt-1">
@@ -128,7 +137,7 @@ export default function MorningBriefing() {
       {/* Greeting Header */}
       <div className="mb-8">
         <h1
-          className="text-3xl lg:text-5xl font-bold text-text-primary tracking-[0.15em] uppercase"
+          className="text-2xl sm:text-3xl lg:text-5xl font-bold text-text-primary tracking-[0.1em] md:tracking-[0.15em] uppercase break-words"
           style={{ fontFamily: 'Syncopate, var(--font-display), sans-serif' }}
         >
           {greeting}{userName ? `, ${userName}` : ''}.
@@ -153,7 +162,7 @@ export default function MorningBriefing() {
       </p>
 
       {/* Widget Grid — asymmetric */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 md:gap-4">
         {/* Today's Focus — spans 2 cols */}
         <GlassCard className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
@@ -278,6 +287,38 @@ export default function MorningBriefing() {
                     variant={item.status === 'DONE' ? 'completed' : item.status === 'DRAFTED' ? 'active' : 'paused'}
                   />
                 </div>
+              ))
+            )}
+          </div>
+        </GlassCard>
+
+        {/* Recent Reports */}
+        <GlassCard>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">Recent Reports</h3>
+            <button
+              onClick={() => setCanvas('reports')}
+              className="text-primary text-xs hover:text-primary/80 transition-colors"
+            >
+              View All &rarr;
+            </button>
+          </div>
+          <div className="space-y-3">
+            {recentReports.length === 0 ? (
+              <p className="text-text-tertiary text-sm py-2">No reports generated yet</p>
+            ) : (
+              recentReports.map((report: any) => (
+                <button
+                  key={report.id}
+                  onClick={() => setCanvas('reports')}
+                  className="w-full flex items-center gap-3 py-1 text-left hover:bg-elevated/30 -mx-1 px-1 rounded-lg transition-colors"
+                >
+                  <FileText size={14} className="text-primary flex-shrink-0" />
+                  <span className="text-text-primary text-sm truncate flex-1">{report.title}</span>
+                  <span className="text-text-tertiary text-xs flex-shrink-0">
+                    {new Date(report.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                  </span>
+                </button>
               ))
             )}
           </div>

@@ -43,12 +43,16 @@ import financialsRoutes from './routes/financials.routes';
 import incomeStrategyRoutes from './routes/income-strategy.routes';
 import networkRoutes from './routes/network.routes';
 import portfolioRoutes from './routes/portfolio.routes';
+import reportRoutes from './routes/report.routes';
 import weeklyReportRoutes from './routes/weekly-report.routes';
 import marketingRoutes from './routes/marketing.routes';
 import confidenceRoutes from './routes/confidence.routes';
 import knowledgeRoutes from './routes/knowledge.routes';
 import livekitRoutes from './routes/livekit.routes';
+import queueRoutes from './routes/queue.routes';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
+import { taskQueueService } from './services/task-queue.service';
+import { telegramHitlService } from './services/telegram-hitl.service';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -142,11 +146,13 @@ app.use('/api', financialsRoutes);
 app.use('/api', incomeStrategyRoutes);
 app.use('/api', networkRoutes);
 app.use('/api', portfolioRoutes);
+app.use('/api', reportRoutes);
 app.use('/api', weeklyReportRoutes);
 app.use('/api', marketingRoutes);
 app.use('/api', confidenceRoutes);
 app.use('/api', knowledgeRoutes);
 app.use('/api', livekitRoutes);
+app.use('/api', queueRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -200,6 +206,24 @@ knowledgeDigestService.initialize().then(() => {
   console.log('[Startup] Knowledge digest service initialized');
 }).catch(err => {
   console.error('[Startup] Knowledge digest init failed:', err.message);
+});
+
+// Initialize task queue service
+taskQueueService.initialize().then(() => {
+  console.log('[Startup] Task queue service initialized');
+}).catch(err => {
+  console.error('[Startup] Task queue init failed:', err.message);
+});
+
+// Initialize Telegram HITL service (long polling mode)
+telegramHitlService.initialize().then((ok) => {
+  if (ok) {
+    console.log('[Startup] Telegram HITL active (long polling)');
+  } else {
+    console.log('[Startup] Telegram HITL not configured — skipping');
+  }
+}).catch(err => {
+  console.error('[Startup] Telegram HITL init failed:', err.message);
 });
 
 // Start server

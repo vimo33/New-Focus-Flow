@@ -46,7 +46,7 @@ export default function CommandPalette() {
       <div className="absolute inset-0 bg-base/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
 
       {/* Palette */}
-      <div className="absolute top-[20%] left-1/2 -translate-x-1/2 w-[580px] max-h-[520px] bg-surface border border-[var(--glass-border)] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+      <div className="absolute top-[10%] md:top-[20%] left-1/2 -translate-x-1/2 w-[calc(100%-2rem)] max-w-[580px] max-h-[520px] bg-surface border border-[var(--glass-border)] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         <Command className="flex flex-col h-full" label="Command palette">
           {/* Search input */}
           <div className="flex items-center gap-3 px-4 py-3 border-b border-[var(--glass-border)]">

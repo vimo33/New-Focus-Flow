@@ -57,7 +57,7 @@ router.get('/livekit/keywords', async (_req: Request, res: Response) => {
     try {
       const projects = await vaultService.getProjects();
       for (const p of projects) {
-        if (p.title) keywords.push(`${p.title}:2`);
+        if (p.title) keywords.push(p.title);
       }
     } catch { /* skip */ }
 
@@ -65,20 +65,20 @@ router.get('/livekit/keywords', async (_req: Request, res: Response) => {
     try {
       const contacts = await crmService.getContacts();
       for (const c of contacts.slice(0, 50)) {
-        if (c.name) keywords.push(`${c.name}:2`);
+        if (c.name) keywords.push(c.name);
       }
     } catch { /* skip */ }
 
     // Add founder name
     try {
       const profile = await founderProfileService.getProfile();
-      if (profile?.name) keywords.push(`${profile.name}:2`);
+      if (profile?.name) keywords.push(profile.name);
     } catch { /* skip */ }
 
     // Add core platform terms
     keywords.push(
-      'Nitara:2', 'Focus Flow:2', 'Vimo:2',
-      'Kavach:2', 'Bramha:2', 'OpenClaw:2',
+      'Nitara', 'Focus Flow', 'Vimo',
+      'Kavach', 'Bramha', 'OpenClaw',
     );
 
     res.json({ keywords, count: keywords.length });

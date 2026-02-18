@@ -169,7 +169,7 @@ export default function SettingsCanvas() {
           <GlassCard>
             <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">Voice & Audio</h3>
             <label className="block text-text-secondary text-sm mb-2">Output Voice</label>
-            <div className="grid grid-cols-3 gap-2 mb-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-4">
               {[
                 { name: 'Nova', key: 'nova', desc: 'Neutral' },
                 { name: 'Atlas', key: 'atlas', desc: 'Direct' },

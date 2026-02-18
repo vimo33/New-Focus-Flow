@@ -11,7 +11,8 @@ export type CanvasState =
   | 'council_evaluation'
   | 'weekly_report'
   | 'onboarding'
-  | 'marketing';
+  | 'marketing'
+  | 'reports';
 
 interface CanvasStore {
   activeCanvas: CanvasState;

@@ -1,0 +1,64 @@
+﻿PRD: AURA — The Zurich Temporal Lens (Project Mirari)
+Status: Ideal Vision Specification (Post-Freedom Design Update)
+Version: 5.0 (Zero-UI & Invisible Companion Focus)
+Lead Engineering Team: Claude Code Opus 4.6 (Orchestrator) + sub-agents in tmux mode
+________________
+1. Executive Summary & Vision
+AURA is no longer defined as a mobile application, but as a Temporal Lens—an invisible, "Zero-UI" companion that overlays history directly onto the user's perception of the physical city.1 By utilizing full-duplex multimodal models, AURA proactively identifies landmarks and initiates unscripted, voice-driven roleplays based on the user's real-time emotional context and spatial position.
+________________
+2. Core Interaction Loop: Omnimodal Proactivity
+Unlike the "point-and-identify" manual loop, Mirari uses a Continuous Perception Stream:
+1. See & Listen: The engine utilizes full-duplex vision-language-action (VLA) processing to identify high-relevance landmarks before the user even raises their phone.
+2. Whisper: The AI "whispers" a proactive historical hook through spatial audio (e.g., "The man standing where you are now was once arrested for eating sausages in Lent").2
+3. Co-Create: The user engages in a natural, voice-first conversation. There are no menus; the user's verbal input and gaze drive the narrative evolution.
+________________
+3. 2026 "Invisible Architecture" Technical Stack
+The stack is architected for "Real-Time Adaptive Immersion," prioritizing throughput and latency over rigid scripts.
+3.1 Advanced Multimodal Core
+* Omnimodal Engine: MiniCPM-o 4.5.
+   * Capability: Supports Full-Duplex Proactive Multimodal Live Streaming. It can see, listen, and speak simultaneously without mutual blocking.
+* Spatial Grounding: Qwen3-VL (Nano).
+   * Capability: Provides 3D Grounding to predict real-world size and depth, ensuring AR overlays are anchored with centimeter precision in 3D space.
+* Flash Reasoning: MobileLLM-Pro (P1).
+   * Capability: 1.08B parameter reasoning model distilled from Llama 4-Scout; handles "historical memory" and long-context persona consistency (128k tokens).
+* Streaming Speech: NeuTTS-Nano.
+   * Capability: Zero-shot voice cloning (3s sample) and real-time streaming synthesis for unscripted conversational output.
+3.2 Execution Strategy
+* 1-Bit Sustainability: Utilization of BitNet b1.58 principles to achieve 94% memory reduction and triple inference speed for the reasoning core.
+* Unified Memory Co-Execution: Fine-grained CPU-GPU-NPU task distribution via LiteRT to manage thermal loads during 15+ minute continuous vision sessions.
+________________
+4. Content Strategy: The Generative World Engine
+The experience moves beyond branching scripts to a Generative World Engine architecture.1
+1. Character Constitutions: Historical figures (e.g., Zwingli, Tristan Tzara) are governed by a "Constitution"—a high-dimensional embedding of their theological, political, and social beliefs.2
+2. Adaptive Persona Barriers: The AI maintains character integrity while dynamically navigating user questions. It uses the Persona Barrier to stay in-period (e.g., refusing to discuss modern technology while standing in 4th-century Turicum).1
+3. Digital Souvenirs: At the end of a journey, the engine generates a unique, one-of-a-kind digital memento (e.g., a Dadaist collage or a Roman sentinel's log) that reflects the specific conversation and path taken by the user.1
+________________
+5. UI/UX Design: Liquid Glass & Spatial Harmony
+The design follows the "Least UX is the Best UX" principle.
+* Liquid Glass: Surfaces utilize Adaptive Transparency and micro-refractions to blend with the physical environment.
+* Ultra-Contextual Navigation: Menus only materialize near the content they modify and dissolve into background transparency when the user's gaze shifts away.
+* Gesture & Eye-Controlled Flows: Replaces the "tap-and-scroll" monopoly with spatial gestures and gaze-based triggers for AR reveals.
+________________
+6. Soundscapes: 4-Layer Spatial Audio
+Sound is treated as the primary immersive anchor, receiving 10-15% of the total R&D budget.
+1. Ambient Base: Low-frequency emotional tone (e.g., medieval market crowd drone).
+2. Spatial Layer: 3D object-based audio positioning character voices in the user's physical room/environment.
+3. Reactive Layer: Sound effects that respond to movement (e.g., echoing footsteps on stone when "entering" a reconstructed fort).
+4. Functional Layer: Subtle haptic and auditory cues for navigation and accessibility.
+________________
+7. Privacy: Law of Local Residency
+Privacy is not a setting, but a physical law of the architecture.
+* Secure Enclave Reasoning: Visual perception and character constitutions are processed in an encrypted on-device enclave.
+* Differential Anonymization: Any cloud-enhanced "Deep Conversations" are sanitized via Differential Privacy, ensuring the cloud "Brain" learns from the interaction without ever knowing the user's identity or coordinates.
+________________
+8. Success Metrics (KPIs)
+* Immersion Score: >80% positive sentiment on "sense of presence" and "temporal layering" surveys.
+* Natural Conversation: Average >10 turns per interaction without user "friction" (re-pointing or tapping).1
+* Retention: >25% Day-30 retention, aiming to transform the app into a "Discovery Habit" for locals.3
+________________
+Approved for Ideal Vision Build: AI Council Strategist Team
+Date: February 15, 2026
+Works cited
+1. Zürich Time Traveler Content Strategies
+2. Zurich AR History App POC
+3. Strategic Analysis and Market Viability of Aura: The Zurich Discovery Engine

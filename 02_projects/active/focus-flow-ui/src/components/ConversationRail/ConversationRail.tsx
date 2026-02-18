@@ -16,6 +16,7 @@ export default function ConversationRail() {
     toggleExpanded,
     setExpanded,
     sendMessage,
+    sendMessageWithAttachments,
     addVoiceMessage,
     projectId,
     projectName,
@@ -65,6 +66,19 @@ export default function ConversationRail() {
     setExpanded(true);
   };
 
+  const handleVoiceTextMessage = (content: string) => {
+    if (voice.isConnected && voice.sendTextMessage) {
+      voice.sendTextMessage(content);
+      addVoiceMessage('user', content);
+    } else {
+      sendMessage(content);
+    }
+  };
+
+  const handleVoiceFileUpload = (file: File, content: string) => {
+    sendMessageWithAttachments(content, [file]);
+  };
+
   const isVoiceActive = voice.isConnected;
 
   return (
@@ -83,6 +97,10 @@ export default function ConversationRail() {
         onStartTalking={voice.startTalking}
         onStopTalking={voice.stopTalking}
         onToggleMic={voice.toggleMic}
+        onSendTextMessage={handleVoiceTextMessage}
+        onFileUpload={handleVoiceFileUpload}
+        deepMode={voice.deepMode}
+        onToggleDeepMode={() => voice.setDeepMode(!voice.deepMode)}
       />
 
       {/* Backdrop overlay when expanded (non-voice) */}
@@ -95,7 +113,7 @@ export default function ConversationRail() {
 
       {/* Thread overlay (text mode only — voice uses VoiceOverlay) */}
       {isExpanded && !isVoiceActive && (
-        <div className="fixed bottom-16 left-12 right-0 z-40 max-h-[60vh] flex flex-col">
+        <div className="fixed bottom-16 left-0 md:left-12 right-0 z-40 max-h-[60vh] flex flex-col">
           <div className="flex items-center justify-between px-4 py-2 bg-surface border-b border-[var(--glass-border)]">
             <span className="text-text-secondary text-xs font-semibold tracking-wider uppercase">
               Conversation
@@ -106,7 +124,7 @@ export default function ConversationRail() {
           </div>
           <div ref={threadRef} className="flex-1 overflow-y-auto px-4 py-3 bg-surface/95 backdrop-blur-xl">
             {messages.map((msg) => (
-              <MessageBubble key={msg.id} role={msg.role} content={msg.content} timestamp={msg.timestamp}>
+              <MessageBubble key={msg.id} role={msg.role} content={msg.content} timestamp={msg.timestamp} attachments={msg.attachments}>
                 {msg.cards?.map((card, i) => (
                   <ConversationActionCard
                     key={i}
@@ -132,7 +150,7 @@ export default function ConversationRail() {
       )}
 
       {/* Bottom bar */}
-      <div className="fixed bottom-0 left-12 right-0 z-40 bg-surface border-t border-[var(--glass-border)]">
+      <div className="fixed bottom-14 md:bottom-0 left-0 md:left-12 right-0 z-40 bg-surface border-t border-[var(--glass-border)]">
         {/* Last Nitara message compact bar */}
         {!isExpanded && lastNitaraMessage && (
           <button
@@ -189,7 +207,7 @@ export default function ConversationRail() {
           <button
             onClick={handleSend}
             disabled={!inputValue.trim()}
-            className={`flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+            className={`flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
               inputValue.trim()
                 ? 'bg-primary text-base hover:bg-primary/80'
                 : 'bg-elevated text-text-tertiary'

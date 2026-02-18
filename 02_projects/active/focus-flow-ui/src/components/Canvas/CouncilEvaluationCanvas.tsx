@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useCanvasStore } from '../../stores/canvas';
 import { api } from '../../services/api';
+import { useAgentStore } from '../../stores/agent';
 import { GlassCard, ConfidenceRing } from '../shared';
 
 interface Evaluator {
@@ -74,11 +75,14 @@ export default function CouncilEvaluationCanvas() {
   const { canvasParams, goBack } = useCanvasStore();
   const [verdict, setVerdict] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [polling, setPolling] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const projectId = canvasParams?.projectId;
     const verdictId = canvasParams?.verdictId;
+    const ideaId = canvasParams?.ideaId;
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
 
     const fetchFullVerdict = async (id: string) => {
       const res = await api.getCouncilVerdict(id);
@@ -87,23 +91,74 @@ export default function CouncilEvaluationCanvas() {
 
     const loadVerdict = async () => {
       try {
+        // Idea-based council (from voice): SSE + fallback poll
+        if (ideaId) {
+          const idea = await api.getIdea(ideaId);
+          if (idea?.council_verdict) {
+            setVerdict({ ...idea.council_verdict, project_name: idea.title });
+            setLoading(false);
+          } else {
+            // No verdict yet — enter polling mode with SSE
+            setLoading(false);
+            setPolling(true);
+
+            // SSE: listen for council completion matching this idea
+            const unsubCouncil = useAgentStore.getState().onCouncilCompleted('council-canvas', async (data) => {
+              if (data.idea_id === ideaId && data.recommendation) {
+                try {
+                  const updated = await api.getIdea(ideaId);
+                  if (updated?.council_verdict) {
+                    setVerdict({ ...updated.council_verdict, project_name: updated.title });
+                    setPolling(false);
+                    if (pollTimer) clearInterval(pollTimer);
+                  }
+                } catch {}
+              }
+            });
+
+            // Fallback poll every 15s
+            pollTimer = setInterval(async () => {
+              try {
+                const updated = await api.getIdea(ideaId);
+                if (updated?.council_verdict) {
+                  setVerdict({ ...updated.council_verdict, project_name: updated.title });
+                  setPolling(false);
+                  if (pollTimer) clearInterval(pollTimer);
+                  unsubCouncil();
+                }
+              } catch {
+                // Ignore poll errors, keep trying
+              }
+            }, 15000);
+
+            // Store unsubscribe for cleanup — attach to pollTimer cleanup
+            const origPollTimer = pollTimer;
+            pollTimer = Object.assign(origPollTimer, { __unsub: unsubCouncil }) as any;
+          }
+          return;
+        }
+
         if (verdictId) {
           const v = await fetchFullVerdict(verdictId);
           setVerdict(v);
         } else if (projectId) {
-          const res = await api.getCouncilVerdicts(projectId);
-          const summary = res.verdicts?.[0];
-          if (summary?.id) {
-            const full = await fetchFullVerdict(summary.id);
-            setVerdict(full);
-          } else {
-            try {
-              const proj = await api.getProject(projectId);
-              if (proj?.artifacts?.council_verdict) {
-                setVerdict({ ...proj.artifacts.council_verdict, project_name: proj.title });
-              }
-            } catch {
-              // No verdict found
+          // Try council framework verdicts first, then fall back to project artifacts
+          let found = false;
+          try {
+            const res = await api.getCouncilVerdicts(projectId);
+            const summary = res.verdicts?.[0];
+            if (summary?.id) {
+              const full = await fetchFullVerdict(summary.id);
+              setVerdict(full);
+              found = true;
+            }
+          } catch {
+            // Council framework unavailable — fall through to project artifacts
+          }
+          if (!found) {
+            const proj = await api.getProject(projectId);
+            if (proj?.artifacts?.council_verdict) {
+              setVerdict({ ...proj.artifacts.council_verdict, project_name: proj.title });
             }
           }
         } else {
@@ -122,12 +177,42 @@ export default function CouncilEvaluationCanvas() {
     };
 
     loadVerdict();
+
+    return () => {
+      if (pollTimer) {
+        clearInterval(pollTimer);
+        // Clean up SSE subscription if attached
+        if ((pollTimer as any).__unsub) (pollTimer as any).__unsub();
+      }
+    };
   }, [canvasParams]);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading council evaluation...</div>
+      </div>
+    );
+  }
+
+  if (polling) {
+    const ideaName = canvasParams?.ideaName || 'your idea';
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
+            <div className="w-3 h-3 rounded-full bg-secondary animate-pulse" style={{ animationDelay: '0.3s' }} />
+            <div className="w-3 h-3 rounded-full bg-tertiary animate-pulse" style={{ animationDelay: '0.6s' }} />
+          </div>
+          <p className="text-text-primary text-lg font-semibold">Council in Session</p>
+          <p className="text-text-secondary text-sm mt-1">
+            Evaluating "{ideaName}" — the council agents are deliberating.
+          </p>
+          <p className="text-text-tertiary text-xs mt-3">
+            This typically takes 30-60 seconds. Results will appear automatically.
+          </p>
+        </div>
       </div>
     );
   }

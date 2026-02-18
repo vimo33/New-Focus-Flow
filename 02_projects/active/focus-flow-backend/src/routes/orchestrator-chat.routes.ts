@@ -7,7 +7,7 @@ const router = Router();
 // POST /api/orchestrator/chat - Send message to orchestrator
 router.post('/chat', async (req: Request, res: Response) => {
   try {
-    const { content, thread_id, source, intent, project_id, deep_mode } = req.body;
+    const { content, thread_id, source, intent, project_id, deep_mode, attachments } = req.body;
 
     // Allow empty content for greeting intent
     if (!content && intent !== 'greeting') {
@@ -18,7 +18,7 @@ router.post('/chat', async (req: Request, res: Response) => {
       content || '',
       thread_id,
       source || 'text',
-      { intent, project_id, deep_mode }
+      { intent, project_id, deep_mode, attachments }
     );
 
     res.json(response);

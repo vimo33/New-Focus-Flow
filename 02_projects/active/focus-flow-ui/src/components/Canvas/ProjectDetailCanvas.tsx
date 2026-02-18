@@ -2,18 +2,19 @@ import { useEffect, useState } from 'react';
 import { useCanvasStore } from '../../stores/canvas';
 import { useConversationStore } from '../../stores/conversation';
 import { api } from '../../services/api';
+import { FileText } from 'lucide-react';
 import { GlassCard, Badge, PipelineNode, ConfidenceRing } from '../shared';
 import type { Task, Project, ActivityEntry } from '../../services/api';
 
 const PHASES = ['concept', 'spec', 'design', 'dev', 'test', 'deploy', 'live'] as const;
 const PHASE_LABELS: Record<string, string> = {
-  concept: 'Opportunity',
-  spec: 'Proposal',
-  design: 'Negotiate',
-  dev: 'Engage',
-  test: 'Deliver',
-  deploy: 'Review',
-  live: 'Close',
+  concept: 'Concept',
+  spec: 'Spec',
+  design: 'Design',
+  dev: 'Dev',
+  test: 'Test',
+  deploy: 'Deploy',
+  live: 'Live',
 };
 
 const PLAYBOOK_BADGES: Record<string, { label: string; variant: 'active' | 'playbook' | 'council' | 'completed' | 'paused' }> = {
@@ -48,6 +49,7 @@ export default function ProjectDetailCanvas() {
   const [addingCollaborator, setAddingCollaborator] = useState(false);
   const [newCollabName, setNewCollabName] = useState('');
   const [newCollabRole, setNewCollabRole] = useState('');
+  const [projectReports, setProjectReports] = useState<any[]>([]);
 
   // Set project context for Nitara when viewing this project
   useEffect(() => {
@@ -69,13 +71,17 @@ export default function ProjectDetailCanvas() {
       api.getCollaborators(projectId),
       api.getProjectActivity(projectId),
       api.getProjectMemories(projectId, 5).catch(() => ({ memories: [] })),
+      api.getReports(undefined, 50).catch(() => ({ reports: [] })),
     ])
-      .then(([proj, fin, collab, act, mem]) => {
+      .then(([proj, fin, collab, act, mem, reports]) => {
         setProject(proj);
         setFinancials(fin);
         setCollaborators(collab.collaborators || []);
         setActivity(act.entries || []);
         setMemories(mem.memories?.map((m: any) => m.memory) || []);
+        // Filter reports for this project
+        const projReports = (reports.reports || []).filter((r: any) => r.project_id === projectId);
+        setProjectReports(projReports);
         // Update conversation store with project name for context indicator
         if (proj?.title) {
           useConversationStore.getState().setProjectContext(projectId, proj.title);
@@ -701,6 +707,44 @@ export default function ProjectDetailCanvas() {
               </button>
             </GlassCard>
           )}
+
+          {/* Reports */}
+          <GlassCard>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">Reports</h3>
+              <button
+                onClick={() => setCanvas('reports')}
+                className="text-primary text-xs hover:text-primary/80 transition-colors"
+              >
+                View All &rarr;
+              </button>
+            </div>
+            {projectReports.length === 0 ? (
+              <p className="text-text-tertiary text-xs">No reports for this project yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {projectReports.slice(0, 3).map((report: any) => (
+                  <button
+                    key={report.id}
+                    onClick={() => setCanvas('reports')}
+                    className="w-full flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg hover:bg-elevated/40 transition-colors text-left"
+                  >
+                    <FileText size={14} className="text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text-primary text-sm truncate">{report.title}</p>
+                      <p className="text-text-tertiary text-xs">
+                        {new Date(report.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </p>
+                    </div>
+                    <Badge
+                      label={report.type.replace(/-/g, ' ').toUpperCase()}
+                      variant="playbook"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </GlassCard>
 
           {/* Activity Feed */}
           <GlassCard>

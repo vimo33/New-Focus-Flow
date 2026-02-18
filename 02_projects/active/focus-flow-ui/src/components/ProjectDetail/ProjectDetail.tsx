@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useParams, useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { useAgentStore } from '../../stores/agent';
 import type {
   Project, Task, ActivityEntry, FocusSession, DesignScreen,
   PipelineState, PhaseState, PhaseSubState,
@@ -158,6 +159,28 @@ export function ProjectDetail() {
     if (id) {
       loadProjectData(id);
     }
+  }, [id]);
+
+  // SSE: auto-refresh when relevant tools complete
+  useEffect(() => {
+    if (!id) return;
+
+    const RELEVANT_TOOLS = new Set([
+      'create_task', 'update_task', 'create_project', 'update_project',
+      'process_inbox_item', 'promote_idea_to_project', 'validate_idea',
+      'start_pipeline', 'scaffold_project', 'generate_specs',
+    ]);
+
+    const unsub = useAgentStore.getState().onToolCompleted('project-detail', (data) => {
+      if (RELEVANT_TOOLS.has(data.tool)) {
+        const isRelevant = !data.data?.project_id || data.data.project_id === id;
+        if (isRelevant) {
+          loadProjectData(id);
+        }
+      }
+    });
+
+    return unsub;
   }, [id]);
 
   // Close menu on click outside
@@ -2147,8 +2170,34 @@ function CouncilRunningView({ project, onStatusRefresh }: { project: Project; on
   const [error, setError] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  // Poll for progress every 2s
+  // SSE-driven progress + fallback poll every 10s
   useEffect(() => {
+    // SSE: live per-agent updates
+    const unsubProgress = useAgentStore.getState().onCouncilProgress('council-running-view', (data) => {
+      if (data.project_id !== project.id) return;
+      setProgress(prev => {
+        if (!prev) return prev;
+        const agents: AgentProgressEntry[] = prev.agents.map(a => {
+          if (a.agent_name !== data.agent_name) return a;
+          const updated: AgentProgressEntry = { ...a, status: data.status };
+          if (data.error) updated.error = data.error;
+          if (data.score != null && a.evaluation) {
+            updated.evaluation = { ...a.evaluation, score: data.score };
+          }
+          return updated;
+        });
+        return { ...prev, agents, completed_count: data.completed_count ?? prev.completed_count };
+      });
+    });
+
+    // SSE: council completed → trigger refresh
+    const unsubCompleted = useAgentStore.getState().onCouncilCompleted('council-running-view', (data) => {
+      if (data.project_id !== project.id) return;
+      if (pollRef.current) clearInterval(pollRef.current);
+      onStatusRefresh();
+    });
+
+    // Fallback poll every 10s
     const poll = async () => {
       try {
         const status = await api.getPipelineStatus(project.id);
@@ -2156,7 +2205,6 @@ function CouncilRunningView({ project, onStatusRefresh }: { project: Project; on
         const cp = p.artifacts?.council_progress;
         if (cp) setProgress(cp);
 
-        // Auto-transition when step changes to council_review
         const step = status.current_phase_state?.step;
         if (step === 'council_review') {
           if (pollRef.current) clearInterval(pollRef.current);
@@ -2167,8 +2215,13 @@ function CouncilRunningView({ project, onStatusRefresh }: { project: Project; on
       }
     };
     poll();
-    pollRef.current = setInterval(poll, 2000);
-    return () => { if (pollRef.current) clearInterval(pollRef.current); };
+    pollRef.current = setInterval(poll, 10000);
+
+    return () => {
+      if (pollRef.current) clearInterval(pollRef.current);
+      unsubProgress();
+      unsubCompleted();
+    };
   }, [project.id]);
 
   const handleRetry = async () => {

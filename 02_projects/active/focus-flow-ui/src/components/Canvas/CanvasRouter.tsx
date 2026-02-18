@@ -1,5 +1,65 @@
 import { useCanvasStore } from '../../stores/canvas';
-import { lazy, Suspense, useRef, useEffect, useState } from 'react';
+import { lazy, Suspense, useRef, useEffect, useState, Component } from 'react';
+import type { ReactNode, ErrorInfo } from 'react';
+
+/**
+ * Error boundary that catches dynamic import failures (stale chunks after rebuild)
+ * and auto-reloads the page once. Shows a retry button if reload already attempted.
+ */
+class ChunkErrorBoundary extends Component<
+  { children: ReactNode },
+  { hasError: boolean; error: Error | null }
+> {
+  constructor(props: { children: ReactNode }) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error: Error, _info: ErrorInfo) {
+    const isChunkError =
+      error.message.includes('dynamically imported module') ||
+      error.message.includes('Failed to fetch') ||
+      error.message.includes('Loading chunk');
+
+    if (isChunkError) {
+      // Auto-reload once to pick up new chunk hashes
+      const reloadKey = 'chunk-reload-' + window.location.pathname;
+      if (!sessionStorage.getItem(reloadKey)) {
+        sessionStorage.setItem(reloadKey, '1');
+        window.location.reload();
+        return;
+      }
+      // Already tried reloading — clear flag so next navigation can try again
+      sessionStorage.removeItem(reloadKey);
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-text-secondary text-lg">Something went wrong</p>
+            <p className="text-text-tertiary text-sm mt-1 max-w-md">
+              A new version may be available. Try reloading.
+            </p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 rounded-lg text-sm font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+            >
+              Reload Page
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 // Lazy load canvas components
 const MorningBriefing = lazy(() => import('./MorningBriefing'));
@@ -13,6 +73,7 @@ const FinancialsCanvas = lazy(() => import('./FinancialsCanvas'));
 const CalendarCanvas = lazy(() => import('./CalendarCanvas'));
 const OnboardingFlow = lazy(() => import('../Onboarding/OnboardingFlow'));
 const MarketingCanvas = lazy(() => import('./MarketingCanvas'));
+const ReportsCanvas = lazy(() => import('./ReportsCanvas'));
 
 // Placeholder for canvases not yet built
 function ComingSoon({ name }: { name: string }) {
@@ -66,6 +127,8 @@ export default function CanvasRouter() {
         return <OnboardingFlow />;
       case 'marketing':
         return <MarketingCanvas />;
+      case 'reports':
+        return <ReportsCanvas />;
       default:
         return <ComingSoon name="Unknown Canvas" />;
     }
@@ -78,15 +141,17 @@ export default function CanvasRouter() {
           visible ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center h-64">
-              <div className="text-text-tertiary">Loading...</div>
-            </div>
-          }
-        >
-          {renderCanvas()}
-        </Suspense>
+        <ChunkErrorBoundary>
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center h-64">
+                <div className="text-text-tertiary">Loading...</div>
+              </div>
+            }
+          >
+            {renderCanvas()}
+          </Suspense>
+        </ChunkErrorBoundary>
       </div>
     </div>
   );

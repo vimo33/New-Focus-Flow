@@ -11,6 +11,7 @@ import {
 } from 'livekit-client';
 import type { TranscriptionSegment } from 'livekit-client';
 import { api } from '../services/api';
+import { useCanvasStore } from '../stores/canvas';
 
 type InputMode = 'push-to-talk' | 'toggle' | 'voice-active';
 
@@ -26,18 +27,26 @@ interface LiveKitVoiceState {
   agentAudioLevel: number;
   transcriptQueue: Array<{ role: 'user' | 'nitara'; text: string }>;
   inputMode: InputMode;
+  deepMode: boolean;
+  setDeepMode: (enabled: boolean) => void;
   connect: (threadId?: string, projectId?: string) => Promise<void>;
   disconnect: () => void;
   startTalking: () => void;
   stopTalking: () => void;
   toggleMic: () => void;
+  sendTextMessage: (text: string) => Promise<void>;
 }
 
 function getInputMode(): InputMode {
   const stored = localStorage.getItem('nitara-input-mode');
   if (stored === 'voice-active' || stored === 'toggle' || stored === 'push-to-talk') return stored;
-  return 'toggle'; // default to toggle — much better UX than push-to-hold
+  return 'toggle';
 }
+
+// Throttle threshold — only update state when audio level changes by this much
+const LEVEL_THRESHOLD = 0.02;
+// Audio level poll interval (250ms instead of 100ms — still smooth, 60% fewer re-renders)
+const LEVEL_POLL_MS = 250;
 
 export function useLiveKitVoice(): LiveKitVoiceState {
   const [isConnected, setIsConnected] = useState(false);
@@ -51,10 +60,14 @@ export function useLiveKitVoice(): LiveKitVoiceState {
   const [agentAudioLevel, setAgentAudioLevel] = useState(0);
   const [transcriptQueue, setTranscriptQueue] = useState<Array<{ role: 'user' | 'nitara'; text: string }>>([]);
   const [inputMode] = useState<InputMode>(getInputMode);
+  const [deepMode, setDeepMode] = useState(false);
 
   const roomRef = useRef<Room | null>(null);
   const audioElementRef = useRef<HTMLAudioElement | null>(null);
   const levelIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  // Refs for throttled audio level comparison
+  const lastUserLevel = useRef(0);
+  const lastAgentLevel = useRef(0);
 
   const cleanup = useCallback(() => {
     if (levelIntervalRef.current) {
@@ -70,6 +83,8 @@ export function useLiveKitVoice(): LiveKitVoiceState {
       roomRef.current.disconnect();
       roomRef.current = null;
     }
+    lastUserLevel.current = 0;
+    lastAgentLevel.current = 0;
     setIsConnected(false);
     setIsReady(false);
     setIsMicActive(false);
@@ -92,7 +107,8 @@ export function useLiveKitVoice(): LiveKitVoiceState {
     const tokenParams: Record<string, any> = { threadId, voicePreset };
     if (projectId) {
       tokenParams.projectId = projectId;
-      tokenParams.deepMode = true; // Auto deep mode for project voice
+      tokenParams.deepMode = true;
+      setDeepMode(true);
     }
 
     const { token, wsUrl } = await api.getLiveKitToken(tokenParams);
@@ -111,6 +127,9 @@ export function useLiveKitVoice(): LiveKitVoiceState {
       _participant: RemoteParticipant
     ) => {
       if (track.kind === Track.Kind.Audio) {
+        // Reuse existing element if present
+        const existing = document.getElementById('livekit-agent-audio');
+        if (existing) existing.remove();
         const el = track.attach();
         el.id = 'livekit-agent-audio';
         document.body.appendChild(el);
@@ -133,7 +152,7 @@ export function useLiveKitVoice(): LiveKitVoiceState {
       setIsAgentSpeaking(agentSpeaking);
     });
 
-    // Transcription from LiveKit Agents SDK (primary method)
+    // Transcription from LiveKit Agents SDK
     room.on(RoomEvent.TranscriptionReceived, (
       segments: TranscriptionSegment[],
       participant?: Participant
@@ -144,21 +163,24 @@ export function useLiveKitVoice(): LiveKitVoiceState {
       const isAgent = participant?.identity !== room.localParticipant.identity;
       const isFinal = segments.some(s => s.final);
 
-      setCurrentTranscript(text);
-
+      // Set role-specific transcript (avoid cross-overwriting)
       if (isAgent) {
         setAgentTranscript(text);
+        setCurrentTranscript(text);
       } else {
         setUserTranscript(text);
+        setCurrentTranscript(text);
       }
 
-      // When a final transcript arrives, queue it for the conversation thread
+      // Queue final transcripts for the conversation thread
       if (isFinal && text.length > 1) {
+        // Clear the live transcript after a short delay so the final text doesn't linger
+        setTimeout(() => setCurrentTranscript(''), 800);
         setTranscriptQueue(q => [...q, { role: isAgent ? 'nitara' : 'user', text }]);
       }
     });
 
-    // Data messages fallback (for custom data payloads)
+    // Data messages fallback
     room.on(RoomEvent.DataReceived, (
       payload: Uint8Array,
       _participant?: RemoteParticipant,
@@ -169,6 +191,8 @@ export function useLiveKitVoice(): LiveKitVoiceState {
         const data = JSON.parse(decoded);
         if (data.type === 'transcript' && data.text) {
           setCurrentTranscript(data.text);
+        } else if (data.type === 'open_canvas' && data.canvas) {
+          useCanvasStore.getState().setCanvas(data.canvas, data.params || {});
         }
       } catch {
         // Ignore non-JSON data packets
@@ -182,39 +206,46 @@ export function useLiveKitVoice(): LiveKitVoiceState {
     await room.connect(wsUrl, token);
     setIsConnected(true);
 
-    // Request mic permission by enabling then disabling, but with proper timing.
-    // This pre-creates the audio track so subsequent enable calls are instant.
+    // Pre-create mic track. Use the published track event instead of arbitrary delay.
     try {
       await room.localParticipant.setMicrophoneEnabled(true);
-      // Wait for WebRTC negotiation to complete
-      await new Promise(resolve => setTimeout(resolve, 500));
 
-      // For voice-active mode, keep mic on
+      // For voice-active mode, keep mic on; otherwise mute after track is established
       if (getInputMode() === 'voice-active') {
         setIsMicActive(true);
       } else {
+        // Small delay for WebRTC negotiation — reduced from 500ms
+        await new Promise(resolve => setTimeout(resolve, 150));
         await room.localParticipant.setMicrophoneEnabled(false);
       }
     } catch (err) {
       console.warn('[Voice] Mic permission failed:', err);
     }
 
-    // Mark as ready after a brief stabilization delay
-    setTimeout(() => setIsReady(true), 300);
+    setIsReady(true);
 
-    // Poll audio levels
+    // Poll audio levels — throttled to only trigger re-renders on significant changes
     levelIntervalRef.current = setInterval(() => {
       if (!roomRef.current) return;
       const local = roomRef.current.localParticipant;
-      setUserAudioLevel(local.audioLevel || 0);
+      const newUserLevel = local.audioLevel || 0;
+
+      if (Math.abs(newUserLevel - lastUserLevel.current) > LEVEL_THRESHOLD) {
+        lastUserLevel.current = newUserLevel;
+        setUserAudioLevel(newUserLevel);
+      }
 
       const remoteParticipants = Array.from(roomRef.current.remoteParticipants.values());
-      const maxRemoteLevel = remoteParticipants.reduce(
+      const newAgentLevel = remoteParticipants.reduce(
         (max, p) => Math.max(max, p.audioLevel || 0),
         0
       );
-      setAgentAudioLevel(maxRemoteLevel);
-    }, 100);
+
+      if (Math.abs(newAgentLevel - lastAgentLevel.current) > LEVEL_THRESHOLD) {
+        lastAgentLevel.current = newAgentLevel;
+        setAgentAudioLevel(newAgentLevel);
+      }
+    }, LEVEL_POLL_MS);
   }, [cleanup]);
 
   const disconnect = useCallback(() => {
@@ -233,7 +264,6 @@ export function useLiveKitVoice(): LiveKitVoiceState {
     setIsMicActive(false);
   }, []);
 
-  // Toggle mic on/off (for toggle mode)
   const toggleMic = useCallback(async () => {
     if (!roomRef.current || !isReady) return;
     if (isMicActive) {
@@ -244,6 +274,11 @@ export function useLiveKitVoice(): LiveKitVoiceState {
       setIsMicActive(true);
     }
   }, [isReady, isMicActive]);
+
+  const sendTextMessage = useCallback(async (text: string) => {
+    if (!roomRef.current) return;
+    await roomRef.current.localParticipant.sendText(text, { topic: 'lk.chat' });
+  }, []);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -264,10 +299,13 @@ export function useLiveKitVoice(): LiveKitVoiceState {
     agentAudioLevel,
     transcriptQueue,
     inputMode,
+    deepMode,
+    setDeepMode,
     connect,
     disconnect,
     startTalking,
     stopTalking,
     toggleMic,
+    sendTextMessage,
   };
 }

@@ -90,12 +90,13 @@ class OrchestratorLLM(llm.LLM):
     memory, prompt injection detection, and the full system prompt.
     """
 
-    def __init__(self, backend_url: str = BACKEND_URL, project_id: str = "", deep_mode: bool = False):
+    def __init__(self, backend_url: str = BACKEND_URL, project_id: str = "", deep_mode: bool = False, room=None):
         super().__init__()
         self._backend_url = backend_url
         self._http_session: aiohttp.ClientSession | None = None
         self._project_id = project_id
         self._deep_mode = deep_mode
+        self._room = room
 
     async def _ensure_session(self) -> aiohttp.ClientSession:
         if self._http_session is None or self._http_session.closed:
@@ -261,6 +262,24 @@ class OrchestratorLLMStream(llm.LLMStream):
             if data.get("thread_id"):
                 self._orchestrator_llm._thread_id = data["thread_id"]
 
+            # Forward open_canvas directive to frontend via data channel
+            open_canvas = data.get("open_canvas")
+            if open_canvas and self._orchestrator_llm._room:
+                try:
+                    canvas_msg = json.dumps({
+                        "type": "open_canvas",
+                        "canvas": open_canvas.get("canvas", ""),
+                        "params": open_canvas.get("params", {}),
+                    })
+                    await self._orchestrator_llm._room.local_participant.publish_data(
+                        canvas_msg,
+                        reliable=True,
+                        topic="nitara.canvas",
+                    )
+                    logger.info(f"Published open_canvas: {open_canvas.get('canvas')}")
+                except Exception as e:
+                    logger.warning(f"Failed to publish open_canvas data: {e}")
+
             content = data.get("content", "")
             if not content:
                 content = "Done."
@@ -302,12 +321,13 @@ class OrchestratorLLMStream(llm.LLMStream):
 class NitaraAssistant(Agent):
     def __init__(self, voice_preset: str = "nova", thread_id: str = "",
                  project_id: str = "", deep_mode: bool = False,
-                 stt_instance=None):
+                 stt_instance=None, room=None):
         voice_id = get_voice_id(voice_preset)
         orchestrator_llm = OrchestratorLLM(
             backend_url=BACKEND_URL,
             project_id=project_id,
             deep_mode=deep_mode,
+            room=room,
         )
         # Pre-set thread ID if provided from room/participant metadata
         if thread_id:
@@ -413,6 +433,7 @@ async def entrypoint(ctx: JobContext):
         project_id=project_id,
         deep_mode=deep_mode,
         stt_instance=stt_instance,
+        room=ctx.room,
     )
 
     if using_sttv2:

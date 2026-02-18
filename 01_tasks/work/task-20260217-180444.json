@@ -1,0 +1,10 @@
+{
+  "id": "task-20260217-180444",
+  "title": "Revise architecture: GPS-first trigger, cloud conversation model, on-device only for activation",
+  "description": "Council requirement 3. Current always-on multimodal design causes 2-3hr battery drain and thermal throttling. New model: GPS proximity triggers landmark detection, conversation handled in cloud. On-device used only for initial trigger. Estimate 3-4 weeks added to timeline. Update V5 PRD accordingly.",
+  "category": "work",
+  "status": "todo",
+  "priority": "high",
+  "project_id": "project-20260216-349467",
+  "created_at": "2026-02-17T09:06:20.444Z"
+}

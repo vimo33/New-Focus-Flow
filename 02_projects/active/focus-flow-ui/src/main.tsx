@@ -1,11 +1,42 @@
-import { StrictMode } from 'react'
+import { StrictMode, Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
+// Error boundary to catch React crashes and display a visible error instead of white screen
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ background: '#06080F', color: '#E8ECF1', minHeight: '100vh', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+          <h1 style={{ color: '#EF4444', fontSize: '1.25rem', marginBottom: '1rem' }}>Something went wrong</h1>
+          <pre style={{ color: '#7B8FA3', fontSize: '0.875rem', maxWidth: '90vw', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {this.state.error.message}
+          </pre>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '1.5rem', padding: '0.5rem 1.5rem', background: '#00E5FF', color: '#06080F', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}
+          >
+            Reload
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 )
 

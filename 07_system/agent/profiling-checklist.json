@@ -1,6 +1,6 @@
 {
   "last_updated": "2026-02-16",
-  "overall_completeness": 15,
+  "overall_completeness": 16,
   "domains": {
     "founder_identity": {
       "label": "Founder Identity",
@@ -130,7 +130,7 @@
     },
     "financial_reality": {
       "label": "Financial Reality",
-      "completeness": 17,
+      "completeness": 28,
       "priority": "critical",
       "items": [
         {
@@ -150,9 +150,9 @@
         {
           "key": "monthly_expenses",
           "label": "Business expenses (tools, infra, services)",
-          "status": "unknown",
-          "source": null,
-          "notes": ""
+          "status": "known",
+          "source": "conversation",
+          "notes": "Vimo needs minimum 5,000 CHF/month to cover living costs in Zurich. Current income averages 7k but is sporadic/project-based, creating unpredictability despite the nominal buffer."
         },
         {
           "key": "personal_burn",

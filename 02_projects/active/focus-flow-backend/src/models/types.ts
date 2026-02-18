@@ -605,7 +605,8 @@ export type NotificationType =
   | 'daily_briefing' | 'work_plan' | 'progress_update' | 'stalled_pipeline'
   | 'approval_request' | 'verdict_delivered' | 'task_overdue'
   | 'implementation_complete' | 'test_results' | 'deploy_ready'
-  | 'agent_status' | 'cost_alert' | 'end_of_day_summary';
+  | 'agent_status' | 'cost_alert' | 'end_of_day_summary'
+  | 'tool_completed';
 
 export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent';
 

@@ -9,6 +9,12 @@ export interface ConversationCard {
   actions: Array<{ label: string; variant: 'primary' | 'secondary' }>;
 }
 
+export interface MessageAttachment {
+  filename: string;
+  url: string;
+  size: number;
+}
+
 export interface ConversationMessage {
   id: string;
   role: 'user' | 'nitara';
@@ -16,6 +22,7 @@ export interface ConversationMessage {
   timestamp: string;
   source?: 'text' | 'voice';
   cards?: ConversationCard[];
+  attachments?: MessageAttachment[];
 }
 
 interface ConversationStore {
@@ -36,6 +43,7 @@ interface ConversationStore {
   setCurrentTranscript: (text: string) => void;
   setProjectContext: (projectId: string | null, projectName?: string | null) => void;
   sendMessage: (content: string) => void;
+  sendMessageWithAttachments: (content: string, files: File[]) => Promise<void>;
   addNitaraMessage: (content: string, cards?: ConversationCard[]) => void;
   addVoiceMessage: (role: 'user' | 'nitara', content: string) => void;
 }
@@ -97,6 +105,66 @@ export const useConversationStore = create<ConversationStore>((set, get) => ({
           id: `msg-${++messageId}`,
           role: 'nitara',
           content: `I understand. Let me look into "${content}" for you.`,
+          timestamp: new Date().toISOString(),
+          source: 'text',
+        };
+        set((s) => ({ messages: [...s.messages, nitaraMsg] }));
+      });
+  },
+  sendMessageWithAttachments: async (content, files) => {
+    const attachments: MessageAttachment[] = [];
+    for (const file of files) {
+      try {
+        const result = await api.uploadFile(file);
+        const uploaded = result.files[0];
+        if (uploaded) {
+          attachments.push({
+            filename: uploaded.originalName,
+            url: api.getDownloadUrl(uploaded.name),
+            size: uploaded.size,
+          });
+        }
+      } catch (e) {
+        console.error('File upload failed:', e);
+      }
+    }
+
+    const attachmentLines = attachments.map(a => `[Attached file: ${a.filename}]`).join('\n');
+    const fullContent = attachmentLines
+      ? `${attachmentLines}${content ? '\n' + content : ''}`
+      : content;
+
+    const userMsg: ConversationMessage = {
+      id: `msg-${++messageId}`,
+      role: 'user',
+      content: fullContent,
+      timestamp: new Date().toISOString(),
+      source: 'text',
+      attachments: attachments.length > 0 ? attachments : undefined,
+    };
+    set((s) => ({ messages: [...s.messages, userMsg], inputValue: '' }));
+
+    const { threadId, projectId } = get();
+    const apiAttachments = attachments.map(a => ({ filename: a.filename, url: a.url }));
+    api.sendOrchestratorMessage(fullContent, threadId, 'text', projectId, apiAttachments)
+      .then((response) => {
+        if (response.thread_id && !threadId) {
+          set({ threadId: response.thread_id });
+        }
+        const nitaraMsg: ConversationMessage = {
+          id: `msg-${++messageId}`,
+          role: 'nitara',
+          content: response.content || 'I understand. Let me look into that for you.',
+          timestamp: new Date().toISOString(),
+          source: 'text',
+        };
+        set((s) => ({ messages: [...s.messages, nitaraMsg] }));
+      })
+      .catch(() => {
+        const nitaraMsg: ConversationMessage = {
+          id: `msg-${++messageId}`,
+          role: 'nitara',
+          content: `I understand. Let me look into that for you.`,
           timestamp: new Date().toISOString(),
           source: 'text',
         };
