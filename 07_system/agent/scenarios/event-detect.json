@@ -1,0 +1,43 @@
+{
+  "skill": "event-detect",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "delta_rule_applied",
+      "description": "Report references a previous_scan and explicitly identifies events as new vs carried over",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "scan_coverage_reported",
+      "description": "scan_coverage shows non-zero counts for at least 2 of: competitors, markets, contacts, projects",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "evidence_backed",
+      "description": "Each event has an evidence_url or vault path, not unsourced claims",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "urgency_conservative",
+      "description": "this-week urgency used only for events with genuine time pressure, not just importance",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "actionable_suggestions",
+      "description": "Each event has a specific suggested_action, not generic advice",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

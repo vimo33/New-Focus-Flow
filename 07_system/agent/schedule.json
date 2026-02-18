@@ -118,5 +118,29 @@
     "priority": "medium",
     "trust_tier": 2,
     "description": "Cross-pollinate knowledge graph for non-obvious connections every Sunday at 7am"
+  },
+  {
+    "skill": "event-detect",
+    "arguments": "",
+    "cron": "0 6 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Scan for competitor, market, contact, and project events weekdays at 6am"
+  },
+  {
+    "skill": "morning-briefing",
+    "arguments": "",
+    "cron": "0 7 * * 1-5",
+    "priority": "high",
+    "trust_tier": 1,
+    "description": "Daily morning briefing narrative weekdays at 7am"
+  },
+  {
+    "skill": "time-value-analyze",
+    "arguments": "",
+    "cron": "0 18 * * 5",
+    "priority": "low",
+    "trust_tier": 2,
+    "description": "Time-value allocation analysis every Friday at 6pm"
   }
 ]

@@ -1,0 +1,43 @@
+{
+  "skill": "morning-briefing",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "three_sections_present",
+      "description": "Report contains all three sections: what_changed, focus_today, decisions_needed",
+      "weight": 0.2,
+      "check": "all_projects_scored"
+    },
+    {
+      "name": "narrative_tts_ready",
+      "description": "Narrative is 200-300 words, no markdown formatting, short sentences suitable for TTS",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "sources_consulted",
+      "description": "At least 3 different source reports consulted (events, portfolio, network, etc.)",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "brevity_enforced",
+      "description": "Max 3 items in what_changed, max 2 in focus_today, max 2 in decisions_needed",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "staleness_flagged",
+      "description": "If source data is older than 3 days, report explicitly notes it",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.15,
+      "check": "no_placeholders"
+    }
+  ]
+}

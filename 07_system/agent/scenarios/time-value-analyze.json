@@ -1,0 +1,43 @@
+{
+  "skill": "time-value-analyze",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "allocation_modeled",
+      "description": "Both current_allocation and recommended_allocation present with all 6 categories summing to ~100%",
+      "weight": 0.2,
+      "check": "all_projects_scored"
+    },
+    {
+      "name": "biggest_misallocation_identified",
+      "description": "Report identifies the single biggest gap between current and recommended allocation with evidence",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "founder_trap_analyzed",
+      "description": "Report checks for founder traps (ideation addiction, build without sell, admin creep, learning as procrastination) and states finding",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "data_backed_not_generic",
+      "description": "Recommendations reference specific projects, contacts, or metrics from the vault, not generic advice",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "nitara_cost_included",
+      "description": "Report includes Nitara's own cost efficiency analysis (total weekly cost, ROI per skill)",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

@@ -51,6 +51,7 @@ import knowledgeRoutes from './routes/knowledge.routes';
 import livekitRoutes from './routes/livekit.routes';
 import voiceSessionRoutes from './routes/voice-session.routes';
 import knowledgeGraphRoutes from './routes/knowledge-graph.routes';
+import briefingRoutes from './routes/briefing.routes';
 import queueRoutes from './routes/queue.routes';
 import { queueAuth } from './middleware/queue-auth.middleware';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
@@ -157,6 +158,7 @@ app.use('/api', knowledgeRoutes);
 app.use('/api', livekitRoutes);
 app.use('/api', voiceSessionRoutes);
 app.use('/api', knowledgeGraphRoutes);
+app.use('/api', briefingRoutes);
 app.use('/api/queue', queueAuth);
 app.use('/api', queueRoutes);
 
