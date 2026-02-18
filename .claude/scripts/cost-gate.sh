@@ -13,25 +13,24 @@ API_LOG="/srv/focus-flow/07_system/logs/inference/${DATE}.jsonl"
 # Read budget config (defaults if file missing)
 MAX_TOOL_CALLS=500
 MAX_API_COST=20
+ALERT_THRESHOLD_PCT=80
 
 if [ -f "$BUDGET_FILE" ]; then
-  MAX_TOOL_CALLS=$(python3 -c "
+  eval "$(python3 -c "
 import json
 try:
     with open('$BUDGET_FILE') as f:
-        print(json.load(f).get('max_daily_tool_calls', 500))
+        b = json.load(f)
+    print(f'MAX_TOOL_CALLS={b.get(\"max_daily_tool_calls\", 500)}')
+    print(f'MAX_API_COST={b.get(\"max_daily_api_cost_usd\", 20)}')
+    print(f'ALERT_THRESHOLD_PCT={b.get(\"alert_threshold_pct\", 80)}')
 except:
-    print(500)
-" 2>/dev/null || echo 500)
-
-  MAX_API_COST=$(python3 -c "
-import json
-try:
-    with open('$BUDGET_FILE') as f:
-        print(json.load(f).get('max_daily_api_cost_usd', 20))
-except:
-    print(20)
-" 2>/dev/null || echo 20)
+    print('MAX_TOOL_CALLS=500')
+    print('MAX_API_COST=20')
+    print('ALERT_THRESHOLD_PCT=80')
+" 2>/dev/null || echo "MAX_TOOL_CALLS=500
+MAX_API_COST=20
+ALERT_THRESHOLD_PCT=80")"
 fi
 
 # Primary: count tool invocations from Claude Code logs
@@ -68,6 +67,18 @@ OVER=$(python3 -c "print(1 if float('${API_COST}') >= float('${MAX_API_COST}') e
 if [ "$OVER" -eq 1 ]; then
   echo "COST GATE: Daily API cost limit reached (\$${API_COST}/\$${MAX_API_COST}). Nitara is pausing."
   exit 2
+fi
+
+# Threshold alerting: send once-per-day Telegram alert at 80% (or configured %)
+ALERT_MARKER="/tmp/cost-alert-${DATE}.sent"
+if [ ! -f "$ALERT_MARKER" ]; then
+  THRESHOLD_COST=$(python3 -c "print(f'{float(${MAX_API_COST}) * float(${ALERT_THRESHOLD_PCT}) / 100:.2f}')" 2>/dev/null || echo "16")
+  AT_THRESHOLD=$(python3 -c "print(1 if float('${API_COST}') >= float('${THRESHOLD_COST}') else 0)" 2>/dev/null || echo 0)
+
+  if [ "$AT_THRESHOLD" -eq 1 ]; then
+    touch "$ALERT_MARKER"
+    /srv/focus-flow/.claude/scripts/telegram-notify.sh cost_alert "Daily spend \$${API_COST} has reached ${ALERT_THRESHOLD_PCT}% of \$${MAX_API_COST} budget" 2>/dev/null &
+  fi
 fi
 
 exit 0

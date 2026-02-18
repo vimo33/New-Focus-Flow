@@ -1,0 +1,37 @@
+{
+  "skill": "profiling-question",
+  "version": 1,
+  "satisfaction_threshold": 0.6,
+  "criteria": [
+    {
+      "name": "question_present",
+      "description": "Contains a specific profiling question targeting a knowledge gap",
+      "weight": 0.3,
+      "check": "question_present"
+    },
+    {
+      "name": "targets_gap_domain",
+      "description": "Question targets one of the 7 profiling domains with lowest completeness",
+      "weight": 0.25,
+      "check": "targets_gap"
+    },
+    {
+      "name": "not_duplicate",
+      "description": "Question differs meaningfully from the last 5 profiling questions",
+      "weight": 0.2,
+      "check": "not_duplicate"
+    },
+    {
+      "name": "answerable",
+      "description": "Question is specific enough to answer in 2-3 sentences, not open-ended",
+      "weight": 0.15,
+      "check": "answerable"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

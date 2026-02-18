@@ -2,7 +2,7 @@ import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import { getVaultPath, readJsonFile, writeJsonFile, listFiles, ensureDir } from '../utils/file-operations';
-// inference-logger imported as needed for cost tracking
+import { inferenceLogger, estimateCost } from './inference-logger.service';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -32,6 +32,7 @@ export interface QueueTask {
   pid?: number;
   error?: string;
   retry_count: number;
+  session_cost_usd?: number;
 
   scheduled_at?: string;
   created_by: 'system' | 'user' | 'agent';
@@ -392,6 +393,46 @@ class TaskQueueService {
       clearTimeout(timeoutHandle);
       this.running.delete(task.id);
 
+      // Parse CLI cost summary from stdout and log to inference JSONL
+      const agentModel = task.skill === 'portfolio-analysis' || task.skill === 'build-mvp' || task.skill === 'meta-analysis'
+        ? 'claude-opus-4-6'
+        : 'claude-sonnet-4-5-20250929';
+      const costInfo = this.parseCLICostSummary(stdout, agentModel);
+      if (costInfo) {
+        task.session_cost_usd = costInfo.cost_usd;
+        inferenceLogger.log({
+          timestamp: new Date().toISOString(),
+          task_type: task.skill,
+          budget_tier: 'autonomous',
+          model: agentModel,
+          prompt_tokens: costInfo.input_tokens,
+          completion_tokens: costInfo.output_tokens,
+          total_tokens: costInfo.input_tokens + costInfo.output_tokens,
+          latency_ms: Date.now() - new Date(task.started_at || Date.now()).getTime(),
+          cached: false,
+          caller: `task-queue:${task.id}`,
+          estimated_cost_usd: costInfo.cost_usd,
+          success: code === 0,
+        });
+      } else {
+        // Write a zero-cost entry with parse failure flag so we know cost tracking is incomplete
+        inferenceLogger.log({
+          timestamp: new Date().toISOString(),
+          task_type: task.skill,
+          budget_tier: 'autonomous',
+          model: agentModel,
+          prompt_tokens: 0,
+          completion_tokens: 0,
+          total_tokens: 0,
+          latency_ms: Date.now() - new Date(task.started_at || Date.now()).getTime(),
+          cached: false,
+          caller: `task-queue:${task.id}`,
+          estimated_cost_usd: 0,
+          success: code === 0,
+          _estimated: true,
+        });
+      }
+
       if (code === 0) {
         // Find the most recent report file
         const reportFile = await this.findRecentReport(task.skill);
@@ -413,6 +454,61 @@ class TaskQueueService {
       startedAt: Date.now(),
       timeoutHandle,
     });
+  }
+
+  /**
+   * Parse Claude CLI stdout for cost/token information.
+   * CLI output format isn't guaranteed stable — this is defensive/best-effort.
+   * On parse failure, logs a warning and returns null.
+   */
+  private parseCLICostSummary(stdout: string, model: string): { input_tokens: number; output_tokens: number; cost_usd: number } | null {
+    try {
+      // Try JSON format first (--output-format json may include cost info)
+      const jsonMatch = stdout.match(/\{[^{}]*"input_tokens"\s*:\s*\d+[^{}]*\}/);
+      if (jsonMatch) {
+        const parsed = JSON.parse(jsonMatch[0]);
+        if (parsed.input_tokens && parsed.output_tokens) {
+          return {
+            input_tokens: parsed.input_tokens,
+            output_tokens: parsed.output_tokens,
+            cost_usd: parsed.cost_usd || estimateCost(model, parsed.input_tokens, parsed.output_tokens),
+          };
+        }
+      }
+
+      // Fallback: parse human-readable summary
+      // Common patterns: "Total tokens: 12345" or "Input: 1000 tokens, Output: 500 tokens"
+      const inputMatch = stdout.match(/input[:\s]+(\d[\d,]+)\s*tokens?/i);
+      const outputMatch = stdout.match(/output[:\s]+(\d[\d,]+)\s*tokens?/i);
+      if (inputMatch && outputMatch) {
+        const inputTokens = parseInt(inputMatch[1].replace(/,/g, ''));
+        const outputTokens = parseInt(outputMatch[1].replace(/,/g, ''));
+        return {
+          input_tokens: inputTokens,
+          output_tokens: outputTokens,
+          cost_usd: estimateCost(model, inputTokens, outputTokens),
+        };
+      }
+
+      // Try total cost pattern: "$1.23" or "cost: $1.23"
+      const costMatch = stdout.match(/\$(\d+\.\d+)/);
+      const totalTokenMatch = stdout.match(/(\d[\d,]+)\s*total\s*tokens?/i);
+      if (costMatch) {
+        const cost = parseFloat(costMatch[1]);
+        const totalTokens = totalTokenMatch ? parseInt(totalTokenMatch[1].replace(/,/g, '')) : 0;
+        return {
+          input_tokens: Math.round(totalTokens * 0.7), // rough estimate
+          output_tokens: Math.round(totalTokens * 0.3),
+          cost_usd: cost,
+        };
+      }
+
+      console.warn('[CostTracker] WARNING: Could not parse CLI cost summary, format may have changed');
+      return null;
+    } catch (err: any) {
+      console.warn(`[CostTracker] WARNING: Cost parsing error: ${err.message}`);
+      return null;
+    }
   }
 
   // ─── Task Selection ────────────────────────────────────────────────────────

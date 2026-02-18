@@ -1,0 +1,37 @@
+{
+  "skill": "monitor-project",
+  "version": 1,
+  "satisfaction_threshold": 0.6,
+  "criteria": [
+    {
+      "name": "service_status_present",
+      "description": "Reports service status for all managed services (backend, frontend, telegram)",
+      "weight": 0.25,
+      "check": "service_status"
+    },
+    {
+      "name": "health_checks_run",
+      "description": "Health check results with HTTP status codes or process status",
+      "weight": 0.2,
+      "check": "health_checks"
+    },
+    {
+      "name": "log_analysis",
+      "description": "Recent log entries analyzed for errors or warnings",
+      "weight": 0.2,
+      "check": "log_analysis"
+    },
+    {
+      "name": "actionable_recommendations",
+      "description": "At least 1 actionable recommendation if issues found",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.15,
+      "check": "no_placeholders"
+    }
+  ]
+}

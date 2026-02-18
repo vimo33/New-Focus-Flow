@@ -113,6 +113,21 @@ export class OpenClawClient {
   }
 
   /**
+   * Normalize usage data from different API formats.
+   * OpenClaw may return Anthropic (input_tokens/output_tokens) or OpenAI (prompt_tokens/completion_tokens) format.
+   */
+  private normalizeUsage(usage: any): { prompt_tokens: number; completion_tokens: number; total_tokens: number } {
+    if (!usage) return { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
+
+    // Anthropic format: input_tokens / output_tokens
+    const input = usage.input_tokens || usage.prompt_tokens || 0;
+    const output = usage.output_tokens || usage.completion_tokens || 0;
+    const total = usage.total_tokens || (input + output);
+
+    return { prompt_tokens: input, completion_tokens: output, total_tokens: total };
+  }
+
+  /**
    * SECURITY: Set up logging and monitoring
    */
   private setupInterceptors(): void {
@@ -203,6 +218,10 @@ export class OpenClawClient {
         '/v1/chat/completions',
         apiRequest
       );
+      // Normalize usage from Anthropic/OpenAI format
+      if (response.data) {
+        response.data.usage = this.normalizeUsage(response.data.usage);
+      }
       return response.data;
     } catch (error: any) {
       if (error.response) {
@@ -271,6 +290,10 @@ export class OpenClawClient {
         '/v1/chat/completions',
         apiRequest
       );
+      // Normalize usage from Anthropic/OpenAI format
+      if (response.data) {
+        response.data.usage = this.normalizeUsage(response.data.usage);
+      }
       return response.data;
     } catch (error: any) {
       if (error.response) {

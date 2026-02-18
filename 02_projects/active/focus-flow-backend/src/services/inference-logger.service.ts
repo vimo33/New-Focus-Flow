@@ -19,6 +19,7 @@ export interface InferenceLogEntry {
   estimated_cost_usd?: number;
   success?: boolean;
   error?: string;
+  _estimated?: boolean;
 }
 
 const PRICING: Record<string, { input: number; output: number }> = {

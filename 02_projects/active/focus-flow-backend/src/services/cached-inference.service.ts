@@ -261,10 +261,11 @@ class CachedInferenceClient {
       _internal: _internal ?? true,
     });
 
+    const usage = response.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
     return {
       content: response.choices[0]?.message?.content || '',
       model: response.model || model,
-      usage: response.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+      usage,
       cached: false,
       latency_ms: 0,
     };
@@ -287,10 +288,11 @@ class CachedInferenceClient {
       _internal: _internal ?? true,
     });
 
+    const usage = response.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
     return {
       content: response.choices[0]?.message?.content || '',
       model: response.model || model,
-      usage: response.usage || { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 },
+      usage,
       cached: false,
       latency_ms: 0,
       tool_calls: response.choices[0]?.message?.tool_calls,
@@ -306,21 +308,38 @@ class CachedInferenceClient {
     success: boolean = true,
     error?: string
   ): void {
+    let promptTokens = result.usage.prompt_tokens;
+    let completionTokens = result.usage.completion_tokens;
+    let totalTokens = result.usage.total_tokens;
+    let estimated = false;
+
+    // When tokens are 0 but the request wasn't cached and succeeded, estimate from content length
+    if (!cached && success && promptTokens === 0 && completionTokens === 0) {
+      const inputChars = request.messages.reduce((sum, m) => sum + (m.content?.length || 0), 0) + (request.system_prompt?.length || 0);
+      const outputChars = result.content?.length || 0;
+      promptTokens = Math.ceil(inputChars / 4);
+      completionTokens = Math.ceil(outputChars / 4);
+      totalTokens = promptTokens + completionTokens;
+      estimated = true;
+      console.warn(`[CachedInference] WARNING: Zero tokens from ${model} — estimating from content length (${promptTokens}+${completionTokens} tokens)`);
+    }
+
     const entry: InferenceLogEntry = {
       timestamp: new Date().toISOString(),
       task_type: request.task_type,
       budget_tier: request.budget_tier,
       model,
-      prompt_tokens: result.usage.prompt_tokens,
-      completion_tokens: result.usage.completion_tokens,
-      total_tokens: result.usage.total_tokens,
+      prompt_tokens: promptTokens,
+      completion_tokens: completionTokens,
+      total_tokens: totalTokens,
       latency_ms,
       cached,
       project_id: request.project_id,
       caller: request.caller,
-      estimated_cost_usd: cached ? 0 : estimateCost(model, result.usage.prompt_tokens, result.usage.completion_tokens),
+      estimated_cost_usd: cached ? 0 : estimateCost(model, promptTokens, completionTokens),
       success,
       error,
+      _estimated: estimated || undefined,
     };
     inferenceLogger.log(entry);
   }

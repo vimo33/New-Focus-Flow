@@ -50,6 +50,7 @@ import confidenceRoutes from './routes/confidence.routes';
 import knowledgeRoutes from './routes/knowledge.routes';
 import livekitRoutes from './routes/livekit.routes';
 import queueRoutes from './routes/queue.routes';
+import { queueAuth } from './middleware/queue-auth.middleware';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
 import { taskQueueService } from './services/task-queue.service';
 import { telegramHitlService } from './services/telegram-hitl.service';
@@ -152,6 +153,7 @@ app.use('/api', marketingRoutes);
 app.use('/api', confidenceRoutes);
 app.use('/api', knowledgeRoutes);
 app.use('/api', livekitRoutes);
+app.use('/api/queue', queueAuth);
 app.use('/api', queueRoutes);
 
 // Dashboard summary endpoint

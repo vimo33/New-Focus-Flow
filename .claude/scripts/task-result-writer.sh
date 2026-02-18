@@ -4,6 +4,7 @@
 
 REPORTS_DIR="/srv/focus-flow/07_system/reports"
 API_URL="http://localhost:3001/api/queue/complete"
+TOKEN_FILE="/srv/focus-flow/07_system/secrets/.queue-api-token"
 
 LATEST_REPORT=$(find "$REPORTS_DIR" -maxdepth 1 -name "*.json" -mmin -5 -type f -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
 
@@ -29,9 +30,19 @@ if [ "$VALID" != "valid" ]; then
   exit 0
 fi
 
+# Read auth token
+AUTH_HEADER=""
+if [ -f "$TOKEN_FILE" ]; then
+  TOKEN=$(cat "$TOKEN_FILE" 2>/dev/null | tr -d '[:space:]')
+  if [ -n "$TOKEN" ]; then
+    AUTH_HEADER="Authorization: Bearer ${TOKEN}"
+  fi
+fi
+
 HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" \
   -X POST "$API_URL" \
   -H "Content-Type: application/json" \
+  ${AUTH_HEADER:+-H "$AUTH_HEADER"} \
   -d @"$LATEST_REPORT" \
   --connect-timeout 5 \
   --max-time 10 \
