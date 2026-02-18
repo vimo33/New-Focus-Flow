@@ -1,0 +1,37 @@
+{
+  "skill": "network-import",
+  "version": 1,
+  "satisfaction_threshold": 0.6,
+  "criteria": [
+    {
+      "name": "import_stats_present",
+      "description": "Report includes import_count, dedup_count, and stats with total_in_source/imported_new/merged/skipped",
+      "weight": 0.3,
+      "check": "novel_data"
+    },
+    {
+      "name": "contacts_written",
+      "description": "Contact files were written to 10_profile/network/contacts/ directory",
+      "weight": 0.25,
+      "check": "recommendations"
+    },
+    {
+      "name": "deduplication_run",
+      "description": "Report mentions deduplication with email blocking and name similarity checks",
+      "weight": 0.2,
+      "check": "log_analysis"
+    },
+    {
+      "name": "import_log_written",
+      "description": "Import log written to 10_profile/network/imports/",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

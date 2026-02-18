@@ -4,6 +4,7 @@ import path from 'path';
 import { getVaultPath, readJsonFile, writeJsonFile, listFiles, ensureDir } from '../utils/file-operations';
 import { taskQueueService, QueueTask } from './task-queue.service';
 import { onboardingSessionService } from './onboarding-session.service';
+import { orchestratorService } from '../orchestrator/orchestrator.service';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -33,6 +34,7 @@ interface HITLState {
   question_to_message: Record<string, number>; // questionId → telegramMessageId
   last_checked: string;
   onboarding_active?: boolean;
+  telegram_thread_id?: string; // orchestrator conversation thread for Telegram AI chat
 }
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -453,27 +455,83 @@ class TelegramHitlService {
       }
     }
 
-    // Handle plain text (not a reply) — auto-answer the most recent pending question
-    const answerText = (ctx.message?.text || '').trim();
-    if (!answerText) return;
+    // Plain text (not a reply) — route through orchestrator AI
+    await this.routeToOrchestrator(ctx);
+  }
 
-    const pendingEntries = Object.entries(this.state.question_to_message);
-    if (pendingEntries.length > 0) {
-      const [latestQuestionId] = pendingEntries[pendingEntries.length - 1];
-      await this.answerQuestion(latestQuestionId, answerText, 'owner');
-      await ctx.reply(`✦ Answer recorded. Nitara will continue.`);
+  // ─── Orchestrator AI Chat ─────────────────────────────────────────────────
+
+  private async routeToOrchestrator(ctx: Context): Promise<void> {
+    const text = (ctx.message?.text || '').trim();
+    if (!text || !this.bot) return;
+
+    // Show typing indicator, refresh every 4s (Telegram expires after 5s)
+    const chatId = ctx.chat?.id;
+    if (!chatId) return;
+    await ctx.replyWithChatAction('typing');
+    const typingInterval = setInterval(() => {
+      this.bot!.api.sendChatAction(chatId, 'typing').catch(() => {});
+    }, 4000);
+
+    try {
+      const response = await orchestratorService.chat(
+        text,
+        this.state.telegram_thread_id,
+        'text',
+        {}
+      );
+
+      // Persist thread_id for conversation continuity
+      if (response.thread_id && response.thread_id !== this.state.telegram_thread_id) {
+        this.state.telegram_thread_id = response.thread_id;
+        await this.saveState();
+      }
+
+      const reply = response.content || '(No response from Nitara)';
+      await this.sendLongMessage(chatId, reply);
+    } catch (err: any) {
+      console.error('[TelegramHITL] Orchestrator error:', err.message);
+      await ctx.reply('Something went wrong reaching Nitara\'s brain. Try again in a moment.');
+    } finally {
+      clearInterval(typingInterval);
+    }
+  }
+
+  private async sendLongMessage(chatId: number | string, text: string): Promise<void> {
+    if (!this.bot) return;
+    const MAX_LEN = 4096;
+
+    if (text.length <= MAX_LEN) {
+      await this.trySendMarkdown(chatId, text);
       return;
     }
 
-    // No pending questions — show help
-    await ctx.reply(
-      '✦ *Nitara*\n\n' +
-      'No pending questions right now.\n\n' +
-      '/status — View active tasks\n' +
-      '/help — All commands\n' +
-      '/onboard — Start profiling session',
-      { parse_mode: 'Markdown' }
-    );
+    // Split into chunks respecting paragraph > line > space > hard-cut boundaries
+    let remaining = text;
+    while (remaining.length > 0) {
+      if (remaining.length <= MAX_LEN) {
+        await this.trySendMarkdown(chatId, remaining);
+        break;
+      }
+
+      let splitAt = remaining.lastIndexOf('\n\n', MAX_LEN);
+      if (splitAt < MAX_LEN * 0.3) splitAt = remaining.lastIndexOf('\n', MAX_LEN);
+      if (splitAt < MAX_LEN * 0.3) splitAt = remaining.lastIndexOf(' ', MAX_LEN);
+      if (splitAt < MAX_LEN * 0.3) splitAt = MAX_LEN;
+
+      await this.trySendMarkdown(chatId, remaining.substring(0, splitAt));
+      remaining = remaining.substring(splitAt).trimStart();
+    }
+  }
+
+  private async trySendMarkdown(chatId: number | string, text: string): Promise<void> {
+    if (!this.bot) return;
+    try {
+      await this.bot.api.sendMessage(chatId, text, { parse_mode: 'Markdown' });
+    } catch {
+      // Markdown parse failed — send as plain text
+      await this.bot.api.sendMessage(chatId, text);
+    }
   }
 
   // ─── Outbound (question watching) ──────────────────────────────────────────

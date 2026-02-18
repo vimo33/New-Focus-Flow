@@ -46,6 +46,30 @@ If this is a resumed task, first check `07_system/agent/answered-questions/` for
 - Frontend builds without errors
 - All systemd services active
 
+## Convergence Loops (Attractor-Inspired)
+
+After each build phase, self-validate before moving to the next. Do NOT single-shot — iterate within your session:
+
+1. **Implement** the current phase
+2. **Validate** — run the build (`npm run build` / `npx tsc`), run any existing tests
+3. **Check against spec** — does the output match the architecture doc / API contract?
+4. **If issues found**, loop back and fix (max 3 iterations per phase)
+5. **Only declare phase complete** when build passes AND spec is satisfied
+
+After Phase 4 (end-to-end verification), run a final convergence check:
+- Re-read the original project spec
+- Verify each spec requirement has a corresponding implementation
+- If gaps found, iterate (max 2 final iterations)
+- External scenario validation runs as post-execution check via validate-analysis.sh
+
+## Leash Containerization
+
+When running via the task queue, this agent executes inside a Leash container with Cedar policies (`07_system/agent/cedar-policies/builder.cedar`). Key constraints:
+- **Write access**: only `/srv/focus-flow/02_projects/` (project directories)
+- **No write access**: `07_system/`, `.claude/`, `10_profile/`
+- **Network**: localhost only (for build verification and health checks)
+- **Processes**: npm, npx, node, tsc, git, systemctl only
+
 ## Build Guard
 
 **2-hour timeout enforced.** If not at Phase 4 within 2 hours, halt and report partial progress.

@@ -1,0 +1,8 @@
+{
+  "skill": "portfolio-analysis",
+  "date": "2026-02-18",
+  "score": 0.18,
+  "threshold": 0.7,
+  "passed": false,
+  "report_path": "/tmp/test-report-bad.json"
+}

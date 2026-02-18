@@ -1,0 +1,43 @@
+{
+  "skill": "research-youtube",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "channels_discovered",
+      "description": "At least 5 relevant YouTube channels identified with subscriber counts and content themes",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "strategy_patterns",
+      "description": "Content strategy extraction: posting frequency, format, engagement patterns for each channel",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "gap_analysis",
+      "description": "Identifies underserved topics or content gaps the founder could fill",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "source_citations",
+      "description": "All channel claims backed by URLs (YouTube links, social media data)",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "actionable_video_ideas",
+      "description": "At least 3 specific video ideas with format and topic recommendations",
+      "weight": 0.1,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

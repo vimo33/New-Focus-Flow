@@ -1,0 +1,43 @@
+{
+  "skill": "research-passive-income",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "opportunities_scored",
+      "description": "At least 3 income opportunities with numeric scores on all 6 dimensions",
+      "weight": 0.2,
+      "check": "all_projects_scored"
+    },
+    {
+      "name": "grounded_in_skills",
+      "description": "Opportunities reference founder's actual skills and projects, not generic advice",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "revenue_estimates",
+      "description": "Each opportunity includes time-to-first-dollar and revenue range estimates",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "source_citations",
+      "description": "Market data and platform claims backed by URLs or vault references",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "weighted_ranking",
+      "description": "Composite weighted score ranks opportunities clearly by priority",
+      "weight": 0.15,
+      "check": "specific_dates"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.15,
+      "check": "no_placeholders"
+    }
+  ]
+}

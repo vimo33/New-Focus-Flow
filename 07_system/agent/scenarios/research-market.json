@@ -1,0 +1,43 @@
+{
+  "skill": "research-market",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "market_sizing",
+      "description": "TAM/SAM/SOM with numeric values and methodology (top-down or bottom-up)",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "competitive_landscape",
+      "description": "At least 3 competitors analyzed with product, pricing, strengths, weaknesses",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "pricing_recommendation",
+      "description": "Specific pricing strategy with price points and value metrics, not vague suggestions",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "differentiation_clear",
+      "description": "UVP and positioning statement grounded in founder's actual capabilities",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "source_citations",
+      "description": "Market data backed by URLs, reports, or dated references",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

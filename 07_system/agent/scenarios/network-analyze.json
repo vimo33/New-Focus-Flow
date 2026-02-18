@@ -1,0 +1,43 @@
+{
+  "skill": "network-analyze",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "opportunities_with_actions",
+      "description": "At least 3 opportunities each with a specific suggested_action (not 'reach out')",
+      "weight": 0.25,
+      "check": "recommendations"
+    },
+    {
+      "name": "industry_clusters",
+      "description": "Contacts grouped by industry/sector with cluster counts and alignment to projects",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "revenue_adjacency",
+      "description": "Revenue-adjacent contacts identified with concrete paths to income",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "network_gaps",
+      "description": "Missing roles, industries, or seniority levels identified with fill strategies",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "contacts_analyzed_count",
+      "description": "contacts_analyzed field present and > 0, showing real data was processed",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}
