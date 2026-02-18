@@ -1,7 +1,21 @@
 import { Router, Request, Response, NextFunction } from 'express';
+import fs from 'fs/promises';
+import { getVaultPath } from '../utils/file-operations';
 import { reportService } from '../services/report.service';
 
 const router = Router();
+
+// GET /api/reports/nitara-guide — serve the Nitara system guide markdown
+router.get('/reports/nitara-guide', async (req: Request, res: Response) => {
+  try {
+    const guidePath = getVaultPath('07_system/NITARA_GUIDE.md');
+    const content = await fs.readFile(guidePath, 'utf-8');
+    res.json({ content });
+  } catch (error: any) {
+    console.error('Error reading Nitara guide:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
 
 // GET /api/reports/types — list available report types
 router.get('/reports/types', async (req: Request, res: Response) => {

@@ -60,6 +60,20 @@ export function MarkdownContent({ content, className = '' }: MarkdownContentProp
             <strong className="font-semibold text-text-primary">{children}</strong>
           ),
           hr: () => <hr className="border-[var(--glass-border)] my-4" />,
+          table: ({ children }) => (
+            <div className="overflow-x-auto mb-3">
+              <table className="w-full text-sm text-text-secondary border-collapse">{children}</table>
+            </div>
+          ),
+          thead: ({ children }) => (
+            <thead className="border-b border-[var(--glass-border)]">{children}</thead>
+          ),
+          th: ({ children }) => (
+            <th className="text-left text-text-primary text-xs font-semibold uppercase tracking-wider px-3 py-2">{children}</th>
+          ),
+          td: ({ children }) => (
+            <td className="px-3 py-2 border-b border-[var(--glass-border)]/30 text-sm">{children}</td>
+          ),
         }}
       >
         {content}

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { ArrowLeft, FileText, Calendar, Tag } from 'lucide-react';
+import { ArrowLeft, FileText, Calendar, Tag, BookOpen } from 'lucide-react';
 import { api } from '../../services/api';
 import { GlassCard, StatCard, NitaraInsightCard, Badge } from '../shared';
 import { MarkdownContent } from '../shared/MarkdownContent';
@@ -218,6 +218,9 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
   const [types, setTypes] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [showGuide, setShowGuide] = useState(false);
+  const [guideContent, setGuideContent] = useState<string | null>(null);
+  const [loadingGuide, setLoadingGuide] = useState(false);
 
   useEffect(() => {
     loadReports();
@@ -269,6 +272,20 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
   const goBack = () => {
     setSelectedReport(null);
     setSelectedId(null);
+    setShowGuide(false);
+  };
+
+  const openGuide = async () => {
+    setLoadingGuide(true);
+    setShowGuide(true);
+    try {
+      const data = await api.getNitaraGuide();
+      setGuideContent(data.content);
+    } catch (err) {
+      console.error('Failed to load Nitara guide:', err);
+    } finally {
+      setLoadingGuide(false);
+    }
   };
 
   const formatDate = (dateStr: string) => {
@@ -280,6 +297,43 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
       return dateStr;
     }
   };
+
+  // ─── Guide View ──────────────────────────────────────────────────────────
+
+  if (showGuide) {
+    return (
+      <div className="p-6 max-w-4xl mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <button
+            onClick={goBack}
+            className="p-2 rounded-lg hover:bg-elevated/50 text-text-secondary hover:text-text-primary transition-colors"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-xl font-semibold text-text-primary">Nitara System Guide</h1>
+            <div className="flex items-center gap-3 mt-1">
+              <Badge label="Guide" variant="council" />
+              <span className="text-text-tertiary text-xs">Reference documentation</span>
+            </div>
+          </div>
+        </div>
+        {loadingGuide ? (
+          <div className="flex items-center justify-center h-32">
+            <div className="text-text-tertiary">Loading guide...</div>
+          </div>
+        ) : guideContent ? (
+          <GlassCard>
+            <MarkdownContent content={guideContent} />
+          </GlassCard>
+        ) : (
+          <GlassCard className="text-center py-12">
+            <p className="text-text-secondary">Failed to load guide</p>
+          </GlassCard>
+        )}
+      </div>
+    );
+  }
 
   // ─── Detail View ─────────────────────────────────────────────────────────
 
@@ -390,6 +444,28 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
           <p className="text-text-tertiary text-sm mt-1">
             Reports will appear here as Nitara generates them.
           </p>
+        </GlassCard>
+      )}
+
+      {/* Pinned: Nitara System Guide */}
+      {!loading && !filterProjectId && (
+        <GlassCard className="cursor-pointer hover:border-primary/30 transition-colors mb-3 border-primary/20 bg-primary/5">
+          <button onClick={openGuide} className="w-full text-left">
+            <div className="flex items-start justify-between">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <Badge label="Guide" variant="council" />
+                </div>
+                <h3 className="text-text-primary font-medium flex items-center gap-2">
+                  <BookOpen size={16} className="text-primary shrink-0" />
+                  Nitara System Guide
+                </h3>
+                <p className="text-text-tertiary text-xs mt-1">
+                  Architecture, commands, safety controls, and day-to-day usage reference
+                </p>
+              </div>
+            </div>
+          </button>
         </GlassCard>
       )}
 

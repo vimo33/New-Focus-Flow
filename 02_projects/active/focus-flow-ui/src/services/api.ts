@@ -1386,6 +1386,10 @@ export class VaultAPI {
     return this.request('/reports/types');
   }
 
+  async getNitaraGuide(): Promise<{ content: string }> {
+    return this.request('/reports/nitara-guide');
+  }
+
   // ============================================================================
   // Marketing / GTM Methods
   // ============================================================================
