@@ -1,0 +1,43 @@
+{
+  "skill": "serendipity-scan",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "cross_domain_insights",
+      "description": "At least 1 insight that connects 2+ different domains (market+person, project+technology, etc.)",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "multi_source_evidence",
+      "description": "Each insight cites at least 2 different source entities or reports as evidence",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "actionable_suggestions",
+      "description": "Each insight includes a concrete suggested_action with specific next step and timeline",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "novelty_not_obvious",
+      "description": "Insights are genuinely non-obvious — not restating what single reports already said",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "knowledge_graph_utilized",
+      "description": "Report shows evidence of reading the knowledge graph (entity counts, relationship data)",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

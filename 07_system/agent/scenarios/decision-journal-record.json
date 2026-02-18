@@ -1,0 +1,37 @@
+{
+  "skill": "decision-journal-record",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "decisions_recorded",
+      "description": "At least 1 decision recorded from the source report with a valid decision ID",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "falsifiable_predictions",
+      "description": "Each decision has a predicted_outcome that is specific and falsifiable, not vague",
+      "weight": 0.25,
+      "check": "recommendations"
+    },
+    {
+      "name": "tracking_criteria_present",
+      "description": "Each decision has at least 1 tracking criterion with measurable condition and date",
+      "weight": 0.2,
+      "check": "specific_dates"
+    },
+    {
+      "name": "source_linked",
+      "description": "Each decision references the source_report it was extracted from",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.15,
+      "check": "no_placeholders"
+    }
+  ]
+}

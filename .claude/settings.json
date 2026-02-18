@@ -45,6 +45,11 @@
             "type": "command",
             "command": "/srv/focus-flow/.claude/scripts/validate-edit.sh",
             "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/scripts/knowledge-graph-trigger.sh",
+            "timeout": 5
           }
         ]
       },

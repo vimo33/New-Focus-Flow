@@ -94,5 +94,29 @@
     "priority": "medium",
     "trust_tier": 1,
     "description": "Cross-reference contacts with projects every Wednesday at 10am"
+  },
+  {
+    "skill": "knowledge-graph-update",
+    "arguments": "",
+    "cron": "0 23 * * *",
+    "priority": "background",
+    "trust_tier": 1,
+    "description": "Extract entities and relationships from recent reports into knowledge graph daily at 11pm"
+  },
+  {
+    "skill": "decision-journal-evaluate",
+    "arguments": "",
+    "cron": "0 8 * * 5",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Evaluate past decisions against actual outcomes every Friday at 8am"
+  },
+  {
+    "skill": "serendipity-scan",
+    "arguments": "",
+    "cron": "0 7 * * 0",
+    "priority": "medium",
+    "trust_tier": 2,
+    "description": "Cross-pollinate knowledge graph for non-obvious connections every Sunday at 7am"
   }
 ]
