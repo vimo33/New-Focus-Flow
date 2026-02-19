@@ -1,0 +1,18 @@
+{
+  "id": "task-1771497277086-ntpq55",
+  "skill": "profiling-question",
+  "arguments": "",
+  "priority": "background",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "failed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-19T10:34:37.086Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 3,
+  "created_by": "system",
+  "started_at": "2026-02-19T10:35:37.138Z",
+  "pid": 2173806,
+  "error": "Exit code 1: ",
+  "completed_at": "2026-02-19T10:35:59.926Z"
+}

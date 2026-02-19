@@ -1,0 +1,84 @@
+{
+  "id": "founder-20260216-070050",
+  "name": "Vikas Mohan",
+  "bio": "Switzerland-based cross-border builder and parent who runs ideas like a studio and ships them like products. Hybrid founder/product strategist, technical architect, operator, and educator focused on building systems that turn messy reality into decision-grade clarity and real-world action.",
+  "location": "Zurich, Switzerland",
+  "preferred_archetype": "cofounder",
+  "skills": [
+    {
+      "name": "Product Strategy",
+      "level": "expert",
+      "category": "business"
+    },
+    {
+      "name": "Technical Architecture",
+      "level": "expert",
+      "category": "technical"
+    },
+    {
+      "name": "Multi-Agent System Design",
+      "level": "advanced",
+      "category": "technical"
+    },
+    {
+      "name": "Privacy & Compliance Engineering",
+      "level": "advanced",
+      "category": "technical"
+    },
+    {
+      "name": "Workflow Automation",
+      "level": "advanced",
+      "category": "technical"
+    },
+    {
+      "name": "Systems Thinking",
+      "level": "expert",
+      "category": "strategy"
+    },
+    {
+      "name": "Spec-First Development",
+      "level": "expert",
+      "category": "product"
+    },
+    {
+      "name": "Teaching & Curriculum Design",
+      "level": "advanced",
+      "category": "education"
+    },
+    {
+      "name": "Self-Hosted Infrastructure",
+      "level": "advanced",
+      "category": "technical"
+    }
+  ],
+  "experience": [],
+  "active_work": [
+    "Brahma-Atlas Studio (competitive intelligence)",
+    "Multiplium Research Agent (investment research automation)",
+    "Follow the Rabbit Studios (AI storytelling/film production)",
+    "Overture (musician/venue community platform)",
+    "FocusFlow OS (personal orchestration system)",
+    "RakshaLens (workplace safety/vision AI)",
+    "Soft Schwizz (client/agency work)",
+    "Bootcamps and MVP programs"
+  ],
+  "strategic_focus_tags": [
+    "decision-grade outputs",
+    "multi-agent orchestration",
+    "privacy-first architecture",
+    "GDPR/Swiss compliance",
+    "composable workflows",
+    "self-hosted infrastructure",
+    "MVP-first approach",
+    "modular systems",
+    "quality control",
+    "spec-driven development",
+    "open-source ecosystems",
+    "template-based frameworks",
+    "research automation",
+    "cross-border execution"
+  ],
+  "onboarding_completed": true,
+  "created_at": "2026-02-16T12:14:30.050Z",
+  "updated_at": "2026-02-16T21:27:03.399Z"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917420",
+  "first_name": "Johannes",
+  "last_name": "Pokorny",
+  "full_name": "Johannes Pokorny",
+  "company": "Climate Week Zurich",
+  "position": "Co-Founder & Managing Director",
+  "linkedin_url": "https://www.linkedin.com/in/johannes-pokorny-37870253",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["ESG", "climate", "Zurich", "events", "sustainability"],
+  "last_contacted": "07 Jun 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.420Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 68,
+  "triage_score": 6.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Climate Week Zurich is scheduled for 4-9 May 2026 — a strategic platform uniting business, politics and civil society for climate innovation",
+      "Focus: Sustainable Finance and Sustainable Business — major Swiss ESG event",
+      "Climate Week Zurich listed among top sustainability events for 2026 globally"
+    ],
+    "outreach_angle": "Climate Week Zurich runs 4-9 May 2026 — that is 10 weeks away. Johannes is organizing this event. Two revenue angles: (1) Bramha ESG could sponsor or present at Climate Week Zurich as a launch platform to Swiss SME decision-makers who attend; (2) Johannes needs event tech — the Global Foundation for Transparent Collective Gatherings governance tools could be piloted at Climate Week Zurich as a transparent governance layer for the event. Contact this week to discuss either angle — the sponsorship conversation has a natural 8-week lead time.",
+    "relevant_project": "Bramha ESG"
+  }
+}

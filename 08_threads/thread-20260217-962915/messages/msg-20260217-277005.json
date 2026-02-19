@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-277005",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "Let me check what's actually installed:\n\nThree coding agents are installed:\n\n**Claude Code** (`claude`) — Anthropic's own CLI. That's what I'd default to for Mirari work. Version 2.1.44 is current.\n\n**Codex** — OpenAI's coding agent. Good for parallel batch work, PR reviews.\n\n**OpenCode** — A lighter alternative.\n\nHow I'd use them for Mirari: point one at the project directory with a task — scaffold the spatial audio layer, generate the MiniCPM-o integration code, write the Qwen3-VL grounding module — and it runs autonomously while we talk strategy. Background mode means it works in parallel and pings me when done.\n\nWorth keeping in mind once we have Mirari's specs locked down and move into build phase.",
+  "source": "voice",
+  "created_at": "2026-02-17T08:51:17.005Z"
+}

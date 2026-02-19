@@ -1,0 +1,18 @@
+{
+  "id": "task-1771372442428-e4bdmv",
+  "skill": "profiling-question",
+  "arguments": "",
+  "priority": "background",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "failed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-17T23:54:02.428Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 3,
+  "created_by": "system",
+  "started_at": "2026-02-18T06:11:46.957Z",
+  "pid": 1971896,
+  "error": "Exit code 143: ",
+  "completed_at": "2026-02-18T06:45:07.870Z"
+}

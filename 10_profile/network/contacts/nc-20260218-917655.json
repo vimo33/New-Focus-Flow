@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917655",
+  "first_name": "Harish",
+  "last_name": "Nagesh",
+  "full_name": "Harish Nagesh",
+  "company": "InDepth Engineering Solutions",
+  "position": "Project Manager",
+  "linkedin_url": "https://www.linkedin.com/in/harish-nagesh-54216a13",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "20 Sep 2018",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.655Z",
+  "updated_at": "2026-02-18T23:32:27.166Z",
+  "phone": "001-716-8687685 ::: +91 99864 43113 ::: +91 91136 13876",
+  "emails": [
+    "nharishmech@gmail.com"
+  ],
+  "phones": [
+    "001-716-8687685 ::: +91 99864 43113 ::: +91 91136 13876"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:27.165Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

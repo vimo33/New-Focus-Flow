@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917313",
+  "first_name": "Martina",
+  "last_name": "Niggli",
+  "full_name": "Martina Niggli",
+  "company": "proxi. dein kompass in konflikten.",
+  "position": "Gründer:in",
+  "linkedin_url": "https://www.linkedin.com/in/martina-niggli",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "01 Dec 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.313Z",
+  "updated_at": "2026-02-18T23:34:00.559Z",
+  "company_size": "1-10",
+  "industry": "Non-Profit Organization Management",
+  "skills": [
+    "Business Analyse",
+    "Java",
+    "Produktmanagement",
+    "Python",
+    "SQL"
+  ],
+  "location": true,
+  "enrichment_date": "2026-02-18T23:34:00.558Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

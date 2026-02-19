@@ -1,0 +1,17 @@
+{
+  "id": "task-1771538404956-kj29hx",
+  "skill": "network-enrich",
+  "arguments": "",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-19T22:00:04.956Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-19T22:00:04.992Z",
+  "pid": 2249285,
+  "completed_at": "2026-02-19T22:16:41.523Z"
+}

@@ -1,0 +1,234 @@
+{
+  "task_type": "network-analyze",
+  "status": "completed",
+  "generated_at": "2026-02-19T00:00:00.000Z",
+  "contacts_analyzed": 94,
+  "opportunities": [
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Tommy Fliski",
+      "contact_id": "nc-20260218-917396",
+      "company": "Green Marmot Capsule Hotel",
+      "description": "BD Manager at a Z\u00fcrich boutique capsule hotel \u2014 the exact distribution partner type that AURA's validation sprint requires. AURA's critical active task is to secure one boutique hotel QR card placement before the build decision. Tommy controls that decision at Green Marmot, which serves tech-savvy independent travelers (the AURA target persona).",
+      "suggested_action": "Send Tommy a LinkedIn message or email in the next 48 hours: 'Tommy \u2014 I am building AURA, a voice AI companion that brings Z\u00fcrich's history to life for hotel guests. We are piloting QR card placements at 3 boutique Z\u00fcrich hotels \u2014 zero cost to the hotel, guests get a free premium experience. Would Green Marmot be open to a quick call this week?' Then schedule a 10-minute call, visit the hotel in person if possible. Objective: written email confirmation of QR card placement agreement.",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Rodolphe Bocquet",
+      "contact_id": "nc-20260218-917316",
+      "company": "ESG4Boards",
+      "description": "20+ year ESG expert with VP-level roles at Clarity AI and Global Head of ESG at Qontigo. The most credentialed ESG practitioner in the network. A 30-minute conversation with him validates or disproves Bramha ESG's core thesis \u2014 saving months of misdirected product development. His institutional network (board members at Swiss companies, sustainable finance community) represents CHF 50K-500K in potential first customers if the thesis holds.",
+      "suggested_action": "LinkedIn message this week referencing the September 2025 conversation: 'Rodolphe \u2014 great connecting in September. I have been developing Bramha ESG since then \u2014 an AI-native ESG compliance platform for Swiss SMEs. Before I go deep on the product, I would love 30 minutes to pressure-test the thesis: what are the real pain points for Swiss SME boards in ESG reporting today? Your perspective would be invaluable.' Wait for his response. Do not pitch. Ask questions only. Document insights for product development.",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Dan-George Filimon",
+      "contact_id": "nc-20260218-917355",
+      "company": "Amulet AI",
+      "description": "Ex-Google Staff Engineer building on-device LLMs in Z\u00fcrich. At pre-seed stage with Amulet AI (Qybala). Same city, same technology layer, same funding stage as Vimo. Natural peer who could become: (1) a Multiplium beta customer for their AI pipeline orchestration needs, (2) a co-marketing partner in the Z\u00fcrich AI founder community, (3) a referral source to other Swiss AI founders.",
+      "suggested_action": "LinkedIn message this week: 'Dan-George \u2014 we connected last February in the Z\u00fcrich AI scene. I have been building Multiplium, an AI orchestration layer for multi-agent pipelines. Given Amulet AI's work on on-device LLMs, I think there's an interesting overlap in how we're thinking about model coordination. Coffee this week or next?' Meet in person. Share Multiplium's current state. Ask about their pipeline architecture. If there is a fit, propose a beta pilot.",
+      "potential_impact": "medium",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Penny Schiffer",
+      "contact_id": "nc-20260218-917334",
+      "company": "Raized.ai",
+      "description": "CEO of an AI-powered VC deal sourcing platform backed by SICTIC and Kickstart. Conceptual overlap with ATX. Also: she has navigated Swiss startup funding programs successfully and can provide warm introductions to SICTIC angels (200+ members) \u2014 the funding source most accessible at Vimo's current stage.",
+      "suggested_action": "LinkedIn message this week referencing a Venturelab article about Raized.ai: 'Penny \u2014 I saw the Venturelab piece on Raized.ai. I am building ATX (Agentic Trust Exchange), an AI-mediated professional collaboration network. The conceptual overlap with your deal sourcing work is striking. Would love 20 minutes to compare notes and explore whether there is a partnership angle. Coffee in Z\u00fcrich?' If the conversation goes well, make a direct ask: 'Would you be open to introducing me to your SICTIC contact? I think one of our projects would resonate with the angels there.'",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "introduction-chain",
+      "contact_name": "Nathalie Manetti",
+      "contact_id": "nc-20260218-917346",
+      "company": "Venturelab",
+      "description": "Project Manager at Venturelab, Switzerland's central startup support institution. Swiss startups surpassed CHF 2.4B in funding in 2026. Venturelab has introductions to Founderful, Redalpine, Spicehaus, and other active Swiss seed funds. This is the single highest-leverage institutional relationship for accessing Swiss VC capital.",
+      "suggested_action": "LinkedIn message this week: 'Nathalie \u2014 it has been almost a year since we connected. I have made significant progress on two projects: Bramha ESG (AI-native ESG compliance for Swiss SMEs) and Mirari (a voice AI companion for Z\u00fcrich). I would love to share progress and explore whether there is a Venturelab program fit for either. Are you available for a 20-minute call in March?' After the call, prepare a one-page brief on Bramha ESG for Venturelab program consideration. Ask for introductions to 2-3 active Swiss seed funds.",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Jan F\u00fclscher",
+      "contact_id": "nc-20260218-917324",
+      "company": "Cognel",
+      "description": "Co-founder of Cognel AI (systematic reasoning), CEO of senozon (data analytics), serial founder-investor, assistant lecturer at University of Zurich and Bern. Embedded in Impact Hub and Top 100 Swiss Startups ecosystem. Could be: advisor, angel investor, or Multiplium beta customer.",
+      "suggested_action": "LinkedIn message this week: 'Jan \u2014 it's been about 10 months since we connected. I have been building Multiplium, an AI orchestration layer, and I am curious about how you are approaching the reasoning reliability problem at Cognel. Would you be up for a coffee in Z\u00fcrich this month? Happy to share what I'm working on in return.' Meet in person. Bring a clear ask: one specific area where Jan's 20+ years of Swiss startup experience would help.",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "introduction-chain",
+      "contact_name": "Johannes Pokorny",
+      "contact_id": "nc-20260218-917420",
+      "company": "Climate Week Zurich",
+      "description": "Co-founder of Climate Week Zurich 2026 (4-9 May). Strategic platform for Swiss business, politics, and civil society on climate innovation. Sponsorship or speaking slot gives Bramha ESG direct access to Swiss corporate sustainability decision-makers \u2014 the exact buyer profile. Lead time: 8 weeks minimum.",
+      "suggested_action": "LinkedIn message by end of next week: 'Johannes \u2014 I have been following Climate Week Z\u00fcrich's growth. I am building Bramha ESG, an AI-native ESG compliance platform launching for Swiss SMEs in 2026. Would there be a speaking or sponsorship opportunity at Climate Week Z\u00fcrich in May? I would love to explore this.' If yes: prepare a 10-minute talk on AI-native ESG compliance for Swiss SMEs. If sponsorship: agree on a booth or brand presence. Budget for CHF 2-5K sponsorship if needed.",
+      "potential_impact": "high",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Denis Belkevich",
+      "contact_id": "nc-20260218-917414",
+      "company": "Fuelarts",
+      "description": "General Partner at Fuelarts. Just launched AX, an AI-powered accelerator for creative tech. Currently raising $500K pre-seed for AX MVP. Overture (live music community platform) is a natural creative tech candidate for AX's first cohort.",
+      "suggested_action": "LinkedIn message this month referencing the AX launch: 'Denis \u2014 I saw the AX announcement \u2014 bold move. I have been building Overture, a community-driven live performance platform. Creative tech through and through. Would Overture be a candidate for AX's first cohort? Happy to share the brief.' Short. No pitch deck attachment. Wait for response. If positive: prepare a 2-page brief on Overture for AX consideration.",
+      "potential_impact": "medium",
+      "urgency": "this-month"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Alexander Ginsburg",
+      "contact_id": "nc-20260218-917405",
+      "company": "Futurae Technologies AG",
+      "description": "Head of Global Alliances at a CHF 5M funded Swiss security company in international expansion. Kavach AI's physical security monitoring layer is complementary to Futurae's digital authentication \u2014 same enterprise clients, different attack surfaces.",
+      "suggested_action": "LinkedIn message this month: 'Alexander \u2014 following up on our connection. Futurae's Series A and international expansion is impressive. I have been building Kavach AI, an edge-AI physical security monitoring platform. I think there is an interesting complementary angle between Futurae's digital authentication layer and Kavach's physical monitoring \u2014 protecting the same enterprise clients at different layers. Would you be open to a 20-minute exploratory call?' If positive: prepare a one-page on how Kavach + Futurae could go to market together as a bundled physical + digital security solution.",
+      "potential_impact": "medium",
+      "urgency": "this-month"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Armin Agic",
+      "contact_id": "nc-20260218-917379",
+      "company": "ecoinvent",
+      "description": "Outbound Sales Lead at ecoinvent, which just released v3.12 (November 2025). ecoinvent's LCA database is the globally recognized emissions factor standard. A data partnership would give Bramha ESG instant credibility and plug a critical data gap in ESG reporting.",
+      "suggested_action": "LinkedIn message this month: 'Armin \u2014 I saw the v3.12 release \u2014 impressive expanded sector coverage. I am building Bramha ESG, an AI-native ESG compliance platform for Swiss SMEs, and I am evaluating which emissions factor datasets to integrate. ecoinvent is the obvious choice for scope 3 credibility. Would you be open to discussing a data partnership or licensing arrangement? Happy to discuss mutual promotional value too.' This is a natural business conversation \u2014 he is in an outbound sales role.",
+      "potential_impact": "medium",
+      "urgency": "this-month"
+    },
+    {
+      "type": "dormant-reactivation",
+      "contact_name": "Ajith Govind Satheesh",
+      "contact_id": "nc-20260218-917318",
+      "company": "Cactus",
+      "description": "Most recently contacted founder in the network (August 2025, 6 months ago). Warm reactivation \u2014 direct ask for a specific introduction in the Indian enterprise security space for Kavach AI.",
+      "suggested_action": "LinkedIn message this week: 'Ajith \u2014 checking in after our August conversation. Big progress on Kavach AI since then. Would love to catch up. Also \u2014 do you know anyone in the Indian enterprise security, smart cities, or workplace safety space who might find Kavach interesting? I would greatly appreciate an introduction, and happy to return the favor.' Specific ask. Low friction. Timeline: this week.",
+      "potential_impact": "medium",
+      "urgency": "this-week"
+    },
+    {
+      "type": "revenue-adjacent",
+      "contact_name": "Mathias Vazquez Rodriguez",
+      "contact_id": "nc-20260218-917385",
+      "company": "HITS - House of Insurtech Switzerland",
+      "description": "Open Innovation Manager at HITS \u2014 Generali's innovation hub in Z\u00fcrich with 20 active startups. Money in insurtech is concentrating in AI-first solutions. Kavach AI (workplace safety, insurance claims reduction) is a natural HITS pilot candidate.",
+      "suggested_action": "LinkedIn message this month: 'Mathias \u2014 I have been building Kavach AI, an edge-AI workplace safety monitoring platform that reduces workplace incidents and insurance claims. Given HITS's focus on AI-first solutions and Generali's DACH operations, I would love to explore whether there is a pilot opportunity. Are you open to a 20-minute intro call?' If positive: prepare a one-page on Kavach AI's insurance value proposition (claims reduction %, ROI for insurer).",
+      "potential_impact": "high",
+      "urgency": "this-month"
+    }
+  ],
+  "clusters": {
+    "Zurich_AI_Founders": {
+      "members": [
+        "Dan-George Filimon (Amulet AI)",
+        "Penny Schiffer (Raized.ai)",
+        "Jan F\u00fclscher (Cognel)",
+        "Julie Rielle (MindHeal AG)"
+      ],
+      "signal": "All four were contacted within a 3-month window in early 2025 \u2014 Vimo was embedded in this community. Reactivating all four in the same week would rebuild that momentum as a cluster rather than four separate threads.",
+      "revenue_opportunity": "Early beta users for Nitara and Multiplium; potential angel investors; referral network into Swiss VC"
+    },
+    "ESG_Sustainability_Switzerland": {
+      "members": [
+        "Rodolphe Bocquet (ESG4Boards)",
+        "Johannes Pokorny (Climate Week Zurich)",
+        "Armin Agic (ecoinvent)",
+        "Claudia Piwecki (Clima Now)"
+      ],
+      "signal": "Concentrated cluster of ESG practitioners in Switzerland. Bramha ESG has a ready-built referral network if engaged correctly.",
+      "revenue_opportunity": "Market validation, first customers, and distribution channel for Bramha ESG"
+    },
+    "Swiss_Institutional_Gateways": {
+      "members": [
+        "Nathalie Manetti (Venturelab)",
+        "Thomas Ackermann (ETH Z\u00fcrich)",
+        "Mathias Vazquez Rodriguez (HITS)"
+      ],
+      "signal": "Three institutional gateways that collectively unlock Swiss VC, ETH incubation, and Generali enterprise pilots.",
+      "revenue_opportunity": "Funding access (Venturelab), incubation support (ETH ESA BIC), enterprise pilot (HITS/Generali)"
+    },
+    "Security_Deep_Tech": {
+      "members": [
+        "Alexander Ginsburg (Futurae Technologies)",
+        "Alex Murawski (NOA Labs)",
+        "Kevin Sartori (Nivek, Deep Tech Advisor)"
+      ],
+      "signal": "Security-adjacent cluster with complementary roles: partnership (Futurae), hardware manufacturing (NOA Labs), strategic advisory (Sartori).",
+      "revenue_opportunity": "Kavach AI go-to-market support, hardware partner, and growth advisory"
+    }
+  },
+  "gaps": [
+    {
+      "gap_type": "missing_role",
+      "description": "No Swiss angel investors or seed-stage VC partners in the active network. The gap between concept stage and first institutional funding requires angels writing CHF 25K-100K checks.",
+      "suggested_action": "Apply to SICTIC (Swiss ICT Investor Club) as a startup presenter. Penny Schiffer and Jan F\u00fclscher can provide warm introductions. SICTIC events expose startups to 200+ Swiss angels simultaneously."
+    },
+    {
+      "gap_type": "missing_industry",
+      "description": "Only one hospitality/hotel contact (Tommy Fliski) for AURA's distribution strategy. Need 3-5 additional boutique Z\u00fcrich hotel BD contacts.",
+      "suggested_action": "Direct outreach to Z\u00fcrich Tourism digital experience manager plus BD contacts at 5 boutique hotels: Marktgasse Hotel, Sorell Hotel, Hotel Langstrasse, Das Stue (if expanding), Boutique Hotel Minerva. Use Google Maps to identify boutique properties near major tourist areas."
+    },
+    {
+      "gap_type": "missing_industry",
+      "description": "No Swiss regulatory or compliance body contacts (FINMA, BAFU, SECO) for Bramha ESG's compliance framework design.",
+      "suggested_action": "Request introduction from Rodolphe Bocquet (ESG4Boards) to one Swiss regulatory contact after the validation conversation. Alternatively, identify a Big 4 ESG practice contact (KPMG Switzerland, PwC Switzerland) who interacts with regulators regularly."
+    },
+    {
+      "gap_type": "missing_geography",
+      "description": "Singapore network is effectively empty \u2014 critical gap for ATX and Kavach AI market entry. Only Ashwin Gangappa (NUS) touches Singapore.",
+      "suggested_action": "Leverage Ashwin Gangappa (NUS, Nov 2024 contact) for a warm introduction to NUS Enterprise or SGInnovate. Research and reach out directly to 2-3 Singapore AI startup ecosystem contacts (SGInnovate program manager, Enterprise Singapore tech lead)."
+    },
+    {
+      "gap_type": "missing_geography",
+      "description": "India enterprise network is entirely dormant (2012-2018 connections). Kavach AI's primary deployment market requires active India relationships.",
+      "suggested_action": "Reactivate through Ajith Govind Satheesh (Cactus, Aug 2025) \u2014 ask for specific introductions to Indian enterprise security or smart cities decision-makers as the first step."
+    },
+    {
+      "gap_type": "missing_role",
+      "description": "No enterprise Chief Sustainability Officers or ESG/compliance heads at Swiss large corporates who could be Bramha ESG pilot customers.",
+      "suggested_action": "Identify and request introduction to the CSO or Head of Sustainability at 3 mid-size Swiss companies through Climate Week Zurich (Johannes Pokorny) or Rodolphe Bocquet (ESG4Boards). These are the Bramha ESG design partner candidates."
+    }
+  ],
+  "confidence": 0.72,
+  "satisfaction_score": 0.52,
+  "satisfaction_details": [
+    {
+      "name": "opportunities_with_actions",
+      "score": 0.6,
+      "weight": 0.25
+    },
+    {
+      "name": "industry_clusters",
+      "score": 0.2,
+      "weight": 0.2
+    },
+    {
+      "name": "revenue_adjacency",
+      "score": 0.6,
+      "weight": 0.2
+    },
+    {
+      "name": "network_gaps",
+      "score": 0.6,
+      "weight": 0.15
+    },
+    {
+      "name": "contacts_analyzed_count",
+      "score": 0.2,
+      "weight": 0.1
+    },
+    {
+      "name": "no_placeholders",
+      "score": 1.0,
+      "weight": 0.1
+    }
+  ]
+}

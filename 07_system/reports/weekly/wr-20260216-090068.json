@@ -1,0 +1,75 @@
+{
+  "id": "wr-20260216-090068",
+  "week_start": "2026-02-09",
+  "week_end": "2026-02-16",
+  "overall_momentum": 0,
+  "kpis": [
+    {
+      "label": "Monthly Revenue",
+      "value": "7,000",
+      "trend_direction": "up",
+      "trend_percentage": "USD +7,000 net",
+      "spark_data": [
+        0,
+        0,
+        0,
+        0,
+        7000
+      ]
+    },
+    {
+      "label": "Task Efficiency",
+      "value": "0%",
+      "trend_direction": "down",
+      "trend_percentage": "0 completed",
+      "spark_data": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "label": "Network Growth",
+      "value": "0",
+      "trend_direction": "flat",
+      "trend_percentage": "+0 new",
+      "spark_data": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "label": "Active Projects",
+      "value": "17",
+      "trend_direction": "flat",
+      "trend_percentage": "this week",
+      "spark_data": [
+        0,
+        0,
+        0,
+        0,
+        17
+      ]
+    }
+  ],
+  "strategic_intelligence": [
+    "17 active project(s) in progress.",
+    "Review project priorities for the upcoming week."
+  ],
+  "activity_volume": [
+    0,
+    1,
+    3,
+    0,
+    0,
+    2,
+    0
+  ],
+  "retrospective": "**Week in Review**\n\nStrong revenue performance (+$7K) contrasts sharply with zero task completions across 17 active projects, suggesting resource fragmentation and possible misalignment between billable work and project tracking. With 0% task efficiency, the portfolio is likely over-extended—consider consolidating to 5-7 high-priority projects and implementing a \"finish before starting\" discipline. Immediate action: conduct a project audit this week to identify which initiatives can be paused, delegated, or closed to restore forward momentum.",
+  "created_at": "2026-02-16T12:47:46.437Z"
+}

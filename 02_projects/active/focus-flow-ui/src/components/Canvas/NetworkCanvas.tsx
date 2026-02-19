@@ -2,6 +2,22 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { GlassCard, StatCard, Badge, NitaraInsightCard } from '../shared';
 import { api } from '../../services/api';
 
+const STRENGTH_VARIANT: Record<string, 'active' | 'paused' | 'blocked' | 'completed'> = {
+  strong: 'active',
+  moderate: 'completed',
+  weak: 'paused',
+  dormant: 'blocked',
+};
+
+const SENIORITY_LABELS: Record<string, string> = {
+  c_suite: 'C-Suite',
+  vp: 'VP',
+  director: 'Director',
+  manager: 'Manager',
+  individual_contributor: 'IC',
+  founder: 'Founder',
+};
+
 export default function NetworkCanvas() {
   const [contacts, setContacts] = useState<any[]>([]);
   const [graph, setGraph] = useState<any>(null);
@@ -20,6 +36,9 @@ export default function NetworkCanvas() {
   const [enrichBudget, setEnrichBudget] = useState<{ used: number; limit: number; remaining: number } | null>(null);
   const [enriching, setEnriching] = useState(false);
   const [enrichProgress, setEnrichProgress] = useState<{ status: string; processed: number; total: number; enriched: number } | null>(null);
+
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'with_data' | 'needs_data'>('with_data');
 
   const refreshData = useCallback(async () => {
     try {
@@ -266,14 +285,21 @@ export default function NetworkCanvas() {
     );
   }
 
-  // Client-side search filtering
-  const filteredContacts = contacts.filter((c) => {
+  // Classification: "with data" = has full_name AND (company OR email)
+  const hasActionableData = (c: any) => !!(c.full_name && (c.company || c.email));
+  const contactsWithData = contacts.filter(hasActionableData);
+  const contactsNeedingData = contacts.filter(c => !hasActionableData(c));
+
+  // Tab-aware search filtering
+  const baseContacts = activeTab === 'with_data' ? contactsWithData : contactsNeedingData;
+  const filteredContacts = baseContacts.filter((c) => {
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
       (c.full_name || '').toLowerCase().includes(q) ||
       (c.company || '').toLowerCase().includes(q) ||
-      (c.position || '').toLowerCase().includes(q)
+      (c.position || '').toLowerCase().includes(q) ||
+      (c.email || '').toLowerCase().includes(q)
     );
   });
 
@@ -413,10 +439,30 @@ export default function NetworkCanvas() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Left Column — Contact List (spans 2) */}
         <GlassCard className="lg:col-span-2">
+          {/* Tab bar + search */}
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
-              Contacts
-            </h3>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => setActiveTab('with_data')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                  activeTab === 'with_data'
+                    ? 'bg-primary/15 text-primary border-primary/30'
+                    : 'text-text-tertiary border-transparent hover:text-text-secondary'
+                }`}
+              >
+                With Data ({contactsWithData.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('needs_data')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                  activeTab === 'needs_data'
+                    ? 'bg-primary/15 text-primary border-primary/30'
+                    : 'text-text-tertiary border-transparent hover:text-text-secondary'
+                }`}
+              >
+                Needs Data ({contactsNeedingData.length})
+              </button>
+            </div>
             <input
               type="text"
               placeholder="Search..."
@@ -429,76 +475,170 @@ export default function NetworkCanvas() {
           {displayContacts.length === 0 ? (
             <div className="flex items-center justify-center py-8">
               <p className="text-text-tertiary text-sm">
-                No contacts match your search.
+                {searchQuery.trim()
+                  ? 'No contacts match your search.'
+                  : activeTab === 'with_data'
+                    ? 'No enriched contacts yet. Try enriching your network!'
+                    : 'All contacts have data — nice!'}
               </p>
             </div>
           ) : (
             <div>
-              {displayContacts.map((contact) => {
-                const initials = (contact.full_name || 'U')
-                  .split(' ')
-                  .map((n: string) => n[0])
-                  .join('')
-                  .toUpperCase()
-                  .slice(0, 2);
+              {activeTab === 'with_data'
+                ? /* Rich contact rows for "With Data" tab */
+                  displayContacts.map((contact) => {
+                    const initials = (contact.full_name || 'U')
+                      .split(' ')
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2);
 
-                const strengthVariant: Record<string, 'active' | 'paused' | 'blocked' | 'completed'> = {
-                  strong: 'active',
-                  moderate: 'completed',
-                  weak: 'paused',
-                  dormant: 'blocked',
-                };
+                    const pdlLikelihood = contact.enrichment_data?.pdl_likelihood;
 
-                return (
-                  <div
-                    key={contact.id || contact.full_name}
-                    className="p-3 border-b border-[var(--glass-border)] last:border-b-0 flex items-center gap-3"
-                  >
-                    {/* Avatar */}
-                    <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-xs font-medium flex-shrink-0">
-                      {initials}
-                    </div>
+                    return (
+                      <div
+                        key={contact.id || contact.full_name}
+                        className="p-3 border-b border-[var(--glass-border)] last:border-b-0 flex items-start gap-3"
+                      >
+                        {/* Avatar */}
+                        <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-xs font-medium flex-shrink-0 mt-0.5">
+                          {initials}
+                        </div>
 
-                    {/* Info */}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary text-sm font-medium truncate">
-                        {contact.full_name}
-                      </p>
-                      {(contact.position || contact.company) && (
-                        <p className="text-text-tertiary text-xs truncate">
-                          {contact.position}
-                          {contact.position && contact.company ? ' @ ' : ''}
-                          {contact.company}
-                        </p>
-                      )}
-                    </div>
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <p className="text-text-primary text-sm font-medium truncate">
+                              {contact.full_name}
+                            </p>
+                            {contact.seniority && contact.seniority !== 'unknown' && (
+                              <span className="text-[10px] text-text-tertiary bg-elevated/60 px-1.5 py-0.5 rounded-full flex-shrink-0">
+                                {SENIORITY_LABELS[contact.seniority as keyof typeof SENIORITY_LABELS] || contact.seniority}
+                              </span>
+                            )}
+                          </div>
+                          {(contact.position || contact.company) && (
+                            <p className="text-text-tertiary text-xs truncate">
+                              {contact.position}
+                              {contact.position && contact.company ? ' @ ' : ''}
+                              {contact.company}
+                            </p>
+                          )}
+                          {contact.industry && (
+                            <p className="text-text-tertiary/70 text-[11px] truncate mt-0.5">
+                              {contact.industry}
+                            </p>
+                          )}
+                          {contact.skills && contact.skills.length > 0 && (
+                            <div className="flex items-center gap-1 mt-1 flex-wrap">
+                              {contact.skills.slice(0, 3).map((skill: string) => (
+                                <span key={skill} className="text-[10px] text-text-secondary bg-elevated/50 border border-[var(--glass-border)] px-1.5 py-0.5 rounded-full">
+                                  {skill}
+                                </span>
+                              ))}
+                              {contact.skills.length > 3 && (
+                                <span className="text-[10px] text-text-tertiary">+{contact.skills.length - 3}</span>
+                              )}
+                            </div>
+                          )}
+                        </div>
 
-                    {/* Relationship badge */}
-                    {contact.relationship_strength && (
-                      <Badge
-                        label={contact.relationship_strength.toUpperCase()}
-                        variant={strengthVariant[contact.relationship_strength] || 'paused'}
-                      />
-                    )}
-
-                    {/* Tags */}
-                    {contact.tags && contact.tags.length > 0 && (
-                      <div className="hidden sm:flex items-center gap-1">
-                        {contact.tags.slice(0, 2).map((tag: string) => (
-                          <Badge key={tag} label={tag} variant="playbook" />
-                        ))}
+                        {/* Right side: badges */}
+                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                          {contact.relationship_strength && (
+                            <Badge
+                              label={contact.relationship_strength.toUpperCase()}
+                              variant={STRENGTH_VARIANT[contact.relationship_strength] || 'paused'}
+                            />
+                          )}
+                          {pdlLikelihood != null && (
+                            <span className="flex items-center gap-0.5 text-[10px] text-text-tertiary">
+                              <span className="material-symbols-rounded text-xs text-primary/60">verified</span>
+                              PDL {pdlLikelihood}/10
+                            </span>
+                          )}
+                          {contact.tags && contact.tags.length > 0 && (
+                            <div className="hidden sm:flex items-center gap-1">
+                              {contact.tags.slice(0, 2).map((tag: string) => (
+                                <Badge key={tag} label={tag} variant="playbook" />
+                              ))}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                );
-              })}
+                    );
+                  })
+                : /* Compact rows for "Needs Data" tab */
+                  displayContacts.map((contact) => {
+                    const initials = (contact.full_name || 'U')
+                      .split(' ')
+                      .map((n: string) => n[0])
+                      .join('')
+                      .toUpperCase()
+                      .slice(0, 2);
+
+                    const sparseInfo = contact.email || contact.company || (contact.import_sources?.join(', ')) || contact.imported_from || '';
+
+                    return (
+                      <div
+                        key={contact.id || contact.full_name}
+                        className="p-2.5 border-b border-[var(--glass-border)] last:border-b-0 flex items-center gap-2.5"
+                      >
+                        {/* Smaller avatar */}
+                        <div className="w-7 h-7 rounded-full bg-elevated/60 flex items-center justify-center text-text-tertiary text-[10px] font-medium flex-shrink-0">
+                          {initials}
+                        </div>
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-text-secondary text-sm truncate">
+                            {contact.full_name || 'Unknown'}
+                          </p>
+                          {sparseInfo && (
+                            <p className="text-text-tertiary text-xs truncate">
+                              {sparseInfo}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Needs enrichment indicator */}
+                        <span className="material-symbols-rounded text-base text-text-tertiary/50" title="Needs enrichment">
+                          data_alert
+                        </span>
+                      </div>
+                    );
+                  })
+              }
+            </div>
+          )}
+
+          {/* Enrichment CTA banner in "Needs Data" tab */}
+          {activeTab === 'needs_data' && contactsNeedingData.length > 0 && enrichBudget && enrichBudget.remaining > 0 && (
+            <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm">
+                <span className="material-symbols-rounded text-base text-primary">auto_awesome</span>
+                <span className="text-text-secondary">
+                  {contactsNeedingData.length} contacts need enrichment
+                </span>
+                <span className="text-text-tertiary text-xs">
+                  ({enrichBudget.remaining} PDL lookups remaining)
+                </span>
+              </div>
+              <button
+                onClick={handleEnrich}
+                disabled={enriching}
+                className="px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 border border-primary/30 rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {enriching ? 'Enriching...' : 'Enrich Now'}
+              </button>
             </div>
           )}
 
           {filteredContacts.length > 20 && (
             <div className="pt-3 text-center">
               <p className="text-text-tertiary text-xs">
-                Showing 20 of {filteredContacts.length} contacts
+                Showing 20 of {filteredContacts.length} {activeTab === 'with_data' ? 'enriched' : 'incomplete'} contacts
               </p>
             </div>
           )}

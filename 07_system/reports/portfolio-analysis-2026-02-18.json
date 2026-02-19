@@ -1,0 +1,493 @@
+{
+  "task_type": "portfolio-analysis",
+  "status": "completed",
+  "generated_at": "2026-02-18T12:00:00.000Z",
+  "founder": {
+    "name": "Vikas Mohan",
+    "location": "Zurich, Switzerland",
+    "archetype": "cofounder",
+    "monthly_revenue": 7000,
+    "monthly_burn": 5000,
+    "revenue_currency": "CHF",
+    "revenue_streams": [
+      {"source": "AI Course Creation", "amount": 3500, "type": "one_time"},
+      {"source": "Explainer Video with FTR", "amount": 3500, "type": "one_time"}
+    ],
+    "pipeline_deals": [
+      {"name": "Orthoanalytics", "stage": "closed_won", "value": 9000, "currency": "USD"}
+    ],
+    "profiling_completeness": 16
+  },
+  "portfolio_summary": {
+    "total_projects": 19,
+    "active_projects": 18,
+    "paused_projects": 1,
+    "all_at_concept_phase": true,
+    "projects_with_council_review": 16,
+    "average_council_score": 4.6,
+    "portfolio_health": "CRITICAL",
+    "primary_issue": "18 active projects at concept phase with zero execution. Classic idea generation without execution syndrome."
+  },
+  "scoring_dimensions": {
+    "revenue_proximity": {"weight": 0.30, "description": "How close to generating income?"},
+    "market_validation": {"weight": 0.20, "description": "Evidence of demand"},
+    "skill_alignment": {"weight": 0.15, "description": "Leverages existing founder skills?"},
+    "effort_to_revenue": {"weight": 0.20, "description": "Revenue per hour invested"},
+    "strategic_fit": {"weight": 0.15, "description": "Alignment with directive and portfolio balance"}
+  },
+  "project_scores": [
+    {
+      "id": "project-20260214-394530",
+      "title": "Nitara / Focus Flow OS",
+      "phase": "concept",
+      "status": "active",
+      "council_score": null,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 7,
+        "market_validation": 6,
+        "skill_alignment": 10,
+        "effort_to_revenue": 6,
+        "strategic_fit": 9
+      },
+      "weighted_total": 7.2,
+      "recommendation": "BUILD-NEXT",
+      "rationale": "The strategic platform. Already being built. Perfect skill alignment. Revenue through consulting/teaching/SaaS.",
+      "tier": 1
+    },
+    {
+      "id": "project-20260211-877092",
+      "title": "Bramha CI Platform",
+      "phase": "concept",
+      "status": "active",
+      "council_score": null,
+      "council_recommendation": null,
+      "scores": {
+        "revenue_proximity": 7,
+        "market_validation": 8,
+        "skill_alignment": 7,
+        "effort_to_revenue": 7,
+        "strategic_fit": 6
+      },
+      "weighted_total": 6.8,
+      "recommendation": "BUILD-NEXT",
+      "rationale": "Strongest revenue play. TEPA timing advantage. Services-first model for immediate cash. India corridor as personal moat.",
+      "tier": 1
+    },
+    {
+      "id": "project-20260211-085103",
+      "title": "Bramha ESG (Architecture)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.6,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 5,
+        "market_validation": 7,
+        "skill_alignment": 5,
+        "effort_to_revenue": 4,
+        "strategic_fit": 5
+      },
+      "weighted_total": 5.5,
+      "recommendation": "PARK",
+      "rationale": "Merge into Bramha CI as adjacent product. ESG compliance monitoring as add-on, not standalone.",
+      "tier": 2
+    },
+    {
+      "id": "project-20260211-365391",
+      "title": "Bramha ESG (Services-First)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.8,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 6,
+        "market_validation": 7,
+        "skill_alignment": 4,
+        "effort_to_revenue": 5,
+        "strategic_fit": 5
+      },
+      "weighted_total": 5.3,
+      "recommendation": "PARK",
+      "rationale": "Services model is sound but requires ESG domain co-founder. Merge into Bramha CI strategy.",
+      "tier": 2
+    },
+    {
+      "id": "project-20260212-644685",
+      "title": "Overture Event (Master Strategy)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.0,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 3,
+        "market_validation": 4,
+        "skill_alignment": 4,
+        "effort_to_revenue": 3,
+        "strategic_fit": 3
+      },
+      "weighted_total": 4.0,
+      "recommendation": "PARK",
+      "rationale": "Two-sided marketplace in crowded space. No music industry background. Cold-start problem unsolved.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260211-240437",
+      "title": "Overture (Live Music + Radio)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.8,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 3,
+        "market_validation": 4,
+        "skill_alignment": 4,
+        "effort_to_revenue": 3,
+        "strategic_fit": 2
+      },
+      "weighted_total": 3.8,
+      "recommendation": "PARK",
+      "rationale": "Revenue math errors. Earlier version superseded by Master Strategy. Two tasks pending but low priority.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260216-349467",
+      "title": "Mirari / AURA Zurich Temporal Lens",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.0,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 4,
+        "skill_alignment": 6,
+        "effort_to_revenue": 2,
+        "strategic_fit": 3
+      },
+      "weighted_total": 3.7,
+      "recommendation": "PARK",
+      "rationale": "Ambitious vision but speculative. No revenue path for 12+ months. Wrong time given financial pressure.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260215-227660",
+      "title": "AURA - Discover Your City",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.7,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 4,
+        "skill_alignment": 5,
+        "effort_to_revenue": 3,
+        "strategic_fit": 3
+      },
+      "weighted_total": 3.5,
+      "recommendation": "PARK",
+      "rationale": "Better-scoped AURA variant but still requires hotel partnerships and significant build.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260215-822591",
+      "title": "Kavach AI",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.4,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 3,
+        "market_validation": 5,
+        "skill_alignment": 4,
+        "effort_to_revenue": 2,
+        "strategic_fit": 3
+      },
+      "weighted_total": 3.5,
+      "recommendation": "PARK",
+      "rationale": "Workplace safety/vision AI. Requires hardware, on-site deployments. Different sales motion than founder's skillset.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260212-807504",
+      "title": "Global Foundation v3 (Active)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 5.6,
+      "council_recommendation": "needs-info",
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 4,
+        "skill_alignment": 3,
+        "effort_to_revenue": 1,
+        "strategic_fit": 2
+      },
+      "weighted_total": 3.3,
+      "recommendation": "PARK",
+      "rationale": "Non-profit foundation concept. No revenue path. Mission-driven but misaligned with income directive.",
+      "tier": 3
+    },
+    {
+      "id": "project-20260215-603248",
+      "title": "AURA AI Travel Guide",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.6,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 3,
+        "skill_alignment": 4,
+        "effort_to_revenue": 2,
+        "strategic_fit": 2
+      },
+      "weighted_total": 2.8,
+      "recommendation": "KILL",
+      "rationale": "Speculative technical foundations. Duplicate of Mirari/AURA. Council rejected.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260213-357010",
+      "title": "Agentic Trust Exchange (ATX)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.6,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 3,
+        "skill_alignment": 5,
+        "effort_to_revenue": 2,
+        "strategic_fit": 2
+      },
+      "weighted_total": 2.6,
+      "recommendation": "KILL",
+      "rationale": "Fascinating concept but zero market validation, extremely complex trust dynamics, no revenue path.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260213-267941",
+      "title": "Multiplium",
+      "phase": "concept",
+      "status": "active",
+      "council_score": null,
+      "council_recommendation": null,
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 2,
+        "skill_alignment": 5,
+        "effort_to_revenue": 2,
+        "strategic_fit": 2
+      },
+      "weighted_total": 2.5,
+      "recommendation": "KILL",
+      "rationale": "Vague description. No council evaluation. No clear revenue model or validation.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-711527",
+      "title": "Focus Flow OS v1.2 (Old PRD)",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 3.6,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 3,
+        "skill_alignment": 8,
+        "effort_to_revenue": 2,
+        "strategic_fit": 1
+      },
+      "weighted_total": 2.5,
+      "recommendation": "KILL",
+      "rationale": "Superseded by active Nitara build. Over-engineered per council. Delete to reduce noise.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-205431",
+      "title": "Sentio AI",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.0,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 3,
+        "skill_alignment": 3,
+        "effort_to_revenue": 1,
+        "strategic_fit": 2
+      },
+      "weighted_total": 2.3,
+      "recommendation": "KILL",
+      "rationale": "Massive scope (mobile, desktop, marketplace, live). No music tech background. Fatal misalignment per council.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-996704",
+      "title": "Jass Card Design",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 3.6,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 2,
+        "market_validation": 2,
+        "skill_alignment": 3,
+        "effort_to_revenue": 2,
+        "strategic_fit": 1
+      },
+      "weighted_total": 2.0,
+      "recommendation": "KILL",
+      "rationale": "Niche within a niche. Cultural disconnect. Legal/ethical risks. Technical art project masquerading as business.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-669487",
+      "title": "Global Foundation v2",
+      "phase": "concept",
+      "status": "active",
+      "council_score": 4.6,
+      "council_recommendation": "reject",
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 3,
+        "skill_alignment": 3,
+        "effort_to_revenue": 1,
+        "strategic_fit": 1
+      },
+      "weighted_total": 2.0,
+      "recommendation": "KILL",
+      "rationale": "Superseded by v3. Delete.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-619207",
+      "title": "Global Foundation v1",
+      "phase": "concept",
+      "status": "active",
+      "council_score": null,
+      "council_recommendation": null,
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 2,
+        "skill_alignment": 3,
+        "effort_to_revenue": 1,
+        "strategic_fit": 1
+      },
+      "weighted_total": 2.0,
+      "recommendation": "KILL",
+      "rationale": "Earliest version. Superseded. Delete.",
+      "tier": 4
+    },
+    {
+      "id": "project-20260212-777082",
+      "title": "Global Foundation v3 (Paused)",
+      "phase": "concept",
+      "status": "paused",
+      "council_score": null,
+      "council_recommendation": null,
+      "scores": {
+        "revenue_proximity": 1,
+        "market_validation": 2,
+        "skill_alignment": 2,
+        "effort_to_revenue": 1,
+        "strategic_fit": 1
+      },
+      "weighted_total": 1.5,
+      "recommendation": "KILL",
+      "rationale": "Already paused. Duplicate. Make permanent kill.",
+      "tier": 4
+    }
+  ],
+  "top_recommendations": [
+    {
+      "priority": 1,
+      "action": "KILL 14 projects immediately",
+      "rationale": "18 active projects at concept phase is paralyzing. Focus enables execution.",
+      "projects_to_kill": [
+        "project-20260215-603248",
+        "project-20260213-357010",
+        "project-20260212-711527",
+        "project-20260212-205431",
+        "project-20260212-996704",
+        "project-20260212-669487",
+        "project-20260212-619207",
+        "project-20260212-777082",
+        "project-20260213-267941"
+      ],
+      "projects_to_park": [
+        "project-20260211-240437",
+        "project-20260212-644685",
+        "project-20260216-349467",
+        "project-20260215-227660",
+        "project-20260215-822591",
+        "project-20260212-807504",
+        "project-20260211-085103",
+        "project-20260211-365391"
+      ]
+    },
+    {
+      "priority": 2,
+      "action": "Activate consulting revenue within 30 days",
+      "rationale": "Expert-level skills currently generating CHF 0 in consulting. Quick path to CHF 3-5K/month.",
+      "target_revenue": "CHF 5,000/month"
+    },
+    {
+      "priority": 3,
+      "action": "Launch Bramha CI services (months 1-3)",
+      "rationale": "Strongest revenue play. TEPA timing. Services-first model for immediate cash.",
+      "target_revenue": "CHF 5-15K per client engagement"
+    },
+    {
+      "priority": 4,
+      "action": "Ship Nitara MVP (months 1-6)",
+      "rationale": "Strategic platform. Already in development. Dogfood for own portfolio management.",
+      "target": "Functional MVP for personal use + showcase"
+    },
+    {
+      "priority": 5,
+      "action": "Productize Bramha CI (months 3-12)",
+      "rationale": "Convert validated manual workflows into SaaS tool.",
+      "target_revenue": "CHF 500-1,500/month SaaS subscriptions"
+    }
+  ],
+  "cross_project_analysis": {
+    "resource_conflicts": [
+      "Founder attention spread across 18 active concept-phase projects",
+      "AURA/Mirari variants (3 projects) compete for same development time",
+      "Overture variants (2 projects) duplicate marketplace concept",
+      "Global Foundation variants (3 active + 1 paused) are same concept at different revisions",
+      "Bramha ESG variants (2 projects) should be merged into Bramha CI"
+    ],
+    "synergies": [
+      "Nitara + Bramha CI: shared conversation-first architecture, RAG pipeline, multi-agent orchestration",
+      "Bramha CI + ESG: regulatory monitoring as adjacent product for same Swiss SME customers",
+      "Nitara + Teaching: existing course revenue can scale using Nitara as showcase",
+      "India-Switzerland corridor: Bramha CI TEPA positioning + founder's personal network"
+    ],
+    "portfolio_balance": {
+      "concept_phase": 19,
+      "development_phase": 0,
+      "revenue_generating": 0,
+      "balance_assessment": "CATASTROPHICALLY IMBALANCED — 100% concept, 0% execution, 0% revenue from projects"
+    },
+    "income_gap_analysis": {
+      "required_monthly": 5000,
+      "target_monthly": 10000,
+      "current_monthly": 7000,
+      "current_type": "sporadic, one-time",
+      "missing_categories": [
+        "Retainer/consulting income (CHF 5-7.5K/month at Swiss rates)",
+        "Productized services (Bramha CI workshops at CHF 15-25K/year per client)",
+        "Recurring SaaS revenue (12+ months away)"
+      ]
+    }
+  },
+  "critical_knowledge_gaps": [
+    "Partner dynamics with Savya (work split, revenue sharing)",
+    "Actual financial runway (savings, months of buffer)",
+    "Hourly consulting rates",
+    "Risk appetite (lifestyle vs. venture scale)",
+    "Active client relationships and satisfaction",
+    "Actual time allocation across projects"
+  ]
+}

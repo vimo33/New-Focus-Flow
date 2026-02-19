@@ -1,0 +1,17 @@
+{
+  "id": "task-1771397327785-test",
+  "skill": "monitor-project",
+  "arguments": "focus-flow --quick-check",
+  "priority": "high",
+  "directive_aligned": false,
+  "trust_tier": 2,
+  "status": "running",
+  "max_duration_minutes": 15,
+  "created_at": "2026-02-18T06:48:47.000Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 1,
+  "created_by": "user-test",
+  "started_at": "2026-02-18T06:58:34.684Z",
+  "pid": 1979006,
+  "error": "Exit code null: \nSession terminated, killing shell... ...killed.\n"
+}

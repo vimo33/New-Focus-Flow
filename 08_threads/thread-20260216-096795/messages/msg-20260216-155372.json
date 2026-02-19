@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-155372",
+  "thread_id": "thread-20260216-096795",
+  "role": "assistant",
+  "content": "Yes. I have access to the full tool registry — every capability domain that powers the system.\n\n**What I can do:**\n\n**Core Operations**\n- Inbox capture & processing\n- Task & project management across all playbook types\n- Ideas Council evaluation & validation\n- Health/wellbeing tracking\n\n**Strategic Intelligence**\n- Memory search (long-term context)\n- Network analysis (contacts, clusters, opportunities)\n- Financial tracking (revenue, costs, runway, income strategies)\n- Weekly reports & morning briefings\n\n**Execution**\n- CRM & sales pipeline management\n- Content drafting & GTM calendar\n- Project scaffolding & spec generation\n- Pipeline orchestration (concept → delivery)\n\n**System Control**\n- Dashboard summaries\n- Frontend navigation\n- Capability registry updates (self-expansion)\n\nThe registry is dynamic — as you identify gaps or new workflows, I can add tools to it through `update_capabilities`. That's how the system grows.\n\nWhat are you thinking about using?",
+  "source": "voice",
+  "created_at": "2026-02-16T20:52:35.372Z"
+}

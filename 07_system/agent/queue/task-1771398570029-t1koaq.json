@@ -1,0 +1,18 @@
+{
+  "id": "task-1771398570029-t1koaq",
+  "skill": "portfolio-analysis",
+  "arguments": "all",
+  "priority": "high",
+  "directive_aligned": true,
+  "trust_tier": 2,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-18T07:09:30.029Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-18T07:09:40.057Z",
+  "pid": 1981761,
+  "completed_at": "2026-02-18T07:14:22.363Z",
+  "result_file": "/srv/focus-flow/07_system/reports/portfolio-analysis-2026-02-18.json"
+}

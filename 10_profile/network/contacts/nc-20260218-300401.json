@@ -1,0 +1,18 @@
+{
+  "id": "nc-20260218-300401",
+  "first_name": "Maruthi",
+  "last_name": "Medicals",
+  "full_name": "Maruthi Medicals",
+  "relationship_type": "vendor",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:38:20.401Z",
+  "updated_at": "2026-02-18T23:04:39.717Z",
+  "ai_tags": [
+    "healthcare",
+    "medical",
+    "pharmaceuticals"
+  ]
+}

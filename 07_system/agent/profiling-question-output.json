@@ -1,0 +1,11 @@
+{
+  "task_type": "profiling-question",
+  "status": "completed",
+  "timestamp": "2026-02-19T05:14:30Z",
+  "question_id": "profiling-20260219-051430",
+  "question": "I want to understand where your business actually comes from. How did your current two revenue streams — the AI Course and the Explainer Video work with FTR — reach you? Did they come through a warm introduction, inbound inquiry, or did you hunt them? This tells me which channels actually work and where I should be watching for opportunities.",
+  "domain": "network_intelligence",
+  "priority": 1,
+  "reasoning": "Network Intelligence is at 0% completion. Previous partner_dynamics and client_relationships questions received deflective responses, suggesting they were either poorly timed or too complex. This question pivots to referral_sources — a more concrete, immediately observable pattern. Understanding how Vimo's business actually arrives (warm intro vs. inbound vs. outbound) directly enables strategic sourcing and introduction opportunities. This is fundamental to Nitara's ability to connect people effectively.",
+  "profiling_checklist_item": "referral_sources"
+}

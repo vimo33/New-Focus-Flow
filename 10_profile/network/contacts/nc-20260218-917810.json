@@ -1,0 +1,33 @@
+{
+  "id": "nc-20260218-917810",
+  "first_name": "Shyam",
+  "last_name": "Shankar",
+  "full_name": "Shyam Shankar",
+  "company": "TEYON",
+  "position": "Lead Vehicle Artist",
+  "linkedin_url": "https://www.linkedin.com/in/shyam-shankar-4b96a862",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "10 Jul 2014",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.810Z",
+  "updated_at": "2026-02-18T23:32:20.395Z",
+  "phone": "+918884037232 ::: +48724086612 ::: +60 17-634 6330",
+  "emails": [
+    "shyamshankar90@gmail.com",
+    "shyam.shankar01@gmail.com"
+  ],
+  "phones": [
+    "+918884037232 ::: +48724086612 ::: +60 17-634 6330",
+    "+919787958920"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:20.394Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

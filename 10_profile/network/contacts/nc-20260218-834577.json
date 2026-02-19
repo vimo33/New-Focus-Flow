@@ -1,0 +1,20 @@
+{
+  "id": "nc-20260218-834577",
+  "first_name": "Rahul",
+  "last_name": "Hyd",
+  "full_name": "Rahul Hyd",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:30:34.577Z",
+  "updated_at": "2026-02-18T22:41:10.256Z",
+  "phone": "09985929292",
+  "phones": [
+    "09985929292"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

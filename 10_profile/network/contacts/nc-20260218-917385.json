@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917385",
+  "first_name": "Mathias",
+  "last_name": "Vazquez Rodriguez",
+  "full_name": "Mathias Vazquez Rodriguez",
+  "company": "HITS - House of Insurtech Switzerland",
+  "position": "Open Innovation Manager",
+  "linkedin_url": "https://www.linkedin.com/in/mathiasvazquezrodriguez",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["insurtech", "Generali", "open innovation", "corporate VC", "Switzerland"],
+  "last_contacted": "13 Nov 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.385Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 55,
+  "triage_score": 5.5,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "HITS (House of Insurtech Switzerland) is a Generali subsidiary running a 600m² corp-up studio in Zurich with 50+ startups in Insurtech, Fintech, GenAI, and blockchain",
+      "HITS has 20 startups in their Innovation Garage, actively seeking AI-first solutions in Q4 2025 / Q1 2026",
+      "The Global InsurTech Report Q3 2025 shows money concentrating in AI-first solutions in insurance",
+      "HITS has active collaborations with startups developing pilots for Generali DACH region"
+    ],
+    "outreach_angle": "Mathias manages open innovation for HITS — the Generali-backed insurtech hub in Zürich. Kavach AI (AI security/monitoring platform) is directly relevant to insurance use cases — workplace safety, risk monitoring, and loss prevention are core insurer concerns. Bramha ESG is also relevant — Generali and insurers increasingly need ESG risk data on SME clients. Reach out: 'Mathias — following up on our connection. I have been building Kavach AI, an edge-AI security monitoring platform that reduces workplace incidents and insurance claims. Given HITS's focus on AI-first solutions, I would love to explore whether there is a pilot opportunity with Generali's DACH operations. Are you open to a 20-minute intro call this month?' Timeline: this month.",
+    "relevant_project": "Kavach AI"
+  }
+}

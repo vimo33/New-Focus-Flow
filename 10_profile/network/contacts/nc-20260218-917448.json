@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917448",
+  "first_name": "Rim",
+  "last_name": "Bouassida",
+  "full_name": "Rim Bouassida",
+  "company": "S&P Global",
+  "position": "Product Manager",
+  "linkedin_url": "https://www.linkedin.com/in/rimbouassida",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "24 Feb 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.448Z",
+  "updated_at": "2026-02-18T23:32:22.477Z",
+  "phone": "+41775350693",
+  "phones": [
+    "+41775350693",
+    "+35795504527"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:22.476Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

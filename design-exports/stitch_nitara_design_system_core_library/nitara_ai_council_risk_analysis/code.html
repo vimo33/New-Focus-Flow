@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara AI Council Risk Analysis</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c2bee",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022", // Main theme background
+                        "void": "#06080F", // Specific requested background
+                        "accent-cyan": "#00e5ff",
+                        "accent-teal": "#14b8a6",
+                        "accent-amber": "#f59e0b",
+                        "phosphor-green": "#4ade80",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "syncopate": ["Syncopate", "sans-serif"],
+                        "dm": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        "neon": "0 0 10px rgba(140, 43, 238, 0.5), 0 0 20px rgba(140, 43, 238, 0.3)",
+                        "glass": "0 4px 30px rgba(0, 0, 0, 0.1)",
+                    },
+                    backgroundImage: {
+                        'star-field': "radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px), radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px), radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #8c2bee;
+        }
+
+        /* Starfield Animation */
+        .stars {
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px;
+            animation: moveStars 200s linear infinite;
+        }
+        
+        @keyframes moveStars {
+            from {background-position: 0 0, 40px 60px, 130px 270px;}
+            to {background-position: 550px 550px, 390px 410px, 680px 820px;}
+        }
+
+        /* Glassmorphism utilities */
+        .glass-panel {
+            background: rgba(25, 16, 34, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(140, 43, 238, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Gradient Text */
+        .text-gradient {
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-void text-gray-200 font-display h-screen w-screen overflow-hidden flex selection:bg-primary selection:text-white">
+<!-- Starfield Background Layer -->
+<div class="fixed inset-0 stars pointer-events-none opacity-40 z-0"></div>
+<!-- Sidebar -->
+<aside class="w-12 h-full bg-void border-r border-white/5 flex flex-col items-center py-6 z-20 relative">
+<div class="mb-8">
+<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-purple-900 shadow-neon"></div>
+</div>
+<nav class="flex flex-col gap-6 w-full items-center">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg bg-primary/20 text-primary shadow-inner border border-primary/30 transition-all hover:shadow-neon group">
+<span class="material-icons-outlined text-[20px]">star</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-icons-outlined text-[20px]">dashboard</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-icons-outlined text-[20px]">analytics</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-icons-outlined text-[20px]">hub</span>
+</button>
+</nav>
+<div class="mt-auto mb-4">
+<button class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors">
+<span class="material-icons-outlined text-[20px]">settings</span>
+</button>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col h-full relative z-10 p-8 overflow-y-auto overflow-x-hidden">
+<!-- Header -->
+<header class="flex flex-col gap-1 mb-10 pl-2 border-l-2 border-primary/50">
+<h1 class="font-syncopate text-2xl tracking-widest text-white uppercase flex items-center gap-3">
+                Council Evaluation <span class="text-gray-600">//</span> <span class="text-primary font-bold">Project: SwissAI Studio</span>
+</h1>
+<p class="font-dm text-gray-400 tracking-wide text-sm flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Synthesis of 3 specialized intelligence nodes.
+            </p>
+</header>
+<!-- Central Dashboard Area -->
+<div class="grid grid-cols-12 gap-6 h-full pb-20">
+<!-- Persona 1: The Architect -->
+<div class="col-span-3 flex flex-col gap-4 relative">
+<!-- Connecting Line (Decorative SVG) -->
+<svg class="absolute top-1/2 -right-8 w-16 h-20 z-0 opacity-30 hidden xl:block" style="transform: translateY(-50%)">
+<path d="M0,10 C20,10 40,40 60,40" fill="none" stroke="#00e5ff" stroke-width="1"></path>
+<circle cx="60" cy="40" fill="#00e5ff" r="2"></circle>
+</svg>
+<div class="glass-card rounded-xl p-6 h-full flex flex-col border-t-2 border-t-accent-cyan/80 shadow-[0_0_15px_-5px_rgba(0,229,255,0.15)]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center">
+<span class="material-icons-outlined text-accent-cyan">architecture</span>
+</div>
+<div>
+<h3 class="font-syncopate text-xs text-accent-cyan tracking-wider">The Architect</h3>
+<span class="text-[10px] uppercase text-gray-500 font-mono tracking-widest">Tech Feasibility</span>
+</div>
+</div>
+<span class="font-mono text-xl font-bold text-white">8.5<span class="text-gray-600 text-sm">/10</span></span>
+</div>
+<div class="mt-2 space-y-4 font-dm text-sm text-gray-300">
+<p class="leading-relaxed border-l-2 border-accent-cyan/20 pl-3">
+                            Scalable architecture with modular microservices. Low legacy debt identified in current stack.
+                        </p>
+<div class="bg-accent-cyan/5 rounded p-3 border border-accent-cyan/10">
+<p class="text-xs text-accent-cyan font-bold mb-1 uppercase tracking-wider flex items-center gap-1">
+<span class="material-icons-outlined text-[14px]">warning</span> Caution
+                            </p>
+<p class="text-xs">AI inference cost spikes anticipated during peak load.</p>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-white/5">
+<div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+<div class="bg-accent-cyan h-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Central Hub: Metrics & Visualization -->
+<div class="col-span-6 flex flex-col gap-6 items-center relative">
+<!-- Main Gauge -->
+<div class="relative w-72 h-72 flex items-center justify-center my-4 group cursor-default">
+<!-- Outer Decorative Ring -->
+<div class="absolute inset-0 rounded-full border border-white/5 border-dashed animate-[spin_60s_linear_infinite]"></div>
+<div class="absolute inset-2 rounded-full border border-white/5 border-dotted animate-[spin_40s_linear_reverse_infinite]"></div>
+<!-- Gradient Ring Background -->
+<div class="absolute inset-4 rounded-full bg-gradient-to-tr from-phosphor-green/20 via-transparent to-accent-amber/20 blur-xl opacity-50 transition-opacity duration-700 group-hover:opacity-80"></div>
+<!-- SVG Gauge -->
+<svg class="w-full h-full -rotate-90 transform relative z-10" viewbox="0 0 100 100">
+<!-- Track -->
+<circle cx="50" cy="50" fill="none" r="42" stroke="#1f2937" stroke-linecap="round" stroke-width="6"></circle>
+<!-- Progress (Green to Amber Gradient defined in defs) -->
+<defs>
+<lineargradient id="gaugeGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#4ade80"></stop>
+<stop offset="100%" stop-color="#f59e0b"></stop>
+</lineargradient>
+</defs>
+<circle class="transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="42" stroke="url(#gaugeGradient)" stroke-dasharray="264" stroke-dashoffset="68.64" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<!-- Center Content -->
+<div class="absolute inset-0 flex flex-col items-center justify-center z-20">
+<span class="text-xs font-mono text-gray-500 uppercase tracking-widest mb-1">Composite</span>
+<span class="text-6xl font-mono font-bold text-white tracking-tighter shadow-black drop-shadow-lg">7.4</span>
+<div class="mt-2 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-phosphor-green shadow-[0_0_8px_rgba(74,222,128,0.8)]"></span>
+<span class="text-xs text-gray-400 font-dm uppercase tracking-wider">Opportunity</span>
+</div>
+</div>
+</div>
+<!-- Lower Central Cards: Risk Matrix & Mitigation -->
+<div class="w-full grid grid-cols-2 gap-6 h-full">
+<!-- Risk Matrix -->
+<div class="glass-card rounded-xl p-5 border-t border-t-white/10 relative overflow-hidden">
+<h4 class="font-syncopate text-[10px] text-gray-400 uppercase tracking-widest mb-4 flex justify-between">
+                            Risk Matrix <span class="material-icons-outlined text-sm">grid_view</span>
+</h4>
+<div class="relative w-full h-40 border-l border-b border-gray-700 grid grid-cols-2 grid-rows-2">
+<!-- Labels -->
+<span class="absolute -left-6 top-1/2 -translate-y-1/2 -rotate-90 text-[9px] text-gray-500 uppercase font-mono tracking-widest">Impact</span>
+<span class="absolute bottom-[-20px] left-1/2 -translate-x-1/2 text-[9px] text-gray-500 uppercase font-mono tracking-widest">Probability</span>
+<!-- Grid Lines -->
+<div class="border-r border-b border-gray-800/50 bg-accent-amber/5"></div> <!-- High Impact, Low Prob -->
+<div class="border-b border-gray-800/50"></div>
+<div class="border-r border-gray-800/50"></div>
+<div class=""></div>
+<!-- Data Point: CFO Rejection (High Impact, Low Prob - Top Left) -->
+<div class="absolute top-[25%] left-[25%] group cursor-pointer">
+<div class="w-3 h-3 rounded-full bg-accent-amber shadow-[0_0_10px_rgba(245,158,11,0.6)] animate-pulse"></div>
+<!-- Tooltip -->
+<div class="absolute left-6 top-1/2 -translate-y-1/2 w-32 bg-gray-900 border border-gray-700 text-[10px] p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none">
+<span class="text-accent-amber font-bold block">CFO Budget Rejection</span>
+<span class="text-gray-400">High Impact / Low Prob</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Mitigation Plan -->
+<div class="glass-card rounded-xl p-5 border-t border-t-white/10 flex flex-col">
+<h4 class="font-syncopate text-[10px] text-gray-400 uppercase tracking-widest mb-4 flex justify-between">
+                            Nitara Protocol <span class="material-icons-outlined text-sm">playlist_add_check</span>
+</h4>
+<div class="space-y-3 font-dm text-sm flex-1">
+<div class="flex items-start gap-3 group">
+<div class="mt-0.5 w-4 h-4 rounded border border-primary/50 flex items-center justify-center text-[10px] text-primary group-hover:bg-primary group-hover:text-white transition-colors">1</div>
+<span class="text-gray-300 group-hover:text-white transition-colors">Include ROI case study</span>
+</div>
+<div class="flex items-start gap-3 group">
+<div class="mt-0.5 w-4 h-4 rounded border border-primary/50 flex items-center justify-center text-[10px] text-primary group-hover:bg-primary group-hover:text-white transition-colors">2</div>
+<span class="text-gray-300 group-hover:text-white transition-colors">Draft retainer model</span>
+</div>
+<div class="flex items-start gap-3 group">
+<div class="mt-0.5 w-4 h-4 rounded border border-primary/50 flex items-center justify-center text-[10px] text-primary group-hover:bg-primary group-hover:text-white transition-colors">3</div>
+<span class="text-gray-300 group-hover:text-white transition-colors">Verify backend benchmarks</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Persona 2 & 3: The Strategist & The Analyst -->
+<div class="col-span-3 flex flex-col gap-6 relative">
+<!-- Connecting Line (Decorative SVG) -->
+<svg class="absolute top-1/4 -left-8 w-16 h-20 z-0 opacity-30 hidden xl:block" style="transform: translateY(-50%) scaleX(-1)">
+<path d="M0,10 C20,10 40,40 60,40" fill="none" stroke="#14b8a6" stroke-width="1"></path>
+<circle cx="60" cy="40" fill="#14b8a6" r="2"></circle>
+</svg>
+<!-- Strategist -->
+<div class="glass-card rounded-xl p-6 flex flex-col border-t-2 border-t-accent-teal/80 shadow-[0_0_15px_-5px_rgba(20,184,166,0.15)] flex-1">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-accent-teal/10 border border-accent-teal/30 flex items-center justify-center">
+<span class="material-icons-outlined text-accent-teal">psychology</span>
+</div>
+<div>
+<h3 class="font-syncopate text-xs text-accent-teal tracking-wider">The Strategist</h3>
+<span class="text-[10px] uppercase text-gray-500 font-mono tracking-widest">Market Fit</span>
+</div>
+</div>
+<span class="font-mono text-xl font-bold text-white">6.8<span class="text-gray-600 text-sm">/10</span></span>
+</div>
+<div class="mt-2 space-y-3 font-dm text-sm text-gray-300">
+<p class="leading-relaxed border-l-2 border-accent-teal/20 pl-3">
+                            Strong founder-market fit detected. 
+                        </p>
+<div class="bg-accent-teal/5 rounded p-2 border border-accent-teal/10">
+<p class="text-xs text-accent-teal font-bold mb-1 uppercase tracking-wider">Risk Analysis</p>
+<p class="text-xs">High competition saturation in Swiss HR tech sector.</p>
+</div>
+</div>
+<div class="mt-auto pt-3 border-t border-white/5">
+<div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+<div class="bg-accent-teal h-full" style="width: 68%"></div>
+</div>
+</div>
+</div>
+<!-- Connecting Line (Decorative SVG) -->
+<svg class="absolute top-3/4 -left-8 w-16 h-20 z-0 opacity-30 hidden xl:block" style="transform: translateY(-50%) scaleX(-1)">
+<path d="M0,40 C20,40 40,10 60,10" fill="none" stroke="#f59e0b" stroke-width="1"></path>
+<circle cx="60" cy="10" fill="#f59e0b" r="2"></circle>
+</svg>
+<!-- Analyst -->
+<div class="glass-card rounded-xl p-6 flex flex-col border-t-2 border-t-accent-amber/80 shadow-[0_0_15px_-5px_rgba(245,158,11,0.15)] flex-1">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-accent-amber/10 border border-accent-amber/30 flex items-center justify-center">
+<span class="material-icons-outlined text-accent-amber">pie_chart</span>
+</div>
+<div>
+<h3 class="font-syncopate text-xs text-accent-amber tracking-wider">The Analyst</h3>
+<span class="text-[10px] uppercase text-gray-500 font-mono tracking-widest">Finance</span>
+</div>
+</div>
+<span class="font-mono text-xl font-bold text-white">6.2<span class="text-gray-600 text-sm">/10</span></span>
+</div>
+<div class="mt-2 space-y-3 font-dm text-sm text-gray-300">
+<p class="leading-relaxed border-l-2 border-accent-amber/20 pl-3">
+                            Current burn rate is sustainable for 12mo runway.
+                        </p>
+<div class="bg-accent-amber/5 rounded p-2 border border-accent-amber/10">
+<p class="text-xs text-accent-amber font-bold mb-1 uppercase tracking-wider">Fiscal Risk</p>
+<p class="text-xs">Pre-revenue phase requires immediate 3-month buffer.</p>
+</div>
+</div>
+<div class="mt-auto pt-3 border-t border-white/5">
+<div class="w-full bg-gray-800 h-1 rounded-full overflow-hidden">
+<div class="bg-accent-amber h-full" style="width: 62%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Conversation Rail (Fixed Bottom Overlay) -->
+<div class="absolute bottom-6 left-8 right-8 h-20 glass-panel rounded-full flex items-center px-8 border border-primary/30 shadow-neon animate-in fade-in slide-in-from-bottom-4 duration-700">
+<div class="flex items-center gap-4 mr-6">
+<!-- Avatar -->
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center shadow-[0_0_15px_rgba(140,43,238,0.8)] overflow-hidden">
+<img class="w-full h-full object-cover opacity-80 mix-blend-overlay" data-alt="Abstract purple liquid metal forming a digital face" src="https://lh3.googleusercontent.com/aida-public/AB6AXuArvSFuVNijKHGZdnq9SusFnIsomsuHgMBpAViMxzOwuidW7VEb9YI3yfyT5nkZdvfAGKey4CLOMP_yoYv7C0wR0L73UBBKdKGHNdUpO5zE-JgGkd3WifMtC4Z5t8vBSiJzoktteffXKhA6lQtzmCY7QwH6DCzEI5ngjE4xPvgTm0zz0osTEvv3UFOgJ8DcVuhFtLc_9X10Su_D1wq4INQ22qXSzfh5imEtXrz8XbsXUaWyxLm3E8nd_KUe413j8H488Gg-NyOPWjqK"/>
+</div>
+<div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-black"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-syncopate text-xs text-primary font-bold tracking-widest">NITARA</span>
+<span class="text-[10px] text-gray-400 font-mono">The Critic Node Active</span>
+</div>
+</div>
+<div class="h-8 w-[1px] bg-white/10 mx-2"></div>
+<p class="font-dm text-sm text-gray-200 ml-4 flex-1 truncate leading-relaxed">
+<span class="text-primary/70 mr-2">&gt;&gt;</span>
+                The Architect is optimistic, but the Strategist sees a crowded market. I recommend we focus the proposal on the <span class="text-white font-bold border-b border-primary/50 pb-0.5">unique automation hooks</span> we discussed.
+            </p>
+<button class="ml-auto flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 hover:bg-primary/30 border border-primary/40 text-xs text-primary font-bold uppercase tracking-wider transition-all hover:shadow-[0_0_10px_rgba(140,43,238,0.4)]">
+<span class="material-icons-outlined text-sm">forum</span>
+                View Thread
+            </button>
+</div>
+</main>
+</body></html>

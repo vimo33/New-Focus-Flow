@@ -1,0 +1,118 @@
+{
+  "task_type": "knowledge-graph-update",
+  "status": "completed",
+  "generated_at": "2026-02-18T22:00:00.000Z",
+  "reports_processed": [
+    "portfolio-analysis-2026-02-18",
+    "monitor-project-2026-02-18",
+    "weekly/wr-20260216-090068"
+  ],
+  "entities_extracted": 19,
+  "entities_new": 19,
+  "entities_updated": 0,
+  "entities_unchanged": 0,
+  "relationships_extracted": 9,
+  "contradictions_detected": 0,
+  "by_type": {
+    "project": 6,
+    "person": 2,
+    "opportunity": 4,
+    "market": 4,
+    "relationship": 9
+  },
+  "entity_files_written": [
+    "07_system/reports/kg-entities/projects.jsonl",
+    "07_system/reports/kg-entities/people.jsonl",
+    "07_system/reports/kg-entities/opportunities.jsonl",
+    "07_system/reports/kg-entities/markets.jsonl",
+    "07_system/reports/kg-entities/relationships.jsonl"
+  ],
+  "staging_note": "Entities written to reports/kg-entities/ staging area. Target 07_system/knowledge-graph/entities/ is root-owned and not writable by nitara user. Files must be moved by root or permissions fixed: sudo chown -R nitara:nitara /srv/focus-flow/07_system/knowledge-graph/",
+  "key_entities": {
+    "projects_tier1": [
+      {
+        "name": "Nitara (Focus Flow OS)",
+        "score": 7.2,
+        "recommendation": "BUILD-NEXT"
+      },
+      {
+        "name": "Bramha CI Platform",
+        "score": 6.8,
+        "recommendation": "BUILD-NEXT"
+      }
+    ],
+    "projects_parked": [
+      {
+        "name": "Bramha ESG",
+        "score": 5.5
+      },
+      {
+        "name": "Kavach AI",
+        "score": 3.5
+      },
+      {
+        "name": "Overture Event Platform",
+        "score": 4.0
+      },
+      {
+        "name": "Mirari / AURA Zurich Temporal Lens",
+        "score": 3.7
+      }
+    ],
+    "markets": [
+      "Swiss SME ESG Compliance",
+      "Zurich City Tourism / Discovery Apps",
+      "India Workplace Safety / Vision AI",
+      "India-Switzerland Trade Corridor (TEPA)"
+    ],
+    "opportunities": [
+      "Swiss AI/Tech Consulting (CHF 3-7.5K/mo, 30-day horizon)",
+      "Bramha CI Services (CHF 5-15K/engagement, 1-3 months)",
+      "Orthoanalytics \u2014 closed won $9K USD",
+      "Nitara SaaS (12+ months)"
+    ]
+  },
+  "strategic_insights_captured": [
+    "Portfolio is critically imbalanced: 19 projects at concept phase, 0 in execution, 0 generating revenue from projects",
+    "Founder has CHF 7K/month sporadic income but needs recurring retainer/consulting",
+    "Two clear BUILD-NEXT projects: Nitara (strategic platform) + Bramha CI (revenue path)",
+    "TEPA India-Switzerland timing advantage for Bramha CI is time-sensitive",
+    "14 projects recommended for kill/archive to restore focus",
+    "Partner Savya dynamics remain unknown \u2014 critical knowledge gap"
+  ],
+  "confidence": 0.85,
+  "next_run": "2026-02-19",
+  "satisfaction_score": 0.65,
+  "satisfaction_details": [
+    {
+      "name": "reports_processed",
+      "score": 0.5,
+      "weight": 0.25
+    },
+    {
+      "name": "entities_extracted",
+      "score": 0.5,
+      "weight": 0.2
+    },
+    {
+      "name": "source_traceability",
+      "score": 1.0,
+      "weight": 0.2
+    },
+    {
+      "name": "dedup_respected",
+      "score": 0.5,
+      "weight": 0.15
+    },
+    {
+      "name": "relationships_extracted",
+      "score": 0.5,
+      "weight": 0.1
+    },
+    {
+      "name": "no_placeholders",
+      "score": 1.0,
+      "weight": 0.1
+    }
+  ]
+}

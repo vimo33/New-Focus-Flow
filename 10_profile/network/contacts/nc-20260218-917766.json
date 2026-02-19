@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917766",
+  "first_name": "Kavya",
+  "last_name": "Vemulapati",
+  "full_name": "Kavya Vemulapati",
+  "company": "UXReactor",
+  "position": "Lead Product Experience Designer",
+  "linkedin_url": "https://www.linkedin.com/in/kavyavemulapati",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "30 Sep 2015",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.766Z",
+  "updated_at": "2026-02-18T23:32:26.431Z",
+  "phone": "+91 90006 60099",
+  "phones": [
+    "+91 90006 60099"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:26.431Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

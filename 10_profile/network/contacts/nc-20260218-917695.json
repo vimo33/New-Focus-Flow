@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917695",
+  "first_name": "Prashant",
+  "last_name": "Dadu",
+  "full_name": "Prashant Dadu",
+  "company": "Talent Grid",
+  "position": "Founder",
+  "linkedin_url": "https://www.linkedin.com/in/prashantdadu",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "12 Sep 2018",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.695Z",
+  "updated_at": "2026-02-18T23:32:30.863Z",
+  "phone": "+91 98809 89944 ::: +91 98809 89944 ::: +91 98809 89944",
+  "phones": [
+    "+91 98809 89944 ::: +91 98809 89944 ::: +91 98809 89944"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:30.862Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917324",
+  "first_name": "Jan",
+  "last_name": "Fülscher",
+  "full_name": "Jan Fülscher",
+  "company": "Cognel",
+  "position": "Co-founder at Cognel",
+  "linkedin_url": "https://www.linkedin.com/in/janfuelscher",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["AI", "systematic thinking", "Switzerland", "deep tech", "serial founder"],
+  "last_contacted": "16 Apr 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.324Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 78,
+  "triage_score": 7.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Jan Fülscher is co-founder of Cognel.ai — an AI startup focused on systematic and reliable thinking (team of 5)",
+      "Also CEO of senozon, specializing in data analysis and location decision tools for 20+ years",
+      "Serial founder, investor, and assistant lecturer at universities of Zurich and Bern",
+      "Connected to Impact Hub Zürich and Top 100 Swiss Startups ecosystem"
+    ],
+    "outreach_angle": "Jan is a highly connected Swiss AI founder and investor-practitioner at the intersection of AI and systematic reasoning — directly relevant to ATX and Multiplium. He was last contacted in April 2025 (10 months ago) — relationship is still warm. Reach out on LinkedIn this week: 'Jan — catching up on Cognel's progress. I have been building Multiplium, an AI orchestration layer. Would love to connect for a coffee in Zurich and swap notes on how you are approaching the reasoning reliability problem. Are you free any week in March?' This is a high-probability conversation that could yield angel investment interest, co-founder/advisor relationship, or customer.",
+    "relevant_project": "Multiplium"
+  }
+}

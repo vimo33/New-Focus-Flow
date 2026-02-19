@@ -1,0 +1,157 @@
+{
+  "id": "idea-20260217-704110",
+  "title": "Mirari V5.0 — Zero-UI Temporal Companion (Full Vision)",
+  "description": "AURA is no longer a mobile app, but a Temporal Lens—an invisible, 'Zero-UI' companion that overlays history onto physical Zurich using full-duplex multimodal streaming.\n\n**Core Loop:**\n- Continuous Perception Stream: Full-duplex VLA processing identifies landmarks proactively\n- Whisper: AI initiates historical hooks via spatial audio\n- Co-Create: Voice-first unscripted roleplay—no menus, gaze-driven narrative\n\n**Tech Stack (2026 Bleeding-Edge):**\n- MiniCPM-o 4.5: Full-duplex proactive multimodal live streaming\n- Qwen3-VL Nano: 3D spatial grounding (centimeter precision)\n- MobileLLM-Pro P1: 1.08B reasoning model, 128k context\n- NeuTTS-Nano: Zero-shot voice cloning\n- BitNet b1.58: 94% memory reduction, 3x inference speed\n\n**Content: Generative World Engine**\n- Character Constitutions: High-dimensional embeddings of historical figures\n- Adaptive Persona Barriers: Period authenticity\n- Digital Souvenirs: Unique generative mementos\n\n**UX:** Liquid Glass, gesture + eye-controlled, gaze-based AR\n\n**Audio:** 4-layer spatial system (10-15% R&D budget)\n\n**Privacy:** Secure enclave reasoning, differential anonymization\n\n**Metrics:** >80% immersion, >10 turns/interaction, >25% D30 retention\n\n**Full PRD:** /root/.openclaw/workspace/projects/mirari/prd-v5.0.txt\n\nCouncil pre-approved 'Ideal Vision Build' Feb 15. Seeking validation on technical/market viability before MVP scoping.",
+  "status": "inbox",
+  "created_at": "2026-02-17T01:11:44.110Z",
+  "council_verdict": {
+    "recommendation": "reject",
+    "overall_score": 4.7,
+    "evaluations": [
+      {
+        "agent_name": "Feasibility Agent",
+        "score": 4,
+        "reasoning": "Mirari V5.0 is built on a directionally sound technical thesis, but the specific stack as presented contains a dangerous mix of real research foundations and speculative model versions that don't exist yet. Research confirms: MiniCPM-o series is real (latest: 2.6 at 8B params with multimodal streaming), BitNet b1.58 is a confirmed Microsoft Research paper with real ternary-weight quantization, MobileLLM is a real Meta sub-1B research track, and Qwen2.5-VL exists with 2D bounding-box localization. However, the specific versions cited — MiniCPM-o 4.5, Qwen3-VL Nano with centimeter 3D precision, MobileLLM-Pro P1 with 128k context, and NeuTTS-Nano — do not exist as of this evaluation date (Feb 2026). The core feasibility fracture is not the models themselves — those will improve — it's the simultaneous real-time orchestration of 5+ specialized ML pipelines on a wearable power budget (~5-10W), combined with a critical dependency on consumer AR glasses hardware that does not yet exist at the spec level required. Qwen2.5-VL does 2D localization; 'centimeter-precision 3D spatial grounding' in outdoor urban environments requires RTK-GPS or LiDAR infrastructure, none of which is in the stack. Swiss GDPR/nDSG regulations impose severe constraints on continuous public video capture and face proximity detection, which the privacy section understates. The BitNet b1.58 memory savings are real, but production-grade hardware support for ternary-weight inference acceleration remains largely in research.",
+        "concerns": [
+          "Core AR hardware platform does not exist at required spec: lightweight outdoor glasses with gaze tracking, spatial display, and sufficient NPU for this workload — no device shipping or credibly announced for 2026",
+          "MiniCPM-o 4.5, Qwen3-VL Nano, MobileLLM-Pro P1 (128k context), and NeuTTS-Nano are non-existent models; the stack is built on vaporware versions of real research directions",
+          "Running 5+ ML pipelines simultaneously (VLA streaming + spatial grounding + LLM reasoning + TTS + spatial audio) on a <10W wearable power budget has never been demonstrated; thermal throttling and battery life (~45-90 min max) are critical failure modes",
+          "Centimeter-precision outdoor 3D spatial grounding is unsolved at scale — Qwen2.5-VL provides 2D bounding box localization, not 3D metric depth; achieving cm precision requires RTK GPS + pre-built LiDAR semantic map of Zurich, an infrastructure project in itself",
+          "Swiss nDSG / GDPR compliance for continuous public video stream with AI landmark/face processing is a legal minefield; FDPIC has been aggressive — 'secure enclave reasoning' is not a compliance strategy",
+          "Full-duplex proactive initiation (AI whisper) requires sub-200ms end-to-end latency; no on-device pipeline achieves this at this model complexity today, and cloud offload creates a privacy contradiction with the enclave strategy",
+          "BitNet b1.58 hardware acceleration is still research-stage; production silicon optimized for ternary inference is not commercially available, meaning the 3x speed / 94% memory claims don't transfer to real deployable hardware yet",
+          "Zero-UI gaze-driven AR in outdoor lighting conditions (Zurich is overcast ~60% of the year) faces severe eye-tracking reliability degradation and display contrast failure in direct sunlight"
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "technical_complexity",
+            "score": 3,
+            "weight": 0.35,
+            "reasoning": "Simultaneous orchestration of VLA streaming, 3D spatial grounding, 128k-context LLM, zero-shot TTS, and spatial audio on constrained edge hardware represents an unsolved systems engineering problem. Each component individually is hard; the real-time synchronization of all five, with proactive AI initiation, is a qualitatively harder challenge than anything currently shipped. No comparable system exists in production."
+          },
+          {
+            "dimension": "resource_requirements",
+            "score": 4,
+            "weight": 0.25,
+            "reasoning": "Research foundations (MiniCPM-o, BitNet, MobileLLM, Qwen-VL) reduce greenfield ML research burden. However: a Zurich city-scale semantic 3D map is a separate infrastructure project, hardware co-design requires partnerships with AR OEMs, historical content curation is labor-intensive, and realistically requires a 15-25 person cross-disciplinary team and $5-10M+ to reach a functional MVP. Not impossible, but scope is consistently underestimated in the pitch."
+          },
+          {
+            "dimension": "time_to_build",
+            "score": 3,
+            "weight": 0.2,
+            "reasoning": "2026 full-vision delivery is not credible. A stripped MVP (phone-based, cloud-inference, single landmark, no gaze control) is achievable in 12-18 months. The full Zero-UI, on-device, gaze-controlled, proactive AR vision requires hardware that isn't shipping until 2027 at earliest, making the complete product a 2028 realistic target. Hardware delivery schedule is entirely outside the team's control."
+          },
+          {
+            "dimension": "risk_assessment",
+            "score": 3,
+            "weight": 0.2,
+            "reasoning": "Four compounding high-severity risks: (1) AR hardware platform bet with no fallback device strategy, (2) privacy/legal exposure under Swiss nDSG for continuous public video capture, (3) foundational models cited are speculative versions — if they don't materialize with claimed specs, the whole architecture needs redesign, (4) user adoption requires sufficient AR hardware adoption in Zurich — a chicken-and-egg problem. Any one of these alone is manageable; all four together on a 2026 timeline is very high risk."
+          }
+        ],
+        "confidence": 0.83,
+        "key_insight": "The V5.0 stack cites models that don't exist (4.5, Nano, Pro P1, NeuTTS-Nano) as the foundation for a hardware platform that also doesn't exist — the entire architecture is a 2028 product being scoped as a 2026 build. The real technical risk isn't whether these models will eventually work; it's that the critical path runs through consumer AR hardware no one has shipped, and simultaneous 5-pipeline on-device inference at wearable power levels that no team has demonstrated."
+      },
+      {
+        "agent_name": "Market Agent",
+        "score": 5,
+        "reasoning": "Mirari V5.0 targets a real and growing intersection: premium experiential tourism, AI companions, and spatial computing. The demand signal is genuine — cultural/heritage tourism is a multi-billion dollar segment, Zurich draws ~3M tourists annually with high disposable income, and post-pandemic 'experience over things' spending is structurally elevated. Voice-first AI companions (validated by ChatGPT usage patterns in travel) and immersive historical roleplay fill a gap that legacy audio guides (Rick Steves, Bloomberg Connects) leave wide open. However, the Zero-UI/gaze-driven AR core loop is hardware-dependent in a way that fundamentally gates the TAM. Apple Vision Pro sits at $3,500 with <500K units shipped; Meta Ray-Bans have scale but limited AR fidelity; true consumer-grade gaze-driven spatial AR is realistically a 2027–2028 story, not 2026. The concept is also Zurich-specific at launch, which is a defensible beachhead but limits early revenue signals. On the competitive side, the current field (Histopad, TimeLooper, city audio apps) is weak and fragmented — but Apple, Google, and Niantic are all building toward exactly this layer with native platform advantages. The window is real but narrow. The tech stack (MiniCPM-o 4.5, NeuTTS-Nano, BitNet b1.58) reads as research-grade rather than production-proven, which adds execution risk on top of market timing risk. Finally, tourism products structurally fight D30 retention — visitors don't return to Zurich monthly. The >25% D30 target implies either locals as primary users or a global multi-city expansion baked into the model, neither of which is surfaced in this pitch.",
+        "concerns": [
+          "Hardware dependency: Zero-UI gaze AR requires devices not yet at consumer scale — mass market AR glasses realistically 2027–2028, making a 2026 launch premature for the full vision",
+          "Structural retention ceiling: Tourism products fight D30 by design — tourists visit once; the retention metric implies locals or multi-city expansion which isn't scoped here",
+          "Zurich-only TAM is very small for venture-scale returns; $50–200 one-time purchases on ~3M annual tourists, with high churn, is a thin revenue base",
+          "Big tech platform risk: Apple, Google, and Meta are building native spatial experience layers that could commoditize the AR overlay entirely",
+          "Tech stack speculative: Several named components (MiniCPM-o 4.5, NeuTTS-Nano) appear to be projected/research versions — production readiness by 2026 is unvalidated",
+          "Social friction of Zero-UI in public: Voice-first ambient interaction in a city has real adoption barriers — social awkwardness, ambient noise, and cultural norms in Switzerland specifically",
+          "No validated willingness-to-pay data cited for this experience tier"
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "market_demand",
+            "score": 7,
+            "weight": 0.3,
+            "reasoning": "Experiential tourism demand is structurally strong. AI-powered historical immersion fills a real gap in the market. Zurich's premium tourist demographic has willingness to pay for differentiated experiences. The concept resonates with documented 'experience economy' trends."
+          },
+          {
+            "dimension": "competitive_landscape",
+            "score": 6,
+            "weight": 0.25,
+            "reasoning": "Current direct competitors (Histopad, TimeLooper, legacy audio guides) are weak and fragmented — the field is open. However, Apple, Google, Niantic, and Meta are all moving toward this layer with platform-level advantages. The window is real but closing. First-mover advantage in AI historical roleplay is achievable if executed in the next 12–18 months."
+          },
+          {
+            "dimension": "differentiation",
+            "score": 7,
+            "weight": 0.25,
+            "reasoning": "Voice-first unscripted historical roleplay with proactive AI initiation is genuinely novel. No current product does full-duplex multimodal + spatial grounding + character constitution-driven dialogue. Digital Souvenirs as a retention/monetization hook is clever. Differentiation is strong on paper — the risk is execution, not concept."
+          },
+          {
+            "dimension": "timing",
+            "score": 3,
+            "weight": 0.2,
+            "reasoning": "This is the critical risk. The full Zero-UI vision requires gaze-driven AR hardware at consumer scale — that's 2027–2028. A 2026 MVP would either ship to a tiny early-adopter segment or require significant de-scoping. The AI backend timing is actually good (2025–2026 capabilities match the vision), but the hardware layer is the binding constraint. Being 18 months early in hardware-dependent markets is effectively being wrong."
+          }
+        ],
+        "confidence": 0.68,
+        "key_insight": "The market opportunity is real but the timing is off by roughly 18–24 months — the hardware layer required for the full Zero-UI vision won't reach addressable consumer scale until 2027–2028, meaning an MVP scoped to 2026 must either target a much smaller premium-early-adopter niche (viable but tiny) or de-scope to phone-first and treat the Zero-UI AR as a 2027 upgrade path."
+      },
+      {
+        "agent_name": "UX Agent",
+        "score": 5,
+        "reasoning": "Mirari V5.0 presents a genuinely visionary UX concept with exceptional delight potential, but carries critical structural risks that current UX research consistently flags as adoption killers. The 'Zero-UI' paradigm is the most ambitious — and most fragile — design choice possible. Note: web search was unavailable; analysis draws on established UX research and comparable products (Apple Vision Pro, Meta Ray-Ban, Google Glass, Niantic Lightship, Rick & Morty Schwifty AR). The vision is extraordinary; the path from concept to loved-product is treacherous.\n\nUSER NEED CLARITY: The core need is real and validated — tourists in heritage cities want deeper, more visceral historical connection than a placard or audio guide delivers. The 'whisper' model (AI initiates, user doesn't have to ask) is an elegant inversion of blank-slate AI fatigue. However, the concept conflates the need ('feel history') with the delivery mechanism ('invisible AI overlay') in ways that may not reflect how actual tourists behave. Most heritage tourism research shows users want control, not immersion-by-default. The Zurich single-city constraint also limits whether the 'need' is broadly validated or locally assumed.\n\nUSABILITY: This is the critical vulnerability. Zero-UI is the hardest UX paradigm in existence — no affordances, no fallback, no safety net. Every known Zero-UI deployment (Google Glass, early Apple Watch ambient mode, Meta's passive audio features) has struggled with the same trio of failures: (1) users can't discover what the system can do, (2) error recovery is invisible and frustrating, and (3) hardware dependency creates a two-tier experience. Gaze-driven navigation in public amplifies all three. The 'no menus' stance is philosophically clean but practically punishing. Additionally, voice-first roleplay in public (streets of Zurich, tourist crowds) creates severe social friction — research on voice assistant adoption consistently shows public use reluctance. The >80% immersion metric as success criteria is also a UX anti-pattern: immersion can mask confusion and mask churn signals until it's too late.\n\nUSER JOURNEY: The loop — Perceive → Whisper → Co-Create — is elegant on a whiteboard. The breakdown happens at the seams: (a) Onboarding gap: how does a user transition from 'app installed' to 'seamless invisible companion'? Zero-UI onboarding is a solved problem only in theory. (b) The proactive whisper is powerful but requires extreme calibration — too frequent = annoying, too rare = invisible. Without a UI dial, users have no agency to tune it. (c) D30 retention >25% in a single-city app requires exceptional replayability. Historical content in Zurich is finite; generative variation helps but doesn't solve the 'I've seen the Grossmünster whisper' fatigue. (d) Hardware assumption: the 2026 timeline assumes mass-market AR glasses with gaze tracking are in tourist hands. This is highly uncertain — Meta Ray-Ban 2024 lacks spatial anchoring; Apple Vision Pro is $3500 and not a walking-tour device.\n\nDELIGHT POTENTIAL: Genuinely exceptional when it works. Spatial audio historical whispers anchored to centimeter-precise landmarks = best-case is extraordinary. Voice-cloned historical figures with Character Constitutions (period authenticity barriers) = unprecedented for the category. Digital Souvenirs as a collectible mechanic is smart retention design. The AI-initiates model removes the blank-slate paralysis that kills most AI apps. If the tech stack delivers at spec and the hardware is in place, the peak moments would be 9-10/10 memorable experiences. The risk is variance: the gap between 'it works' and 'it broke the magic' in a Zero-UI system is a cliff edge, not a slope.",
+        "concerns": [
+          "Zero-UI onboarding is unsolved — there is no established pattern for teaching users a system with no visible affordances. This is not a design challenge; it is a fundamental UX paradox for a consumer product.",
+          "Public voice use barrier: unscripted roleplay with an AI aloud on Zurich streets faces deep social friction. Comparable products (Alexa, Google Assistant) show public use avoidance even among power users.",
+          "Hardware availability risk: gaze-based AR with centimeter spatial grounding assumes 2026 mass-market smart glasses that do not yet exist in the required form factor at tourist-accessible price points.",
+          "Latency is a magic-killer: in a Zero-UI ambient system, any perceptible lag between landmark recognition and whisper destroys the illusion completely. There is no UI to buffer user expectation.",
+          "AI-initiated proactive whispers require extreme calibration — too aggressive creates annoyance, too passive creates invisibility. Without UI controls, users have no agency to tune this critical parameter.",
+          "Single-city content depth vs. replayability tension: Zurich's finite historical inventory limits D30 retention even with generative variation. The collectible (Digital Souvenirs) mechanic helps but may not be sufficient.",
+          "Safety concern: Zero-UI walking experience with spatial audio reduces situational awareness. This is a genuine liability risk in urban pedestrian environments.",
+          "The >80% immersion success metric can mask confusion signals — a user who is confused but 'immersed' will churn silently without UI error signals to diagnose the problem."
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "user_need_clarity",
+            "score": 7,
+            "weight": 0.2,
+            "reasoning": "The core need — deeper, visceral historical connection at heritage sites — is real and underserved. The AI-initiates 'whisper' model elegantly solves blank-slate fatigue. However, the concept conflates need validation with delivery mechanism assumption; 'Zero-UI AR' is one solution to the need, not the obvious one, and single-city scoping limits broad validation."
+          },
+          {
+            "dimension": "usability",
+            "score": 3,
+            "weight": 0.35,
+            "reasoning": "Zero-UI is the hardest usability paradigm. No affordances means no discoverability, no error recovery, no fallback. Gaze-driven navigation in public is physically demanding and socially awkward. Voice-first roleplay in tourist crowds faces persistent public-use reluctance. Every comparable Zero-UI product deployment has failed at scale for these same structural reasons."
+          },
+          {
+            "dimension": "user_journey",
+            "score": 5,
+            "weight": 0.25,
+            "reasoning": "The Perceive→Whisper→Co-Create loop is conceptually clean but has critical gaps: onboarding is unresolved, proactive whisper calibration requires UI controls that don't exist, D30 retention in a single-city app is ambitious, and the hardware assumption is a 2026 bet. The journey is excellent from first-whisper onward but the path to that first whisper is a wall."
+          },
+          {
+            "dimension": "delight_potential",
+            "score": 9,
+            "weight": 0.2,
+            "reasoning": "When functioning as envisioned, this is category-defining delight. Spatial audio historical whispers, voice-cloned period-authentic figures, proactive AI context, generative digital souvenirs — the peak experience would be genuinely magical and deeply memorable. The collectible mechanic is smart. The variance risk is high, but the ceiling is real."
+          }
+        ],
+        "confidence": 0.72,
+        "key_insight": "The delight ceiling is extraordinary but the onboarding floor is missing — Zero-UI presupposes users already understand the interaction model, which means the magic only works for users who somehow already believe it will work. This bootstrapping problem will be the primary cause of early churn, not technical failure."
+      }
+    ],
+    "synthesized_reasoning": "Mirari V5.0 presents a genuinely compelling vision — the demand signal is real, the 'Temporal Lens' concept is differentiated, and the AI-initiates Whisper model elegantly sidesteps the blank-slate fatigue that kills most AI companion products. However, all three Council agents independently converged on a single fatal structural flaw: the entire architecture is load-bearing on hardware and model versions that do not yet exist. This is not a development risk — it is a prerequisite gap. MiniCPM-o 4.5, Qwen3-VL Nano with centimeter 3D precision, MobileLLM-Pro P1, and NeuTTS-Nano are projected research trajectories, not deployable components. Consumer AR glasses with outdoor gaze tracking and sufficient NPU at a tourist-accessible price point are realistically a 2027–2028 story, not 2026. The Council cannot validate a vision that depends on a hardware category and model tier that does not yet ship. Beyond the stack, three structural tensions compound the risk: First, the power budget problem — orchestrating 5+ ML pipelines (VLA streaming, spatial grounding, LLM reasoning, TTS, spatial audio) on a sub-10W wearable has never been demonstrated, and thermal throttling alone would cap sessions at 45–90 minutes maximum, which is a direct collision with the >10 turns/interaction retention target. Second, the retention math is broken — the >25% D30 metric is structurally incompatible with a single-city tourism product where the visitor base is non-recurring. This implies either Zurich locals as primary users or a multi-city expansion roadmap, neither of which is scoped or validated in this submission. Third, Zero-UI is the highest-risk UX paradigm in existence, and every comparable deployment — Google Glass, early Apple Watch ambient mode, Meta passive audio — has failed at the same seam: users cannot discover capabilities, cannot recover from errors, and have no agency to tune a proactive AI that initiates without their input. The 'no menus' stance is philosophically clean but practically punishing in a public outdoor environment with social friction, ambient noise, and Zurich's overcast lighting degrading eye-tracking reliability. The Swiss nDSG/GDPR exposure from continuous public video capture with AI face-proximity processing is severely underestimated — 'secure enclave reasoning' is not a compliance strategy. The Council's recommendation is not a rejection of the vision, but a rejection of this scoping and timeline. The core thesis — spatial audio history, character-driven roleplay, AI-initiated narrative — is worth pursuing. The path forward requires grounding the experience in deployable technology before the hardware catches up to the full vision.",
+    "next_steps": [
+      "Immediately decouple the product vision from the 2026 AR glasses dependency: rebuild the MVP architecture on existing smartphone hardware (iPhone 16 Pro LiDAR + ARKit spatial anchoring + existing headphones) to validate the core Whisper loop and character roleplay experience without waiting for a hardware category that doesn't exist yet",
+      "Audit and replace the speculative model stack with deployable equivalents: substitute MiniCPM-o 2.6 (confirmed, 8B, multimodal streaming) for the vaporware 4.5 version; use Qwen2.5-VL for 2D landmark localization (acknowledge the 3D precision gap and solve it with pre-built semantic maps of key Zurich sites rather than runtime inference); use a validated sub-1B on-device LLM for reasoning",
+      "Resolve the D30 retention paradox before any further build: conduct a 2-week discovery sprint with 20+ Zurich locals and 20+ repeat-visit tourists to determine whether the primary retention driver is local habituation, collectible Digital Souvenir mechanics, or a multi-city expansion model — the entire business case depends on which of these is true",
+      "Commission a formal Swiss nDSG/FDPIC legal opinion on the continuous public video processing architecture before any further tech investment — specifically address whether 'secure enclave reasoning' satisfies FDPIC's aggressive stance on persistent environmental capture, and whether differential anonymization at inference time is legally sufficient or structurally insufficient",
+      "Run a Zero-UI onboarding research sprint: prototype and user-test 3 distinct onboarding models (guided tutorial, progressive disclosure, contextual coaching) with 15+ participants in an outdoor urban environment before committing to the 'no menus' stance — the current proposal has no solution for capability discovery or error recovery, which are documented adoption killers in every comparable Zero-UI deployment",
+      "Define the AR glasses roadmap as a staged upgrade path, not a launch dependency: position the phone-first MVP as Phase 1 (2026), establish partnership conversations with Meta and Apple for Phase 2 integration (2027–2028 when hardware reaches required spec), and set explicit hardware trigger conditions (e.g., Meta Ray-Ban achieving spatial display fidelity + gaze tracking accuracy thresholds) before committing Phase 2 budget",
+      "Validate willingness-to-pay at the premium tier before any generative content investment: run a 90-day Zurich pilot with a curated set of 5–8 manually authored historical character experiences (not generative) to establish baseline NPS, session length, and actual revenue conversion — the Generative World Engine is a scalability solution, not an MVP requirement"
+    ],
+    "council_composition": [
+      "Feasibility Agent",
+      "Market Agent",
+      "UX Agent"
+    ]
+  },
+  "council_evaluated_at": "2026-02-17T08:52:30.686Z"
+}

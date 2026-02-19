@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Active Voice Interface</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00e5ff20",
+                        "muted-teal": "#3BBFB2",
+                        "amber": "#ffb703",
+                        "violet": "#a78bfa",
+                        "phosphor-green": "#39FF14",
+                        "background-dark": "#06080F",
+                        "background-light": "#f5f8f8",
+                        "surface": "#0f131a",
+                        "surface-glass": "rgba(15, 19, 26, 0.6)",
+                        "border-dim": "rgba(30, 48, 80, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],
+                        "heading": ["DM Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 15px rgba(0, 229, 255, 0.3)",
+                        "glow-amber": "0 0 15px rgba(255, 183, 3, 0.3)",
+                        "glow-text": "0 0 8px rgba(0, 229, 255, 0.6)",
+                        "glow-teal": "0 0 10px rgba(59, 191, 178, 0.2)",
+                    },
+                    animation: {
+                        'pulse-ring': 'pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+                        'cursor-blink': 'cursor-blink 1s step-end infinite',
+                    },
+                    keyframes: {
+                        'pulse-ring': {
+                            '0%': { transform: 'scale(0.8)', opacity: '0.5' },
+                            '100%': { transform: 'scale(2.2)', opacity: '0' },
+                        },
+                        'cursor-blink': {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-starfield {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }
+        .glass-panel {
+            background: rgba(15, 19, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 191, 178, 0.2);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.3);
+        }
+        .glass-card-active {
+            background: linear-gradient(145deg, rgba(0, 229, 255, 0.05) 0%, rgba(0, 229, 255, 0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 229, 255, 0.3);
+        }::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3050;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00e5ff;
+        }
+        .blur-backdrop {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            background-color: rgba(6, 8, 15, 0.6);
+            mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
+        }
+        .fade-mask-top {
+            mask-image: linear-gradient(to bottom, transparent, black 20%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%);
+        }
+    </style>
+</head>
+<body class="bg-starfield text-slate-300 font-body antialiased selection:bg-primary selection:text-black h-screen overflow-hidden flex">
+<nav class="fixed left-0 top-0 h-screen w-16 border-r border-muted-teal/20 glass-panel flex flex-col items-center py-8 z-50">
+<div class="mb-12">
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-sm">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-8 w-full items-center">
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">dashboard</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">memory</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10">
+<div class="absolute left-0 h-6 w-0.5 bg-primary shadow-glow-primary rounded-r"></div>
+<span class="material-icons text-primary shadow-glow-text text-2xl transition-all group-hover:scale-110">star</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">forum</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">settings</span>
+</button>
+</div>
+<div class="mt-auto">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-muted-teal/40">
+<img alt="User Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKwuEergf5rSF5IHWOlG6-tHBkcH7qlyVfLnob_8Mp88STMSwLCdcdJYZ57hHZduBFJbjrnDyraAXHHKpMzithkFp7-pQ8OmKh9Oe7DbHS2F_nzNlB6TvUOSNa0u-9oEik49pNVXBZRj6D5M6yMlDlsSZ7EtLQbjLoyWQ4z1uSO1dsws0yTmRq8FsiX0oJaiOr5XYzmUZz23fQ9Q39Bo4qSBecsT0IRzpEQAY8R00MEb4TcFuGE3w-uKCJ3ZIP-CdFb6yyB2o4859"/>
+</div>
+</div>
+</nav>
+<main class="ml-16 w-full h-full relative flex flex-col">
+<header class="absolute top-0 right-0 p-8 z-40">
+<h1 class="font-display font-bold text-2xl tracking-[0.2em] text-white/20 uppercase">Nitara</h1>
+</header>
+<div class="absolute top-0 left-0 w-full h-[45%] z-0 overflow-hidden opacity-30 blur-backdrop pointer-events-none">
+<div class="p-12 lg:p-20 grid grid-cols-12 gap-8 w-full max-w-[1600px] mx-auto">
+<div class="col-span-8 space-y-8">
+<h2 class="font-display text-4xl text-white mb-8">Morning Briefing</h2>
+<div class="grid grid-cols-2 gap-6">
+<div class="glass-card h-40 rounded-xl p-6"></div>
+<div class="glass-card h-40 rounded-xl p-6"></div>
+</div>
+<div class="glass-card h-64 rounded-xl p-6 w-full"></div>
+</div>
+<div class="col-span-4 space-y-6">
+<div class="glass-card h-full rounded-xl p-6"></div>
+</div>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-[65%] z-10 flex flex-col justify-end pb-32 fade-mask-top">
+<div class="w-full max-w-4xl mx-auto px-8 space-y-8 overflow-y-auto max-h-full scroll-smooth" id="chat-container">
+<div class="flex justify-end animate-fade-in-up" style="animation-delay: 0.1s;">
+<div class="bg-surface border border-muted-teal/20 text-slate-200 px-6 py-4 rounded-2xl rounded-tr-sm max-w-[80%] shadow-lg backdrop-blur-md">
+<p class="text-lg leading-relaxed font-body">Hey Nitara, what's the status on the SwissAI studio project with Savya?</p>
+</div>
+</div>
+<div class="flex gap-6 animate-fade-in-up" style="animation-delay: 0.2s;">
+<div class="flex-shrink-0 mt-1">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary/80 to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-sm">auto_awesome</span>
+</div>
+</div>
+<div class="space-y-3 max-w-[85%]">
+<div class="text-primary font-mono text-xs mb-1 tracking-widest uppercase">Nitara • 09:42</div>
+<div class="text-slate-100 text-lg leading-relaxed font-body">
+                            The SwissAI Studio project is in the <span class="text-primary font-bold">Scope</span> phase. We're currently awaiting final sign-off on the technical architecture from Savya's CTO.
+                        </div>
+<div class="flex gap-3 pt-2">
+<button class="px-4 py-1.5 rounded-full border border-muted-teal/40 text-muted-teal text-xs font-mono uppercase hover:bg-muted-teal/10 hover:border-muted-teal transition-all">
+                                [ Show Scope ]
+                            </button>
+<button class="px-4 py-1.5 rounded-full border border-muted-teal/40 text-muted-teal text-xs font-mono uppercase hover:bg-muted-teal/10 hover:border-muted-teal transition-all">
+                                [ Skip ]
+                            </button>
+</div>
+</div>
+</div>
+<div class="flex justify-end animate-fade-in-up" style="animation-delay: 0.3s;">
+<div class="bg-surface border border-muted-teal/20 text-slate-200 px-6 py-4 rounded-2xl rounded-tr-sm max-w-[80%] shadow-lg backdrop-blur-md">
+<p class="text-lg leading-relaxed font-body">Yeah show me, and also — can we afford to take on another project right now?</p>
+</div>
+</div>
+<div class="flex gap-6 animate-fade-in-up" style="animation-delay: 0.4s;">
+<div class="flex-shrink-0 mt-1">
+<div class="w-10 h-10 rounded-full bg-gradient-to-br from-primary/80 to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-sm">auto_awesome</span>
+</div>
+</div>
+<div class="space-y-4 w-full">
+<div class="text-primary font-mono text-xs mb-1 tracking-widest uppercase">Nitara • 09:43</div>
+<div class="flex flex-col md:flex-row gap-4 w-full">
+<div class="glass-card-active p-5 rounded-lg border-l-4 border-l-primary flex-1 min-w-[300px] hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="font-mono text-[10px] text-primary bg-primary/10 px-2 py-0.5 rounded border border-primary/20">ACTIVE</span>
+<span class="material-icons text-primary/50 text-lg">folder_open</span>
+</div>
+<h3 class="font-heading font-bold text-white text-lg mb-1">SwissAI Studio</h3>
+<div class="text-sm text-slate-400 font-mono mb-4">Partner: Savya Inc.</div>
+<div class="w-full bg-slate-800 h-1.5 rounded-full mb-2 overflow-hidden">
+<div class="bg-primary h-full w-[35%] shadow-glow-primary"></div>
+</div>
+<div class="flex justify-between text-xs font-mono text-muted-teal">
+<span>PHASE: SCOPE</span>
+<span>35%</span>
+</div>
+</div>
+<div class="glass-card p-5 rounded-lg border-l-4 border-l-phosphor-green flex-1 min-w-[300px] hover:bg-white/5 transition-colors cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="font-mono text-[10px] text-phosphor-green bg-phosphor-green/10 px-2 py-0.5 rounded border border-phosphor-green/20">LIQUIDITY CHECK</span>
+<span class="material-icons text-phosphor-green/50 text-lg">payments</span>
+</div>
+<div class="flex items-baseline gap-2 mb-1">
+<h3 class="font-heading font-bold text-white text-2xl">CHF 4,200k</h3>
+<span class="text-xs text-slate-400">/ mo</span>
+</div>
+<div class="text-sm text-slate-400 font-mono mb-4 border-b border-white/5 pb-2">Costs: CHF 890k</div>
+<div class="flex items-center gap-2">
+<span class="material-icons text-phosphor-green text-sm">check_circle</span>
+<span class="font-mono text-xs text-phosphor-green uppercase font-bold tracking-wide">Verdict: Financially Viable</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-end py-4">
+<div class="text-right max-w-2xl">
+<span class="text-2xl font-light text-white font-body">Great, let's move forward. Can you draft a</span><span class="inline-block w-3 h-8 ml-1 bg-primary align-middle animate-cursor-blink shadow-glow-text"></span>
+</div>
+</div>
+<div class="h-24"></div>
+</div>
+</div>
+<div class="absolute bottom-10 left-0 w-full flex justify-center items-center z-50 pointer-events-none">
+<div class="relative flex justify-center items-center pointer-events-auto">
+<div class="absolute w-24 h-24 rounded-full border border-primary/30 animate-pulse-ring"></div>
+<div class="absolute w-24 h-24 rounded-full border border-primary/20 animate-pulse-ring" style="animation-delay: 0.5s;"></div>
+<div class="absolute w-24 h-24 rounded-full border border-primary/10 animate-pulse-ring" style="animation-delay: 1s;"></div>
+<button class="relative w-20 h-20 rounded-full bg-surface-glass border border-primary/50 text-primary shadow-glow-primary flex items-center justify-center group hover:bg-primary hover:text-black transition-all duration-300">
+<div class="absolute inset-0 rounded-full bg-primary/10 animate-pulse"></div>
+<span class="material-icons text-4xl group-hover:scale-110 transition-transform">mic</span>
+</button>
+<div class="absolute left-28 h-12 flex items-center gap-1 opacity-50">
+<div class="w-1 bg-primary h-4 rounded-full animate-pulse"></div>
+<div class="w-1 bg-primary h-8 rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+<div class="w-1 bg-primary h-6 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+<div class="w-1 bg-primary h-3 rounded-full animate-pulse" style="animation-delay: 0.3s"></div>
+</div>
+<div class="absolute right-28 h-12 flex items-center gap-1 opacity-50">
+<div class="w-1 bg-primary h-3 rounded-full animate-pulse" style="animation-delay: 0.3s"></div>
+<div class="w-1 bg-primary h-6 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+<div class="w-1 bg-primary h-8 rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+<div class="w-1 bg-primary h-4 rounded-full animate-pulse"></div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Auto-scroll to bottom of chat on load
+        window.onload = function() {
+            var chatContainer = document.getElementById("chat-container");
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+
+</body></html>

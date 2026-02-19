@@ -1,0 +1,17 @@
+{
+  "id": "task-1771398580050-0m61v7",
+  "skill": "profiling-question",
+  "arguments": "",
+  "priority": "background",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-18T07:09:40.050Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-18T07:09:50.050Z",
+  "pid": 1981848,
+  "completed_at": "2026-02-18T07:10:39.766Z"
+}

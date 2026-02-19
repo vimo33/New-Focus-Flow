@@ -1,0 +1,20 @@
+{
+  "id": "nc-20260218-813912",
+  "first_name": "Amu",
+  "last_name": "Maid",
+  "full_name": "Amu Maid",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:30:13.912Z",
+  "updated_at": "2026-02-18T22:33:59.105Z",
+  "phone": "+91 74115 21955 ::: +91 99005 14570",
+  "phones": [
+    "+91 74115 21955 ::: +91 99005 14570"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

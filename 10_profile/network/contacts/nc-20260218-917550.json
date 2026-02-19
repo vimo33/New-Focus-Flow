@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917550",
+  "first_name": "Rudra",
+  "last_name": "Sen",
+  "full_name": "Rudra Sen",
+  "company": "Naandi Foundation",
+  "position": "Communications Co-ordinator",
+  "linkedin_url": "https://www.linkedin.com/in/senrudra",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "09 Dec 2019",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.550Z",
+  "updated_at": "2026-02-18T23:32:21.475Z",
+  "location": "India",
+  "phone": "+918498854488 ::: +918851639313",
+  "phones": [
+    "+918498854488 ::: +918851639313"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:21.474Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

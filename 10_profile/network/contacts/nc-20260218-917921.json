@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-917921",
+  "first_name": "rajat",
+  "last_name": "goenka",
+  "full_name": "rajat goenka",
+  "company": "Texport Overseas",
+  "position": "Owner",
+  "linkedin_url": "https://www.linkedin.com/in/rajat-goenka-55867a2",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "23 Oct 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.921Z",
+  "updated_at": "2026-02-18T23:32:37.555Z",
+  "enrichment_date": "2026-02-18T23:32:37.554Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

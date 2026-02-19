@@ -1,0 +1,32 @@
+{
+  "id": "nc-20260218-917509",
+  "first_name": "Vivek",
+  "last_name": "Suresh",
+  "full_name": "Vivek Suresh",
+  "company": "Trimble Inc.",
+  "position": "Lead Technical Writer",
+  "linkedin_url": "https://www.linkedin.com/in/vivek-suresh-69b149103",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "03 Dec 2020",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.509Z",
+  "updated_at": "2026-02-18T23:32:18.946Z",
+  "location": "Karnataka",
+  "phone": "‪+91 99 62 558032‬",
+  "emails": [
+    "vivek.hellboy07@gmail.com"
+  ],
+  "phones": [
+    "‪+91 99 62 558032‬"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:18.945Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-673456",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "Yes. The setup lives at the system level — `~/.claude/` — so it's available to any project Nitara spins up. Build Mirari, scaffold Overture, generate specs for Brahma ESG — same autonomous pipeline, same hooks, same sub-agent orchestration, regardless of project.\n\nOne setup. Everywhere.\n\nWant me to wire it up now, or wait until the council verdict lands so we configure it with Mirari as the first live test?",
+  "source": "voice",
+  "created_at": "2026-02-17T08:57:53.456Z"
+}

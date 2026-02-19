@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-917908",
+  "first_name": "Rahul",
+  "last_name": "Karunakar",
+  "full_name": "Rahul Karunakar",
+  "company": "Indusind general Insurance",
+  "position": "AVP marcom",
+  "linkedin_url": "https://www.linkedin.com/in/rahul-karunakar-24109534",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "23 Oct 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.908Z",
+  "updated_at": "2026-02-18T23:32:39.988Z",
+  "enrichment_date": "2026-02-18T23:32:39.988Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

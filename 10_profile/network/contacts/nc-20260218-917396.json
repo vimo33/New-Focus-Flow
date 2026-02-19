@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917396",
+  "first_name": "Tommy",
+  "last_name": "Fliski",
+  "full_name": "Tommy Fliski",
+  "company": "Green Marmot Capsule Hotel",
+  "position": "Business Development Manager",
+  "linkedin_url": "https://www.linkedin.com/in/tommyfliski",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["hotel", "Zurich", "hospitality", "tourism", "distribution"],
+  "last_contacted": "11 Nov 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.396Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 60,
+  "triage_score": 6.0,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Green Marmot Capsule Hotel is a Zürich-based boutique hotel property — small, independent, traveler-focused",
+      "Tommy Fliski handles business development — he controls decisions about hotel partnerships and in-property promotions",
+      "Capsule/boutique hotels attract exactly the tech-savvy, independent traveler profile targeted by AURA (Quinn persona)"
+    ],
+    "outreach_angle": "This is the single most operationally urgent contact. Vimo's most critical active task is securing one boutique hotel commitment for AURA QR card distribution before build begins — and Tommy is the BD lead at a boutique Zürich hotel. Green Marmot is an ideal AURA distribution partner: capsule hotel guests are solo/independent travelers who are tech-native, the hotel is small enough to move quickly on a pilot, and the cost to Tommy is zero (he just places QR cards). Message Tommy this week: 'Tommy — I am building AURA, a voice AI guide to Zürich's history for hotel guests. We are placing QR cards in 3 boutique Zürich hotels as a pilot — zero cost to the hotel, and guests get a free premium Zürich experience. Would Green Marmot be open to a pilot partnership? Happy to meet at the hotel this week.' This directly completes a critical active task.",
+    "relevant_project": "Mirari / AURA"
+  }
+}

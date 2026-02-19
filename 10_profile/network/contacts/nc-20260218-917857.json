@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-917857",
+  "first_name": "Ram",
+  "last_name": "Samtani",
+  "full_name": "Ram Samtani",
+  "company": "The Winning Impression",
+  "position": "Co-Founder",
+  "linkedin_url": "https://www.linkedin.com/in/coachramsamtani",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "11 Nov 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.857Z",
+  "updated_at": "2026-02-18T23:32:50.461Z",
+  "enrichment_date": "2026-02-18T23:32:50.460Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

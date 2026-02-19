@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917362",
+  "first_name": "Julie",
+  "last_name": "Rielle",
+  "full_name": "Julie Rielle",
+  "company": "MindHeal® AG",
+  "position": "Founder & CEO",
+  "linkedin_url": "https://www.linkedin.com/in/julie-rielle",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": ["health tech", "AI", "Switzerland", "founder", "mental health"],
+  "last_contacted": "27 Jan 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.362Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 62,
+  "triage_score": 6.2,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "MindHeal AG is a Swiss health AI company founded and led by Julie Rielle — focus on digital mental health solutions",
+      "Swiss health tech sector attracting significant VC attention in 2025-2026 given aging population and burnout trends",
+      "Julie was last contacted January 2025 — relationship is warm (12 months)"
+    ],
+    "outreach_angle": "Julie leads a Swiss health AI startup. As a fellow Swiss AI founder, she is a natural peer connection. The Sentio project (sovereign AI personal instrument for wellbeing) overlaps with MindHeal's mental health AI focus. Reach out as founder-to-founder: 'Julie — catching up after a year. I have been building Sentio, a sovereign AI personal instrument that gives users full control over their digital mental model. Given MindHeal's work in this space, I would love to share notes on how you are thinking about user trust and data sovereignty in health AI. Coffee in Zürich?' Timeline: this month.",
+    "relevant_project": "Sentio"
+  }
+}

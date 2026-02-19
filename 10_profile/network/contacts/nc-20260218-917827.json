@@ -1,0 +1,33 @@
+{
+  "id": "nc-20260218-917827",
+  "first_name": "Mithun",
+  "last_name": "Banerjee",
+  "full_name": "Mithun Banerjee",
+  "company": "Mirchi",
+  "position": "Vice President & Creative Brand Solutions Director",
+  "linkedin_url": "https://www.linkedin.com/in/mithun-banerjee-2473a16",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "30 May 2014",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.827Z",
+  "updated_at": "2026-02-18T23:32:25.389Z",
+  "phone": "09833880902",
+  "emails": [
+    "mithun.banerjee@timesgroup.com",
+    "Mithun1980@yahoo.com"
+  ],
+  "phones": [
+    "09833880902",
+    "+912267536839"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:25.388Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "nc-20260218-051047",
+  "first_name": "Anupama",
+  "last_name": "",
+  "full_name": "Anupama",
+  "company": "Skava Electric",
+  "relationship_type": "partner",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:34:11.047Z",
+  "updated_at": "2026-02-18T23:18:48.660Z",
+  "ai_tags": [
+    "energy",
+    "electric-vehicles",
+    "manufacturing"
+  ]
+}

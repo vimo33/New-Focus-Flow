@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-017594",
+  "thread_id": "thread-20260216-948060",
+  "role": "assistant",
+  "content": "I'll create it for you. I need:\n\n- **Title** (required)\n- **Description** (optional but recommended)\n- **Phase** (optional: idea, spec, design, dev, deploy, gtm, sales, crm — defaults to concept if not specified)\n\nGive me the title and whatever details you want captured, and I'll spin it up. Sounds like this might be your new AURA direction?",
+  "source": "voice",
+  "created_at": "2026-02-16T23:20:17.594Z"
+}

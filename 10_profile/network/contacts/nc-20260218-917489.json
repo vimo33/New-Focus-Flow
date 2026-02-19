@@ -1,0 +1,32 @@
+{
+  "id": "nc-20260218-917489",
+  "first_name": "Katharina",
+  "last_name": "Kolatzki",
+  "full_name": "Katharina Kolatzki",
+  "company": "Universität Zürich | University of Zurich",
+  "position": "Wissenschaftliche Stabsmitarbeiterin im Generalsekretariat",
+  "linkedin_url": "https://www.linkedin.com/in/katharina-kolatzki-909886100",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "01 Dec 2021",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.489Z",
+  "updated_at": "2026-02-18T23:32:26.811Z",
+  "phone": "+49 1515 9448810",
+  "emails": [
+    "katharina.kolatzki@gmail.com"
+  ],
+  "phones": [
+    "+49 1515 9448810",
+    "+41 77 529 37 26"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:26.810Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

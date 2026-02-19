@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917405",
+  "first_name": "Alexander",
+  "last_name": "Ginsburg",
+  "full_name": "Alexander Ginsburg",
+  "company": "Futurae Technologies AG",
+  "position": "Head Global Alliances & Partnerships",
+  "linkedin_url": "https://www.linkedin.com/in/aginsburg",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["security", "authentication", "B2B SaaS", "Switzerland", "partnerships"],
+  "last_contacted": "10 Nov 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.405Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 58,
+  "triage_score": 5.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Futurae Technologies raised CHF 5M Series A with backing from Euroclear, AXA Venture Partners, ZKB, and EquityPitcher Ventures",
+      "Futurae is an enterprise 2FA/MFA authentication platform based in Zurich, founded 2016",
+      "Company is in international expansion phase — actively seeking global partnerships",
+      "Alexander leads Global Alliances — he is the revenue-generating partnerships function at a funded Swiss security scale-up"
+    ],
+    "outreach_angle": "Alexander is the partnerships lead at a Series-A funded Swiss security company in active international expansion. Two angles: (1) Kavach AI could position as a complementary edge-security product — an integration partnership with Futurae's authentication layer could make Kavach more enterprise-ready; (2) Futurae's enterprise client base is a direct sales channel for Kavach AI site-security solutions. Reach out referencing Futurae's expansion phase and proposing a 20-minute call to explore whether Kavach's physical security edge layer complements Futurae's digital authentication. This week.",
+    "relevant_project": "Kavach AI"
+  }
+}

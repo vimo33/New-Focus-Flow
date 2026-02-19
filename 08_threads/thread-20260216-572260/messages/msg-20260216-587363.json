@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-587363",
+  "thread_id": "thread-20260216-572260",
+  "role": "assistant",
+  "content": "There are no AI Council reviews yet. The system shows zero validated ideas, which means no ideas have been put through the council evaluation process.\n\nTo get your first AI Council review, you'd need to:\n\n1. **Capture an idea** (via `create_idea`)\n2. **Run validation** (via `validate_idea`) — this triggers the AI Council\n3. **Review the scores** — the council provides multi-perspective scoring and a verdict\n\nOnce you have ideas evaluated, I'll be able to show you which one scored highest and what the council said about it.\n\nWant to capture an idea now and run it through the council?",
+  "source": "voice",
+  "created_at": "2026-02-16T20:59:47.363Z"
+}
