@@ -1586,6 +1586,171 @@ export class VaultAPI {
       method: 'DELETE',
     });
   }
+
+  // ============================================================================
+  // Hypothesis Methods (v2)
+  // ============================================================================
+
+  async getHypotheses(projectId: string): Promise<{ hypotheses: any[]; count: number }> {
+    return this.request(`/hypotheses?project_id=${encodeURIComponent(projectId)}`);
+  }
+
+  async createHypothesis(data: {
+    project_id: string;
+    statement: string;
+    type: 'problem' | 'solution' | 'channel' | 'pricing' | 'moat';
+    confidence?: number;
+    evidence_refs?: string[];
+  }): Promise<{ status: string; hypothesis: any }> {
+    return this.request('/hypotheses', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateHypothesis(id: string, data: any): Promise<{ status: string; hypothesis: any }> {
+    return this.request(`/hypotheses/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Experiment Methods (v2)
+  // ============================================================================
+
+  async getExperimentsV2(projectId?: string): Promise<{ experiments: any[]; count: number }> {
+    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/experiments${qs}`);
+  }
+
+  async getExperimentV2(id: string): Promise<any> {
+    return this.request(`/experiments/${id}`);
+  }
+
+  async createExperimentV2(data: {
+    project_id: string;
+    hypothesis_id?: string;
+    metric_name: string;
+    metric_definition?: string;
+    success_rule: string;
+  }): Promise<{ status: string; experiment: any }> {
+    return this.request('/experiments', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExperimentResults(id: string, results: {
+    baseline?: number;
+    variant?: number;
+    lift?: number;
+    p_value?: number;
+    sample_size?: number;
+  }): Promise<{ status: string; experiment: any }> {
+    return this.request(`/experiments/${id}/results`, {
+      method: 'PATCH',
+      body: JSON.stringify({ results }),
+    });
+  }
+
+  async recordExperimentDecision(id: string, data: {
+    action: 'scale' | 'iterate' | 'pivot' | 'park' | 'kill';
+    rationale: string;
+    evidence?: any[];
+    confidence?: number;
+  }): Promise<{ status: string; experiment: any; decision: any }> {
+    return this.request(`/experiments/${id}/decide`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Decision Methods (v2)
+  // ============================================================================
+
+  async getDecisions(projectId?: string): Promise<{ decisions: any[]; count: number }> {
+    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/decisions${qs}`);
+  }
+
+  // ============================================================================
+  // Playbook Methods (v2)
+  // ============================================================================
+
+  async getPlaybooks(projectId?: string): Promise<{ playbooks: any[]; count: number }> {
+    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/playbooks${qs}`);
+  }
+
+  async getPlaybook(id: string): Promise<any> {
+    return this.request(`/playbooks/${id}`);
+  }
+
+  async createPlaybook(data: {
+    project_id?: string;
+    title: string;
+    context: string;
+    steps: any[];
+    success_metrics?: string[];
+    failure_modes?: string[];
+  }): Promise<{ status: string; playbook: any }> {
+    return this.request('/playbooks', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Approval Queue Methods (v2)
+  // ============================================================================
+
+  async getApprovals(status?: string): Promise<{ approvals: any[]; count: number }> {
+    const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.request(`/approvals${qs}`);
+  }
+
+  async decideApproval(id: string, data: {
+    action: 'approved' | 'rejected';
+    reason?: string;
+  }): Promise<{ status: string; approval: any }> {
+    return this.request(`/approvals/${id}/decide`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Auth Methods (v2)
+  // ============================================================================
+
+  async authRegister(data: { email: string; password: string; name: string }): Promise<{ token: string; user: any }> {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async authLogin(data: { email: string; password: string }): Promise<{ token: string; user: any }> {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async authLogout(token: string): Promise<{ status: string }> {
+    return this.request('/auth/logout', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  }
+
+  async authMe(token: string): Promise<{ user: any }> {
+    return this.request('/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  }
 }
 
 // ============================================================================
