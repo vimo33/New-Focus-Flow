@@ -54,10 +54,16 @@ import voiceSessionRoutes from './routes/voice-session.routes';
 import knowledgeGraphRoutes from './routes/knowledge-graph.routes';
 import briefingRoutes from './routes/briefing.routes';
 import queueRoutes from './routes/queue.routes';
+import authRoutes from './routes/auth.routes';
+import hypothesesRoutes from './routes/hypotheses.routes';
+import experimentsRoutes from './routes/experiments.routes';
+import playbooksRoutes from './routes/playbooks.routes';
+import approvalsRoutes from './routes/approvals.routes';
 import { queueAuth } from './middleware/queue-auth.middleware';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
 import { taskQueueService } from './services/task-queue.service';
 import { telegramHitlService } from './services/telegram-hitl.service';
+import { migrate } from './db/migrate';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -162,6 +168,11 @@ app.use('/api', knowledgeGraphRoutes);
 app.use('/api', briefingRoutes);
 app.use('/api/queue', queueAuth);
 app.use('/api', queueRoutes);
+app.use('/api', authRoutes);
+app.use('/api', hypothesesRoutes);
+app.use('/api', experimentsRoutes);
+app.use('/api', playbooksRoutes);
+app.use('/api', approvalsRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -208,6 +219,13 @@ app.use((req: Request, res: Response) => {
     error: 'Not found',
     path: req.path
   });
+});
+
+// Initialize PostgreSQL schema
+migrate().then(() => {
+  console.log('[Startup] PostgreSQL schema ready');
+}).catch(err => {
+  console.error('[Startup] PostgreSQL migration failed:', err.message);
 });
 
 // Initialize knowledge digest on startup

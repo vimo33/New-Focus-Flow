@@ -1,6 +1,7 @@
 ---
 name: network-enrich
 description: Two-pass network enrichment — triage all contacts, deep-enrich top 20%
+context: fork
 model: sonnet
 allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---

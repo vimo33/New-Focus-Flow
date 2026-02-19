@@ -1,8 +1,9 @@
 ---
 name: network-import
 description: Import LinkedIn ZIP or Gmail CSV contacts with deduplication and merge
+context: fork
 model: sonnet
-allowed-tools: Read, Write, Glob, Grep, Bash
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /network-import

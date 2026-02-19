@@ -1,6 +1,7 @@
 ---
 name: research-passive-income
 description: Validate passive income opportunities grounded in the founder's actual skills and network
+context: fork
 model: sonnet
 allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---

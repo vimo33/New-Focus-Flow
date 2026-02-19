@@ -1,6 +1,7 @@
 ---
 name: research-youtube
 description: YouTube channel discovery and content strategy extraction for the founder's domain
+context: fork
 model: sonnet
 allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---

@@ -1,8 +1,9 @@
 ---
 name: network-analyze
 description: Find revenue opportunities, introduction chains, and strategic gaps in network data
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write, WebSearch
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /network-analyze

@@ -1,7 +1,9 @@
 ---
 name: validate-system
 description: Validate all Nitara services are healthy
-allowed-tools: Bash, Read, Glob
+context: fork
+model: haiku
+allowed-tools: Read, Glob, Grep
 ---
 
 # Validate Nitara System

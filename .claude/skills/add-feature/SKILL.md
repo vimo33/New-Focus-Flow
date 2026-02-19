@@ -1,7 +1,9 @@
 ---
 name: add-feature
 description: Add a new feature to Nitara following project conventions
-allowed-tools: Bash, Read, Edit, Write, Glob, Grep
+context: fork
+model: opus
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
 # Add Feature to Nitara

@@ -1,8 +1,9 @@
 ---
 name: voice-profiling
 description: Trigger outbound voice profiling call to gather founder information
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Bash, Write
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /voice-profiling

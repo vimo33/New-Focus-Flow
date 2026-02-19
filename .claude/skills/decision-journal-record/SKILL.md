@@ -1,8 +1,9 @@
 ---
 name: decision-journal-record
 description: Record portfolio recommendations as trackable decisions with predicted outcomes for later accuracy evaluation.
-model: haiku
-allowed-tools: Read, Glob, Write
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

@@ -1,8 +1,9 @@
 ---
 name: monitor-project
 description: Quick health checks, cost tracking, stale task detection, queue depth monitoring
-model: haiku
-allowed-tools: Bash, Read, Glob, Grep, Write
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep
 ---
 
 # /monitor-project

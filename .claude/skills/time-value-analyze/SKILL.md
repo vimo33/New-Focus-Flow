@@ -1,8 +1,9 @@
 ---
 name: time-value-analyze
 description: Model ROI of the founder's time across activity categories. Recommend allocation based on monetization proximity, network leverage, and skill alignment.
-model: opus
-allowed-tools: Read, Glob, Grep, Write, WebSearch
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

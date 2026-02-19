@@ -1,8 +1,9 @@
 ---
 name: decision-journal-evaluate
 description: Evaluate past decisions against actual outcomes. Track prediction accuracy and feed learnings back into the system.
-model: sonnet
-allowed-tools: Read, Glob, Grep, Write, WebSearch
+context: fork
+model: opus
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

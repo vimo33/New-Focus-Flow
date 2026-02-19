@@ -1,8 +1,9 @@
 ---
 name: morning-briefing
 description: Curated daily narrative answering three questions — what changed, what to focus on, what needs decisions. Cross-references all agent outputs into one actionable brief.
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

@@ -1,8 +1,9 @@
 ---
 name: outreach-draft
 description: Generate personalized outreach messages for high-value network connections
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write, WebSearch
+allowed-tools: Read, Glob, Grep, Write
 ---
 
 # /outreach-draft

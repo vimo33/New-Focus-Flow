@@ -1,8 +1,9 @@
 ---
 name: network-portfolio-xref
 description: Cross-reference network contacts with active projects for strategic leverage
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write, Bash
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /network-portfolio-xref

@@ -1,8 +1,9 @@
 ---
 name: voice-briefing
 description: Generate and deliver TTS-optimized morning briefing via voice call
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Bash, Write
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /voice-briefing

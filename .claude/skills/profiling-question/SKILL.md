@@ -1,8 +1,9 @@
 ---
 name: profiling-question
 description: Generate next highest-priority profiling question for Telegram HITL
-model: haiku
-allowed-tools: Read, Glob, Write
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /profiling-question

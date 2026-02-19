@@ -1,8 +1,9 @@
 ---
 name: event-detect
 description: Lightweight daily scan for external and internal triggers — competitor movements, contact changes, market shifts, project milestones. Surfaces only NEW events since last run.
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write, WebSearch, WebFetch
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

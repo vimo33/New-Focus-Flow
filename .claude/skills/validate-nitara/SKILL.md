@@ -1,7 +1,9 @@
 ---
 name: validate-nitara
 description: Full health check for Nitara — TSC, Vite build, systemd status, health endpoints, branding verification
-allowed-tools: Bash, Read, Glob
+context: fork
+model: haiku
+allowed-tools: Read, Glob, Grep
 user-invocable: true
 ---
 

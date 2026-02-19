@@ -1,7 +1,9 @@
 ---
 name: fix-issue
 description: Debug and fix an issue in Nitara
-allowed-tools: Bash, Read, Edit, Write, Glob, Grep
+context: fork
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
 # Fix Issue in Nitara

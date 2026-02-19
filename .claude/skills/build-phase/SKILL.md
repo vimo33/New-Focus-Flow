@@ -1,7 +1,9 @@
 ---
 name: build-phase
 description: Execute a phase from TASKS.md — reads tasks, resolves dependencies, dispatches agents
-allowed-tools: Bash, Read, Edit, Write, Glob, Grep, Task
+context: fork
+model: opus
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 user-invocable: true
 ---
 

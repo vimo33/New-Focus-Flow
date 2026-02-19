@@ -1,8 +1,9 @@
 ---
 name: knowledge-graph-update
 description: Extract entities and relationships from recent reports into the append-only knowledge graph. Detects contradictions.
+context: fork
 model: sonnet
-allowed-tools: Read, Glob, Grep, Write
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

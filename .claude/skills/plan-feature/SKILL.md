@@ -1,7 +1,9 @@
 ---
 name: plan-feature
 description: Read uploaded plan documents and break them into development tasks
-allowed-tools: Read, Glob, Grep, Bash, Task
+context: fork
+model: opus
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 user-invocable: true
 ---
 

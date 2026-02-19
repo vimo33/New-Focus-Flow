@@ -1,6 +1,7 @@
 ---
 name: build-mvp
 description: Orchestrate agent team to design, build, test, and deploy an MVP
+context: fork
 model: opus
 allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---

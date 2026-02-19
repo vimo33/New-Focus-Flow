@@ -1,6 +1,7 @@
 ---
 name: research-market
 description: TAM/competition/pricing analysis for a specific project
+context: fork
 model: sonnet
 allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---

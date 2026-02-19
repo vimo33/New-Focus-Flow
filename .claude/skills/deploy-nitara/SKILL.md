@@ -1,7 +1,9 @@
 ---
 name: deploy-nitara
 description: Build both packages, restart services, verify health endpoints
-allowed-tools: Bash, Read
+context: fork
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 user-invocable: true
 ---
 

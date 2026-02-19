@@ -1,8 +1,9 @@
 ---
 name: meta-analysis
 description: Self-improvement analysis — review agent outputs, satisfaction trends, and improve NLSpecs
+context: fork
 model: opus
-allowed-tools: Read, Glob, Grep, Write
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

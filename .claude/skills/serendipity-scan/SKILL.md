@@ -1,8 +1,9 @@
 ---
 name: serendipity-scan
 description: Cross-pollinate the knowledge graph to find non-obvious connections — market convergences, network bridges, timing signals, and cross-project synergies.
-model: opus
-allowed-tools: Read, Glob, Grep, Write, WebSearch
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 hooks:
   PreToolUse:
     - matcher: "Write|Edit"

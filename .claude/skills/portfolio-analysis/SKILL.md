@@ -1,8 +1,9 @@
 ---
 name: portfolio-analysis
 description: Deep analysis of all projects with scoring, ranking, and kill/park/pivot/invest/build-next recommendations
+context: fork
 model: opus
-allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write, Task
+allowed-tools: Read, Glob, Grep, WebSearch, WebFetch, Write
 ---
 
 # /portfolio-analysis

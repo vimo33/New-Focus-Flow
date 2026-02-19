@@ -23,6 +23,11 @@
             "type": "command",
             "command": "/srv/focus-flow/.claude/scripts/cost-gate.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/hooks/validators/budget-gate.py",
+            "timeout": 5
           }
         ]
       },
@@ -50,6 +55,11 @@
             "type": "command",
             "command": "/srv/focus-flow/.claude/scripts/knowledge-graph-trigger.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "/srv/focus-flow/.claude/hooks/validators/validate-design-tokens.sh",
+            "timeout": 10
           }
         ]
       },
