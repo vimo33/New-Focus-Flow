@@ -30,8 +30,8 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 
   // Dev mode fallback — allow unauthenticated access with a default user
   if (process.env.NODE_ENV !== 'production') {
-    req.user = { id: 'dev-user', email: 'dev@nitara.local', name: 'Dev User', role: 'owner' };
-    req.teamId = 'dev-team';
+    req.user = { id: '00000000-0000-0000-0000-000000000001', email: 'dev@nitara.local', name: 'Dev User', role: 'owner' };
+    req.teamId = '00000000-0000-0000-0000-000000000001';
     return next();
   }
 
