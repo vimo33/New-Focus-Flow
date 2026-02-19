@@ -1,57 +1,79 @@
-# CLAUDE.md — Nitara Project Instructions
+# CLAUDE.md — Nitara v2 Implementation Rules
 
-## Project Identity
+## Product Identity
 - **Product Name:** Nitara (formerly Focus Flow OS)
-- **Agent Name:** Nitara (the AI business partner the user talks to)
+- **Agent Name:** Nitara — AI co-founder for solo entrepreneurs
 - **Sanskrit Origin:** Niti (strategy) + Tara (star) = Strategic Star
-- **One-line:** Conversation-first AI business partner for solo entrepreneurs
+- **One-line:** Turn uncertainty into decisions across a portfolio of ventures
+
+## Read These First (Required)
+Before implementing anything, read these context pack docs:
+- `/docs/nitara/01_Vision.md` — Five modes (Think/Validate/Build/Grow/Leverage)
+- `/docs/nitara/06_Screen_Inventory.md` — All screens and their status
+- `/docs/nitara/08_Memory_Architecture.md` — File + vector + summary memory layers
+- `/docs/nitara/09_Autonomy_and_Safety.md` — Tier 1/2/3 autonomy gates
+- `/docs/nitara/07_Data_Model.md` — Core entities (Project, Hypothesis, Experiment, Decision)
+- `/docs/nitara/15_Design_System.md` — Design token contract and component library
 
 ## Architecture Overview
 
-Nitara is a conversation-first application. The user talks to Nitara (voice or text) and Nitara controls what appears on the visual canvas. The UI is NOT a traditional page-navigation app — the conversation drives the experience.
+Nitara is a **five-mode AI co-founder platform**. The UI is organized around modes, not pages.
 
-**Three interface layers:**
-1. **Conversation Rail** — persistent bottom bar on every screen (voice + text input, action cards, approval flows)
-2. **Canvas** — the main content area that Nitara controls (morning briefing, portfolio, network, financials, project detail, calendar, settings, council evaluation, weekly report, onboarding)
-3. **Command Palette** — Cmd+K overlay for power-user navigation (enhanced with Recent Context and Suggested Actions)
+**Five Operational Modes (bottom dock navigation):**
+1. **Think** — Portfolio strategy, idea intake, scoring, hypothesis generation
+2. **Validate** — Experiment design, measurement, decision gates (Scale/Iterate/Pivot/Park/Kill)
+3. **Build** — Autonomous builder with agent runs, HITL checkpoints, approval queue
+4. **Grow** — Resource allocation, KPI dashboards, simulation, go-to-market
+5. **Leverage** — Network intelligence, playbook library, tool registry, partnerships
 
-**Five sidebar items (thin icon rail, 48px):**
-1. ✦ Nitara (home/conversation + morning briefing)
-2. ◈ Portfolio (all projects and ideas)
-3. ⊛ Network (contacts, partners, relationships)
-4. ◷ Calendar (time-based view)
-5. ⚙ Settings (profile, preferences, integrations)
+**Three Interface Layers:**
+1. **Conversation Rail** — Persistent bottom bar (voice + text input, action cards, approvals)
+2. **Canvas** — Main content area controlled by active mode + sub-tab
+3. **Command Palette** — Cmd+K overlay for power-user navigation
+
+**Navigation:** Bottom dock with mode-contextual sub-items (not sidebar icon rail).
 
 ## Tech Stack
 - **Frontend:** React 19, Vite, TypeScript, Tailwind CSS 4, Zustand
 - **Backend:** Express 5, TypeScript, Node.js 22
-- **AI:** Claude via OpenClaw gateway (Sonnet for operations, Opus for council/synthesis)
-- **Memory:** Mem0 (semantic memory), Qdrant (vector store)
+- **Database:** PostgreSQL 16 (structured data via Drizzle ORM) + file vault (documents/reports)
+- **AI:** Claude via OpenClaw gateway (Opus for reasoning, Sonnet for execution, Haiku for checks)
+- **Memory:** Mem0 (semantic), Qdrant (vector), file vault (artifacts)
 - **Voice:** LiveKit Agents (Deepgram STT + Cartesia TTS)
-- **State Machine:** XState v5 for Core Agent, BullMQ for job queues
-- **Storage:** File-based JSON vault (migrating to SQLite)
+- **Agent System:** Claude Code CLI as execution engine, agent queue at `07_system/agent/queue/`
+
+## Data Model (PostgreSQL)
+Core entities — see `/docs/nitara/07_Data_Model.md` for full schema:
+- **Project** — id, team_id, name, status, stage, autonomy_level, goals, constraints
+- **Hypothesis** — id, project_id, statement, type, confidence, evidence_refs
+- **Experiment** — id, project_id, hypothesis_id, metric, success_rule, results, decision
+- **Decision** — id, project_id, experiment_id, action, rationale, evidence, counterarguments
+- **AgentRun** — id, project_id, mode, agents, status, cost, approvals
+- **Playbook** — id, project_id, steps, success_metrics, failure_modes
+- **Approval** — id, team_id, agent_run_id, risk_tier, status
+
+File vault stays for: markdown reports, conversation transcripts, agent queue files, config.
 
 ## Design System Tokens
 
 ### Colors (CSS Variables)
 ```css
 :root {
-  --color-base: #06080F;          /* Deep void black */
-  --color-surface: #0C1220;       /* Card backgrounds */
-  --color-elevated: #141E30;      /* Interactive elements */
-  --color-border: rgba(30, 48, 80, 0.4); /* Luminous borders */
-  
+  --color-base: #06080F;
+  --color-surface: #0C1220;
+  --color-elevated: #141E30;
+  --color-border: rgba(30, 48, 80, 0.4);
+
   --color-primary: #00E5FF;       /* Electric cyan — Nitara's voice */
   --color-secondary: #FFB800;     /* Warm amber — attention, finance */
-  --color-tertiary: #8B5CF6;      /* Soft violet — AI council, intelligence */
-  --color-success: #22C55E;       /* Phosphor green */
-  --color-danger: #EF4444;        /* Error red */
-  
-  --color-text-primary: #E8ECF1;  /* Cool white */
-  --color-text-secondary: #7B8FA3; /* Muted blue-grey */
-  --color-text-tertiary: #4A5568; /* Faded */
-  
-  /* Glassmorphism */
+  --color-tertiary: #8B5CF6;      /* Soft violet — AI council */
+  --color-success: #22C55E;
+  --color-danger: #EF4444;
+
+  --color-text-primary: #E8ECF1;
+  --color-text-secondary: #7B8FA3;
+  --color-text-tertiary: #4A5568;
+
   --glass-bg: rgba(12, 18, 32, 0.7);
   --glass-blur: blur(12px);
   --glass-border: rgba(30, 48, 80, 0.3);
@@ -60,14 +82,9 @@ Nitara is a conversation-first application. The user talks to Nitara (voice or t
 
 ### Typography
 ```css
-/* Import in index.css */
-@import url('https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap');
-
-:root {
-  --font-display: 'Syncopate', sans-serif;    /* Headings, labels */
-  --font-body: 'DM Sans', sans-serif;         /* Body text, UI */
-  --font-mono: 'JetBrains Mono', monospace;   /* Numbers, code, data */
-}
+--font-display: 'Syncopate', sans-serif;    /* Headings, labels */
+--font-body: 'DM Sans', sans-serif;         /* Body text, UI */
+--font-mono: 'JetBrains Mono', monospace;   /* Numbers, code, data */
 ```
 
 ### Spacing Scale
@@ -75,7 +92,18 @@ Nitara is a conversation-first application. The user talks to Nitara (voice or t
 4px (xs), 8px (sm), 12px (md), 16px (base), 24px (lg), 32px (xl), 48px (2xl), 64px (3xl)
 ```
 
-### Component Patterns
+### Glass Levels
+- **High** — Dock, critical overlays: `rgba(12, 18, 32, 0.85)` + `blur(20px)`
+- **Medium** — Panels, cards: `rgba(12, 18, 32, 0.7)` + `blur(12px)`
+- **Low** — Context surfaces: `rgba(12, 18, 32, 0.4)` + `blur(8px)`
+
+### Design Token Contract
+- All styles MUST use CSS variables (no hardcoded colors/fonts)
+- If a new token is needed, add to `design/tokens.json` first, then use
+- Tokens sync with CSS custom properties in `index.css`
+- Validators enforce this: `validate-design-tokens.sh` runs on all Write/Edit
+
+## Component Patterns
 
 **Glass Card:**
 ```tsx
@@ -84,184 +112,127 @@ Nitara is a conversation-first application. The user talks to Nitara (voice or t
 </div>
 ```
 
-**Action Card (with left accent):**
-```tsx
-<div className="bg-[var(--glass-bg)] backdrop-blur-xl border border-[var(--glass-border)] rounded-xl p-4 border-l-4 border-l-[var(--color-primary)]">
-  {/* Use --color-secondary for amber (approvals), --color-tertiary for violet (council) */}
-</div>
-```
+**Decision Gate Card:** Kill (red) / Scale (green) / Variant (amber) buttons with evidence summary.
 
-**Pipeline Node:**
-```tsx
-// Completed: solid fill + check
-// Active: larger, glowing border, pulse animation
-// Future: outlined, faint
-// Blocked: amber outline
-```
+**Typed Confirmation Modal:** For destructive actions — user types exact phrase to confirm. Always logs to audit trail.
 
-**Nitara Message:**
-```tsx
-<div className="flex gap-3 items-start">
-  <span className="text-[var(--color-primary)] text-lg">✦</span>
-  <div className="bg-[var(--glass-bg)] rounded-xl rounded-tl-sm p-4 border-l-2 border-l-[var(--color-primary)]">
-    {message}
-  </div>
-</div>
-```
+**Experiment Card:** Confidence ring, signal volatility, p-value, operator override, decision buttons.
+
+**Dock Nav:** Bottom dock with 5 mode icons, contextual sub-items per mode.
 
 ## File Structure
-
 ```
-/srv/nitara/
-├── src/
-│   ├── services/           # Backend services
-│   ├── routes/             # Express route handlers
-│   ├── middleware/          # Auth, logging, etc.
-│   └── types/              # Shared TypeScript types
-├── 02_projects/active/nitara-ui/
-│   └── src/
-│       ├── App.tsx
-│       ├── main.tsx
-│       ├── index.css        # Tailwind + design tokens
+/srv/focus-flow/
+├── CLAUDE.md                          # This file
+├── docs/nitara/                       # Context pack (19 docs + mock data)
+├── design/
+│   ├── tokens.json                    # Canonical design tokens
+│   ├── stitch_v1/                     # Stitch design exports (reference)
+│   └── screens/                       # Per-screen design files
+├── 02_projects/active/
+│   ├── focus-flow-backend/src/        # Express backend
+│   │   ├── services/                  # Business logic
+│   │   ├── routes/                    # API routes
+│   │   ├── db/                        # Drizzle schema + migrations
+│   │   └── middleware/                # Auth, logging
+│   └── focus-flow-ui/src/            # React frontend
 │       ├── components/
-│       │   ├── ConversationRail/    # Persistent bottom conversation
-│       │   │   ├── ConversationRail.tsx
-│       │   │   ├── VoiceInput.tsx   # LiveKit push-to-talk
-│       │   │   ├── MessageBubble.tsx
-│       │   │   └── ActionCard.tsx   # Inline approvals
-│       │   ├── Canvas/              # Canvas router and views
-│       │   │   ├── CanvasRouter.tsx  # Renders based on context
-│       │   │   ├── MorningBriefing.tsx
-│       │   │   ├── PortfolioCanvas.tsx
-│       │   │   ├── NetworkCanvas.tsx
-│       │   │   ├── FinancialsCanvas.tsx
-│       │   │   ├── ProjectCanvas.tsx
-│       │   │   ├── CalendarCanvas.tsx
-│       │   │   ├── SettingsCanvas.tsx
-│       │   │   ├── CouncilEvaluationCanvas.tsx
-│       │   │   └── WeeklyReportCanvas.tsx
-│       │   ├── CommandPalette/      # Cmd+K
-│       │   │   └── CommandPalette.tsx
-│       │   ├── Sidebar/            # 5-item icon rail
-│       │   │   └── IconRail.tsx
-│       │   ├── Pipeline/           # Luminous node visualization
-│       │   │   └── PlaybookPipeline.tsx  # size='compact' | 'full'
-│       │   ├── Onboarding/         # First-run 5-step flow
-│       │   │   ├── OnboardingFlow.tsx
-│       │   │   ├── OnboardingStep1Profile.tsx
-│       │   │   ├── OnboardingStep2Archetype.tsx
-│       │   │   ├── OnboardingStep3Network.tsx
-│       │   │   ├── OnboardingStep4Financials.tsx
-│       │   │   └── OnboardingStep5Activated.tsx
-│       │   └── shared/             # Buttons, cards, badges, etc.
-│       │       ├── GlassCard.tsx
-│       │       ├── ActionCard.tsx
-│       │       ├── NitaraInsightCard.tsx  # Amber contextual notes
-│       │       ├── StatCard.tsx
-│       │       ├── Badge.tsx
-│       │       ├── SparkLine.tsx
-│       │       ├── ConfidenceRing.tsx    # Circular progress (council/confidence)
-│       │       └── RelationshipDots.tsx  # 3-dot strength indicator
-│       ├── stores/
-│       │   ├── conversation.ts     # Conversation state (Zustand)
-│       │   ├── canvas.ts           # Active canvas state
-│       │   └── app.ts              # Global app state
-│       ├── hooks/
-│       │   ├── useVoice.ts         # LiveKit voice hook
-│       │   ├── useCanvas.ts        # Canvas state management
-│       │   └── useCommandPalette.ts
-│       └── services/
-│           └── api.ts              # Backend API client
+│       │   ├── Canvas/                # Mode-specific screens
+│       │   ├── ConversationRail/      # Persistent conversation
+│       │   ├── Dock/                  # Bottom dock navigation
+│       │   ├── CommandPalette/        # Cmd+K
+│       │   ├── Onboarding/            # First-run flow
+│       │   └── shared/                # Reusable components
+│       ├── stores/                    # Zustand state
+│       └── services/                  # API client
+├── .claude/
+│   ├── agents/                        # Agent definitions
+│   ├── skills/                        # Skill definitions (3 tiers)
+│   ├── scripts/                       # Hook scripts
+│   └── hooks/validators/              # Deterministic Python validators
+├── 07_system/
+│   ├── agent/queue/                   # Autonomous agent queue
+│   ├── agent/cost-budget.json         # Daily budget ($20 default)
+│   ├── agent/schedule.json            # Scheduled tasks
+│   └── agent/KILL_SWITCH              # Touch to halt all agents
+└── 08_threads/                        # Conversation threads
 ```
 
 ## Naming Conventions
-- Files: kebab-case for services (`financials.service.ts`), PascalCase for React components (`GlassCard.tsx`)
+- Files: kebab-case for services (`experiment.service.ts`), PascalCase for components (`ExperimentStack.tsx`)
 - Variables: camelCase
-- Types/Interfaces: PascalCase, prefix with `I` only for service interfaces
+- Types/Interfaces: PascalCase
 - API routes: `/api/` prefix, kebab-case paths
-- Vault directories: numbered prefix (`10_profile/`, `10_financials/`)
-- CSS: Tailwind utility classes, CSS variables for design tokens (no arbitrary values where tokens exist)
+- Vault directories: numbered prefix (`07_system/`, `10_profile/`)
+- CSS: Tailwind utilities + CSS variables for design tokens (never arbitrary values where tokens exist)
+
+## Agent System
+
+### Skill Tiers
+- **Tier 1 (Atomic):** Do one thing with validator. Examples: `/think-score-project`, `/validate-create-experiment`
+- **Tier 2 (Orchestrator):** Chain atomic skills. Examples: `/portfolio-review`, `/experiment-loop`
+- **Tier 3 (User-facing):** Existing skills upgraded with proper frontmatter
+
+### Mode Agents
+- `nitara-think` — Portfolio strategy orchestrator
+- `nitara-validate` — Experiment lifecycle orchestrator
+- `nitara-build` — Build execution orchestrator
+- `nitara-grow` — Growth and resource orchestrator
+- `nitara-leverage` — Network and playbook orchestrator
+
+### Autonomy Tiers (from `/docs/nitara/09_Autonomy_and_Safety.md`)
+- **Tier 1 (Auto):** Research, reports, analysis, file writes — no approval needed
+- **Tier 2 (Soft Gate):** Drafts, pipeline changes, budget adjustments — approval with rollback
+- **Tier 3 (Hard Gate):** External comms, spending, deletion — typed confirmation required
+
+### Kill Switch
+`touch 07_system/agent/KILL_SWITCH` blocks all autonomous operations.
 
 ## Playbook System
-Projects use configurable playbook templates (JSON in `07_system/playbooks/`):
-- `software-build.json` — Concept → Evaluate → Spec → Design → Dev → Test → Deploy → Live
-- `client-engagement.json` — Opportunity → Proposal → Negotiate → Engage → Deliver → Review → Close
-- `content-course.json` — Concept → Outline → Create → Review → Publish → Promote → Iterate
-- `studio-project.json` — Opportunity → Scope → Evaluate → Propose → Win/Lose → Deliver → Retrospect
-- `exploratory-idea.json` — Capture → Expand → Evaluate → Decide
-
-## Migration Notes
-- All references to "Focus Flow" → "Nitara"
-- All references to "venture" → "project"
-- All references to "Co-CEO" or "Core Agent" → "Nitara" (in user-facing text) or "NitaraAgent" (in code)
-- Vault root: `/srv/focus-flow/` → `/srv/nitara/` (use symlink during transition)
-- systemd: `focus-flow-backend` → `nitara-backend`
-- Package: `focus-flow-os` → `nitara`
-
-## Testing
-- Backend: Integration tests per route file
-- Frontend: Playwright E2E tests (existing 150+ tests need path updates after rename)
-- Voice: Manual testing with LiveKit dev server
-- Always run `tsc --noEmit` before committing
-
-## Important Constraints
-- Single-user system (no multi-tenancy)
-- Claude Pro Max subscription via OpenClaw (setup-token auth)
-- All external communications are hard-gate (Tier 3) — never auto-send
-- Financial data is decision-support, not accounting compliance
-- LinkedIn data via export ZIP only, no scraping
-- Email metadata only, never read content
-- Voice: push-to-talk only (no always-listening)
+Projects use configurable playbook templates (`07_system/playbooks/`):
+- `software-build.json`, `client-engagement.json`, `content-course.json`, `studio-project.json`, `exploratory-idea.json`
 
 ## Archetype System
+Three personality modes affecting Nitara's system prompt tone:
+- **The Strategist:** Direct, data-driven, margin-focused
+- **The Co-Founder:** Balanced, collaborative, growth-focused
+- **The Critic:** Skeptical, risk-averse, edge-case focused
 
-Nitara has three personality archetypes that affect her system prompt tone, confidence expression, and strategic framing. The user selects during onboarding (step 2) and can change in Settings.
+## Engineering Constraints
+- Keep changes small and reversible
+- Never remove existing pages; remap them into modes or link to them
+- All destructive actions require typed confirmation + audit event
+- Multi-user from start: all queries filter by `team_id`
+- Desktop-first, responsive
+- Project stages: Idea → Validation → MVP → Growth → Scale → Exit
 
-**The Strategist:** Direct, data-driven, ruthlessly efficient. Focuses on margins and ROI. Tone: professional. Confidence expression: HIGH. When reviewing a plan: "The margins are thin. I'd restructure the pricing before proceeding."
+## Definition of Done (every feature)
+- Route + component implemented
+- API endpoint connected to PostgreSQL via Drizzle
+- Loading/empty/error states handled
+- Design tokens used (no hardcoded styles)
+- Validator passes
+- Update docs if schema changed
 
-**The Co-Founder:** Balanced, collaborative, creative. Focuses on vision and long-term growth. Tone: encouraging. Confidence expression: HIGH. When reviewing a plan: "It's ambitious. Let's find the most sustainable path to that first 10k."
+## Canvas States → Mode Mapping
+| Old Canvas | New Mode | Sub-tab |
+|------------|----------|---------|
+| morning_briefing | Think | Home (default) |
+| portfolio | Think | Strategy |
+| project_detail | Think | Ventures |
+| financials | Think / Grow | Finance |
+| network | Leverage | Network |
+| calendar | Cmd+K accessible | — |
+| settings | Cognition | Config |
+| council_evaluation | Think | Project sub-view |
+| weekly_report | Think | Reporting |
 
-**The Critic:** Skeptical, risk-averse, thorough. Focuses on edge cases and failure points. Tone: sharp. Confidence expression: HIGHEST. When reviewing a plan: "Three assumptions here are untested. I'd validate the cheapest one first."
-
-Stored as `preferred_archetype` on FounderProfile. Affects prompt templating in the conversation service — the archetype is injected into Nitara's system prompt to shape her tone and approach.
-
-## Onboarding Flow (5 Steps)
-
-First-run only (detect by checking if FounderProfile exists). Full-screen, no sidebar. Progress dots at top.
-
-1. **Profile Conversation** — Nitara introduces herself, user describes their work, Nitara renders profile card with ALL extracted data (not just name/location — include work descriptions, skills, active projects mentioned).
-2. **Choose Your Partner's Voice** — Three archetype cards with preview message. Selection persists to FounderProfile.
-3. **Mapping Your Constellation** — LinkedIn ZIP upload with real-time progress via SSE (contacts found, high-value opps identified). Contact cards appear as discovered. Skip option available.
-4. **Defining Your Financial Gravity** — Editable income source cards, orbital revenue/burn visualization, Nitara Intelligence goal-gap analysis. Runway and safety net indicators.
-5. **System Activated** — Summary stats (archetype, network nodes, projects, revenue). "ENTER COMMAND CENTER" button. Shows only once, ever.
-
-After step 5, sidebar appears and morning briefing loads.
-
-## Canvas States Reference
-
-| State | Triggered By | Sidebar Active |
-|-------|-------------|---------------|
-| morning_briefing | App open (default), Nitara sidebar click | ✦ Nitara |
-| portfolio | Portfolio sidebar click, "show my portfolio" | ◈ Portfolio |
-| network | Network sidebar click, "show my network" | ⊛ Network |
-| financials | "how are we doing financially", "show financials" | ✦ Nitara |
-| project_detail | Click project card, "show [project name]" | ◈ Portfolio |
-| calendar | Calendar sidebar click | ◷ Calendar |
-| settings | Settings sidebar click | ⚙ Settings |
-| council_evaluation | "run council evaluation", click from portfolio | ✦ Nitara |
-| weekly_report | Nitara generates weekly, "show weekly report" | ✦ Nitara |
-| onboarding | First run only (no sidebar visible) | None |
-
-## UX Audit Implementation Notes
-
-These are specific implementation details from the design review. All agent teams should follow these:
-
-1. **Sidebar must be identical across all screens.** Same 5 icons, same component. Only the active state changes. Do not create per-screen sidebar variations.
-2. **StatCard must always include currency prefix.** "CHF 4,200" not "4,200". The morning briefing and financials view must be consistent.
-3. **PipelineNode must accept size prop.** `size='compact'` for portfolio cards, `size='full'` for project detail. Same component, two render modes.
-4. **RelationshipDots need visible contrast.** Filled dots: cyan (#00E5FF). Empty dots: visible grey (#334155). Not near-invisible.
-5. **Revenue bars must use consistent labeling.** Use revenue type labels (RETAINER, PASSIVE, PIPELINE) rather than target percentages, since not all projects have targets.
-6. **Conversation rail breathing animation.** The text input border should have a subtle cyan pulse when idle: `animation: breathe 3s ease-in-out infinite` cycling border opacity between 15% and 40%.
-7. **Profile card in onboarding must show all extracted data.** When the user says "I'm starting an AI consulting studio with my friend Savya, I do freelance projects, and I teach courses" — the profile card must show all three work items, not just name and location.
-8. **NitaraInsightCard** is a reusable component for contextual notes from Nitara. Amber/yellow background variant of ActionCard. Used in project detail (client context notes), network view (suggestions), and financials (strategic advice).
-9. **Voice Active screen dims canvas to 25-30% opacity.** Not 10% (too faint to retain context). The user should still see a ghost of the morning briefing while the conversation is active.
+## UX Implementation Notes
+1. Bottom dock must be identical structure across all modes. Only sub-items change.
+2. StatCard must always include currency prefix ("CHF 4,200" not "4,200")
+3. Revenue bars use type labels (RETAINER, PASSIVE, PIPELINE)
+4. Conversation rail border has breathing animation (cyan pulse, 15-40% opacity)
+5. Voice active screen dims canvas to 25-30% opacity
+6. NitaraInsightCard: amber contextual notes from Nitara
+7. High contrast text on dark-glass surfaces (4.5:1 minimum)
+8. All interactive targets minimum 44px

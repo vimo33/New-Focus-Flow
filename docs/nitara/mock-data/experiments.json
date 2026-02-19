@@ -1,0 +1,19 @@
+{
+  "experiments": [
+    {
+      "id": "dyn_pricing_v2",
+      "project_id": "orion",
+      "name": "Dynamic Pricing V2",
+      "status": "running",
+      "metric_name": "conv_rate",
+      "results": {
+        "baseline": 0.034,
+        "variant": 0.042,
+        "lift": 0.008,
+        "p_value": 0.02,
+        "sample_size": 14203
+      },
+      "decision_rule": "If p_value<0.05 and lift>0.005 then SCALE"
+    }
+  ]
+}

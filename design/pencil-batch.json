@@ -1,0 +1,42 @@
+[
+  {
+    "file": "design/screens/think-portfolio.pen",
+    "prompt": "Design the Think mode Portfolio Strategy screen. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_5/. Shows: top decisions pending, active ventures list with stage badges, resource allocation bars, experiment counts, MRR tracking, recent activity feed. Bottom dock: Strategy | Ventures | Finance | Comms. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/validate-experiment-stack.pen",
+    "prompt": "Design the Validate mode Experiment Stack screen. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_scientific_decision_crucible_v2/. Shows: left sidebar (Stack/Variant Testing/Data Sources), tabs (All/Decision Required/Processing), experiment cards with retention confidence, signal volatility, p-value, conditionality logic, Kill/Scale/Variant buttons. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/build-autonomous.pen",
+    "prompt": "Design the Build mode Autonomous Intelligence Builder screen. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_6/. Shows: monthly spend, active agents count, ROI ratio, pending approvals count, execution preview with confidence/budget/risk bars, pattern recognition insights, agent activity feed. Bottom dock: Build | Control | Agents | Data | Tune. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/cognition-intelligence.pen",
+    "prompt": "Design the Cognition mode Founder Cognitive Intelligence screen. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_7/. Shows: cognitive load percentage (84%), decision quality (9.2/10), decision velocity (14/day), active experiments count, energy heatmap (flow/deep work/fatigue), focus drivers list, recommended actions. Bottom dock: Cognition | Bio | Decisions | Delegation | Config. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/sunset-rationalization.pen",
+    "prompt": "Design the Sunset mode Project Rationalization Protocol screen. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_9/. Shows: deprecation phase indicator, 'Why Now' reasons (market signal decay, resource reallocation, technical debt), status checklist (artifacts/domains/keys/compute), compute salvage metrics, agent bandwidth freed, knowledge harvest tabs (Assets/Playbooks/Audiences/Domain). Bottom dock: Overview | Sunset | Archives | Comms. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/shared-typed-confirmation.pen",
+    "prompt": "Design the Typed Confirmation Modal for destructive actions. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_1/. Shows: severity badge (Critical), salvage checklist with toggles, resource reallocation preview, typed confirmation input field, Cancel and Confirm Termination buttons. Red/crimson accent color scheme. Glass modal overlay. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/shared-inference-panel.pen",
+    "prompt": "Design the Inference Logic side panel. Reference: design/stitch_v1/stitch_nitara_dock_active_notify_v2/nitara_dock_default_state_v1_8/. Shows: right slide-over panel with calculation model formula, weighted signals list (meeting density, context switching, task complexity), 24h logic variance chart. Transparent glass panel overlaying the main canvas. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  },
+  {
+    "file": "design/screens/shared-dock-nav.pen",
+    "prompt": "Design the bottom dock navigation component. Shows 5 mode icons (Think/Validate/Build/Grow/Leverage) with contextual sub-items that change per mode. Glass-high treatment. Active mode highlighted with accent glow. Notification badges. Compact 64px height. Use design tokens from design/tokens.json.",
+    "model": "claude-opus-4-6"
+  }
+]

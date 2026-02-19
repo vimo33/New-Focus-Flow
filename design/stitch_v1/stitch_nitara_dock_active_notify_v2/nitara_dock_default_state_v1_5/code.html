@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Strategy &amp; Decisions V2</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#3b82f6",
+                        "think-navy": "#0a192f",
+                        "crimson-accent": "#991b1b",
+                        "background-dark": "#05080f",
+                        "decision-blue": "#2563eb",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(10, 25, 47, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .crimson-glow {
+            box-shadow: 0 0 20px 5px rgba(153, 27, 27, 0.2);
+        }
+        .blue-glow {
+            box-shadow: 0 0 20px 5px rgba(37, 99, 235, 0.15);
+        }
+        .bg-think-ambient {
+            background: radial-gradient(circle at 50% 0%, #0f2a50 0%, #05080f 70%);
+        }
+        .text-glow {
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .tooltip-container {
+            position: relative;
+        }
+        .tooltip-container:hover .tooltip-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .tooltip-content {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(4px);
+            background-color: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e2e8f0;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 50;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+            pointer-events: none;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-slate-100 min-h-screen overflow-hidden relative selection:bg-blue-500/30">
+<div class="fixed inset-0 bg-think-ambient pointer-events-none z-0"></div>
+<div class="relative w-full h-screen flex flex-col overflow-y-auto pb-32 z-10">
+<div class="layout-container flex h-full grow flex-col">
+<div class="px-8 py-5 border-b border-white/10 flex justify-between items-center bg-slate-900/40 backdrop-blur-sm sticky top-0 z-20">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold shadow-lg shadow-blue-600/20">N</div>
+<span class="font-bold text-lg tracking-tight text-white">Nitara</span>
+<span class="px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-[10px] text-slate-300 uppercase tracking-wider">Mission Control</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30">
+<span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+<span class="text-xs text-blue-100 font-medium">Think Mode Active</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 hover:text-white transition-colors cursor-pointer">notifications</span>
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 border border-white/20 overflow-hidden">
+<img alt="User Avatar" class="w-full h-full object-cover opacity-90" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-0IX2hXWTopgN4DV4vdhSg6guMMaZujSiVKdyxxtr8WAfzBBgTpaUR_P1Y2SMuFbvsR20Qn5o-IriQcFycrMgQq2qd5X73p9lk5m5arkyzuSXh6YCKZFtp-Zo2FEv5t_oeqiRcqv1fqxpMbIz7_h0x_l_zQlGShgYte1ig2Z7kUI39j8mD8-JRlHEI7SJIA7GxiV8Sg1nZAFziP8WCAyeONihi4VjKS2rg4-PjkjfnUST-ENMa1QBl65_G4QAosaWZ1FbWKypUo0q"/>
+</div>
+</div>
+</div>
+<div class="px-4 md:px-10 lg:px-20 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[1400px] flex-1 gap-8">
+<div class="flex justify-between items-end px-4 border-b border-white/10 pb-6">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<h1 class="text-3xl font-bold text-white tracking-tight">Portfolio Strategy</h1>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-900/50 text-indigo-200 uppercase border border-indigo-500/30">Q3 Cycle</span>
+</div>
+<p class="text-slate-300 text-sm">Review venture signals and allocate resources.</p>
+</div>
+<div class="flex gap-2">
+<div class="px-4 py-2 rounded-lg bg-emerald-900/20 border border-emerald-500/30 text-sm font-medium text-emerald-100 flex items-center gap-2 shadow-lg shadow-emerald-900/10">
+<span class="material-symbols-outlined text-sm">trending_up</span>
+                                Portfolio Health: 82%
+                            </div>
+<button class="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 border border-white/20 text-sm font-medium text-slate-200 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">tune</span> Filters
+                            </button>
+</div>
+</div>
+<div class="mx-4 p-0 rounded-xl bg-gradient-to-r from-blue-950/40 to-slate-900/40 border border-blue-500/20 shadow-lg shadow-blue-900/5 overflow-hidden">
+<div class="px-6 py-4 border-b border-white/10 bg-white/5 flex items-center justify-between">
+<h2 class="text-sm font-semibold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-amber-400">gavel</span>
+                            Top Decisions Pending
+                        </h2>
+<span class="text-xs text-slate-400">3 High-Impact Items</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-white/10">
+<div class="p-5 hover:bg-white/[0.02] transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-200 border border-amber-500/30 uppercase">Urgent</span>
+<span class="text-[10px] text-slate-400">Due in 4h</span>
+</div>
+<h3 class="text-sm font-semibold text-white mb-1 group-hover:text-blue-200 transition-colors">Project Altair: Pivot or Persevere?</h3>
+<p class="text-xs text-slate-300 mb-4 line-clamp-2">Recent retention metrics (D30 &lt; 5%) suggest current model is failing. Eng requests 2-week sprint for pivot.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-[10px] text-slate-400">Impact: <span class="text-white">High</span></span>
+<button class="text-xs bg-blue-600 hover:bg-blue-500 text-white px-3 py-1.5 rounded-lg transition-colors font-medium">Decide</button>
+</div>
+</div>
+<div class="p-5 hover:bg-white/[0.02] transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-purple-500/20 text-purple-200 border border-purple-500/30 uppercase">Funding</span>
+<span class="text-[10px] text-slate-400">Due in 2d</span>
+</div>
+<h3 class="text-sm font-semibold text-white mb-1 group-hover:text-blue-200 transition-colors">Series A Bridge Allocation</h3>
+<p class="text-xs text-slate-300 mb-4 line-clamp-2">Determine bridge amount for Project Gemini to reach Q4 milestones. Treasury suggests $250k cap.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-[10px] text-slate-400">Impact: <span class="text-white">Med</span></span>
+<button class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition-colors font-medium">Review</button>
+</div>
+</div>
+<div class="p-5 hover:bg-white/[0.02] transition-colors group cursor-pointer">
+<div class="flex justify-between items-start mb-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700/50 text-slate-300 border border-slate-600 uppercase">Hiring</span>
+<span class="text-[10px] text-slate-400">Due in 5d</span>
+</div>
+<h3 class="text-sm font-semibold text-white mb-1 group-hover:text-blue-200 transition-colors">Lead Growth Hire</h3>
+<p class="text-xs text-slate-300 mb-4 line-clamp-2">Approve offer letter for Head of Growth candidate. Salary exceeds band by 15% but strong signal.</p>
+<div class="flex items-center justify-between mt-auto">
+<span class="text-[10px] text-slate-400">Impact: <span class="text-white">Med</span></span>
+<button class="text-xs bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg transition-colors font-medium">Review</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 px-4">
+<div class="lg:col-span-8 flex flex-col gap-6">
+<div class="rounded-2xl bg-slate-900/60 border border-white/10 p-0 backdrop-blur-md overflow-hidden min-h-[400px]">
+<div class="p-6 border-b border-white/10 flex justify-between items-center bg-white/[0.02]">
+<div>
+<h2 class="text-lg font-semibold text-white flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-400">rocket_launch</span>
+                                            Active Ventures
+                                        </h2>
+<p class="text-xs text-slate-300 mt-1">Live experiments and growth stage projects</p>
+</div>
+<div class="flex gap-2">
+<button class="text-xs text-slate-200 hover:text-white flex items-center gap-1 bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg border border-white/10 hover:border-white/20 transition-colors">
+<span class="material-symbols-outlined text-sm">sort</span> Sort
+                                        </button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<div class="group flex flex-col md:flex-row md:items-center justify-between p-5 hover:bg-white/[0.04] rounded-xl transition-all border border-white/5 hover:border-white/10 bg-slate-800/30">
+<div class="flex items-start gap-4 mb-4 md:mb-0">
+<div class="w-12 h-12 rounded-lg bg-indigo-900/30 border border-indigo-500/30 flex items-center justify-center text-indigo-200 shadow-lg shadow-indigo-900/20">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold text-white group-hover:text-indigo-200 transition-colors">Project Gemini</h4>
+<span class="px-1.5 py-0.5 rounded text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/20">Scaling</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">AI-driven personal finance assistant.</p>
+<div class="flex gap-3 mt-2">
+<span class="text-[10px] text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>Healthy</span>
+<span class="text-[10px] text-slate-500">MRR: $12.4k</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 min-w-[140px]">
+<div class="flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600/20 border border-blue-500/40 text-blue-200 text-xs font-medium cursor-pointer hover:bg-blue-600/30 transition-colors">
+<span class="material-symbols-outlined text-[14px]">play_arrow</span>
+                                                Next Action: Approve Budget
+                                            </div>
+<span class="text-[10px] text-slate-500">Last update: 2h ago</span>
+</div>
+</div>
+<div class="group flex flex-col md:flex-row md:items-center justify-between p-5 hover:bg-white/[0.04] rounded-xl transition-all border border-white/5 hover:border-white/10 bg-slate-800/30">
+<div class="flex items-start gap-4 mb-4 md:mb-0">
+<div class="w-12 h-12 rounded-lg bg-amber-900/30 border border-amber-500/30 flex items-center justify-center text-amber-200 shadow-lg shadow-amber-900/20">
+<span class="material-symbols-outlined">explore</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold text-white group-hover:text-amber-200 transition-colors">Project Altair</h4>
+<span class="px-1.5 py-0.5 rounded text-[10px] bg-amber-500/20 text-amber-300 border border-amber-500/20">Validation</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">Decentralized compute marketplace.</p>
+<div class="flex gap-3 mt-2">
+<span class="text-[10px] text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>At Risk</span>
+<span class="text-[10px] text-slate-500">Users: 405</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 min-w-[140px]">
+<div class="flex items-center gap-1 px-3 py-1 rounded-full bg-amber-600/20 border border-amber-500/40 text-amber-200 text-xs font-medium cursor-pointer hover:bg-amber-600/30 transition-colors">
+<span class="material-symbols-outlined text-[14px]">search</span>
+                                                Next Action: Investigate Pivot
+                                            </div>
+<span class="text-[10px] text-slate-500">Last update: 1d ago</span>
+</div>
+</div>
+<div class="group flex flex-col md:flex-row md:items-center justify-between p-5 hover:bg-white/[0.04] rounded-xl transition-all border border-white/5 hover:border-white/10 bg-slate-800/30">
+<div class="flex items-start gap-4 mb-4 md:mb-0">
+<div class="w-12 h-12 rounded-lg bg-purple-900/30 border border-purple-500/30 flex items-center justify-center text-purple-200 shadow-lg shadow-purple-900/20">
+<span class="material-symbols-outlined">science</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold text-white group-hover:text-purple-200 transition-colors">Project Nebula</h4>
+<span class="px-1.5 py-0.5 rounded text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/20">Ideation</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">Cross-chain bridge protocol.</p>
+<div class="flex gap-3 mt-2">
+<span class="text-[10px] text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>Early</span>
+<span class="text-[10px] text-slate-500">Burn: $2k/mo</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 min-w-[140px]">
+<div class="flex items-center gap-1 px-3 py-1 rounded-full bg-purple-600/20 border border-purple-500/40 text-purple-200 text-xs font-medium cursor-pointer hover:bg-purple-600/30 transition-colors">
+<span class="material-symbols-outlined text-[14px]">science</span>
+                                                Next Action: Review Signal
+                                            </div>
+<span class="text-[10px] text-slate-500">Last update: 5h ago</span>
+</div>
+</div>
+<div class="group flex flex-col md:flex-row md:items-center justify-between p-5 hover:bg-white/[0.04] rounded-xl transition-all border border-red-900/30 hover:border-red-500/30 bg-red-950/10">
+<div class="flex items-start gap-4 mb-4 md:mb-0">
+<div class="w-12 h-12 rounded-lg bg-red-900/30 border border-red-500/30 flex items-center justify-center text-red-200 shadow-lg shadow-red-900/20">
+<span class="material-symbols-outlined">sunny</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h4 class="text-base font-bold text-white group-hover:text-red-200 transition-colors">Project Neo</h4>
+<span class="px-1.5 py-0.5 rounded text-[10px] bg-red-500/20 text-red-300 border border-red-500/20">Sunset</span>
+</div>
+<p class="text-xs text-slate-400 mt-1">Legacy analytics dashboard.</p>
+<div class="flex gap-3 mt-2">
+<span class="text-[10px] text-slate-500 flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>Closing</span>
+<span class="text-[10px] text-slate-500">Assets: Liquidation</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-end gap-2 min-w-[140px]">
+<div class="flex items-center gap-1 px-3 py-1 rounded-full bg-red-600/20 border border-red-500/40 text-red-200 text-xs font-medium cursor-pointer hover:bg-red-600/30 transition-colors">
+<span class="material-symbols-outlined text-[14px]">archive</span>
+                                                Next Action: Finalize Audit
+                                            </div>
+<span class="text-[10px] text-slate-500">Last update: 3d ago</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="rounded-2xl bg-slate-900/60 border border-white/10 p-6 backdrop-blur-md">
+<div class="flex justify-between items-center mb-5">
+<h2 class="text-sm font-semibold text-slate-100 uppercase tracking-wide flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-400 text-sm">pie_chart</span>
+                                        Resource Allocation
+                                    </h2>
+</div>
+<div class="space-y-4">
+<div>
+<div class="flex justify-between text-xs text-slate-300 mb-1">
+<span>Engineering Bandwidth</span>
+<span class="text-white font-medium">92% Utilized</span>
+</div>
+<div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden flex">
+<div class="bg-indigo-500 h-full w-[45%]"></div>
+<div class="bg-amber-500 h-full w-[30%]"></div>
+<div class="bg-purple-500 h-full w-[17%]"></div>
+</div>
+<div class="flex justify-between text-[10px] text-slate-500 mt-1">
+<span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-indigo-500"></div>Gemini</span>
+<span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-amber-500"></div>Altair</span>
+<span class="flex items-center gap-1"><div class="w-1.5 h-1.5 rounded-full bg-purple-500"></div>Nebula</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs text-slate-300 mb-1">
+<span>Marketing Budget (Q3)</span>
+<span class="text-white font-medium">65% Spent</span>
+</div>
+<div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+<div class="bg-emerald-500 h-full rounded-full w-[65%] shadow-[0_0_10px_rgba(16,185,129,0.3)]"></div>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="rounded-xl bg-slate-900/60 border border-white/10 p-4 backdrop-blur-md flex flex-col items-center justify-center text-center">
+<span class="text-2xl font-bold text-white mb-1">12</span>
+<span class="text-[10px] text-slate-400 uppercase tracking-wider">Experiments</span>
+</div>
+<div class="rounded-xl bg-slate-900/60 border border-white/10 p-4 backdrop-blur-md flex flex-col items-center justify-center text-center">
+<span class="text-2xl font-bold text-emerald-400 mb-1">$42k</span>
+<span class="text-[10px] text-slate-400 uppercase tracking-wider">Total MRR</span>
+</div>
+</div>
+<div class="rounded-2xl bg-slate-900/60 border border-white/10 p-6 backdrop-blur-md flex flex-col grow">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-sm font-semibold text-slate-100 uppercase tracking-wide flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm">history</span>
+                                    Recent Activity
+                                </h2>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="mt-1 w-2 h-2 rounded-full bg-indigo-500 shrink-0"></div>
+<div>
+<p class="text-xs text-slate-200"><span class="font-bold text-white">Gemini</span> released feature set v2.1 to beta cohort.</p>
+<span class="text-[10px] text-slate-500">2 hours ago</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="mt-1 w-2 h-2 rounded-full bg-amber-500 shrink-0"></div>
+<div>
+<p class="text-xs text-slate-200"><span class="font-bold text-white">Altair</span> flagged for retention drop (-15%).</p>
+<span class="text-[10px] text-slate-500">5 hours ago</span>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="mt-1 w-2 h-2 rounded-full bg-red-500 shrink-0"></div>
+<div>
+<p class="text-xs text-slate-200"><span class="font-bold text-white">Neo</span> sunset phase 2 initiated (server teardown).</p>
+<span class="text-[10px] text-slate-500">1 day ago</span>
+</div>
+</div>
+</div>
+<button class="w-full mt-auto py-2 text-xs text-slate-400 hover:text-white border-t border-white/5 hover:bg-white/5 transition-colors">
+                                View Full Log
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
+<div class="glass-panel px-4 py-3 rounded-full flex items-center gap-3 shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] border border-white/20">
+<a class="group relative flex flex-col items-center justify-center min-w-[72px] h-[64px] rounded-full bg-slate-800/90 blue-glow border border-blue-500/40 overflow-hidden" href="#">
+<div class="absolute inset-0 bg-gradient-to-tr from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-blue-100 text-[24px] mb-1">dashboard</span>
+<span class="text-[10px] font-bold text-blue-50 tracking-wide">Strategy</span>
+</a>
+<a class="group relative flex flex-col items-center justify-center min-w-[72px] h-[64px] rounded-full transition-all duration-300 hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors text-[24px] mb-1">rocket_launch</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-200 transition-colors">Ventures</span>
+</a>
+<a class="group relative flex flex-col items-center justify-center min-w-[72px] h-[64px] rounded-full transition-all duration-300 hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors text-[24px] mb-1">finance</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-200 transition-colors">Finance</span>
+</a>
+<a class="group relative flex flex-col items-center justify-center min-w-[72px] h-[64px] rounded-full transition-all duration-300 hover:bg-white/10" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-white transition-colors text-[24px] mb-1">forum</span>
+<span class="text-[10px] font-medium text-slate-500 group-hover:text-slate-200 transition-colors">Comms</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</body></html>

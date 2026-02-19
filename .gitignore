@@ -15,5 +15,7 @@ local_cache/
 playwright-report/
 test-results/
 *.png
+!design/**/*.png
+!design-exports/**/*.png
 *.docx
 package-lock.json

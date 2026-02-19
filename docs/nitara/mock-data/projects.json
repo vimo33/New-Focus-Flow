@@ -1,0 +1,61 @@
+{
+  "projects": [
+    {
+      "id": "orion",
+      "name": "Project Orion",
+      "status": "active",
+      "stage": "Series A Prep",
+      "autonomy_level": "assisted",
+      "goals": {
+        "primary_kpi": "MRR",
+        "target": 25000,
+        "deadline": "2026-06-30"
+      },
+      "constraints": {
+        "budget_usd_per_day": 20,
+        "founder_hours_per_week": 25,
+        "risk_tolerance": "medium"
+      },
+      "signal_strength": 8.9,
+      "market_fit": "high"
+    },
+    {
+      "id": "neo",
+      "name": "Project Neo",
+      "status": "active",
+      "stage": "Validation",
+      "autonomy_level": "manual",
+      "goals": {
+        "primary_kpi": "Conversion",
+        "target": 0.05,
+        "deadline": "2026-04-30"
+      },
+      "constraints": {
+        "budget_usd_per_day": 10,
+        "founder_hours_per_week": 15,
+        "risk_tolerance": "low"
+      },
+      "signal_strength": 6.2,
+      "market_fit": "testing"
+    },
+    {
+      "id": "altair",
+      "name": "Project Altair",
+      "status": "active",
+      "stage": "Growth",
+      "autonomy_level": "auto",
+      "goals": {
+        "primary_kpi": "Retention",
+        "target": 0.35,
+        "deadline": "2026-05-31"
+      },
+      "constraints": {
+        "budget_usd_per_day": 30,
+        "founder_hours_per_week": 10,
+        "risk_tolerance": "high"
+      },
+      "signal_strength": 9.4,
+      "market_fit": "valid"
+    }
+  ]
+}
