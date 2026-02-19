@@ -1,6 +1,7 @@
-import { useState } from 'react';
-import { FlaskConical, AlertTriangle, TrendingUp, Pause, Skull, ChevronRight } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { FlaskConical, AlertTriangle } from 'lucide-react';
 import { useExperimentStore, type Experiment } from '../../stores/experiment';
+import DecisionGateCard from '../shared/DecisionGateCard';
 
 const STATUS_STYLES: Record<string, { bg: string; text: string; label: string }> = {
   draft: { bg: 'bg-slate-500/20', text: 'text-slate-400', label: 'Draft' },
@@ -15,6 +16,24 @@ function ExperimentCard({ experiment }: { experiment: Experiment }) {
   const status = STATUS_STYLES[experiment.status] || STATUS_STYLES.draft;
   const needsDecision = experiment.status === 'completed' && !experiment.decision;
   const results = experiment.resultsJson;
+  const { recordDecision } = useExperimentStore();
+  const [decidingRationale, setDecidingRationale] = useState('');
+  const [showRationale, setShowRationale] = useState(false);
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+
+  const handleDecide = (action: string) => {
+    setPendingAction(action);
+    setShowRationale(true);
+  };
+
+  const confirmDecision = () => {
+    if (pendingAction && decidingRationale.trim()) {
+      recordDecision(experiment.id, pendingAction, decidingRationale);
+      setShowRationale(false);
+      setPendingAction(null);
+      setDecidingRationale('');
+    }
+  };
 
   return (
     <div className={`bg-[rgba(15,10,20,0.65)] backdrop-blur-[20px] border rounded-xl p-5 transition-all hover:border-white/15 ${
@@ -56,20 +75,51 @@ function ExperimentCard({ experiment }: { experiment: Experiment }) {
         </div>
       )}
 
-      {needsDecision && (
-        <div className="flex items-center gap-2 pt-3 border-t border-white/5">
-          <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-medium hover:bg-emerald-500/30 transition-colors">
-            <TrendingUp size={12} /> Scale
-          </button>
-          <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-400 text-xs font-medium hover:bg-amber-500/30 transition-colors">
-            <Pause size={12} /> Iterate
-          </button>
-          <button className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/30 transition-colors">
-            <Skull size={12} /> Kill
-          </button>
-          <button className="ml-auto text-slate-500 hover:text-slate-300 transition-colors">
-            <ChevronRight size={16} />
-          </button>
+      {experiment.decision && (
+        <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/5 border border-white/5 mb-3">
+          <span className="text-[10px] text-slate-500 uppercase tracking-wider">Decision:</span>
+          <span className="text-xs font-semibold text-slate-300 capitalize">{experiment.decision}</span>
+          {experiment.decisionRationale && (
+            <span className="text-xs text-slate-500 truncate ml-1">— {experiment.decisionRationale}</span>
+          )}
+        </div>
+      )}
+
+      {needsDecision && !showRationale && (
+        <div className="pt-3 border-t border-white/5">
+          <DecisionGateCard onDecide={handleDecide} compact />
+        </div>
+      )}
+
+      {showRationale && (
+        <div className="pt-3 border-t border-white/5 space-y-2">
+          <p className="text-[10px] text-slate-400 uppercase tracking-wider">
+            Rationale for <span className="text-slate-200 capitalize">{pendingAction}</span>
+          </p>
+          <input
+            type="text"
+            value={decidingRationale}
+            onChange={(e) => setDecidingRationale(e.target.value)}
+            placeholder="Why this decision?"
+            className="w-full bg-black/40 border border-white/20 rounded-lg px-3 py-2 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-white/40"
+            onKeyDown={(e) => e.key === 'Enter' && confirmDecision()}
+            autoFocus
+          />
+          <div className="flex gap-2">
+            <button
+              onClick={confirmDecision}
+              disabled={!decidingRationale.trim()}
+              className="px-3 py-1.5 rounded-lg bg-indigo-500/20 text-indigo-400 text-xs font-medium hover:bg-indigo-500/30 transition-colors disabled:opacity-40"
+            >
+              Confirm
+            </button>
+            <button
+              onClick={() => { setShowRationale(false); setPendingAction(null); }}
+              className="px-3 py-1.5 text-slate-500 text-xs hover:text-slate-300 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
         </div>
       )}
     </div>
@@ -77,8 +127,14 @@ function ExperimentCard({ experiment }: { experiment: Experiment }) {
 }
 
 export default function ExperimentStack() {
-  const { experiments, loading } = useExperimentStore();
+  const { experiments, loading, fetchExperiments } = useExperimentStore();
   const [activeTab, setActiveTab] = useState<TabFilter>('all');
+
+  // For now, fetch all experiments across projects (using a wildcard or default project)
+  useEffect(() => {
+    // Try to load experiments — will use dev auth fallback
+    fetchExperiments('all');
+  }, [fetchExperiments]);
 
   const filtered = experiments.filter((exp) => {
     if (activeTab === 'decision-required') return exp.status === 'completed' && !exp.decision;

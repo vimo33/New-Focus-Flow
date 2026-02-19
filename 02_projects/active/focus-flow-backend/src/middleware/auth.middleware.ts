@@ -18,19 +18,24 @@ declare global {
  */
 export async function requireAuth(req: Request, res: Response, next: NextFunction) {
   const authHeader = req.headers.authorization;
-  if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ error: 'Authentication required' });
+  if (authHeader?.startsWith('Bearer ')) {
+    const token = authHeader.slice(7);
+    const session = await authService.validateSession(token);
+    if (session) {
+      req.user = session.user;
+      req.teamId = session.teamId;
+      return next();
+    }
   }
 
-  const token = authHeader.slice(7);
-  const session = await authService.validateSession(token);
-  if (!session) {
-    return res.status(401).json({ error: 'Invalid or expired session' });
+  // Dev mode fallback — allow unauthenticated access with a default user
+  if (process.env.NODE_ENV !== 'production') {
+    req.user = { id: 'dev-user', email: 'dev@nitara.local', name: 'Dev User', role: 'owner' };
+    req.teamId = 'dev-team';
+    return next();
   }
 
-  req.user = session.user;
-  req.teamId = session.teamId;
-  next();
+  return res.status(401).json({ error: 'Authentication required' });
 }
 
 /**

@@ -34,6 +34,18 @@ router.post('/experiments', requireAuth, async (req: Request, res: Response) => 
   }
 });
 
+// GET /api/experiments — List all experiments for the team
+router.get('/experiments', requireAuth, async (req: Request, res: Response) => {
+  try {
+    const status = req.query.status as string | undefined;
+    const experiments = await experimentsService.listByTeam(req.teamId!, status);
+    res.json({ experiments, count: experiments.length });
+  } catch (error: any) {
+    console.error('Error listing all experiments:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // GET /api/projects/:projectId/experiments — List experiments for a project
 router.get('/projects/:projectId/experiments', requireAuth, async (req: Request, res: Response) => {
   try {

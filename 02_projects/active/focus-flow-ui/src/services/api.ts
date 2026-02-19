@@ -1592,26 +1592,26 @@ export class VaultAPI {
   // ============================================================================
 
   async getHypotheses(projectId: string): Promise<{ hypotheses: any[]; count: number }> {
-    return this.request(`/hypotheses?project_id=${encodeURIComponent(projectId)}`);
+    return this.request(`/projects/${encodeURIComponent(projectId)}/hypotheses`);
   }
 
   async createHypothesis(data: {
-    project_id: string;
+    projectId: string;
     statement: string;
     type: 'problem' | 'solution' | 'channel' | 'pricing' | 'moat';
     confidence?: number;
-    evidence_refs?: string[];
-  }): Promise<{ status: string; hypothesis: any }> {
+    evidenceRefs?: string[];
+  }): Promise<any> {
     return this.request('/hypotheses', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async updateHypothesis(id: string, data: any): Promise<{ status: string; hypothesis: any }> {
-    return this.request(`/hypotheses/${id}`, {
-      method: 'PUT',
-      body: JSON.stringify(data),
+  async updateHypothesisConfidence(id: string, confidence: number, newEvidence?: string): Promise<any> {
+    return this.request(`/hypotheses/${id}/confidence`, {
+      method: 'PATCH',
+      body: JSON.stringify({ confidence, newEvidence }),
     });
   }
 
@@ -1620,8 +1620,10 @@ export class VaultAPI {
   // ============================================================================
 
   async getExperimentsV2(projectId?: string): Promise<{ experiments: any[]; count: number }> {
-    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
-    return this.request(`/experiments${qs}`);
+    if (projectId && projectId !== 'all') {
+      return this.request(`/projects/${encodeURIComponent(projectId)}/experiments`);
+    }
+    return this.request('/experiments');
   }
 
   async getExperimentV2(id: string): Promise<any> {
@@ -1629,37 +1631,42 @@ export class VaultAPI {
   }
 
   async createExperimentV2(data: {
-    project_id: string;
-    hypothesis_id?: string;
-    metric_name: string;
-    metric_definition?: string;
-    success_rule: string;
-  }): Promise<{ status: string; experiment: any }> {
+    projectId: string;
+    hypothesisId?: string;
+    metricName: string;
+    metricDefinition?: string;
+    successRule: string;
+  }): Promise<any> {
     return this.request('/experiments', {
       method: 'POST',
       body: JSON.stringify(data),
     });
   }
 
-  async updateExperimentResults(id: string, results: {
-    baseline?: number;
-    variant?: number;
+  async updateExperimentResults(id: string, data: {
+    baseline: number;
+    variant: number;
     lift?: number;
     p_value?: number;
     sample_size?: number;
-  }): Promise<{ status: string; experiment: any }> {
+  }): Promise<any> {
     return this.request(`/experiments/${id}/results`, {
       method: 'PATCH',
-      body: JSON.stringify({ results }),
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExperimentStatus(id: string, status: 'draft' | 'running' | 'completed'): Promise<any> {
+    return this.request(`/experiments/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
     });
   }
 
   async recordExperimentDecision(id: string, data: {
-    action: 'scale' | 'iterate' | 'pivot' | 'park' | 'kill';
+    decision: 'scale' | 'iterate' | 'pivot' | 'park' | 'kill';
     rationale: string;
-    evidence?: any[];
-    confidence?: number;
-  }): Promise<{ status: string; experiment: any; decision: any }> {
+  }): Promise<any> {
     return this.request(`/experiments/${id}/decide`, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -1711,13 +1718,10 @@ export class VaultAPI {
     return this.request(`/approvals${qs}`);
   }
 
-  async decideApproval(id: string, data: {
-    action: 'approved' | 'rejected';
-    reason?: string;
-  }): Promise<{ status: string; approval: any }> {
+  async decideApproval(id: string, status: 'approved' | 'rejected'): Promise<any> {
     return this.request(`/approvals/${id}/decide`, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ status }),
     });
   }
 

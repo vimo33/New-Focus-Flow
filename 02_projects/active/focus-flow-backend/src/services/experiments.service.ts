@@ -221,9 +221,40 @@ async function recordDecision(id: string, teamId: string, input: RecordDecisionI
   return updated ?? null;
 }
 
+/**
+ * List all experiments for a team (across all projects).
+ */
+async function listByTeam(teamId: string, status?: string) {
+  const conditions = [eq(schema.projects.teamId, teamId)];
+
+  const query = db
+    .select({
+      id: schema.experiments.id,
+      projectId: schema.experiments.projectId,
+      hypothesisId: schema.experiments.hypothesisId,
+      metricName: schema.experiments.metricName,
+      metricDefinition: schema.experiments.metricDefinition,
+      successRule: schema.experiments.successRule,
+      status: schema.experiments.status,
+      resultsJson: schema.experiments.resultsJson,
+      decision: schema.experiments.decision,
+      decisionRationale: schema.experiments.decisionRationale,
+      startAt: schema.experiments.startAt,
+      endAt: schema.experiments.endAt,
+      createdAt: schema.experiments.createdAt,
+    })
+    .from(schema.experiments)
+    .innerJoin(schema.projects, eq(schema.experiments.projectId, schema.projects.id))
+    .where(and(...conditions))
+    .orderBy(desc(schema.experiments.createdAt));
+
+  return query;
+}
+
 export const experimentsService = {
   create,
   listByProject,
+  listByTeam,
   getById,
   recordResults,
   updateStatus,

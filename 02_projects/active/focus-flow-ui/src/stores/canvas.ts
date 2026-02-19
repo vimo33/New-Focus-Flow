@@ -12,7 +12,8 @@ export type CanvasState =
   | 'weekly_report'
   | 'onboarding'
   | 'marketing'
-  | 'reports';
+  | 'reports'
+  | 'venture_wizard';
 
 interface CanvasStore {
   activeCanvas: CanvasState;

@@ -74,6 +74,7 @@ const ReportsCanvas = lazy(() => import('./ReportsCanvas'));
 const ExperimentStack = lazy(() => import('./ExperimentStack'));
 const ApprovalQueue = lazy(() => import('./ApprovalQueue'));
 const PlaybookLibrary = lazy(() => import('./PlaybookLibrary'));
+const VentureWizard = lazy(() => import('./VentureWizard'));
 
 function ComingSoon({ name }: { name: string }) {
   return (
@@ -177,6 +178,7 @@ export default function CanvasRouter() {
       case 'reports': return <ReportsCanvas />;
       case 'settings': return <SettingsCanvas />;
       case 'calendar': return <CalendarCanvas />;
+      case 'venture_wizard': return <VentureWizard />;
       default: return null;
     }
   };

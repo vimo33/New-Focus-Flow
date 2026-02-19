@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Shield, Check, X, AlertTriangle, Clock } from 'lucide-react';
 import { useApprovalStore, type Approval } from '../../stores/approval';
 
@@ -10,6 +11,7 @@ const TIER_STYLES: Record<string, { bg: string; text: string; label: string; ico
 function ApprovalCard({ approval }: { approval: Approval }) {
   const tier = TIER_STYLES[approval.riskTier] || TIER_STYLES.tier2;
   const TierIcon = tier.icon;
+  const { approveItem, rejectItem } = useApprovalStore();
 
   return (
     <div className="bg-[rgba(15,10,20,0.65)] backdrop-blur-[20px] border border-white/8 rounded-xl p-5 transition-all hover:border-white/15">
@@ -34,10 +36,16 @@ function ApprovalCard({ approval }: { approval: Approval }) {
       )}
 
       <div className="flex items-center gap-2 pt-3 border-t border-white/5">
-        <button className="flex items-center gap-1 px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/30 transition-colors">
+        <button
+          onClick={() => approveItem(approval.id)}
+          className="flex items-center gap-1 px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 text-xs font-semibold hover:bg-emerald-500/30 transition-colors"
+        >
           <Check size={14} /> Approve
         </button>
-        <button className="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/30 transition-colors">
+        <button
+          onClick={() => rejectItem(approval.id)}
+          className="flex items-center gap-1 px-4 py-2 rounded-lg bg-red-500/20 text-red-400 text-xs font-semibold hover:bg-red-500/30 transition-colors"
+        >
           <X size={14} /> Reject
         </button>
       </div>
@@ -46,8 +54,12 @@ function ApprovalCard({ approval }: { approval: Approval }) {
 }
 
 export default function ApprovalQueue() {
-  const { approvals, pendingCount, loading } = useApprovalStore();
+  const { approvals, pendingCount, loading, fetchApprovals } = useApprovalStore();
   const pending = approvals.filter(a => a.status === 'pending');
+
+  useEffect(() => {
+    fetchApprovals();
+  }, [fetchApprovals]);
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-8">

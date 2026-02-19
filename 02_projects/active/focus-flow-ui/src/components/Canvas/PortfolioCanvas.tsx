@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Plus } from 'lucide-react';
 import { useCanvasStore } from '../../stores/canvas';
 import { api } from '../../services/api';
 import { GlassCard, StatCard, Badge } from '../shared';
@@ -105,15 +106,24 @@ export default function PortfolioCanvas() {
   return (
     <div className="p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
-        <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">PORTFOLIO</h2>
-        <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight mt-1" style={{ fontFamily: 'var(--font-body)' }}>
-          Your Ventures
-        </h1>
-        <p className="text-text-secondary text-sm mt-2">
-          {dashboard.active_count} active{dashboard.paused_count > 0 ? `, ${dashboard.paused_count} paused` : ''}
-          {dashboard.completed_count > 0 ? `, ${dashboard.completed_count} completed` : ''}
-        </p>
+      <div className="flex items-start justify-between mb-8">
+        <div>
+          <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">PORTFOLIO</h2>
+          <h1 className="text-2xl lg:text-3xl font-bold text-text-primary tracking-tight mt-1" style={{ fontFamily: 'var(--font-body)' }}>
+            Your Ventures
+          </h1>
+          <p className="text-text-secondary text-sm mt-2">
+            {dashboard.active_count} active{dashboard.paused_count > 0 ? `, ${dashboard.paused_count} paused` : ''}
+            {dashboard.completed_count > 0 ? `, ${dashboard.completed_count} completed` : ''}
+          </p>
+        </div>
+        <button
+          onClick={() => setCanvas('venture_wizard')}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-indigo-500/20 text-indigo-400 text-sm font-medium hover:bg-indigo-500/30 border border-indigo-500/20 transition-colors"
+        >
+          <Plus size={16} />
+          New Venture
+        </button>
       </div>
 
       {/* Top Stats */}
