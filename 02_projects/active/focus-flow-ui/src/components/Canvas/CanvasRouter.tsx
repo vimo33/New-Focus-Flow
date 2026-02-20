@@ -70,22 +70,25 @@ const OnboardingFlow = lazy(() => import('../Onboarding/OnboardingFlow'));
 const MarketingCanvas = lazy(() => import('./MarketingCanvas'));
 const ReportsCanvas = lazy(() => import('./ReportsCanvas'));
 
-// Lazy load new v2 canvas components
+// Lazy load v2 canvas components
 const ExperimentStack = lazy(() => import('./ExperimentStack'));
 const ApprovalQueue = lazy(() => import('./ApprovalQueue'));
 const PlaybookLibrary = lazy(() => import('./PlaybookLibrary'));
 const VentureWizard = lazy(() => import('./VentureWizard'));
 
-function ComingSoon({ name }: { name: string }) {
-  return (
-    <div className="flex items-center justify-center h-[60vh]">
-      <div className="text-center">
-        <p className="text-slate-300 text-lg font-medium">{name}</p>
-        <p className="text-slate-500 text-sm mt-1">Coming soon in Nitara v2</p>
-      </div>
-    </div>
-  );
-}
+// Lazy load Phase 5 canvas components
+const AutonomousBuilder = lazy(() => import('./AutonomousBuilder'));
+const AgentDashboard = lazy(() => import('./AgentDashboard'));
+const KPIDashboard = lazy(() => import('./KPIDashboard'));
+const ResourceEngine = lazy(() => import('./ResourceEngine'));
+const ToolRegistryCanvas = lazy(() => import('./ToolRegistryCanvas'));
+const SimulationView = lazy(() => import('./SimulationView'));
+const VariantTesting = lazy(() => import('./VariantTesting'));
+const CommunicationsCanvas = lazy(() => import('./CommunicationsCanvas'));
+const DataSources = lazy(() => import('./DataSources'));
+const DataPipeline = lazy(() => import('./DataPipeline'));
+const ModelTuning = lazy(() => import('./ModelTuning'));
+const PartnershipsCanvas = lazy(() => import('./PartnershipsCanvas'));
 
 export default function CanvasRouter() {
   const { activeCanvas } = useCanvasStore();
@@ -124,43 +127,43 @@ export default function CanvasRouter() {
           case 'strategy': return <PortfolioCanvas />;
           case 'ventures': return <PortfolioCanvas />;
           case 'finance': return <FinancialsCanvas />;
-          case 'comms': return <ComingSoon name="Communications" />;
+          case 'comms': return <CommunicationsCanvas />;
           default: return <MorningBriefing />;
         }
 
       case 'validate':
         switch (activeSubTab) {
           case 'stack': return <ExperimentStack />;
-          case 'variant-testing': return <ComingSoon name="Variant Testing" />;
-          case 'data-sources': return <ComingSoon name="Data Sources" />;
+          case 'variant-testing': return <VariantTesting />;
+          case 'data-sources': return <DataSources />;
           default: return <ExperimentStack />;
         }
 
       case 'build':
         switch (activeSubTab) {
-          case 'build': return <ComingSoon name="Autonomous Builder" />;
+          case 'build': return <AutonomousBuilder />;
           case 'control': return <ApprovalQueue />;
-          case 'agents': return <ComingSoon name="Agent Dashboard" />;
-          case 'data': return <ComingSoon name="Data Pipeline" />;
-          case 'tune': return <ComingSoon name="Model Tuning" />;
-          default: return <ComingSoon name="Build Mode" />;
+          case 'agents': return <AgentDashboard />;
+          case 'data': return <DataPipeline />;
+          case 'tune': return <ModelTuning />;
+          default: return <AutonomousBuilder />;
         }
 
       case 'grow':
         switch (activeSubTab) {
-          case 'resources': return <ComingSoon name="Resource Engine" />;
-          case 'kpis': return <ComingSoon name="KPI Dashboard" />;
-          case 'simulation': return <ComingSoon name="Simulation View" />;
+          case 'resources': return <ResourceEngine />;
+          case 'kpis': return <KPIDashboard />;
+          case 'simulation': return <SimulationView />;
           case 'market': return <MarketingCanvas />;
-          default: return <ComingSoon name="Grow Mode" />;
+          default: return <KPIDashboard />;
         }
 
       case 'leverage':
         switch (activeSubTab) {
           case 'network': return <NetworkCanvas />;
           case 'playbooks': return <PlaybookLibrary />;
-          case 'tools': return <ComingSoon name="Tool Registry" />;
-          case 'partnerships': return <ComingSoon name="Partnerships" />;
+          case 'tools': return <ToolRegistryCanvas />;
+          case 'partnerships': return <PartnershipsCanvas />;
           default: return <NetworkCanvas />;
         }
 

@@ -59,6 +59,10 @@ import hypothesesRoutes from './routes/hypotheses.routes';
 import experimentsRoutes from './routes/experiments.routes';
 import playbooksRoutes from './routes/playbooks.routes';
 import approvalsRoutes from './routes/approvals.routes';
+import budgetRoutes from './routes/budget.routes';
+import signalsRoutes from './routes/signals.routes';
+import agentRunsRoutes from './routes/agent-runs.routes';
+import simulationRoutes from './routes/simulation.routes';
 import { queueAuth } from './middleware/queue-auth.middleware';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
 import { taskQueueService } from './services/task-queue.service';
@@ -173,6 +177,10 @@ app.use('/api', hypothesesRoutes);
 app.use('/api', experimentsRoutes);
 app.use('/api', playbooksRoutes);
 app.use('/api', approvalsRoutes);
+app.use('/api', budgetRoutes);
+app.use('/api', signalsRoutes);
+app.use('/api', agentRunsRoutes);
+app.use('/api', simulationRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

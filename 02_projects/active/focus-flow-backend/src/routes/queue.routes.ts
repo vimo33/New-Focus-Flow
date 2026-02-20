@@ -159,6 +159,19 @@ router.post('/queue/schedule', async (req: Request, res: Response) => {
   }
 });
 
+// GET /queue/schedule — Read schedule.json
+router.get('/queue/schedule', async (req: Request, res: Response) => {
+  try {
+    const { readJsonFile, getVaultPath } = await import('../utils/file-operations');
+    const schedulePath = getVaultPath('07_system/agent/schedule.json');
+    const schedule = await readJsonFile<any[]>(schedulePath) || [];
+    res.json({ schedule, count: schedule.length });
+  } catch (error: any) {
+    console.error('Error reading schedule:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Kill switch — activate
 router.post('/queue/kill-switch', async (req: Request, res: Response) => {
   try {

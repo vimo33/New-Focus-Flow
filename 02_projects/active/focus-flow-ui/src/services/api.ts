@@ -384,6 +384,123 @@ export interface VoiceCommandResponse {
 }
 
 // ============================================================================
+// Budget Types
+// ============================================================================
+
+export interface BudgetConfig {
+  daily_budget_usd: number;
+  weekly_budget_usd: number;
+  alert_threshold_pct: number;
+  hard_stop: boolean;
+}
+
+export interface BudgetPeriod {
+  spent: number;
+  budget: number;
+  pct: number;
+}
+
+export interface BudgetStatus {
+  config: BudgetConfig;
+  today: BudgetPeriod;
+  week: BudgetPeriod;
+  alert_threshold_pct: number;
+}
+
+// ============================================================================
+// Signal Types
+// ============================================================================
+
+export interface Signal {
+  id: string;
+  projectId: string;
+  experimentId?: string;
+  type: string;
+  valueJson?: unknown;
+  source?: string;
+  createdAt: string;
+}
+
+// ============================================================================
+// Agent Run Types
+// ============================================================================
+
+export interface AgentRun {
+  id: string;
+  projectId?: string;
+  teamId: string;
+  mode: 'think' | 'validate' | 'build' | 'grow' | 'leverage';
+  agentsJson: string[];
+  toolsUsedJson: string[];
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  startedAt?: string;
+  endedAt?: string;
+  outputsJson: { type: string; path: string }[];
+  approvalsJson: string[];
+  costUsd?: number;
+  createdAt: string;
+}
+
+export interface AgentRunStats {
+  total_runs: number;
+  total_cost: number;
+  by_status: Record<string, { count: number; cost: number }>;
+  by_mode: { mode: string; count: number; cost: number }[];
+}
+
+// ============================================================================
+// Simulation Types
+// ============================================================================
+
+export interface SimulationParams {
+  projects: string[];
+  budgetPerDay: number;
+  founderHoursPerWeek: number;
+  riskTolerance: 'low' | 'medium' | 'high';
+  timeHorizonWeeks: number;
+}
+
+export interface SimulationResult {
+  scenario: string;
+  projectedMrr: number;
+  experimentVelocity: number;
+  validationTimeline: string;
+  risks: string[];
+  recommendations: string[];
+}
+
+// ============================================================================
+// Schedule Types
+// ============================================================================
+
+export interface ScheduleEntry {
+  skill: string;
+  arguments?: string;
+  cron: string;
+  priority: string;
+  trust_tier: number;
+  description: string;
+}
+
+// ============================================================================
+// Tool Registry Types
+// ============================================================================
+
+export interface ToolManifest {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  execution_type: 'in-process' | 'docker' | 'cli' | 'api';
+  trust_level: 'trusted' | 'verified' | 'community' | 'experimental';
+  capabilities: string[];
+  input_schema?: Record<string, unknown>;
+  output_schema?: Record<string, unknown>;
+  requires_approval: boolean;
+  cost_estimate?: string;
+}
+
+// ============================================================================
 // API Client Class
 // ============================================================================
 
@@ -1754,6 +1871,94 @@ export class VaultAPI {
     return this.request('/auth/me', {
       headers: { 'Authorization': `Bearer ${token}` },
     });
+  }
+
+  // ============================================================================
+  // Budget Methods
+  // ============================================================================
+
+  async getBudget(): Promise<BudgetStatus> {
+    return this.request('/budget');
+  }
+
+  async updateBudget(data: Partial<BudgetConfig>): Promise<{ status: string; config: BudgetConfig }> {
+    return this.request('/budget', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Signals Methods
+  // ============================================================================
+
+  async getSignals(projectId?: string): Promise<{ signals: Signal[]; count: number }> {
+    const qs = projectId ? `?projectId=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/signals${qs}`);
+  }
+
+  async createSignal(data: { projectId: string; experimentId?: string; type: string; valueJson?: unknown; source?: string }): Promise<{ signal: Signal }> {
+    return this.request('/signals', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Agent Runs Methods
+  // ============================================================================
+
+  async getAgentRuns(params?: { status?: string; mode?: string; limit?: number }): Promise<{ runs: AgentRun[]; count: number }> {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.set('status', params.status);
+    if (params?.mode) qs.set('mode', params.mode);
+    if (params?.limit) qs.set('limit', String(params.limit));
+    const qsStr = qs.toString() ? `?${qs.toString()}` : '';
+    return this.request(`/agent-runs${qsStr}`);
+  }
+
+  async getAgentRunStats(): Promise<AgentRunStats> {
+    return this.request('/agent-runs/stats');
+  }
+
+  async getAgentRun(id: string): Promise<AgentRun> {
+    return this.request(`/agent-runs/${id}`);
+  }
+
+  // ============================================================================
+  // Simulation Methods
+  // ============================================================================
+
+  async runSimulation(params: SimulationParams): Promise<SimulationResult> {
+    return this.request('/simulations/run', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  // ============================================================================
+  // Queue Schedule Methods
+  // ============================================================================
+
+  async getQueueSchedule(): Promise<{ schedule: ScheduleEntry[]; count: number }> {
+    return this.request('/queue/schedule');
+  }
+
+  async getQueueStats(): Promise<any> {
+    return this.request('/queue/stats');
+  }
+
+  async getQueueTasks(status?: string): Promise<{ tasks: any[]; count: number }> {
+    const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.request(`/queue/tasks${qs}`);
+  }
+
+  // ============================================================================
+  // Tools Methods
+  // ============================================================================
+
+  async getTools(): Promise<{ tools: ToolManifest[]; count: number }> {
+    return this.request('/tools');
   }
 }
 

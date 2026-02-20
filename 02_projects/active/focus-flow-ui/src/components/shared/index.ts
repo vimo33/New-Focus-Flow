@@ -8,3 +8,7 @@ export { PipelineNode } from './PipelineNode';
 export { ConfidenceRing } from './ConfidenceRing';
 export { RelationshipDots } from './RelationshipDots';
 export { MarkdownContent } from './MarkdownContent';
+export { ProgressBar } from './ProgressBar';
+export { KillSwitchToggle } from './KillSwitchToggle';
+export { AgentCard } from './AgentCard';
+export { SignalBadge } from './SignalBadge';
