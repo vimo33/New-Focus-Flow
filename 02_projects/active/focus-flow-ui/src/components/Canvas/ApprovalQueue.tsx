@@ -62,7 +62,7 @@ export default function ApprovalQueue() {
   }, [fetchApprovals]);
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-8">
+    <div data-testid="canvas-approval-queue" className="max-w-3xl mx-auto px-6 py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
           <Shield size={20} className="text-amber-400" />

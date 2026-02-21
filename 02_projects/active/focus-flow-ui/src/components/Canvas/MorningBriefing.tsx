@@ -123,7 +123,7 @@ export default function MorningBriefing() {
   const activePriorities = priorities.filter(p => p.status !== 'completed');
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto relative">
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto relative" data-testid="canvas-morning-briefing">
       {/* Clock Widget — stacked on mobile, absolute on desktop */}
       <div className="static md:absolute md:top-6 md:right-6 lg:top-8 lg:right-8 text-left md:text-right mb-4 md:mb-0">
         <p className="font-mono text-2xl md:text-3xl lg:text-4xl text-text-primary tabular-nums tracking-tight" style={{ fontFeatureSettings: "'tnum'" }}>

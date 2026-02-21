@@ -13,7 +13,9 @@ export type CanvasState =
   | 'onboarding'
   | 'marketing'
   | 'reports'
-  | 'venture_wizard';
+  | 'venture_wizard'
+  | 'ui_kit'
+  | 'voice_console';
 
 interface CanvasStore {
   activeCanvas: CanvasState;
@@ -52,3 +54,7 @@ export const useCanvasStore = create<CanvasStore>((set, get) => ({
     }
   },
 }));
+
+if (import.meta.env.DEV) {
+  (window as any).__ZUSTAND_CANVAS_STORE__ = useCanvasStore;
+}

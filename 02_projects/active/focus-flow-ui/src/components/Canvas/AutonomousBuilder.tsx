@@ -33,7 +33,7 @@ export default function AutonomousBuilder() {
   const runningCount = tasks.filter(t => t.status === 'running').length;
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div data-testid="canvas-autonomous-builder" className="max-w-5xl mx-auto px-6 py-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">

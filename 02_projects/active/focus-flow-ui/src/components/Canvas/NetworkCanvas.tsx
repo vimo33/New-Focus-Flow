@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { GlassCard, StatCard, Badge, NitaraInsightCard } from '../shared';
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { GlassCard, StatCard, Badge, NitaraInsightCard, Drawer, Skeleton } from '../shared';
 import { api } from '../../services/api';
 
 const STRENGTH_VARIANT: Record<string, 'active' | 'paused' | 'blocked' | 'completed'> = {
@@ -40,6 +40,15 @@ export default function NetworkCanvas() {
   // Tab state
   const [activeTab, setActiveTab] = useState<'with_data' | 'needs_data'>('with_data');
 
+  // Contact detail drawer state
+  const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
+  const [contactDetail, setContactDetail] = useState<any>(null);
+  const [outreachDraft, setOutreachDraft] = useState<{ subject: string; body: string; channel_recommendation: string } | null>(null);
+  const [outreachLoading, setOutreachLoading] = useState(false);
+
+  // Tag filters
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
   const refreshData = useCallback(async () => {
     try {
       const [contactsRes, graphRes, oppsRes] = await Promise.all([
@@ -53,7 +62,6 @@ export default function NetworkCanvas() {
     } catch (err) {
       console.error('Failed to load network data:', err);
     }
-    // Fetch PDL budget (non-blocking)
     api.getEnrichBudget().then(b => setEnrichBudget(b)).catch(() => {});
   }, []);
 
@@ -74,12 +82,23 @@ export default function NetworkCanvas() {
     };
   }, []);
 
+  // Fetch contact detail when selected
+  useEffect(() => {
+    if (!selectedContactId) {
+      setContactDetail(null);
+      setOutreachDraft(null);
+      return;
+    }
+    api.getNetworkContact(selectedContactId)
+      .then(setContactDetail)
+      .catch(() => setContactDetail(null));
+  }, [selectedContactId]);
+
   const handleImport = async (file: File, source: 'linkedin' | 'google') => {
     setImporting(true);
     setImportError(null);
     setImportProgress(null);
 
-    // Connect to SSE BEFORE starting upload so we don't miss fast events
     const es = new EventSource(api.getImportSSEUrl());
     eventSourceRef.current = es;
     let jobId: string | null = null;
@@ -112,7 +131,6 @@ export default function NetworkCanvas() {
     es.onerror = () => {
       es.close();
       eventSourceRef.current = null;
-      // If we didn't get a completion event, poll the job status
       if (jobId) {
         const pollJob = async () => {
           try {
@@ -149,7 +167,6 @@ export default function NetworkCanvas() {
     setEnriching(true);
     setEnrichProgress(null);
 
-    // Listen for SSE progress
     const es = new EventSource(api.getImportSSEUrl());
     const enrichES = es;
 
@@ -185,6 +202,34 @@ export default function NetworkCanvas() {
     }
   };
 
+  const handleDraftOutreach = async (contactId: string) => {
+    setOutreachLoading(true);
+    setOutreachDraft(null);
+    try {
+      const draft = await api.generateOutreachDraft(contactId, '');
+      setOutreachDraft(draft);
+    } catch (err) {
+      console.error('Failed to generate outreach draft:', err);
+    } finally {
+      setOutreachLoading(false);
+    }
+  };
+
+  // Extract unique tags from contacts
+  const allTags = useMemo(() => {
+    const tagSet = new Set<string>();
+    contacts.forEach(c => {
+      if (c.tags) c.tags.forEach((t: string) => tagSet.add(t));
+    });
+    return Array.from(tagSet).sort();
+  }, [contacts]);
+
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
+
   const ImportPanel = () => (
     <GlassCard className="mb-6">
       <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-4">
@@ -192,7 +237,6 @@ export default function NetworkCanvas() {
       </h3>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-        {/* LinkedIn drop zone */}
         <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-[var(--glass-border)] rounded-xl cursor-pointer hover:border-primary/50 hover:bg-elevated/30 transition-all">
           <span className="material-symbols-rounded text-3xl text-text-tertiary">cloud_upload</span>
           <span className="text-text-primary text-sm font-medium">LinkedIn Export</span>
@@ -210,7 +254,6 @@ export default function NetworkCanvas() {
           />
         </label>
 
-        {/* Google drop zone */}
         <label className="flex flex-col items-center justify-center gap-2 p-6 border-2 border-dashed border-[var(--glass-border)] rounded-xl cursor-pointer hover:border-primary/50 hover:bg-elevated/30 transition-all">
           <span className="material-symbols-rounded text-3xl text-text-tertiary">contacts</span>
           <span className="text-text-primary text-sm font-medium">Google Contacts</span>
@@ -229,7 +272,6 @@ export default function NetworkCanvas() {
         </label>
       </div>
 
-      {/* Progress bar */}
       {importing && importProgress && (
         <div className="mb-2">
           <div className="flex items-center justify-between text-xs text-text-tertiary mb-1">
@@ -251,7 +293,6 @@ export default function NetworkCanvas() {
         </div>
       )}
 
-      {/* Completion message */}
       {!importing && importProgress?.status === 'completed' && (
         <div className="flex items-center gap-2 text-sm text-primary py-2">
           <span className="material-symbols-rounded text-base">check_circle</span>
@@ -259,7 +300,6 @@ export default function NetworkCanvas() {
         </div>
       )}
 
-      {/* Error */}
       {importError && (
         <div className="flex items-center gap-2 text-sm text-secondary py-2">
           <span className="material-symbols-rounded text-base">error</span>
@@ -277,22 +317,30 @@ export default function NetworkCanvas() {
 
   if (loading) {
     return (
-      <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-        <div className="flex items-center justify-center h-64">
-          <div className="text-text-tertiary text-sm">Loading network data...</div>
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto" data-testid="canvas-network">
+        <Skeleton variant="text" className="mb-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <Skeleton variant="stat" count={3} />
         </div>
+        <Skeleton variant="list-item" count={5} />
       </div>
     );
   }
 
-  // Classification: "with data" = has full_name AND (company OR email)
+  // Classification
   const hasActionableData = (c: any) => !!(c.full_name && (c.company || c.email));
   const contactsWithData = contacts.filter(hasActionableData);
   const contactsNeedingData = contacts.filter(c => !hasActionableData(c));
 
-  // Tab-aware search filtering
+  // Tab-aware + tag-aware search filtering
   const baseContacts = activeTab === 'with_data' ? contactsWithData : contactsNeedingData;
   const filteredContacts = baseContacts.filter((c) => {
+    // Tag filter
+    if (selectedTags.length > 0) {
+      const cTags: string[] = c.tags || [];
+      if (!selectedTags.some(t => cTags.includes(t))) return false;
+    }
+    // Search filter
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
@@ -303,53 +351,41 @@ export default function NetworkCanvas() {
     );
   });
 
-  const displayContacts = filteredContacts.slice(0, 20);
+  const displayContacts = filteredContacts.slice(0, 50);
 
   const activeRelationships = contacts.filter(
     (c) => c.relationship_strength === 'strong' || c.relationship_strength === 'moderate'
   ).length;
 
-  // Compute max count for proportional bar widths
   const relationshipTypes: { type: string; count: number }[] = graph?.relationship_types || [];
   const maxTypeCount = Math.max(...relationshipTypes.map((r) => r.count), 1);
 
   // Empty state
   if (contacts.length === 0 && !loading) {
     return (
-      <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-        {/* Header */}
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto" data-testid="canvas-network">
         <div className="mb-8">
-          <h2 className="text-xs font-semibold tracking-wider uppercase text-text-secondary mb-2">
-            NETWORK
-          </h2>
-          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">
-            Your Constellation
-          </h1>
-          <p className="text-text-tertiary text-sm">
-            Map and nurture your professional relationships.
-          </p>
+          <h2 className="text-xs font-semibold tracking-wider uppercase text-text-secondary mb-2">NETWORK</h2>
+          <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">Your Constellation</h1>
+          <p className="text-text-tertiary text-sm">Map and nurture your professional relationships.</p>
         </div>
-
         <ImportPanel />
       </div>
     );
   }
 
+  const initials = (name: string) =>
+    (name || 'U').split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
+
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
-      {/* Header */}
-      <div className="mb-8">
-        <h2 className="text-xs font-semibold tracking-wider uppercase text-text-secondary mb-2">
-          NETWORK
-        </h2>
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto" data-testid="canvas-network">
+      {/* Header with toolbar */}
+      <div className="mb-6">
+        <h2 className="text-xs font-semibold tracking-wider uppercase text-text-secondary mb-2">NETWORK</h2>
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">
-              Your Constellation
-            </h1>
-            <p className="text-text-tertiary text-sm">
-              Map and nurture your professional relationships.
-            </p>
+            <h1 className="text-2xl lg:text-3xl font-bold tracking-tight text-text-primary mb-1">Your Constellation</h1>
+            <p className="text-text-tertiary text-sm">Map and nurture your professional relationships.</p>
           </div>
           <div className="flex items-center gap-2">
             {enrichBudget && enrichBudget.remaining > 0 && (
@@ -357,7 +393,6 @@ export default function NetworkCanvas() {
                 onClick={handleEnrich}
                 disabled={enriching}
                 className="flex flex-col items-center gap-0 px-3 py-1.5 text-sm text-text-secondary bg-elevated/50 border border-[var(--glass-border)] rounded-lg hover:text-text-primary hover:border-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-                title={enrichBudget.remaining === 0 ? 'Budget exhausted' : `Enrich contacts with People Data Labs (${enrichBudget.remaining} lookups remaining)`}
               >
                 <span className="flex items-center gap-1.5">
                   <span className="material-symbols-rounded text-base">auto_awesome</span>
@@ -367,7 +402,7 @@ export default function NetworkCanvas() {
               </button>
             )}
             {enrichBudget && enrichBudget.remaining === 0 && (
-              <span className="flex flex-col items-center px-3 py-1.5 text-sm text-text-tertiary bg-elevated/30 border border-[var(--glass-border)] rounded-lg opacity-60 cursor-not-allowed" title="PDL monthly budget exhausted">
+              <span className="flex flex-col items-center px-3 py-1.5 text-sm text-text-tertiary bg-elevated/30 border border-[var(--glass-border)] rounded-lg opacity-60 cursor-not-allowed">
                 <span className="flex items-center gap-1.5">
                   <span className="material-symbols-rounded text-base">auto_awesome</span>
                   Budget Exhausted
@@ -380,7 +415,7 @@ export default function NetworkCanvas() {
               className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-text-secondary bg-elevated/50 border border-[var(--glass-border)] rounded-lg hover:text-text-primary hover:border-primary/50 transition-all"
             >
               <span className="material-symbols-rounded text-base">upload</span>
-              Import Contacts
+              Import
             </button>
           </div>
         </div>
@@ -421,231 +456,123 @@ export default function NetworkCanvas() {
 
       {/* Top Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-        <StatCard
-          value={String(graph?.total_contacts ?? contacts.length)}
-          label="Total Contacts"
-        />
-        <StatCard
-          value={String(activeRelationships)}
-          label="Active Relationships"
-        />
-        <StatCard
-          value={String(opportunities.length)}
-          label="Opportunities"
-        />
+        <StatCard value={String(graph?.total_contacts ?? contacts.length)} label="Total Contacts" />
+        <StatCard value={String(activeRelationships)} label="Active Relationships" />
+        <StatCard value={String(opportunities.length)} label="Opportunities" />
       </div>
 
-      {/* Main Grid — 3 columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left Column — Contact List (spans 2) */}
-        <GlassCard className="lg:col-span-2">
-          {/* Tab bar + search */}
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center gap-1">
-              <button
-                onClick={() => setActiveTab('with_data')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
-                  activeTab === 'with_data'
-                    ? 'bg-primary/15 text-primary border-primary/30'
-                    : 'text-text-tertiary border-transparent hover:text-text-secondary'
-                }`}
-              >
-                With Data ({contactsWithData.length})
-              </button>
-              <button
-                onClick={() => setActiveTab('needs_data')}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
-                  activeTab === 'needs_data'
-                    ? 'bg-primary/15 text-primary border-primary/30'
-                    : 'text-text-tertiary border-transparent hover:text-text-secondary'
-                }`}
-              >
-                Needs Data ({contactsNeedingData.length})
-              </button>
+      {/* 2-Column Layout: Left (contact list) | Center (stats + opportunities) */}
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-4 h-[calc(100vh-340px)] min-h-[400px]">
+        {/* LEFT PANEL — Contact List */}
+        <div className="flex flex-col gap-3 min-h-0">
+          {/* Search */}
+          <input
+            type="text"
+            placeholder="Search contacts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full text-sm bg-elevated/50 border border-[var(--glass-border)] rounded-lg px-3 py-2 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary/50 transition-colors"
+          />
+
+          {/* Tag filter chips */}
+          {allTags.length > 0 && (
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 flex-shrink-0">
+              {allTags.slice(0, 15).map(tag => (
+                <button
+                  key={tag}
+                  onClick={() => toggleTag(tag)}
+                  className={`px-2 py-1 rounded-full text-[10px] font-medium border whitespace-nowrap transition-colors ${
+                    selectedTags.includes(tag)
+                      ? 'bg-primary/15 text-primary border-primary/30'
+                      : 'bg-elevated/30 text-text-tertiary border-[var(--glass-border)] hover:text-text-secondary'
+                  }`}
+                >
+                  {tag}
+                </button>
+              ))}
             </div>
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="text-sm bg-elevated/50 border border-[var(--glass-border)] rounded-lg px-3 py-1.5 text-text-primary placeholder-text-tertiary focus:outline-none focus:border-primary/50 transition-colors"
-            />
+          )}
+
+          {/* Tab bar */}
+          <div className="flex items-center gap-1 flex-shrink-0">
+            <button
+              onClick={() => setActiveTab('with_data')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                activeTab === 'with_data'
+                  ? 'bg-primary/15 text-primary border-primary/30'
+                  : 'text-text-tertiary border-transparent hover:text-text-secondary'
+              }`}
+            >
+              Data ({contactsWithData.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('needs_data')}
+              className={`px-3 py-1.5 text-xs font-semibold rounded-lg border transition-all ${
+                activeTab === 'needs_data'
+                  ? 'bg-primary/15 text-primary border-primary/30'
+                  : 'text-text-tertiary border-transparent hover:text-text-secondary'
+              }`}
+            >
+              Needs Data ({contactsNeedingData.length})
+            </button>
           </div>
 
-          {displayContacts.length === 0 ? (
-            <div className="flex items-center justify-center py-8">
-              <p className="text-text-tertiary text-sm">
-                {searchQuery.trim()
-                  ? 'No contacts match your search.'
-                  : activeTab === 'with_data'
-                    ? 'No enriched contacts yet. Try enriching your network!'
-                    : 'All contacts have data — nice!'}
-              </p>
-            </div>
-          ) : (
-            <div>
-              {activeTab === 'with_data'
-                ? /* Rich contact rows for "With Data" tab */
-                  displayContacts.map((contact) => {
-                    const initials = (contact.full_name || 'U')
-                      .split(' ')
-                      .map((n: string) => n[0])
-                      .join('')
-                      .toUpperCase()
-                      .slice(0, 2);
-
-                    const pdlLikelihood = contact.enrichment_data?.pdl_likelihood;
-
-                    return (
-                      <div
-                        key={contact.id || contact.full_name}
-                        className="p-3 border-b border-[var(--glass-border)] last:border-b-0 flex items-start gap-3"
-                      >
-                        {/* Avatar */}
-                        <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-xs font-medium flex-shrink-0 mt-0.5">
-                          {initials}
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2">
-                            <p className="text-text-primary text-sm font-medium truncate">
-                              {contact.full_name}
-                            </p>
-                            {contact.seniority && contact.seniority !== 'unknown' && (
-                              <span className="text-[10px] text-text-tertiary bg-elevated/60 px-1.5 py-0.5 rounded-full flex-shrink-0">
-                                {SENIORITY_LABELS[contact.seniority as keyof typeof SENIORITY_LABELS] || contact.seniority}
-                              </span>
-                            )}
-                          </div>
-                          {(contact.position || contact.company) && (
-                            <p className="text-text-tertiary text-xs truncate">
-                              {contact.position}
-                              {contact.position && contact.company ? ' @ ' : ''}
-                              {contact.company}
-                            </p>
-                          )}
-                          {contact.industry && (
-                            <p className="text-text-tertiary/70 text-[11px] truncate mt-0.5">
-                              {contact.industry}
-                            </p>
-                          )}
-                          {contact.skills && contact.skills.length > 0 && (
-                            <div className="flex items-center gap-1 mt-1 flex-wrap">
-                              {contact.skills.slice(0, 3).map((skill: string) => (
-                                <span key={skill} className="text-[10px] text-text-secondary bg-elevated/50 border border-[var(--glass-border)] px-1.5 py-0.5 rounded-full">
-                                  {skill}
-                                </span>
-                              ))}
-                              {contact.skills.length > 3 && (
-                                <span className="text-[10px] text-text-tertiary">+{contact.skills.length - 3}</span>
-                              )}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Right side: badges */}
-                        <div className="flex flex-col items-end gap-1 flex-shrink-0">
-                          {contact.relationship_strength && (
-                            <Badge
-                              label={contact.relationship_strength.toUpperCase()}
-                              variant={STRENGTH_VARIANT[contact.relationship_strength] || 'paused'}
-                            />
-                          )}
-                          {pdlLikelihood != null && (
-                            <span className="flex items-center gap-0.5 text-[10px] text-text-tertiary">
-                              <span className="material-symbols-rounded text-xs text-primary/60">verified</span>
-                              PDL {pdlLikelihood}/10
-                            </span>
-                          )}
-                          {contact.tags && contact.tags.length > 0 && (
-                            <div className="hidden sm:flex items-center gap-1">
-                              {contact.tags.slice(0, 2).map((tag: string) => (
-                                <Badge key={tag} label={tag} variant="playbook" />
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                : /* Compact rows for "Needs Data" tab */
-                  displayContacts.map((contact) => {
-                    const initials = (contact.full_name || 'U')
-                      .split(' ')
-                      .map((n: string) => n[0])
-                      .join('')
-                      .toUpperCase()
-                      .slice(0, 2);
-
-                    const sparseInfo = contact.email || contact.company || (contact.import_sources?.join(', ')) || contact.imported_from || '';
-
-                    return (
-                      <div
-                        key={contact.id || contact.full_name}
-                        className="p-2.5 border-b border-[var(--glass-border)] last:border-b-0 flex items-center gap-2.5"
-                      >
-                        {/* Smaller avatar */}
-                        <div className="w-7 h-7 rounded-full bg-elevated/60 flex items-center justify-center text-text-tertiary text-[10px] font-medium flex-shrink-0">
-                          {initials}
-                        </div>
-
-                        {/* Info */}
-                        <div className="flex-1 min-w-0">
-                          <p className="text-text-secondary text-sm truncate">
-                            {contact.full_name || 'Unknown'}
-                          </p>
-                          {sparseInfo && (
-                            <p className="text-text-tertiary text-xs truncate">
-                              {sparseInfo}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Needs enrichment indicator */}
-                        <span className="material-symbols-rounded text-base text-text-tertiary/50" title="Needs enrichment">
-                          data_alert
-                        </span>
-                      </div>
-                    );
-                  })
-              }
-            </div>
-          )}
-
-          {/* Enrichment CTA banner in "Needs Data" tab */}
-          {activeTab === 'needs_data' && contactsNeedingData.length > 0 && enrichBudget && enrichBudget.remaining > 0 && (
-            <div className="mt-4 p-3 bg-primary/5 border border-primary/20 rounded-lg flex items-center justify-between">
-              <div className="flex items-center gap-2 text-sm">
-                <span className="material-symbols-rounded text-base text-primary">auto_awesome</span>
-                <span className="text-text-secondary">
-                  {contactsNeedingData.length} contacts need enrichment
-                </span>
-                <span className="text-text-tertiary text-xs">
-                  ({enrichBudget.remaining} PDL lookups remaining)
-                </span>
+          {/* Contact list (scrollable) */}
+          <div className="flex-1 overflow-y-auto min-h-0 rounded-xl border border-[var(--glass-border)] bg-[var(--glass-bg)]">
+            {displayContacts.length === 0 ? (
+              <div className="flex items-center justify-center py-8">
+                <p className="text-text-tertiary text-sm">
+                  {searchQuery.trim()
+                    ? 'No contacts match your search.'
+                    : activeTab === 'with_data'
+                      ? 'No enriched contacts yet.'
+                      : 'All contacts have data!'}
+                </p>
               </div>
-              <button
-                onClick={handleEnrich}
-                disabled={enriching}
-                className="px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 border border-primary/30 rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {enriching ? 'Enriching...' : 'Enrich Now'}
-              </button>
-            </div>
-          )}
+            ) : (
+              displayContacts.map((contact) => {
+                const isSelected = selectedContactId === contact.id;
+                return (
+                  <button
+                    key={contact.id || contact.full_name}
+                    onClick={() => setSelectedContactId(contact.id || null)}
+                    className={`w-full text-left p-3 border-b border-[var(--glass-border)] last:border-b-0 flex items-center gap-3 transition-colors ${
+                      isSelected
+                        ? 'bg-primary/10 border-l-2 border-l-primary'
+                        : 'hover:bg-elevated/40 border-l-2 border-l-transparent'
+                    }`}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-xs font-medium flex-shrink-0">
+                      {initials(contact.full_name)}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text-primary text-sm font-medium truncate">{contact.full_name}</p>
+                      {(contact.position || contact.company) && (
+                        <p className="text-text-tertiary text-xs truncate">
+                          {contact.position}{contact.position && contact.company ? ' @ ' : ''}{contact.company}
+                        </p>
+                      )}
+                    </div>
+                    {contact.relationship_strength && (
+                      <Badge
+                        label={contact.relationship_strength.toUpperCase()}
+                        variant={STRENGTH_VARIANT[contact.relationship_strength] || 'paused'}
+                      />
+                    )}
+                  </button>
+                );
+              })
+            )}
+            {filteredContacts.length > 50 && (
+              <div className="py-2 text-center">
+                <p className="text-text-tertiary text-xs">Showing 50 of {filteredContacts.length}</p>
+              </div>
+            )}
+          </div>
+        </div>
 
-          {filteredContacts.length > 20 && (
-            <div className="pt-3 text-center">
-              <p className="text-text-tertiary text-xs">
-                Showing 20 of {filteredContacts.length} {activeTab === 'with_data' ? 'enriched' : 'incomplete'} contacts
-              </p>
-            </div>
-          )}
-        </GlassCard>
-
-        {/* Right Column — Two stacked cards */}
-        <div className="flex flex-col gap-4">
+        {/* CENTER PANEL — Stats, Relationships, Opportunities */}
+        <div className="flex flex-col gap-4 overflow-y-auto min-h-0">
           {/* Relationship Breakdown */}
           {graph && relationshipTypes.length > 0 && (
             <GlassCard>
@@ -655,18 +582,14 @@ export default function NetworkCanvas() {
               <div className="space-y-3">
                 {relationshipTypes.map((rt) => (
                   <div key={rt.type} className="flex items-center gap-3">
-                    <span className="text-text-secondary text-sm w-24 truncate capitalize">
-                      {rt.type}
-                    </span>
+                    <span className="text-text-secondary text-sm w-24 truncate capitalize">{rt.type}</span>
                     <div className="flex-1 h-2 bg-elevated rounded-full overflow-hidden">
                       <div
                         className="h-full bg-primary rounded-full transition-all"
                         style={{ width: `${(rt.count / maxTypeCount) * 100}%` }}
                       />
                     </div>
-                    <span className="text-text-tertiary text-xs font-mono tabular-nums w-8 text-right">
-                      {rt.count}
-                    </span>
+                    <span className="text-text-tertiary text-xs font-mono tabular-nums w-8 text-right">{rt.count}</span>
                   </div>
                 ))}
               </div>
@@ -687,39 +610,198 @@ export default function NetworkCanvas() {
                     className="border-b border-secondary/10 last:border-b-0 pb-2 last:pb-0"
                   >
                     <div className="flex items-center gap-2 mb-1">
-                      {opp.type && (
-                        <Badge
-                          label={opp.type.toUpperCase()}
-                          variant="council"
-                        />
-                      )}
+                      {opp.type && <Badge label={opp.type.toUpperCase()} variant="council" />}
                       {opp.priority && (
-                        <span
-                          className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                            opp.priority === 'high'
-                              ? 'bg-secondary'
-                              : opp.priority === 'medium'
-                              ? 'bg-primary'
-                              : 'bg-text-tertiary'
-                          }`}
-                        />
+                        <span className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                          opp.priority === 'high' ? 'bg-secondary' :
+                          opp.priority === 'medium' ? 'bg-primary' : 'bg-text-tertiary'
+                        }`} />
                       )}
                     </div>
-                    <p className="text-text-primary text-sm font-medium">
-                      {opp.title}
-                    </p>
+                    <p className="text-text-primary text-sm font-medium">{opp.title}</p>
                     {opp.description && (
-                      <p className="text-text-tertiary text-xs mt-0.5">
-                        {opp.description}
-                      </p>
+                      <p className="text-text-tertiary text-xs mt-0.5">{opp.description}</p>
                     )}
                   </div>
                 ))}
               </div>
             )}
           </NitaraInsightCard>
+
+          {/* Graph placeholder */}
+          <GlassCard>
+            <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-3">Network Graph</h3>
+            <div className="flex items-center justify-center py-8 border border-dashed border-[var(--glass-border)] rounded-lg">
+              <p className="text-text-tertiary text-sm">Network graph visualization — Sprint 2</p>
+            </div>
+          </GlassCard>
+
+          {/* Enrichment CTA in needs_data tab */}
+          {activeTab === 'needs_data' && contactsNeedingData.length > 0 && enrichBudget && enrichBudget.remaining > 0 && (
+            <GlassCard>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-sm">
+                  <span className="material-symbols-rounded text-base text-primary">auto_awesome</span>
+                  <span className="text-text-secondary">{contactsNeedingData.length} contacts need enrichment</span>
+                  <span className="text-text-tertiary text-xs">({enrichBudget.remaining} PDL lookups remaining)</span>
+                </div>
+                <button
+                  onClick={handleEnrich}
+                  disabled={enriching}
+                  className="px-3 py-1.5 text-xs font-medium text-primary bg-primary/10 border border-primary/30 rounded-lg hover:bg-primary/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {enriching ? 'Enriching...' : 'Enrich Now'}
+                </button>
+              </div>
+            </GlassCard>
+          )}
         </div>
       </div>
+
+      {/* RIGHT PANEL — Drawer for contact detail */}
+      <Drawer
+        open={!!selectedContactId && !!contactDetail}
+        onClose={() => setSelectedContactId(null)}
+        title={contactDetail?.full_name || 'Contact'}
+        width="md"
+      >
+        {contactDetail && (
+          <div className="space-y-5">
+            {/* Avatar + name + company */}
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-lg font-medium flex-shrink-0">
+                {initials(contactDetail.full_name)}
+              </div>
+              <div>
+                <p className="text-text-primary text-lg font-semibold">{contactDetail.full_name}</p>
+                {(contactDetail.position || contactDetail.company) && (
+                  <p className="text-text-secondary text-sm">
+                    {contactDetail.position}{contactDetail.position && contactDetail.company ? ' @ ' : ''}{contactDetail.company}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            {/* Relationship strength */}
+            {contactDetail.relationship_strength && (
+              <div className="flex items-center gap-2">
+                <span className="text-text-tertiary text-xs uppercase tracking-wider">Relationship</span>
+                <Badge
+                  label={contactDetail.relationship_strength.toUpperCase()}
+                  variant={STRENGTH_VARIANT[contactDetail.relationship_strength] || 'paused'}
+                />
+              </div>
+            )}
+
+            {/* Seniority */}
+            {contactDetail.seniority && contactDetail.seniority !== 'unknown' && (
+              <div className="flex items-center gap-2">
+                <span className="text-text-tertiary text-xs uppercase tracking-wider">Seniority</span>
+                <span className="text-text-primary text-sm">
+                  {SENIORITY_LABELS[contactDetail.seniority] || contactDetail.seniority}
+                </span>
+              </div>
+            )}
+
+            {/* Tags */}
+            {contactDetail.tags && contactDetail.tags.length > 0 && (
+              <div>
+                <p className="text-text-tertiary text-xs uppercase tracking-wider mb-2">Tags</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {contactDetail.tags.map((tag: string) => (
+                    <span key={tag} className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs border border-primary/20">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Skills */}
+            {contactDetail.skills && contactDetail.skills.length > 0 && (
+              <div>
+                <p className="text-text-tertiary text-xs uppercase tracking-wider mb-2">Skills</p>
+                <div className="flex flex-wrap gap-1.5">
+                  {contactDetail.skills.map((skill: string) => (
+                    <span key={skill} className="px-2 py-0.5 rounded-full bg-elevated text-text-secondary text-xs border border-[var(--glass-border)]">
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Contact info */}
+            <div className="space-y-2">
+              {contactDetail.email && (
+                <div className="flex items-center gap-2">
+                  <span className="text-text-tertiary text-xs w-16">Email</span>
+                  <a href={`mailto:${contactDetail.email}`} className="text-primary text-sm hover:text-primary/80 transition-colors truncate">
+                    {contactDetail.email}
+                  </a>
+                </div>
+              )}
+              {contactDetail.linkedin_url && (
+                <div className="flex items-center gap-2">
+                  <span className="text-text-tertiary text-xs w-16">LinkedIn</span>
+                  <a href={contactDetail.linkedin_url} target="_blank" rel="noopener noreferrer" className="text-primary text-sm hover:text-primary/80 transition-colors truncate">
+                    Profile
+                  </a>
+                </div>
+              )}
+              {contactDetail.industry && (
+                <div className="flex items-center gap-2">
+                  <span className="text-text-tertiary text-xs w-16">Industry</span>
+                  <span className="text-text-secondary text-sm">{contactDetail.industry}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Draft Outreach */}
+            <div className="pt-2 border-t border-[var(--glass-border)]">
+              <button
+                onClick={() => handleDraftOutreach(contactDetail.id)}
+                disabled={outreachLoading}
+                className="w-full px-3 py-2 rounded-lg text-sm font-medium bg-tertiary/15 text-tertiary border border-tertiary/30 hover:bg-tertiary/25 transition-colors disabled:opacity-50"
+              >
+                {outreachLoading ? 'Drafting...' : 'Draft Outreach'}
+              </button>
+
+              {outreachDraft && (
+                <GlassCard className="mt-3">
+                  <p className="text-[10px] tracking-wider text-tertiary uppercase mb-2">DRAFT OUTREACH</p>
+                  {outreachDraft.subject && (
+                    <p className="text-text-primary text-sm font-semibold mb-1">{outreachDraft.subject}</p>
+                  )}
+                  <p className="text-text-secondary text-sm leading-relaxed whitespace-pre-line">{outreachDraft.body}</p>
+                  {outreachDraft.channel_recommendation && (
+                    <p className="text-text-tertiary text-xs mt-2">
+                      Recommended channel: <span className="text-primary">{outreachDraft.channel_recommendation}</span>
+                    </p>
+                  )}
+                </GlassCard>
+              )}
+            </div>
+
+            {/* Interaction history */}
+            {contactDetail.interactions && contactDetail.interactions.length > 0 && (
+              <div className="pt-2 border-t border-[var(--glass-border)]">
+                <p className="text-text-tertiary text-xs uppercase tracking-wider mb-2">History</p>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {contactDetail.interactions.slice(0, 10).map((interaction: any, i: number) => (
+                    <div key={i} className="flex gap-2 text-xs">
+                      <span className="text-text-tertiary font-mono flex-shrink-0">
+                        {interaction.date ? new Date(interaction.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : ''}
+                      </span>
+                      <span className="text-text-secondary">{interaction.description || interaction.type}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </Drawer>
     </div>
   );
 }

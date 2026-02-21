@@ -32,7 +32,7 @@ export default function CommunicationsCanvas() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div data-testid="canvas-comms" className="max-w-4xl mx-auto px-6 py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
           <MessageSquare size={20} className="text-primary" />

@@ -8,7 +8,7 @@ import { useSTT } from './useSTT';
 
 export interface SuggestedAction {
   id: string;
-  type: 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation';
+  type: 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation' | 'approval';
   title: string;
   subtitle: string;
   description: string;
@@ -132,6 +132,7 @@ export function useVoiceCommands() {
       update: { icon: 'edit', color: 'text-amber-500', bg: 'bg-amber-500/20' },
       delete: { icon: 'delete', color: 'text-red-500', bg: 'bg-red-500/20' },
       conversation: { icon: 'chat', color: 'text-slate-500', bg: 'bg-slate-500/20' },
+      approval: { icon: 'shield', color: 'text-amber-500', bg: 'bg-amber-500/20' },
     };
 
     const iconInfo = iconMap[intent.type] || iconMap.conversation;

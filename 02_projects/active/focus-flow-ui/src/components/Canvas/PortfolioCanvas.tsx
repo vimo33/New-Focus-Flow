@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Plus, RefreshCw } from 'lucide-react';
 import { useCanvasStore } from '../../stores/canvas';
 import { api } from '../../services/api';
-import { GlassCard, StatCard, Badge, SignalStrengthBadge, PruningRecommendations } from '../shared';
+import { GlassCard, StatCard, Badge, SignalStrengthBadge, PruningRecommendations, Skeleton } from '../shared';
 import { useValidationStore } from '../../stores/validation';
 
 interface ProjectHealth {
@@ -109,15 +109,19 @@ export default function PortfolioCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-text-tertiary">Loading portfolio...</div>
+      <div className="p-6 lg:p-8 max-w-7xl mx-auto" data-testid="canvas-portfolio">
+        <Skeleton variant="text" className="mb-6" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+          <Skeleton variant="stat" count={4} />
+        </div>
+        <Skeleton variant="card" count={3} />
       </div>
     );
   }
 
   if (error || !dashboard) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 gap-3">
+      <div className="flex flex-col items-center justify-center h-64 gap-3" data-testid="canvas-portfolio">
         <div className="text-text-tertiary">{error || 'Failed to load portfolio data.'}</div>
         <button
           onClick={loadDashboard}
@@ -130,7 +134,7 @@ export default function PortfolioCanvas() {
   }
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div className="p-6 lg:p-8 max-w-7xl mx-auto" data-testid="canvas-portfolio">
       {/* Header */}
       <div className="flex items-start justify-between mb-8">
         <div>
@@ -217,7 +221,7 @@ export default function PortfolioCanvas() {
       </div>
 
       {/* Projects Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8" data-testid="ventures-list">
         {dashboard.projects
           .filter(p => {
             if (filter === 'all') return true;

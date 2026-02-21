@@ -33,7 +33,7 @@ export default function KPIDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-kpi-dashboard" className="flex items-center justify-center h-64">
         <p className="text-slate-500 text-sm">Loading KPI dashboard...</p>
       </div>
     );
@@ -56,7 +56,7 @@ export default function KPIDashboard() {
   const maxFunnel = Math.max(...funnelStages.map(s => s.count), 1);
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div data-testid="canvas-kpi-dashboard" className="max-w-5xl mx-auto px-6 py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
           <TrendingUp size={20} className="text-success" />

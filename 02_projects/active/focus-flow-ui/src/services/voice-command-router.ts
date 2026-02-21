@@ -3,22 +3,36 @@ import { api, type VoiceCommandIntent, type VoiceCommandRequest } from './api';
 /**
  * Fast-path keyword patterns for obvious commands
  */
-const KEYWORD_PATTERNS: Record<string, { action: string; confidence: number }> = {
+const KEYWORD_PATTERNS: Record<string, { action: string; type: string; confidence: number }> = {
   // Navigation patterns
-  'go to inbox': { action: 'navigate_inbox', confidence: 0.95 },
-  'show inbox': { action: 'navigate_inbox', confidence: 0.95 },
-  'open inbox': { action: 'navigate_inbox', confidence: 0.95 },
-  'go to projects': { action: 'navigate_projects', confidence: 0.95 },
-  'show projects': { action: 'navigate_projects', confidence: 0.95 },
-  'open projects': { action: 'navigate_projects', confidence: 0.95 },
-  'go to calendar': { action: 'navigate_calendar', confidence: 0.95 },
-  'open calendar': { action: 'navigate_calendar', confidence: 0.95 },
-  'go to tasks': { action: 'navigate_tasks', confidence: 0.95 },
-  'show tasks': { action: 'navigate_tasks', confidence: 0.95 },
-  'go to ideas': { action: 'navigate_ideas', confidence: 0.95 },
-  'show ideas': { action: 'navigate_ideas', confidence: 0.95 },
-  'go to voice': { action: 'navigate_voice', confidence: 0.95 },
-  'go to wellbeing': { action: 'navigate_wellbeing', confidence: 0.95 },
+  'go to inbox': { action: 'navigate_inbox', type: 'navigation', confidence: 0.95 },
+  'show inbox': { action: 'navigate_inbox', type: 'navigation', confidence: 0.95 },
+  'open inbox': { action: 'navigate_inbox', type: 'navigation', confidence: 0.95 },
+  'go to projects': { action: 'navigate_projects', type: 'navigation', confidence: 0.95 },
+  'show projects': { action: 'navigate_projects', type: 'navigation', confidence: 0.95 },
+  'open projects': { action: 'navigate_projects', type: 'navigation', confidence: 0.95 },
+  'go to calendar': { action: 'navigate_calendar', type: 'navigation', confidence: 0.95 },
+  'open calendar': { action: 'navigate_calendar', type: 'navigation', confidence: 0.95 },
+  'go to tasks': { action: 'navigate_tasks', type: 'navigation', confidence: 0.95 },
+  'show tasks': { action: 'navigate_tasks', type: 'navigation', confidence: 0.95 },
+  'go to ideas': { action: 'navigate_ideas', type: 'navigation', confidence: 0.95 },
+  'show ideas': { action: 'navigate_ideas', type: 'navigation', confidence: 0.95 },
+  'go to voice': { action: 'navigate_voice', type: 'navigation', confidence: 0.95 },
+  'open voice console': { action: 'navigate_voice', type: 'navigation', confidence: 0.95 },
+  'go to wellbeing': { action: 'navigate_wellbeing', type: 'navigation', confidence: 0.95 },
+
+  // Approval patterns
+  'approve that': { action: 'approval_approve_latest', type: 'approval', confidence: 0.90 },
+  'approve it': { action: 'approval_approve_latest', type: 'approval', confidence: 0.90 },
+  'approve this': { action: 'approval_approve_latest', type: 'approval', confidence: 0.90 },
+  'reject that': { action: 'approval_reject_latest', type: 'approval', confidence: 0.90 },
+  'reject it': { action: 'approval_reject_latest', type: 'approval', confidence: 0.90 },
+  'reject this': { action: 'approval_reject_latest', type: 'approval', confidence: 0.90 },
+  'approve all tier 1': { action: 'approval_approve_tier1', type: 'approval', confidence: 0.90 },
+  'auto approve tier one': { action: 'approval_approve_tier1', type: 'approval', confidence: 0.90 },
+  'show approvals': { action: 'navigate_approvals', type: 'navigation', confidence: 0.95 },
+  'show pending approvals': { action: 'navigate_approvals', type: 'navigation', confidence: 0.95 },
+  'what needs approval': { action: 'navigate_approvals', type: 'navigation', confidence: 0.90 },
 };
 
 export class VoiceCommandRouter {
@@ -30,13 +44,16 @@ export class VoiceCommandRouter {
 
     for (const [pattern, result] of Object.entries(KEYWORD_PATTERNS)) {
       if (normalized === pattern || normalized.startsWith(pattern)) {
+        const label = pattern.replace('go to ', '').replace('show ', '').replace('open ', '').replace('approve ', '').replace('reject ', '');
         return {
-          type: 'navigation',
+          type: result.type as VoiceCommandIntent['type'],
           confidence: result.confidence,
           action: result.action,
           parameters: {},
-          requires_confirmation: false,
-          suggested_response: `Opening ${pattern.replace('go to ', '').replace('show ', '').replace('open ', '')}`
+          requires_confirmation: result.type === 'approval' && result.action.includes('tier'),
+          suggested_response: result.type === 'approval'
+            ? `${result.action.includes('approve') ? 'Approving' : 'Rejecting'} ${label}`
+            : `Opening ${label}`,
         };
       }
     }

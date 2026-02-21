@@ -142,7 +142,7 @@ export default function VentureWizard() {
   const stepIdx = STEPS.findIndex(s => s.id === step);
 
   return (
-    <div className="max-w-2xl mx-auto px-6 py-8">
+    <div data-testid="canvas-venture-wizard" className="max-w-2xl mx-auto px-6 py-8">
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>

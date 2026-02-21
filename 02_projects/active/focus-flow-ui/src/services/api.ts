@@ -359,7 +359,7 @@ export interface ApiError {
 // Voice Command Types
 // ============================================================================
 
-export type VoiceIntentType = 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation';
+export type VoiceIntentType = 'navigation' | 'create' | 'query' | 'update' | 'delete' | 'conversation' | 'approval';
 
 export interface VoiceCommandIntent {
   type: VoiceIntentType;

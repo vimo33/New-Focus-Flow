@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../services/api';
+import { useCanvasStore } from '../../stores/canvas';
 import { GlassCard } from '../shared';
 
 type Archetype = 'strategist' | 'cofounder' | 'critic';
@@ -78,7 +79,7 @@ export default function SettingsCanvas() {
   const skills = profile?.skills?.map((s: any) => s.name || s) || profile?.strategic_focus_tags || [];
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto">
+    <div data-testid="canvas-settings" className="p-6 lg:p-8 max-w-6xl mx-auto">
       <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-8">SETTINGS</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -268,6 +269,17 @@ export default function SettingsCanvas() {
                 <span className="text-text-primary text-sm font-mono">{new Date().toLocaleTimeString()}</span>
               </div>
             </div>
+          </GlassCard>
+
+          {/* UI Kit link */}
+          <GlassCard>
+            <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-3">Developer</h3>
+            <button
+              onClick={() => useCanvasStore.getState().setCanvas('ui_kit')}
+              className="w-full px-3 py-2 rounded-lg text-sm font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+            >
+              UI Kit
+            </button>
           </GlassCard>
 
           {/* Memory Review — live from API */}

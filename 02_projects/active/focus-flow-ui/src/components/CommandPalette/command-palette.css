@@ -15,3 +15,8 @@
 [cmdk-item] {
   min-height: 40px;
 }
+
+/* Selected state glow for cmd items */
+[cmdk-item][data-selected="true"].cmd-item {
+  box-shadow: inset 0 0 0 1px rgba(0, 229, 255, 0.1);
+}

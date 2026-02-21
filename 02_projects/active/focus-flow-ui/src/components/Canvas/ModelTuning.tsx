@@ -15,7 +15,7 @@ export default function ModelTuning() {
   const totalAgents = configs.reduce((s, c) => s + c.agents.length, 0);
 
   return (
-    <div className="max-w-4xl mx-auto px-6 py-8">
+    <div data-testid="canvas-model-tuning" className="max-w-4xl mx-auto px-6 py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
           <Cpu size={20} className="text-tertiary" />

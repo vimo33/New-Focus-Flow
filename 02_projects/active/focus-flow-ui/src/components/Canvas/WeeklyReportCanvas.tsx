@@ -50,7 +50,7 @@ export default function WeeklyReportCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-weekly-report" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading weekly report...</div>
       </div>
     );
@@ -58,7 +58,7 @@ export default function WeeklyReportCanvas() {
 
   if (!report) {
     return (
-      <div className="p-6 lg:p-8 max-w-6xl mx-auto">
+      <div data-testid="canvas-weekly-report" className="p-6 lg:p-8 max-w-6xl mx-auto">
         <div className="mb-8">
           <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">
             WEEKLY PERFORMANCE REPORT
@@ -85,7 +85,7 @@ export default function WeeklyReportCanvas() {
   const maxActivity = Math.max(...activityData, 1);
 
   return (
-    <div className="p-6 lg:p-8 max-w-6xl mx-auto">
+    <div data-testid="canvas-weekly-report" className="p-6 lg:p-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">

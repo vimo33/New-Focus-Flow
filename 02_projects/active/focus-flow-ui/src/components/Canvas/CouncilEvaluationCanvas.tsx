@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useCanvasStore } from '../../stores/canvas';
 import { api } from '../../services/api';
 import { useAgentStore } from '../../stores/agent';
-import { GlassCard, ConfidenceRing } from '../shared';
+import { GlassCard, ConfidenceRing, ExpandableText, StatusChip, ApprovalBar } from '../shared';
 
 interface Evaluator {
   name: string;
@@ -24,7 +24,7 @@ function EvaluatorCard({ ev, index }: { ev: Evaluator; index: number }) {
   const barWidth = `${(ev.score / 10) * 100}%`;
 
   return (
-    <GlassCard>
+    <GlassCard className="flex flex-col">
       {/* Header: icon + name + score */}
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2.5">
@@ -45,8 +45,8 @@ function EvaluatorCard({ ev, index }: { ev: Evaluator; index: number }) {
       </div>
 
       {/* Assessment with left border */}
-      <div className={`border-l-2 ${borderColor} pl-3 mb-3`}>
-        <p className="text-text-secondary text-sm leading-relaxed">{ev.assessment}</p>
+      <div className={`border-l-2 ${borderColor} pl-3 mb-3 flex-1`}>
+        <ExpandableText text={ev.assessment} maxLines={3} />
       </div>
 
       {/* Risk badge */}
@@ -189,7 +189,7 @@ export default function CouncilEvaluationCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-council" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading council evaluation...</div>
       </div>
     );
@@ -198,7 +198,7 @@ export default function CouncilEvaluationCanvas() {
   if (polling) {
     const ideaName = canvasParams?.ideaName || 'your idea';
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-council" className="flex items-center justify-center h-64">
         <div className="text-center">
           <div className="inline-flex items-center gap-3 mb-4">
             <div className="w-3 h-3 rounded-full bg-primary animate-pulse" />
@@ -219,7 +219,7 @@ export default function CouncilEvaluationCanvas() {
 
   if (error || !verdict) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-council" className="flex items-center justify-center h-64">
         <div className="text-center">
           <p className="text-text-secondary text-lg">No Council Evaluation</p>
           <p className="text-text-tertiary text-sm mt-1">
@@ -267,7 +267,7 @@ export default function CouncilEvaluationCanvas() {
   };
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div data-testid="canvas-council" className="p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-8">
         <button
@@ -294,7 +294,7 @@ export default function CouncilEvaluationCanvas() {
       {/* Main Asymmetric Layout: Left evaluator | Center Ring | Right evaluators */}
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-6 mb-8 items-start">
         {/* Left: Featured evaluator */}
-        <div>
+        <div className="flex flex-col items-stretch">
           {featuredEvaluator && (
             <EvaluatorCard ev={featuredEvaluator} index={0} />
           )}
@@ -304,19 +304,18 @@ export default function CouncilEvaluationCanvas() {
         <div className="flex justify-center items-center py-4 lg:py-8">
           <div className="text-center">
             <ConfidenceRing score={compositeScore} size="xl" />
-            <div className="flex items-center justify-center gap-2 mt-3">
-              <span className={`w-2 h-2 rounded-full ${
-                compositeScore >= 7 ? 'bg-success' : compositeScore >= 5 ? 'bg-secondary' : 'bg-danger'
-              }`} />
-              <p className="text-xs tracking-[0.15em] text-text-tertiary uppercase font-semibold">
-                {compositeScore >= 7 ? 'OPPORTUNITY' : compositeScore >= 5 ? 'PROCEED WITH CAUTION' : 'PASS'}
-              </p>
+            <div className="flex items-center justify-center mt-3">
+              <StatusChip
+                label={compositeScore >= 7 ? 'Opportunity' : compositeScore >= 5 ? 'Caution' : 'Pass'}
+                variant={compositeScore >= 7 ? 'success' : compositeScore >= 5 ? 'warning' : 'danger'}
+                pulse={compositeScore >= 7}
+              />
             </div>
           </div>
         </div>
 
         {/* Right: Stacked evaluators */}
-        <div className="space-y-4">
+        <div className="flex flex-col items-stretch gap-4">
           {rightEvaluators.map((ev, i) => (
             <EvaluatorCard key={i} ev={ev} index={i + 1} />
           ))}
@@ -420,21 +419,11 @@ export default function CouncilEvaluationCanvas() {
 
       {/* Synthesis bar */}
       {verdict.synthesized_reasoning && (
-        <div className="bg-tertiary/10 border border-tertiary/20 rounded-xl p-4 flex items-center gap-4">
-          <div className="w-10 h-10 rounded-full bg-tertiary/20 flex items-center justify-center flex-shrink-0">
-            <span className="text-tertiary text-lg">{'\u2726'}</span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2">
-              <span className="text-tertiary text-xs font-semibold tracking-wider uppercase">NITARA</span>
-              <span className="text-text-tertiary text-[10px]">The Critic Node Active</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-success" />
-            </div>
-            <p className="text-text-secondary text-sm mt-0.5 truncate">
-              {'\u00BB'} {verdict.synthesized_reasoning}
-            </p>
-          </div>
-        </div>
+        <ApprovalBar
+          message={verdict.synthesized_reasoning}
+          agentName="Nitara"
+          onApprove={actions.length > 0 && verdict.id ? handleApplyActions : undefined}
+        />
       )}
     </div>
   );

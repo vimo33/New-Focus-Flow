@@ -75,6 +75,8 @@ const ExperimentStack = lazy(() => import('./ExperimentStack'));
 const ApprovalQueue = lazy(() => import('./ApprovalQueue'));
 const PlaybookLibrary = lazy(() => import('./PlaybookLibrary'));
 const VentureWizard = lazy(() => import('./VentureWizard'));
+const UIKitCanvas = lazy(() => import('./UIKitCanvas'));
+const VoiceConsoleCanvas = lazy(() => import('./VoiceConsoleCanvas'));
 
 // Lazy load Phase 5 canvas components
 const AutonomousBuilder = lazy(() => import('./AutonomousBuilder'));
@@ -124,8 +126,8 @@ export default function CanvasRouter() {
     switch (activeMode) {
       case 'think':
         switch (activeSubTab) {
-          case 'strategy': return <PortfolioCanvas />;
           case 'ventures': return <PortfolioCanvas />;
+          case 'insights': return <PortfolioCanvas />;
           case 'finance': return <FinancialsCanvas />;
           case 'comms': return <CommunicationsCanvas />;
           default: return <MorningBriefing />;
@@ -182,6 +184,8 @@ export default function CanvasRouter() {
       case 'settings': return <SettingsCanvas />;
       case 'calendar': return <CalendarCanvas />;
       case 'venture_wizard': return <VentureWizard />;
+      case 'ui_kit': return <UIKitCanvas />;
+      case 'voice_console': return <VoiceConsoleCanvas />;
       default: return null;
     }
   };

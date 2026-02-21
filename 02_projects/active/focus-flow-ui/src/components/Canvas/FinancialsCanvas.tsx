@@ -190,7 +190,7 @@ export default function FinancialsCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-financials" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading financials...</div>
       </div>
     );
@@ -228,7 +228,7 @@ export default function FinancialsCanvas() {
   const inferenceMonthlyUSD = inferenceCosts?.daily_average_usd ? inferenceCosts.daily_average_usd * 30 : 0;
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div data-testid="canvas-financials" className="p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
         <h2 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase"

@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useCanvasStore } from '../../stores/canvas';
 import { useConversationStore } from '../../stores/conversation';
 import { api } from '../../services/api';
 import { FileText, AlertTriangle } from 'lucide-react';
-import { GlassCard, Badge, PipelineNode, ConfidenceRing, SignalStrengthBadge, EnjoymentWidget } from '../shared';
+import { GlassCard, Badge, PipelineNode, ConfidenceRing, SignalStrengthBadge, EnjoymentWidget, ExpandableText } from '../shared';
 import { useValidationStore } from '../../stores/validation';
 import type { Task, Project, ActivityEntry } from '../../services/api';
 
@@ -65,6 +65,8 @@ export default function ProjectDetailCanvas() {
     reasoning: string;
   }>>([]);
   const { scores, fetchScore, fetchEnjoyment } = useValidationStore();
+  const headerRef = useRef<HTMLDivElement>(null);
+  const [showStickyBar, setShowStickyBar] = useState(false);
 
   // Set project context for Nitara when viewing this project
   useEffect(() => {
@@ -114,6 +116,18 @@ export default function ProjectDetailCanvas() {
       .then(setNetworkLeverage)
       .catch(() => setNetworkLeverage(null));
   }, [projectId]);
+
+  // Sticky bar: show when header scrolls out of view
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setShowStickyBar(!entry.isIntersecting),
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const handleAddTask = async () => {
     if (!newTaskTitle.trim() || !projectId) return;
@@ -187,7 +201,7 @@ export default function ProjectDetailCanvas() {
 
   if (!projectId) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-project-detail" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">No project selected.</div>
       </div>
     );
@@ -195,7 +209,7 @@ export default function ProjectDetailCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-project-detail" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading project...</div>
       </div>
     );
@@ -203,7 +217,7 @@ export default function ProjectDetailCanvas() {
 
   if (!project) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-project-detail" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Project not found.</div>
       </div>
     );
@@ -236,9 +250,33 @@ export default function ProjectDetailCanvas() {
   const highPriorityTasks = activeTasks.filter(t => t.priority === 'high');
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div data-testid="canvas-project-detail" className="p-6 lg:p-8 max-w-7xl mx-auto">
+      {/* Sticky action bar */}
+      <div className={`sticky top-0 z-10 transition-all duration-200 ${showStickyBar ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-2 pointer-events-none'}`}>
+        <div className="bg-surface/90 backdrop-blur-lg border-b border-[var(--glass-border)] px-6 py-3 -mx-6 lg:-mx-8 mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            <h2 className="text-sm font-bold text-text-primary truncate">{project.title}</h2>
+            <Badge label={PHASE_LABELS[currentPhase]?.toUpperCase() || currentPhase.toUpperCase()} variant="active" />
+          </div>
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <button
+              onClick={() => document.getElementById('add-task-input')?.focus()}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+            >
+              Add Task
+            </button>
+            <button
+              onClick={() => setCanvas('council_evaluation', { projectId: project.id, projectName: project.title })}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-tertiary/30 text-tertiary hover:bg-tertiary/10 transition-colors"
+            >
+              Council Review
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="mb-6">
+      <div ref={headerRef} className="mb-6">
         <button
           onClick={goBack}
           className="text-text-tertiary hover:text-text-primary text-sm mb-3 flex items-center gap-1 transition-colors"
@@ -281,7 +319,9 @@ export default function ProjectDetailCanvas() {
               {project.title}
             </h1>
             {project.description && (
-              <p className="text-text-secondary text-sm mt-2 max-w-2xl">{project.description}</p>
+              <div className="mt-2 max-w-2xl">
+                <ExpandableText text={project.description} maxLines={2} />
+              </div>
             )}
             <div className="flex items-center gap-4 mt-3">
               {scores.get(project.id) && (
@@ -488,6 +528,7 @@ export default function ProjectDetailCanvas() {
             {/* Add Task */}
             <div className="flex gap-2">
               <input
+                id="add-task-input"
                 type="text"
                 value={newTaskTitle}
                 onChange={(e) => setNewTaskTitle(e.target.value)}
@@ -506,7 +547,7 @@ export default function ProjectDetailCanvas() {
           </GlassCard>
         </div>
 
-        {/* Right Column */}
+        {/* Right Column — reordered: actionable items first */}
         <div className="space-y-4">
           {/* Financials with Margin */}
           <GlassCard>
@@ -534,6 +575,70 @@ export default function ProjectDetailCanvas() {
               </div>
             </div>
           </GlassCard>
+
+          {/* AI Council Review — moved up for visibility */}
+          {(project as any).artifacts?.council_verdict && (() => {
+            const cv = (project as any).artifacts.council_verdict;
+            const score = cv.overall_score || 0;
+            const rec = cv.recommendation || 'needs-info';
+            const evals = cv.evaluations || [];
+            return (
+              <div className="cursor-pointer" onClick={() => setCanvas('council_evaluation', { projectId: project.id, projectName: project.title })}>
+              <GlassCard className="hover:border-primary/40 transition-colors">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-xs font-semibold tracking-wider text-text-primary uppercase">AI Council Review</h3>
+                  <span className={`text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded-full ${
+                    rec === 'approve' ? 'bg-success/15 text-success' :
+                    rec === 'needs-info' ? 'bg-secondary/15 text-secondary' :
+                    'bg-danger/15 text-danger'
+                  }`}>
+                    {rec === 'approve' ? 'PROCEED' : rec === 'needs-info' ? 'NEEDS INFO' : 'RECONSIDER'}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-4 mb-3">
+                  <ConfidenceRing score={score} size="sm" />
+                  <div>
+                    <p className="text-text-primary font-mono text-lg font-bold tabular-nums">{score.toFixed(1)}<span className="text-text-tertiary text-sm">/10</span></p>
+                    <p className="text-text-tertiary text-xs">{evals.length} specialist{evals.length !== 1 ? 's' : ''}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-1.5 mb-3">
+                  {evals.slice(0, 3).map((ev: any, i: number) => (
+                    <div key={i} className="flex items-center justify-between">
+                      <span className="text-text-secondary text-xs truncate flex-1 mr-2">
+                        {ev.agent_name || ev.evaluator_name || 'Agent'}
+                      </span>
+                      <span className={`font-mono text-xs font-semibold ${
+                        ev.score >= 7 ? 'text-success' : ev.score >= 5 ? 'text-secondary' : 'text-danger'
+                      }`}>
+                        {ev.score?.toFixed(1)}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-end">
+                  <span className="text-primary text-xs font-medium">View Full Evaluation &rarr;</span>
+                </div>
+              </GlassCard>
+              </div>
+            );
+          })()}
+
+          {!(project as any).artifacts?.council_verdict && (
+            <GlassCard>
+              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-3">AI Council Review</h3>
+              <p className="text-text-tertiary text-sm mb-3">No council evaluation yet.</p>
+              <button
+                onClick={() => setCanvas('council_evaluation', { projectId: project.id, projectName: project.title })}
+                className="w-full px-3 py-2 rounded-lg text-sm font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+              >
+                Run Council Evaluation
+              </button>
+            </GlassCard>
+          )}
 
           {/* Network Leverage */}
           {(networkLeverage || networkXref.length > 0) && (
@@ -661,69 +766,43 @@ export default function ProjectDetailCanvas() {
             </div>
           )}
 
-          {/* AI Council Review */}
-          {(project as any).artifacts?.council_verdict && (() => {
-            const cv = (project as any).artifacts.council_verdict;
-            const score = cv.overall_score || 0;
-            const rec = cv.recommendation || 'needs-info';
-            const evals = cv.evaluations || [];
-            return (
-              <div className="cursor-pointer" onClick={() => setCanvas('council_evaluation', { projectId: project.id, projectName: project.title })}>
-              <GlassCard className="hover:border-primary/40 transition-colors">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="text-xs font-semibold tracking-wider text-text-primary uppercase">AI Council Review</h3>
-                  <span className={`text-[10px] tracking-wider font-semibold px-2 py-0.5 rounded-full ${
-                    rec === 'approve' ? 'bg-success/15 text-success' :
-                    rec === 'needs-info' ? 'bg-secondary/15 text-secondary' :
-                    'bg-danger/15 text-danger'
-                  }`}>
-                    {rec === 'approve' ? 'PROCEED' : rec === 'needs-info' ? 'NEEDS INFO' : 'RECONSIDER'}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-4 mb-3">
-                  <ConfidenceRing score={score} size="sm" />
-                  <div>
-                    <p className="text-text-primary font-mono text-lg font-bold tabular-nums">{score.toFixed(1)}<span className="text-text-tertiary text-sm">/10</span></p>
-                    <p className="text-text-tertiary text-xs">{evals.length} specialist{evals.length !== 1 ? 's' : ''}</p>
-                  </div>
-                </div>
-
-                <div className="space-y-1.5 mb-3">
-                  {evals.slice(0, 3).map((ev: any, i: number) => (
-                    <div key={i} className="flex items-center justify-between">
-                      <span className="text-text-secondary text-xs truncate flex-1 mr-2">
-                        {ev.agent_name || ev.evaluator_name || 'Agent'}
-                      </span>
-                      <span className={`font-mono text-xs font-semibold ${
-                        ev.score >= 7 ? 'text-success' : ev.score >= 5 ? 'text-secondary' : 'text-danger'
-                      }`}>
-                        {ev.score?.toFixed(1)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex items-center justify-end">
-                  <span className="text-primary text-xs font-medium">View Full Evaluation &rarr;</span>
-                </div>
-              </GlassCard>
-              </div>
-            );
-          })()}
-
-          {!(project as any).artifacts?.council_verdict && (
-            <GlassCard>
-              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase mb-3">AI Council Review</h3>
-              <p className="text-text-tertiary text-sm mb-3">No council evaluation yet.</p>
+          {/* Reports */}
+          <GlassCard>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">Reports</h3>
               <button
-                onClick={() => setCanvas('council_evaluation', { projectId: project.id, projectName: project.title })}
-                className="w-full px-3 py-2 rounded-lg text-sm font-medium border border-primary/30 text-primary hover:bg-primary/10 transition-colors"
+                onClick={() => setCanvas('reports')}
+                className="text-primary text-xs hover:text-primary/80 transition-colors"
               >
-                Run Council Evaluation
+                View All &rarr;
               </button>
-            </GlassCard>
-          )}
+            </div>
+            {projectReports.length === 0 ? (
+              <p className="text-text-tertiary text-xs">No reports for this project yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {projectReports.slice(0, 3).map((report: any) => (
+                  <button
+                    key={report.id}
+                    onClick={() => setCanvas('reports')}
+                    className="w-full flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg hover:bg-elevated/40 transition-colors text-left"
+                  >
+                    <FileText size={14} className="text-primary flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-text-primary text-sm truncate">{report.title}</p>
+                      <p className="text-text-tertiary text-xs">
+                        {new Date(report.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      </p>
+                    </div>
+                    <Badge
+                      label={report.type.replace(/-/g, ' ').toUpperCase()}
+                      variant="playbook"
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </GlassCard>
 
           {/* Collaborators */}
           <GlassCard>
@@ -805,44 +884,6 @@ export default function ProjectDetailCanvas() {
               </button>
             </GlassCard>
           )}
-
-          {/* Reports */}
-          <GlassCard>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-xs font-semibold tracking-wider text-text-tertiary uppercase">Reports</h3>
-              <button
-                onClick={() => setCanvas('reports')}
-                className="text-primary text-xs hover:text-primary/80 transition-colors"
-              >
-                View All &rarr;
-              </button>
-            </div>
-            {projectReports.length === 0 ? (
-              <p className="text-text-tertiary text-xs">No reports for this project yet.</p>
-            ) : (
-              <div className="space-y-2">
-                {projectReports.slice(0, 3).map((report: any) => (
-                  <button
-                    key={report.id}
-                    onClick={() => setCanvas('reports')}
-                    className="w-full flex items-center gap-3 py-2 px-2 -mx-2 rounded-lg hover:bg-elevated/40 transition-colors text-left"
-                  >
-                    <FileText size={14} className="text-primary flex-shrink-0" />
-                    <div className="flex-1 min-w-0">
-                      <p className="text-text-primary text-sm truncate">{report.title}</p>
-                      <p className="text-text-tertiary text-xs">
-                        {new Date(report.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                      </p>
-                    </div>
-                    <Badge
-                      label={report.type.replace(/-/g, ' ').toUpperCase()}
-                      variant="playbook"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
-          </GlassCard>
 
           {/* Activity Feed */}
           <GlassCard>

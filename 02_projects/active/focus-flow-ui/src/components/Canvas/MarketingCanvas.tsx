@@ -144,7 +144,7 @@ export default function MarketingCanvas() {
 
   if (!projectId) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-marketing" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">No project selected.</div>
       </div>
     );
@@ -152,7 +152,7 @@ export default function MarketingCanvas() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64">
+      <div data-testid="canvas-marketing" className="flex items-center justify-center h-64">
         <div className="text-text-tertiary">Loading marketing data...</div>
       </div>
     );
@@ -163,7 +163,7 @@ export default function MarketingCanvas() {
   const hasStrategy = strategy && strategy.id;
 
   return (
-    <div className="p-6 lg:p-8 max-w-7xl mx-auto">
+    <div data-testid="canvas-marketing" className="p-6 lg:p-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="mb-6">
         <button

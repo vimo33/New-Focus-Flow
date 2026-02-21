@@ -4,6 +4,7 @@ import ConversationRail from '../ConversationRail/ConversationRail';
 import { useCanvasStore } from '../../stores/canvas';
 import { useModeStore, MODE_LABELS } from '../../stores/mode';
 import { api } from '../../services/api';
+import { RouteProgressBar } from '../shared/RouteProgressBar';
 
 const CanvasRouter = lazy(() => import('../Canvas/CanvasRouter'));
 const CommandPalette = lazy(() => import('../CommandPalette/CommandPalette'));
@@ -52,7 +53,10 @@ export function NitaraLayout() {
   }
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-base text-text-primary overflow-hidden">
+    <div className="min-h-screen min-h-[100dvh] bg-base text-text-primary overflow-hidden" data-testid="app-shell">
+      {/* Route progress bar */}
+      {!isOnboarding && <RouteProgressBar />}
+
       {/* Top bar — mode indicator */}
       {!isOnboarding && (
         <header className="fixed top-0 left-0 right-0 z-40 h-12 flex items-center justify-between px-4 bg-[rgba(15,10,20,0.85)] backdrop-blur-[20px] border-b border-white/5">

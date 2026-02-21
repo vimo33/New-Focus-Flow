@@ -5,7 +5,7 @@ export type NitaraMode = 'think' | 'validate' | 'build' | 'grow' | 'leverage';
 export type SubTab = string;
 
 interface ModeSubTabs {
-  think: ['strategy', 'ventures', 'finance', 'comms'];
+  think: ['ventures', 'insights', 'finance', 'comms'];
   validate: ['stack', 'variant-testing', 'data-sources'];
   build: ['build', 'control', 'agents', 'data', 'tune'];
   grow: ['resources', 'kpis', 'simulation', 'market'];
@@ -13,7 +13,7 @@ interface ModeSubTabs {
 }
 
 export const MODE_SUB_TABS: ModeSubTabs = {
-  think: ['strategy', 'ventures', 'finance', 'comms'],
+  think: ['ventures', 'insights', 'finance', 'comms'],
   validate: ['stack', 'variant-testing', 'data-sources'],
   build: ['build', 'control', 'agents', 'data', 'tune'],
   grow: ['resources', 'kpis', 'simulation', 'market'],
@@ -29,8 +29,8 @@ export const MODE_LABELS: Record<NitaraMode, string> = {
 };
 
 export const SUB_TAB_LABELS: Record<string, string> = {
-  strategy: 'Strategy',
   ventures: 'Ventures',
+  insights: 'Insights',
   finance: 'Finance',
   comms: 'Comms',
   stack: 'Stack',
@@ -62,7 +62,7 @@ interface ModeStore {
 
 export const useModeStore = create<ModeStore>((set) => ({
   activeMode: 'think',
-  activeSubTab: 'strategy',
+  activeSubTab: 'ventures',
   canvasParams: {},
   setMode: (mode) =>
     set({
@@ -74,3 +74,7 @@ export const useModeStore = create<ModeStore>((set) => ({
   setModeAndTab: (mode, subTab, params = {}) =>
     set({ activeMode: mode, activeSubTab: subTab, canvasParams: params }),
 }));
+
+if (import.meta.env.DEV) {
+  (window as any).__ZUSTAND_MODE_STORE__ = useModeStore;
+}

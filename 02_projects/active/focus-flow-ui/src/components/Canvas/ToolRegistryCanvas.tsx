@@ -51,7 +51,7 @@ export default function ToolRegistryCanvas() {
   const execTypes = [...new Set(tools.map(t => t.execution_type))];
 
   return (
-    <div className="max-w-5xl mx-auto px-6 py-8">
+    <div data-testid="canvas-tool-registry" className="max-w-5xl mx-auto px-6 py-8">
       <div className="mb-6">
         <h1 className="text-xl font-bold text-slate-100 flex items-center gap-2">
           <Wrench size={20} className="text-tertiary" />

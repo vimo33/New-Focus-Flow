@@ -83,6 +83,20 @@ export class ActionExecutor {
         case 'delete_item':
           return await this.executeDeleteItem(intent.parameters);
 
+        // ==================== APPROVAL ACTIONS ====================
+        case 'approval_approve_latest':
+          return await this.executeApprovalAction('approve');
+
+        case 'approval_reject_latest':
+          return await this.executeApprovalAction('reject');
+
+        case 'approval_approve_tier1':
+          return await this.executeApprovalTier1();
+
+        case 'navigate_approvals':
+          // Use canvas store directly (SPA navigation)
+          return { success: true, message: 'Showing approvals', speak: true, data: { canvas: 'voice_console' } };
+
         // ==================== CONVERSATION ====================
         case 'conversation':
           return {
@@ -325,6 +339,55 @@ export class ActionExecutor {
       speak: true,
       data: updated.task
     };
+  }
+
+  // ==================== APPROVAL ACTION IMPLEMENTATIONS ====================
+
+  private async executeApprovalAction(decision: 'approve' | 'reject'): Promise<ExecutionResult> {
+    try {
+      const { approvals } = await api.getApprovals('pending');
+      if (!approvals || approvals.length === 0) {
+        return { success: true, message: 'No pending approvals', speak: true };
+      }
+
+      const latest = approvals[0];
+      await api.decideApproval(latest.id, decision === 'approve' ? 'approved' : 'rejected');
+
+      const verb = decision === 'approve' ? 'Approved' : 'Rejected';
+      return {
+        success: true,
+        message: `${verb}: ${latest.actionSummary}`,
+        speak: true,
+        data: latest,
+      };
+    } catch (error: any) {
+      return { success: false, message: `Failed to ${decision}: ${error.message}`, speak: true };
+    }
+  }
+
+  private async executeApprovalTier1(): Promise<ExecutionResult> {
+    try {
+      const { approvals } = await api.getApprovals('pending');
+      const tier1 = (approvals || []).filter((a: any) => a.riskTier === 'tier1');
+
+      if (tier1.length === 0) {
+        return { success: true, message: 'No tier 1 approvals pending', speak: true };
+      }
+
+      let approved = 0;
+      for (const a of tier1) {
+        await api.decideApproval(a.id, 'approved');
+        approved++;
+      }
+
+      return {
+        success: true,
+        message: `Auto-approved ${approved} tier 1 action${approved > 1 ? 's' : ''}`,
+        speak: true,
+      };
+    } catch (error: any) {
+      return { success: false, message: `Failed to auto-approve: ${error.message}`, speak: true };
+    }
   }
 
   // ==================== DELETE ACTION IMPLEMENTATIONS ====================

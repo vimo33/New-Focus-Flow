@@ -302,7 +302,7 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
 
   if (showGuide) {
     return (
-      <div className="p-6 max-w-4xl mx-auto">
+      <div data-testid="canvas-reports" className="p-6 max-w-4xl mx-auto">
         <div className="flex items-center gap-3 mb-6">
           <button
             onClick={goBack}
@@ -342,7 +342,7 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
     const title = selectedReport.title || selectedReport.report_title || selectedId;
 
     return (
-      <div className="p-6 max-w-4xl mx-auto">
+      <div data-testid="canvas-reports" className="p-6 max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center gap-3 mb-6">
           <button
@@ -385,7 +385,7 @@ export default function ReportsCanvas({ filterProjectId }: ReportsCanvasProps = 
   // ─── List View ──────────────────────────────────────────────────────────
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
+    <div data-testid="canvas-reports" className="p-6 max-w-4xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-xl font-semibold text-text-primary">
