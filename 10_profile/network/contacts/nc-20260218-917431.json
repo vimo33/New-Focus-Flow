@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917431",
+  "first_name": "Jitender Singh",
+  "last_name": "Dahiya",
+  "full_name": "Jitender Singh Dahiya",
+  "company": "KroniQ AI",
+  "position": "Founder and CEO",
+  "linkedin_url": "https://www.linkedin.com/in/jsdahiya",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["AI", "SaaS", "productivity", "founder", "builder-in-public"],
+  "last_contacted": "23 May 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.431Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 73,
+  "triage_score": 7.3,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "KroniQ AI achieved 500+ users within 5 days of launch — strong early PMF signal for AI productivity tools",
+      "Jitender has 18+ years in banking before transitioning to AI entrepreneurship — deep enterprise domain knowledge",
+      "Active builder-in-public on LinkedIn, posting consistently about AI startup journey"
+    ],
+    "outreach_angle": "Fellow AI tools founder building in the productivity space. Reach out as a peer — share what you are building with Multiplium and propose a mutual product demo exchange. KroniQ AI's 500+ user base could be a future distribution channel for Nitara or Multiplium integration. Message via LinkedIn: 'Saw your 500 users in 5 days post — impressive early signal. I am building Multiplium, an AI orchestration layer for solo founders. Would love to swap notes on building AI tools.' Timeline: this week.",
+    "relevant_project": "Multiplium"
+  }
+}

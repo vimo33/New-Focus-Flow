@@ -1,0 +1,14 @@
+{
+  "id": "task-1771646404745-rymo9r",
+  "skill": "monitor-project",
+  "arguments": "all",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "queued",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-21T04:00:04.745Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system"
+}

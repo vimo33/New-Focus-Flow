@@ -93,6 +93,29 @@ class ToolRunnerService {
           input.model
         );
 
+      case 'blog-publisher': {
+        const { blogPublisher } = await import('./blog-publisher.service');
+        const { gtmOrchestrator } = await import('./gtm-orchestrator.service');
+        const entries = await gtmOrchestrator.getCalendarEntries(input.project_id);
+        const entry = entries.find(e => e.id === input.entry_id);
+        if (!entry) throw new Error(`Calendar entry '${input.entry_id}' not found`);
+        return blogPublisher.publish(entry);
+      }
+
+      case 'social-publisher': {
+        const { socialPublisher } = await import('./social-publisher.service');
+        const { gtmOrchestrator: gtm } = await import('./gtm-orchestrator.service');
+        const calEntries = await gtm.getCalendarEntries(input.project_id);
+        const calEntry = calEntries.find(e => e.id === input.entry_id);
+        if (!calEntry) throw new Error(`Calendar entry '${input.entry_id}' not found`);
+        return socialPublisher.publish(calEntry, input.channel || calEntry.channel);
+      }
+
+      case 'youtube-indexer': {
+        const { youtubeIndexer } = await import('./youtube-indexer.service');
+        return youtubeIndexer.indexPlaylist(input.playlist_id);
+      }
+
       default:
         throw new Error(`No in-process handler for tool '${manifest.id}'`);
     }

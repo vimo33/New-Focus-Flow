@@ -120,11 +120,11 @@ function PowerUserGuide() {
     {
       id: 'philosophy',
       icon: 'psychology',
-      title: 'How Focus Flow Works',
+      title: 'How Nitara Works',
       content: (
         <div className="space-y-3">
           <p>
-            Focus Flow is built around one principle: <Strong>capture fast, process later, execute with focus.</Strong> Everything
+            Nitara is built around one principle: <Strong>capture fast, process later, execute with focus.</Strong> Everything
             flows through a pipeline that turns raw thoughts into structured outcomes.
           </p>
           <FlowDiagram steps={['Capture', 'Inbox', 'Route', 'Execute', 'Review']} />
@@ -208,7 +208,7 @@ function PowerUserGuide() {
       content: (
         <div className="space-y-3">
           <p>
-            The Ideas pipeline is unique to Focus Flow. It lets you validate ideas with an <Strong>AI Council</Strong> before
+            The Ideas pipeline is unique to Nitara. It lets you validate ideas with an <Strong>AI Council</Strong> before
             investing time.
           </p>
           <h4 className="text-white font-medium text-sm">The idea journey:</h4>
@@ -421,7 +421,7 @@ function PowerUserGuide() {
       content: (
         <div className="space-y-3">
           <p>
-            Focus Flow uses a <Strong>file-based vault</Strong> — no database. Every item you create is a plain JSON file
+            Nitara uses a <Strong>file-based vault</Strong> — no database. Every item you create is a plain JSON file
             on disk at <code className="px-1.5 py-0.5 bg-card-dark rounded text-xs font-mono text-primary">/srv/focus-flow/</code>.
             You can read, edit, back up, or version-control your data with standard tools.
           </p>

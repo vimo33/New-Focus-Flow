@@ -1,0 +1,72 @@
+{
+  "id": "software-build",
+  "name": "Software Build",
+  "description": "End-to-end software product development from concept to deployment",
+  "phases": [
+    {
+      "id": "concept",
+      "name": "Concept",
+      "order": 1,
+      "substeps": ["Brainstorm", "Research", "Define problem"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "evaluate",
+      "name": "Evaluate",
+      "order": 2,
+      "substeps": ["Council review", "Feasibility analysis", "Risk assessment"],
+      "approval_gate": true,
+      "tools": ["council"]
+    },
+    {
+      "id": "spec",
+      "name": "Spec",
+      "order": 3,
+      "substeps": ["Requirements", "User stories", "Technical spec"],
+      "approval_gate": true,
+      "tools": ["spec-generator"]
+    },
+    {
+      "id": "design",
+      "name": "Design",
+      "order": 4,
+      "substeps": ["System design", "UI mockups", "Review"],
+      "approval_gate": true,
+      "tools": ["design-parser"]
+    },
+    {
+      "id": "dev",
+      "name": "Dev",
+      "order": 5,
+      "substeps": ["Implementation", "Code review", "Integration"],
+      "approval_gate": false,
+      "tools": ["code-generator"]
+    },
+    {
+      "id": "test",
+      "name": "Test",
+      "order": 6,
+      "substeps": ["Unit tests", "Integration tests", "UAT"],
+      "approval_gate": true,
+      "tools": ["validator"]
+    },
+    {
+      "id": "deploy",
+      "name": "Deploy",
+      "order": 7,
+      "substeps": ["Staging deploy", "Production deploy", "Monitoring"],
+      "approval_gate": true,
+      "tools": ["deployer"]
+    },
+    {
+      "id": "live",
+      "name": "Live",
+      "order": 8,
+      "substeps": ["Launch", "GTM activation", "Performance review"],
+      "approval_gate": false,
+      "tools": ["gtm-orchestrator"]
+    }
+  ],
+  "default_tools": ["council", "spec-generator", "code-generator", "deployer"]
+}

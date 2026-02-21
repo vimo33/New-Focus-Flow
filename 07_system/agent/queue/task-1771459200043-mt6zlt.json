@@ -1,0 +1,18 @@
+{
+  "id": "task-1771459200043-mt6zlt",
+  "skill": "monitor-project",
+  "arguments": "all",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-19T00:00:00.043Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-19T00:00:00.071Z",
+  "pid": 2107167,
+  "completed_at": "2026-02-19T00:01:24.697Z",
+  "result_file": "/srv/focus-flow/07_system/reports/monitor-project-2026-02-19.json"
+}

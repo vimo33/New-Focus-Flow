@@ -1,12 +1,14 @@
 ---
 name: deploy
-description: Build and deploy Focus Flow services
-allowed-tools: Bash, Read, Glob
+description: Build and deploy Nitara services
+context: fork
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
-# Deploy Focus Flow
+# Deploy Nitara
 
-Build and deploy all Focus Flow services with health verification.
+Build and deploy all Nitara services with health verification.
 
 ## Steps
 

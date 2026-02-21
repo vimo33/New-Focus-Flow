@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917819",
+  "first_name": "Raghav",
+  "last_name": "Bala",
+  "full_name": "Raghav Bala",
+  "company": "Turing",
+  "position": "Client Engagement and Delivery Director",
+  "linkedin_url": "https://www.linkedin.com/in/raghavkb",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "10 Jul 2014",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.819Z",
+  "updated_at": "2026-02-18T23:32:23.258Z",
+  "phone": "+919886102055 ::: +14256145255",
+  "emails": [
+    "raghav.kb@gmail.com"
+  ],
+  "phones": [
+    "+919886102055 ::: +14256145255"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:23.258Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

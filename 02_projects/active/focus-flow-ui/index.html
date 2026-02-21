@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Personal productivity and wellbeing system" />
-    <meta name="theme-color" content="#137fec" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Conversation-first AI business partner for solo entrepreneurs" />
+    <meta name="theme-color" content="#00E5FF" />
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
@@ -13,7 +13,7 @@
     <!-- iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="Focus Flow" />
+    <meta name="apple-mobile-web-app-title" content="Nitara" />
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
     <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
     <link rel="apple-touch-icon" sizes="144x144" href="/icons/icon-144x144.png" />
@@ -23,16 +23,42 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
     <!-- Microsoft Tile -->
-    <meta name="msapplication-TileColor" content="#137fec" />
+    <meta name="msapplication-TileColor" content="#00E5FF" />
     <meta name="msapplication-TileImage" content="/icons/icon-144x144.png" />
 
-    <title>Focus Flow</title>
+    <title>Nitara</title>
+    <script>
+      // Auto-reload on stale chunk errors (after rebuilds)
+      window.addEventListener('error', function(e) {
+        if (e.message && (e.message.includes('dynamically imported module') || e.message.includes('Failed to fetch') || e.message.includes('Loading chunk'))) {
+          var key = 'chunk-reload';
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, '1');
+            window.location.reload();
+          } else {
+            sessionStorage.removeItem(key);
+          }
+        }
+      });
+      window.addEventListener('unhandledrejection', function(e) {
+        var msg = e.reason && (e.reason.message || String(e.reason));
+        if (msg && (msg.includes('dynamically imported module') || msg.includes('Failed to fetch') || msg.includes('Loading chunk'))) {
+          var key = 'chunk-reload';
+          if (!sessionStorage.getItem(key)) {
+            sessionStorage.setItem(key, '1');
+            window.location.reload();
+          } else {
+            sessionStorage.removeItem(key);
+          }
+        }
+      });
+    </script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   </head>
-  <body>
+  <body style="background-color:#06080F">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

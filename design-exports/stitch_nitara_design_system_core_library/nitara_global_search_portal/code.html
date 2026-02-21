@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Global Search Portal</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#0f2123",
+                        "surface-dark": "#161b1c", // Slightly lighter than void for cards
+                        "void": "#050505", // Deepest black
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    boxShadow: {
+                        'glow': '0 0 20px -5px rgba(0, 229, 255, 0.5)',
+                        'glow-sm': '0 0 10px -2px rgba(0, 229, 255, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        
+        .glass-panel {
+            background: rgba(15, 33, 35, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .search-glow:focus-within {
+            box-shadow: 0 0 30px -5px rgba(0, 229, 255, 0.25);
+            border-color: #00e5ff;
+        }
+
+        /* Animation for the cursor blink effect on the selected item */
+        @keyframes pulse-border {
+            0%, 100% { border-left-color: rgba(0, 229, 255, 0.4); }
+            50% { border-left-color: rgba(0, 229, 255, 1); }
+        }
+        
+        .animate-border-pulse {
+            animation: pulse-border 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white overflow-hidden h-screen w-screen relative selection:bg-primary selection:text-black">
+<!-- DUMMY BACKGROUND DASHBOARD (Blurred Context) -->
+<!-- This section simulates the app running in the background -->
+<div aria-hidden="true" class="absolute inset-0 w-full h-full p-6 grid grid-cols-12 gap-6 opacity-40 pointer-events-none select-none">
+<!-- Sidebar -->
+<div class="col-span-2 bg-surface-dark rounded-xl border border-white/5 p-4 flex flex-col gap-4">
+<div class="h-8 w-8 bg-primary/20 rounded-full mb-4"></div>
+<div class="h-4 w-24 bg-white/10 rounded"></div>
+<div class="h-4 w-32 bg-white/10 rounded"></div>
+<div class="h-4 w-20 bg-white/10 rounded"></div>
+<div class="mt-auto h-12 w-full bg-white/5 rounded-lg"></div>
+</div>
+<!-- Main Content -->
+<div class="col-span-10 grid grid-rows-12 gap-6">
+<!-- Header -->
+<div class="row-span-1 flex justify-between items-center">
+<div class="h-8 w-48 bg-white/10 rounded"></div>
+<div class="flex gap-4">
+<div class="h-8 w-8 bg-white/10 rounded-full"></div>
+<div class="h-8 w-8 bg-white/10 rounded-full"></div>
+</div>
+</div>
+<!-- Charts Area -->
+<div class="row-span-4 grid grid-cols-3 gap-6">
+<div class="bg-surface-dark rounded-xl border border-white/5 p-4 relative overflow-hidden">
+<div class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-primary/20 to-transparent" data-alt="abstract chart gradient"></div>
+</div>
+<div class="bg-surface-dark rounded-xl border border-white/5 p-4"></div>
+<div class="bg-surface-dark rounded-xl border border-white/5 p-4 relative">
+<img class="w-full h-full object-cover opacity-20" data-alt="financial dashboard graph pattern" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUeMTXeblaA9R6bAWdihq2Ix-JTtcSRqhfCBt7p-z8cXYt5bNSK_LludB2vXva9YV-03KU9jXM_iLj4dkPEyZvHl3yw0dkOftolcN3GB3MKTY3X1EiJ3-2IWr313tB_yQRV3KGWKmrfSBAmz2vghuq_THluafsv73B8iWB82D1lAFQFJHthNQSeGkZfKVqQTMX-lbNI71c6ceQ5Uiz7SQNcWFT6iPjfB8Dm4u7uen5Wv4af4IMU7zTkrE2uqHj_s-ZKlFFki2T9Yc2"/>
+</div>
+</div>
+<!-- Table Area -->
+<div class="row-span-7 bg-surface-dark rounded-xl border border-white/5 p-6">
+<div class="h-8 w-full bg-white/5 rounded mb-4"></div>
+<div class="space-y-3">
+<div class="h-12 w-full border-b border-white/5"></div>
+<div class="h-12 w-full border-b border-white/5"></div>
+<div class="h-12 w-full border-b border-white/5"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- BACKDROP BLUR OVERLAY -->
+<div class="absolute inset-0 backdrop-blur-[30px] bg-background-dark/80 z-40"></div>
+<!-- SEARCH PORTAL CONTAINER -->
+<div class="absolute inset-0 z-50 flex items-start justify-center pt-[10vh] px-4">
+<div class="w-full max-w-[800px] flex flex-col gap-6 animate-fade-in-up">
+<!-- SEARCH INPUT -->
+<div class="relative group search-glow rounded-lg bg-void border border-primary/50 transition-all duration-300">
+<div class="absolute left-5 top-1/2 -translate-y-1/2 text-primary">
+<span class="text-2xl">✦</span>
+</div>
+<input autofocus="" class="w-full bg-transparent border-none text-xl py-5 pl-14 pr-32 text-white placeholder-white/30 focus:ring-0 font-display font-light" placeholder="Search projects, partners, or ask a question..." type="text"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2">
+<kbd class="hidden sm:inline-block px-2 py-1 text-xs font-mono font-medium text-white/40 bg-white/5 border border-white/10 rounded">Cmd + K</kbd>
+</div>
+</div>
+<!-- RESULTS GRID -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+<!-- SECTION: RECENT CONTEXT (Top-Left) -->
+<div class="md:col-span-5 flex flex-col gap-2">
+<h3 class="text-xs font-mono uppercase tracking-wider text-white/40 mb-1">Recent Context</h3>
+<div class="grid grid-cols-2 gap-2">
+<!-- Recent Item 1 -->
+<button class="group relative flex flex-col p-3 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors text-left">
+<span class="material-symbols-outlined text-white/50 text-[18px] mb-2 group-hover:text-primary transition-colors">folder_open</span>
+<span class="text-sm font-medium truncate w-full">SwissAI Studio</span>
+<span class="text-[10px] text-white/30 font-mono mt-1">Opened 2m ago</span>
+</button>
+<!-- Recent Item 2 -->
+<button class="group relative flex flex-col p-3 rounded-lg border border-white/5 bg-white/5 hover:bg-white/10 transition-colors text-left">
+<span class="material-symbols-outlined text-white/50 text-[18px] mb-2 group-hover:text-primary transition-colors">person</span>
+<span class="text-sm font-medium truncate w-full">Thomas M.</span>
+<span class="text-[10px] text-white/30 font-mono mt-1">SwissHR</span>
+</button>
+</div>
+</div>
+<!-- SECTION: SUGGESTED ACTIONS (Top-Right) -->
+<div class="md:col-span-7 flex flex-col gap-2">
+<h3 class="text-xs font-mono uppercase tracking-wider text-white/40 mb-1">Suggested Actions</h3>
+<div class="flex flex-wrap gap-2">
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-200 text-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+                            Run revenue forecast
+                        </button>
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-200 text-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">edit_note</span>
+                            Draft outreach to Savya
+                        </button>
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-violet-500/30 bg-violet-500/10 hover:bg-violet-500/20 text-violet-200 text-sm transition-colors">
+<span class="material-symbols-outlined text-[16px]">receipt_long</span>
+                            Review last 3 invoices
+                        </button>
+</div>
+</div>
+<!-- SECTION: TOP MATCHES (Center, Wider List) -->
+<div class="md:col-span-12 mt-2">
+<h3 class="text-xs font-mono uppercase tracking-wider text-white/40 mb-2 pl-1">Top Matches</h3>
+<div class="flex flex-col gap-1">
+<!-- Result 1: Project (Selected) -->
+<div class="relative flex items-center p-3 gap-4 rounded-lg bg-primary/10 border-l-2 border-primary cursor-pointer group">
+<div class="h-10 w-10 rounded flex items-center justify-center bg-primary/20 text-primary">
+<span class="material-symbols-outlined">grid_view</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-white font-medium">SwissAI Studio</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/60">Studio Project</span>
+</div>
+<div class="text-xs text-white/50 font-mono mt-0.5">Phase: Scope</div>
+</div>
+<!-- Enter Key Hint (Visible only on selection) -->
+<div class="flex items-center text-primary animate-pulse">
+<span class="material-symbols-outlined text-lg">keyboard_return</span>
+</div>
+</div>
+<!-- Result 2: Person -->
+<div class="relative flex items-center p-3 gap-4 rounded-lg border border-transparent hover:bg-white/5 cursor-pointer group transition-colors">
+<!-- Avatar with Gradient -->
+<div class="h-10 w-10 rounded-full flex items-center justify-center bg-gradient-to-br from-purple-500 to-indigo-600 text-white overflow-hidden relative" data-alt="Gradient avatar for Savya">
+<span class="z-10 text-sm font-bold">S</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-white/90 font-medium">Savya</span>
+<span class="text-xs text-white/40">• Co-founder</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] text-white/40 font-mono flex items-center gap-1">
+<span class="material-symbols-outlined text-[10px]">location_on</span> Mumbai
+                                    </span>
+<!-- Connection Strength Dots -->
+<div class="flex gap-0.5 items-center ml-2" title="Strong Connection">
+<div class="w-1 h-1 rounded-full bg-primary"></div>
+<div class="w-1 h-1 rounded-full bg-primary"></div>
+<div class="w-1 h-1 rounded-full bg-primary"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Result 3: Financial -->
+<div class="relative flex items-center p-3 gap-4 rounded-lg border border-transparent hover:bg-white/5 cursor-pointer group transition-colors">
+<div class="h-10 w-10 rounded flex items-center justify-center bg-white/5 text-rose-400">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-white/90 font-medium">Q1 Projections.pdf</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-white/10 text-white/60">Document</span>
+</div>
+<div class="text-xs font-mono mt-0.5 text-white/50">
+                                    Invoiced <span class="text-white/80">CHF 4,200</span>
+</div>
+</div>
+</div>
+<!-- Result 4: Task -->
+<div class="relative flex items-center p-3 gap-4 rounded-lg border border-transparent hover:bg-white/5 cursor-pointer group transition-colors">
+<div class="h-10 w-10 rounded flex items-center justify-center bg-white/5 text-amber-400">
+<span class="material-symbols-outlined">check_circle</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-2">
+<span class="text-white/90 font-medium">Finalize HR Workflow Proposal</span>
+</div>
+<div class="flex items-center gap-2 mt-0.5">
+<span class="text-[10px] text-amber-400/80 bg-amber-400/10 px-1.5 rounded font-mono">Priority High</span>
+<span class="text-[10px] text-white/40 font-mono">Due Tomorrow</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- FOOTER LEGEND -->
+<div class="mt-4 py-3 border-t border-white/10 flex items-center justify-between text-[10px] sm:text-xs font-mono text-white/40 select-none">
+<div class="flex items-center gap-4 flex-wrap">
+<span class="flex items-center gap-1"><span class="bg-white/10 px-1 rounded text-white/70">↑↓</span> to navigate</span>
+<span class="flex items-center gap-1"><span class="bg-white/10 px-1 rounded text-white/70">↵</span> to jump</span>
+<span class="flex items-center gap-1"><span class="bg-white/10 px-1 rounded text-white/70">/</span> to ask Nitara</span>
+</div>
+<div class="flex items-center gap-4 hidden sm:flex">
+<span class="flex items-center gap-1"><span class="text-primary">#</span> for projects</span>
+<span class="flex items-center gap-1"><span class="text-primary">@</span> for people</span>
+</div>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,33 @@
+{
+  "id": "nc-20260218-917846",
+  "first_name": "Eric",
+  "last_name": "Samuel",
+  "full_name": "Eric Samuel",
+  "company": "The Backyard",
+  "position": "Gardener",
+  "linkedin_url": "https://www.linkedin.com/in/eric-samuel-2a66754",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [
+    "* coworkers"
+  ],
+  "last_contacted": "11 Dec 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.846Z",
+  "updated_at": "2026-02-18T23:32:28.145Z",
+  "phone": "094 49 811306",
+  "emails": [
+    "hierics@gmail.com"
+  ],
+  "phones": [
+    "094 49 811306"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:28.144Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

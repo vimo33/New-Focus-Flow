@@ -1,0 +1,20 @@
+[
+  {
+    "id": "act-1771319180447",
+    "type": "task_created",
+    "description": "Task created: Revise architecture: GPS-first trigger, cloud conversation model, on-device only for activation",
+    "timestamp": "2026-02-17T09:06:20.447Z"
+  },
+  {
+    "id": "act-1771319176383",
+    "type": "task_created",
+    "description": "Task created: Secure one hotel distribution commitment — QR card placement in key cards or lobby",
+    "timestamp": "2026-02-17T09:06:16.383Z"
+  },
+  {
+    "id": "act-1771319172141",
+    "type": "task_created",
+    "description": "Task created: Tourist validation sprint: recruit 20 tourists on Bahnhofstrasse, run rough demo, measure willingness-to-pay",
+    "timestamp": "2026-02-17T09:06:12.141Z"
+  }
+]

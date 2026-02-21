@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917334",
+  "first_name": "Penny",
+  "last_name": "Schiffer",
+  "full_name": "Penny Schiffer",
+  "company": "Raized.ai",
+  "position": "CEO & Co-founder",
+  "linkedin_url": "https://www.linkedin.com/in/pennyschiffer",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["AI", "VC analytics", "Swiss startup", "data-driven investing"],
+  "last_contacted": "08 Apr 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.334Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 78,
+  "triage_score": 7.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Raized.ai is a Swiss startup using AI and data analytics to help VC investors find early-stage unicorns — deal sourcing engine for investors",
+      "Backed by SICTIC, Swissnex, Kickstart Accelerator, BlueLion Incubator; total funding $243K (pre-seed)",
+      "Venturelab featured Raized.ai as example of AI for VC — exploring Asian firms desire for data-driven startup selection",
+      "Focus on making early-stage investing smarter via data, AI and analytics"
+    ],
+    "outreach_angle": "Penny is building AI infrastructure for VC deal sourcing — a direct strategic overlap with ATX (Agentic Trust Exchange) which mediates professional collaboration via AI agents. Reach out noting that ATX's agent-based compatibility evaluation could extend Raized.ai's deal matching layer. Also, Nitara (Focus Flow OS) as a SaaS product for founders could be relevant to Raized.ai's portfolio company support toolkit. Given the Venturelab connection, this could also open introduction to Swiss VC pipeline.",
+    "relevant_project": "ATX"
+  }
+}

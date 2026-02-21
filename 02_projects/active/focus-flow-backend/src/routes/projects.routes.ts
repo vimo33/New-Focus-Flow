@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { VaultService } from '../services/vault.service';
 import { pipelineService } from '../services/pipeline.service';
 import { conceptChatService } from '../services/concept-chat.service';
+import { partnerAnalysisService } from '../services/partner-analysis.service';
 import { Project } from '../models/types';
 
 const router = Router();
@@ -206,6 +207,57 @@ router.put('/projects/:id/notes', async (req: Request, res: Response) => {
     res.json({ status: 'saved' });
   } catch (error: any) {
     console.error('Error saving notes:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// ============================================================================
+// Collaborator Routes
+// ============================================================================
+
+// POST /api/projects/:id/collaborators
+router.post('/projects/:id/collaborators', async (req: Request, res: Response) => {
+  try {
+    const collaborator = await partnerAnalysisService.addCollaborator(String(req.params.id), req.body);
+    res.status(201).json(collaborator);
+  } catch (error: any) {
+    console.error('Error adding collaborator:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/projects/:id/collaborators
+router.get('/projects/:id/collaborators', async (req: Request, res: Response) => {
+  try {
+    const collaborators = await partnerAnalysisService.getCollaborators(String(req.params.id));
+    res.json({ collaborators, count: collaborators.length });
+  } catch (error: any) {
+    console.error('Error fetching collaborators:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// DELETE /api/projects/:id/collaborators/:cid
+router.delete('/projects/:id/collaborators/:cid', async (req: Request, res: Response) => {
+  try {
+    const removed = await partnerAnalysisService.removeCollaborator(String(req.params.id), String(req.params.cid));
+    if (!removed) {
+      return res.status(404).json({ error: 'Collaborator not found' });
+    }
+    res.json({ status: 'removed' });
+  } catch (error: any) {
+    console.error('Error removing collaborator:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/projects/:id/collaborators/:cid/analyze
+router.post('/projects/:id/collaborators/:cid/analyze', async (req: Request, res: Response) => {
+  try {
+    const analysis = await partnerAnalysisService.analyzePartner(String(req.params.cid));
+    res.json(analysis);
+  } catch (error: any) {
+    console.error('Error analyzing partner:', error);
     res.status(500).json({ error: error.message });
   }
 });

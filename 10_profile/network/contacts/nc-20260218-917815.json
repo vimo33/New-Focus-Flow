@@ -1,0 +1,32 @@
+{
+  "id": "nc-20260218-917815",
+  "first_name": "Geo",
+  "last_name": "Thomas",
+  "full_name": "Geo Thomas",
+  "company": "Acme Experience Marketing Pvt Ltd",
+  "position": "Founder & CEO",
+  "linkedin_url": "https://www.linkedin.com/in/acmeeventsindia",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "10 Jul 2014",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.815Z",
+  "updated_at": "2026-02-18T23:32:27.484Z",
+  "location": "Gujarat",
+  "phone": "998-000-4606",
+  "emails": [
+    "geo@acmeeventsindia.com"
+  ],
+  "phones": [
+    "998-000-4606"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:27.482Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

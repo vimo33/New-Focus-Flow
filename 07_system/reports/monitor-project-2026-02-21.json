@@ -1,0 +1,79 @@
+{
+  "task_type": "monitor-project",
+  "status": "degraded",
+  "checked_at": "2026-02-21T00:00:30.000Z",
+  "service_status": {
+    "focus-flow-backend": "active",
+    "focus-flow-frontend": "active",
+    "focus-flow-telegram": "active",
+    "openclaw-gateway": "inactive"
+  },
+  "disk": {
+    "usage_percent": 36,
+    "used": "26G",
+    "available": "47G",
+    "log_size": "600K"
+  },
+  "inference_costs": {
+    "total_today": 0.0,
+    "budget": 20.0,
+    "utilization_pct": 0,
+    "note": "No inference log found for 2026-02-21 — zero spend or logging not active"
+  },
+  "stale_tasks": [
+    {
+      "id": "task-20260211-933146",
+      "title": "evaluate the 2 concepts and vision",
+      "status": "todo",
+      "stale_since": "2026-02-11"
+    },
+    {
+      "id": "task-20260210-798204",
+      "title": "remind me tomorrow to call migration office for C permit documents submission dates",
+      "status": "todo",
+      "stale_since": "2026-02-10"
+    },
+    {
+      "id": "task-20260211-426909",
+      "title": "Review all flows",
+      "status": "todo",
+      "stale_since": "2026-02-11"
+    },
+    {
+      "id": "task-20260211-942218",
+      "title": "setup call with FRa",
+      "status": "todo",
+      "stale_since": "2026-02-11"
+    },
+    {
+      "id": "task-053",
+      "title": "Execute comprehensive end-to-end integration tests for the complete Focus Flow OS",
+      "status": "completed",
+      "stale_since": "unknown — completed but stale"
+    }
+  ],
+  "queue": {
+    "pending": 0,
+    "in_progress": 0,
+    "total_files": 39
+  },
+  "kill_switch": "inactive",
+  "alerts": [
+    {
+      "severity": "warning",
+      "message": "openclaw-gateway is inactive — AI gateway unavailable; Claude API calls via OpenClaw will fail"
+    },
+    {
+      "severity": "info",
+      "message": "4 stale todo tasks not updated in >7 days (oldest: 2026-02-10)"
+    },
+    {
+      "severity": "info",
+      "message": "No inference cost log found for today (2026-02-21) — spend tracking is dark"
+    },
+    {
+      "severity": "info",
+      "message": "Agent queue contains 39 total files with 0 pending and 0 in-progress — queue is idle"
+    }
+  ]
+}

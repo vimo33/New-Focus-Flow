@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-603265",
+  "first_name": "shankar",
+  "last_name": "k",
+  "full_name": "shankar k",
+  "email": "shankey666@gmail.com",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:43:23.265Z",
+  "updated_at": "2026-02-18T22:43:24.980Z",
+  "phone": "+919886872162",
+  "phones": [
+    "+919886872162"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

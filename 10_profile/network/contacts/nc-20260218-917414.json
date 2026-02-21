@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917414",
+  "first_name": "Denis",
+  "last_name": "Belkevich",
+  "full_name": "Denis Belkevich",
+  "company": "Fuelarts",
+  "position": "General Partner",
+  "linkedin_url": "https://www.linkedin.com/in/dbelkevich",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["VC", "AI accelerator", "creative tech", "investment"],
+  "last_contacted": "12 Sep 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.414Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 70,
+  "triage_score": 7.0,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Fuelarts launched AX — the first AI-powered startup accelerator for the creative tech industry (announced 2025)",
+      "AX provides AI-driven acceleration roadmap with personalized mentorship and smart investor matching",
+      "Fuelarts raising $500K pre-seed to develop the AX MVP, with beta launch planned for Q3 2025",
+      "Denis Belkevich is also involved with DualForce Labs — a venture studio building AI products from the ground up",
+      "Fuelarts focuses specifically on Creative Tech — intersects with Overture (live music/community platform)"
+    ],
+    "outreach_angle": "Denis just launched AX, an AI-powered accelerator for creative tech. Overture (live music community platform) fits squarely in the creative tech category. Reach out referencing the AX launch and asking whether Overture could be a fit for the program. Even if not a direct AX fit, Denis as a GP in creative tech is a natural investor conversation for Overture. Additionally, Fuelarts' interest in AI-mediated tools makes ATX relevant as a B2B SaaS product for accelerators managing portfolio relationships.",
+    "relevant_project": "Overture"
+  }
+}

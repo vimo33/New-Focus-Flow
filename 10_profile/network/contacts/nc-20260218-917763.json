@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917763",
+  "first_name": "Vasudha",
+  "last_name": "Varma",
+  "full_name": "Vasudha Varma",
+  "company": "Google",
+  "position": "Senior Interaction Designer",
+  "linkedin_url": "https://www.linkedin.com/in/vasudha174",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "02 May 2016",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.763Z",
+  "updated_at": "2026-02-18T23:32:19.312Z",
+  "phone": "+1 650-888-2875",
+  "phones": [
+    "+1 650-888-2875"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:19.311Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

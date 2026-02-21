@@ -1,0 +1,27 @@
+{
+  "id": "nc-20260218-917794",
+  "first_name": "Chandramouli",
+  "last_name": "Shankarakrishna",
+  "full_name": "Chandramouli Shankarakrishna",
+  "company": "ExaThought",
+  "position": "Product Strategist",
+  "linkedin_url": "https://www.linkedin.com/in/chandramouli-shankarakrishna",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "08 Apr 2015",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.794Z",
+  "updated_at": "2026-02-18T23:32:29.848Z",
+  "emails": [
+    "chan@tiramisumedia.com"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:29.847Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

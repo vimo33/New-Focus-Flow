@@ -1,7 +1,7 @@
 // Focus Flow Service Worker
 // Provides offline functionality with caching strategies
 
-const CACHE_VERSION = 'focus-flow-v2';
+const CACHE_VERSION = 'focus-flow-v4';
 const STATIC_CACHE = `${CACHE_VERSION}-static`;
 const API_CACHE = `${CACHE_VERSION}-api`;
 const OFFLINE_SYNC_QUEUE = 'offline-captures';
@@ -90,8 +90,20 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets - Cache first with network fallback
-  event.respondWith(cacheFirstStrategy(request));
+  // Navigation requests (HTML pages) - ALWAYS network first
+  // This ensures users always get the latest index.html with correct chunk hashes
+  if (request.mode === 'navigate') {
+    event.respondWith(networkFirstStrategy(request));
+    return;
+  }
+
+  // Hashed assets (contain -[hash]. in filename) - Cache first (safe, immutable)
+  // Non-hashed assets (manifest.json, icons, etc) - Network first
+  if (url.pathname.includes('/assets/') && /\-[a-zA-Z0-9]{8,}\./.test(url.pathname)) {
+    event.respondWith(cacheFirstStrategy(request));
+  } else {
+    event.respondWith(networkFirstStrategy(request));
+  }
 });
 
 // ============================================================================

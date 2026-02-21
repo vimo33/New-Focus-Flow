@@ -1,0 +1,43 @@
+{
+  "skill": "portfolio-analysis",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "project_scores_present",
+      "description": "Each project has a numeric score 1-10 with cited evidence",
+      "weight": 0.2,
+      "check": "all_projects_scored"
+    },
+    {
+      "name": "build_next_recommendation",
+      "description": "Clear BUILD-NEXT recommendation with rationale >100 words",
+      "weight": 0.2,
+      "check": "build_next_with_rationale"
+    },
+    {
+      "name": "novel_data_points",
+      "description": "At least 2 data points per project not in previous report",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "action_plan_specific",
+      "description": "90-day action plan with specific dates, not vague timeframes",
+      "weight": 0.15,
+      "check": "specific_dates"
+    },
+    {
+      "name": "source_citations",
+      "description": "Claims backed by URLs or vault file references",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.15,
+      "check": "no_placeholders"
+    }
+  ]
+}

@@ -1,10 +1,12 @@
 ---
 name: fix-issue
-description: Debug and fix an issue in Focus Flow
-allowed-tools: Bash, Read, Edit, Write, Glob, Grep
+description: Debug and fix an issue in Nitara
+context: fork
+model: sonnet
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
-# Fix Issue in Focus Flow
+# Fix Issue in Nitara
 
 Systematic approach to debugging and fixing issues.
 

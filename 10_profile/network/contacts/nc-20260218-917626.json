@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917626",
+  "first_name": "Rohan",
+  "last_name": "Pereira",
+  "full_name": "Rohan Pereira",
+  "company": "Next Level Experiences LLP",
+  "position": "Assistant General Manager",
+  "linkedin_url": "https://www.linkedin.com/in/rohan-pereira-714bb741",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "03 Jan 2019",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.626Z",
+  "updated_at": "2026-02-18T23:32:22.140Z",
+  "notes": "<HTCData><Twitter>id:228092422/friendof:16449093</Twitter></HTCData>",
+  "emails": [
+    "rohanpereira89@gmail.com"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:22.139Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

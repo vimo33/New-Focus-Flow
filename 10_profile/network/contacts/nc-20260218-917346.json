@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917346",
+  "first_name": "Nathalie",
+  "last_name": "Manetti",
+  "full_name": "Nathalie Manetti",
+  "company": "Venturelab",
+  "position": "Project Manager",
+  "linkedin_url": "https://www.linkedin.com/in/nathalie-manetti",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["Venturelab", "Switzerland", "startup support", "funding gateway"],
+  "last_contacted": "27 Feb 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.346Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 58,
+  "triage_score": 5.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Venturelab reports Swiss startups have already surpassed CHF 2.4 billion in funding in 2026 — momentum accelerating",
+      "Venturelab has supported 90% of Swiss startups and guided companies attract CHF 15B+ total investment",
+      "New VC funds actively deploying in 2026: Forestay Capital, Founderful, Redalpine, Spicehaus Partners among others",
+      "Swiss National Startup Team 2026: ten Swiss startups selected for Silicon Valley roadshow — Venturelab nomination-driven"
+    ],
+    "outreach_angle": "Nathalie was contacted 12 months ago — the relationship needs a check-in. Venturelab is the central institution for Swiss startup support and has direct access to the VC funds deploying capital in 2026. This is the single most strategic institutional relationship for getting Vimo's projects in front of Swiss VC. Reach out with a specific project update: 'Nathalie — it has been a year since we last spoke. I have advanced significantly on two projects — Bramha ESG (AI-native ESG compliance for Swiss SMEs) and Mirari (a Zürich AR travel companion). I would love to share progress and explore whether there is a Venturelab program fit for either. Are you available for a 20-minute call in March?' Timeline: this week.",
+    "relevant_project": "Bramha ESG"
+  }
+}

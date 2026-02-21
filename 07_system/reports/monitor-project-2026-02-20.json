@@ -1,0 +1,129 @@
+{
+  "task_type": "monitor-project",
+  "status": "degraded",
+  "checked_at": "2026-02-20T04:05:00.000Z",
+  "service_status": {
+    "focus-flow-backend": "active",
+    "focus-flow-frontend": "active",
+    "focus-flow-telegram": "active",
+    "openclaw-gateway": "inactive"
+  },
+  "api_health": {
+    "backend_http_3001": "healthy",
+    "frontend_http_5173": "200 OK"
+  },
+  "disk": {
+    "usage_percent": 36,
+    "total": "75G",
+    "used": "26G",
+    "available": "47G",
+    "log_size": "588K"
+  },
+  "inference_costs": {
+    "total_today": 0.0,
+    "budget": 20.0,
+    "utilization_pct": 0,
+    "log_entries_today": 8,
+    "note": "8 log entries found but all report $0.00 cost — cost field may not be tracked in current log format"
+  },
+  "stale_tasks": [
+    {
+      "id": "task-053",
+      "title": "Execute comprehensive end-to-end integration tests for the complete Focus Flow OS",
+      "status": "completed",
+      "last_modified": "2026-02-03",
+      "days_stale": 17,
+      "path": "/srv/focus-flow/01_tasks/active/task-053-integration-testing.json",
+      "note": "Completed task sitting in active/ — should be archived"
+    },
+    {
+      "id": "task-20260210-798204",
+      "title": "remind me tomorrow to call migration office for C permit documents submission dates",
+      "status": "todo",
+      "last_modified": "2026-02-10",
+      "days_stale": 10,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260210-798204.json"
+    },
+    {
+      "id": "task-20260211-426909",
+      "title": "Review all flows",
+      "status": "todo",
+      "last_modified": "2026-02-11",
+      "days_stale": 9,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260211-426909.json"
+    },
+    {
+      "id": "task-20260211-933146",
+      "title": "evaluate the 2 concepts and vision",
+      "status": "todo",
+      "last_modified": "2026-02-11",
+      "days_stale": 9,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260211-933146.json"
+    },
+    {
+      "id": "task-20260211-942218",
+      "title": "setup call with FRa",
+      "status": "todo",
+      "last_modified": "2026-02-11",
+      "days_stale": 9,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260211-942218.json"
+    }
+  ],
+  "queue": {
+    "total": 24,
+    "pending": 0,
+    "in_progress": 0,
+    "completed": 18,
+    "failed": 5,
+    "running": 1,
+    "archived": 9,
+    "running_task": {
+      "id": "task-1771560000627-k0k986",
+      "skill": "monitor-project",
+      "started_at": "2026-02-20T04:00:00.667Z"
+    },
+    "failed_tasks": [
+      {
+        "id": "task-1771488000331-dbh6f6",
+        "skill": "monitor-project",
+        "failed_at": "2026-02-19T08:01:24.805Z",
+        "error": "Exit code 1"
+      },
+      {
+        "id": "task-1771495205488-r892n1",
+        "skill": "profiling-question",
+        "failed_at": "2026-02-19T10:01:29.626Z",
+        "error": "Exit code 1"
+      },
+      {
+        "id": "task-1771495896057-5h85fp",
+        "skill": "profiling-question",
+        "failed_at": "2026-02-19T10:12:59.130Z",
+        "error": "Exit code 1"
+      }
+    ]
+  },
+  "kill_switch": "inactive",
+  "alerts": [
+    {
+      "severity": "warning",
+      "message": "openclaw-gateway service is inactive — AI inference gateway may be unavailable; backend API is healthy but Claude-powered features may be degraded"
+    },
+    {
+      "severity": "warning",
+      "message": "5 failed tasks in agent queue — monitor-project and profiling-question skills failing with exit code 1 on 2026-02-19; recurring failures suggest skill misconfiguration or dependency issue"
+    },
+    {
+      "severity": "info",
+      "message": "5 stale tasks (not updated >7 days): 4 open todos in 01_tasks/work/ and 1 completed task still in active/ that should be archived"
+    },
+    {
+      "severity": "info",
+      "message": "Inference cost log shows 8 entries today but $0.00 total — cost field may not be populated in current log format; unable to confirm actual spend vs $20.00 budget"
+    },
+    {
+      "severity": "info",
+      "message": "Disk usage healthy at 36% (26G of 75G used)"
+    }
+  ]
+}

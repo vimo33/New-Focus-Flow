@@ -1,0 +1,43 @@
+{
+  "skill": "knowledge-graph-update",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "reports_processed",
+      "description": "At least 1 report from the last 7 days was processed and entities extracted",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "entities_extracted",
+      "description": "At least 3 entities extracted with valid entity_type, name, and data fields",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "source_traceability",
+      "description": "Every entity has a source_report field linking back to the originating report",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "dedup_respected",
+      "description": "Unchanged entities are skipped (entities_unchanged count present), not duplicated",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "relationships_extracted",
+      "description": "At least 1 relationship extracted linking entities across types",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

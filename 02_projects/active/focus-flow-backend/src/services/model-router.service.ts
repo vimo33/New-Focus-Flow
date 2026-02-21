@@ -54,9 +54,9 @@ const DEFAULT_ROUTES: Record<TaskType, Record<BudgetTier, RouteEntry>> = {
     premium:  { model: 'haiku',  max_tokens: 1000, temperature: 0.3 },
   },
   conversation: {
-    economy:  { model: 'sonnet', max_tokens: 1024, temperature: 0.7 },
-    standard: { model: 'sonnet', max_tokens: 2048, temperature: 0.7 },
-    premium:  { model: 'opus',   max_tokens: 4096, temperature: 0.7 },
+    economy:  { model: 'sonnet', max_tokens: 2048, temperature: 0.7 },
+    standard: { model: 'opus',   max_tokens: 4096, temperature: 0.7 },
+    premium:  { model: 'opus',   max_tokens: 8192, temperature: 0.7 },
   },
   summarization: {
     economy:  { model: 'haiku',  max_tokens: 2000, temperature: 0.3 },

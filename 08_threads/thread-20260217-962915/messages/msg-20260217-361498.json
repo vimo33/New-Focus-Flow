@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-361498",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "Let me find where the council output landed and link it to the project.\n\nNow I have everything I need. Let me create the properly structured verdict JSON and save it to the verdicts directory so the frontend picks it up.\n\nNow I have the full structure. Let me create the Mirari verdict JSON:\n\nNow let me verify the frontend can see it:\n\nThe council verdict is now live in the system and linked to the Mirari project. The frontend should show it now — **5.5/10, NEEDS INFO**, with the 7-member council composition visible.\n\nRefresh the Mirari project page. The verdict card should appear with the full breakdown — scores by dimension, all 5 recommended actions, and the risk list.",
+  "source": "voice",
+  "created_at": "2026-02-17T09:09:21.498Z"
+}

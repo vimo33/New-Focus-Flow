@@ -1,10 +1,12 @@
 ---
 name: add-feature
-description: Add a new feature to Focus Flow following project conventions
-allowed-tools: Bash, Read, Edit, Write, Glob, Grep
+description: Add a new feature to Nitara following project conventions
+context: fork
+model: opus
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 ---
 
-# Add Feature to Focus Flow
+# Add Feature to Nitara
 
 Guide for adding a new feature following project conventions.
 

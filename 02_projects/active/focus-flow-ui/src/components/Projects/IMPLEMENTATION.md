@@ -1,7 +1,7 @@
 # Projects Management Implementation - Task #37
 
 ## Summary
-Successfully built the Projects Management screen for Focus Flow UI matching the Stitch design reference.
+Successfully built the Projects Management screen for Nitara UI matching the Stitch design reference.
 
 ## Files Created
 

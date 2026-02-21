@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-405490",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "That's the missing piece. Where are those links stored — in the workspace, or somewhere else? If you point me at them, I can read the setup docs and understand exactly how the autonomous loop is wired. Then when the council verdict lands on Mirari, I'll know precisely how to hand off to Claude Code and let it run the build without manual intervention.",
+  "source": "voice",
+  "created_at": "2026-02-17T08:53:25.490Z"
+}

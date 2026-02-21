@@ -13,6 +13,7 @@ import {
   deleteFile,
 } from '../utils/file-operations';
 import { generateApprovalId } from '../utils/id-generator';
+import { confidenceService } from './confidence.service';
 
 const LOG_PREFIX = '[TrustGate]';
 
@@ -43,6 +44,12 @@ const TIER_MAP: Record<string, TrustTier> = {
   merge_to_main: 3,
   advance_pipeline: 3,
   high_cost_operation: 3,
+
+  // Phase 4: GTM & Marketing
+  publish_blog: 3,
+  publish_social: 3,
+  generate_gtm_strategy: 1,
+  draft_content: 1,
 };
 
 interface AgentConfig {
@@ -79,12 +86,37 @@ class TrustGateService {
     return TIER_MAP[actionType] ?? 3; // Default to Tier 3 (safest)
   }
 
+  classifyWithConfidence(actionType: string, confidence: number): { tier: TrustTier; adjusted: boolean; reason?: string } {
+    const baseTier = this.classify(actionType);
+
+    if (confidenceService.shouldEscalate(baseTier, confidence)) {
+      return {
+        tier: 3,
+        adjusted: true,
+        reason: `Escalated from Tier 2 to Tier 3: confidence ${confidence.toFixed(2)} < 0.4 threshold`,
+      };
+    }
+
+    return { tier: baseTier, adjusted: false };
+  }
+
   async createApproval(
     action: AgentAction,
     context: string,
-    reasoning: string
+    reasoning: string,
+    predictedConfidence?: number
   ): Promise<PendingApproval> {
-    const tier = this.classify(action.type);
+    let tier: TrustTier;
+    let adjustmentNote: string | undefined;
+
+    if (predictedConfidence !== undefined) {
+      const result = this.classifyWithConfidence(action.type, predictedConfidence);
+      tier = result.tier;
+      if (result.adjusted) adjustmentNote = result.reason;
+    } else {
+      tier = this.classify(action.type);
+    }
+
     const now = new Date();
 
     const approval: PendingApproval = {
@@ -92,14 +124,18 @@ class TrustGateService {
       tier,
       action,
       context,
-      reasoning,
+      reasoning: adjustmentNote ? `${reasoning} [${adjustmentNote}]` : reasoning,
       created_at: now.toISOString(),
       status: 'pending',
+      predicted_confidence: predictedConfidence,
     };
 
     // Add expiry for Tier 2
     if (tier === 2) {
-      const expiresAt = new Date(now.getTime() + this.config.tier2_delay_minutes * 60 * 1000);
+      const delayMinutes = predictedConfidence !== undefined
+        ? confidenceService.getAdjustedDelay(tier, predictedConfidence, this.config.tier2_delay_minutes)
+        : this.config.tier2_delay_minutes;
+      const expiresAt = new Date(now.getTime() + delayMinutes * 60 * 1000);
       approval.expires_at = expiresAt.toISOString();
     }
 

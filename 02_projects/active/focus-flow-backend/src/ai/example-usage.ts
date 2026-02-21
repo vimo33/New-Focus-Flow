@@ -1,6 +1,6 @@
 /**
  * Example usage of the Claude Client
- * This file demonstrates how to use the Claude SDK client in the Focus Flow backend
+ * This file demonstrates how to use the Claude SDK client in the Nitara backend
  *
  * DO NOT run this file directly - it's for reference only
  */

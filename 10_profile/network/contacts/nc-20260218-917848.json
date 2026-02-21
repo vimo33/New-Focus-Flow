@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-917848",
+  "first_name": "Shamik",
+  "last_name": "Talukder",
+  "full_name": "Shamik Talukder",
+  "company": "Be Tagged Pte Ltd",
+  "position": "CEO & Co-Founder",
+  "linkedin_url": "https://www.linkedin.com/in/shamikt",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "07 Dec 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.848Z",
+  "updated_at": "2026-02-18T23:32:52.913Z",
+  "enrichment_date": "2026-02-18T23:32:52.912Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

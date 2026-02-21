@@ -1,0 +1,170 @@
+[
+  {
+    "skill": "monitor-project",
+    "arguments": "all",
+    "cron": "0 */4 * * *",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Health checks, cost tracking, stale task detection every 4 hours"
+  },
+  {
+    "skill": "profiling-question",
+    "arguments": "",
+    "cron": "0 10 * * *",
+    "priority": "background",
+    "trust_tier": 1,
+    "description": "Generate next profiling question for Telegram daily at 10am"
+  },
+  {
+    "skill": "portfolio-analysis",
+    "arguments": "all",
+    "cron": "0 8 * * 1",
+    "priority": "high",
+    "trust_tier": 2,
+    "description": "Deep portfolio analysis every Monday at 8am"
+  },
+  {
+    "skill": "research-market",
+    "arguments": "",
+    "cron": "0 9 * * 3",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Market research for active projects every Wednesday at 9am"
+  },
+  {
+    "skill": "research-youtube",
+    "arguments": "",
+    "cron": "0 9 * * 5",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "YouTube channel discovery and content strategy every Friday at 9am"
+  },
+  {
+    "skill": "research-passive-income",
+    "arguments": "",
+    "cron": "0 9 1 * *",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Passive income opportunity research on 1st of each month"
+  },
+  {
+    "skill": "network-analyze",
+    "arguments": "",
+    "cron": "0 9 * * 2",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Network intelligence analysis every Tuesday at 9am"
+  },
+  {
+    "skill": "meta-analysis",
+    "arguments": "",
+    "cron": "0 6 * * 0",
+    "priority": "low",
+    "trust_tier": 2,
+    "description": "Self-improvement analysis biweekly on Sundays at 6am"
+  },
+  {
+    "skill": "voice-profiling",
+    "arguments": "",
+    "cron": "0 14 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Voice profiling call weekdays at 2pm (if completeness < 80%)"
+  },
+  {
+    "skill": "voice-briefing",
+    "arguments": "text",
+    "cron": "30 7 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Morning briefing narrative weekdays at 7:30am"
+  },
+  {
+    "skill": "network-enrich",
+    "arguments": "",
+    "cron": "0 22 * * 4",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Network enrichment — triage + deep enrich top 20% every Thursday at 10pm"
+  },
+  {
+    "skill": "network-portfolio-xref",
+    "arguments": "",
+    "cron": "0 10 * * 3",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Cross-reference contacts with projects every Wednesday at 10am"
+  },
+  {
+    "skill": "knowledge-graph-update",
+    "arguments": "",
+    "cron": "0 23 * * *",
+    "priority": "background",
+    "trust_tier": 1,
+    "description": "Extract entities and relationships from recent reports into knowledge graph daily at 11pm"
+  },
+  {
+    "skill": "decision-journal-evaluate",
+    "arguments": "",
+    "cron": "0 8 * * 5",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Evaluate past decisions against actual outcomes every Friday at 8am"
+  },
+  {
+    "skill": "serendipity-scan",
+    "arguments": "",
+    "cron": "0 7 * * 0",
+    "priority": "medium",
+    "trust_tier": 2,
+    "description": "Cross-pollinate knowledge graph for non-obvious connections every Sunday at 7am"
+  },
+  {
+    "skill": "event-detect",
+    "arguments": "",
+    "cron": "0 6 * * 1-5",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Scan for competitor, market, contact, and project events weekdays at 6am"
+  },
+  {
+    "skill": "morning-briefing",
+    "arguments": "",
+    "cron": "0 7 * * 1-5",
+    "priority": "high",
+    "trust_tier": 1,
+    "description": "Daily morning briefing narrative weekdays at 7am"
+  },
+  {
+    "skill": "time-value-analyze",
+    "arguments": "",
+    "cron": "0 18 * * 5",
+    "priority": "low",
+    "trust_tier": 2,
+    "description": "Time-value allocation analysis every Friday at 6pm"
+  },
+  {
+    "skill": "validate-sprint-orchestrator",
+    "arguments": "",
+    "cron": "0 8 * * 1",
+    "priority": "high",
+    "trust_tier": 2,
+    "description": "Create validation sprint with 3-5 uncertain projects every Monday at 8am"
+  },
+  {
+    "skill": "validate-portfolio-prune",
+    "arguments": "",
+    "cron": "0 6 * * 3",
+    "priority": "medium",
+    "trust_tier": 2,
+    "description": "Recompute signal scores, generate kill/scale recommendations bi-weekly Wednesday 6am"
+  },
+  {
+    "skill": "network-career-leverage",
+    "arguments": "",
+    "cron": "0 9 1 * *",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Career leverage analysis on 1st of each month at 9am"
+  }
+]

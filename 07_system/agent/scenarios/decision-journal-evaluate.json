@@ -1,0 +1,43 @@
+{
+  "skill": "decision-journal-evaluate",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "decisions_evaluated",
+      "description": "At least 1 decision evaluated with actual_outcome and accuracy_score",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "evidence_based_scoring",
+      "description": "Each evaluation cites specific evidence for the accuracy score, not just a number",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "accuracy_trend_analyzed",
+      "description": "Report includes system-wide accuracy trend analysis (improving, stable, degrading)",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "bias_detection",
+      "description": "Report identifies at least 1 systematic bias or explicitly states none detected with evidence",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "improvement_recommendations",
+      "description": "Report includes actionable recommendations for improving prediction quality",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or template brackets in output",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

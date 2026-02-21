@@ -1,4 +1,4 @@
-// Focus Flow API Client Service
+// Nitara API Client Service
 // Provides typed methods for all backend API endpoints
 
 import type {
@@ -384,6 +384,123 @@ export interface VoiceCommandResponse {
 }
 
 // ============================================================================
+// Budget Types
+// ============================================================================
+
+export interface BudgetConfig {
+  daily_budget_usd: number;
+  weekly_budget_usd: number;
+  alert_threshold_pct: number;
+  hard_stop: boolean;
+}
+
+export interface BudgetPeriod {
+  spent: number;
+  budget: number;
+  pct: number;
+}
+
+export interface BudgetStatus {
+  config: BudgetConfig;
+  today: BudgetPeriod;
+  week: BudgetPeriod;
+  alert_threshold_pct: number;
+}
+
+// ============================================================================
+// Signal Types
+// ============================================================================
+
+export interface Signal {
+  id: string;
+  projectId: string;
+  experimentId?: string;
+  type: string;
+  valueJson?: unknown;
+  source?: string;
+  createdAt: string;
+}
+
+// ============================================================================
+// Agent Run Types
+// ============================================================================
+
+export interface AgentRun {
+  id: string;
+  projectId?: string;
+  teamId: string;
+  mode: 'think' | 'validate' | 'build' | 'grow' | 'leverage';
+  agentsJson: string[];
+  toolsUsedJson: string[];
+  status: 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+  startedAt?: string;
+  endedAt?: string;
+  outputsJson: { type: string; path: string }[];
+  approvalsJson: string[];
+  costUsd?: number;
+  createdAt: string;
+}
+
+export interface AgentRunStats {
+  total_runs: number;
+  total_cost: number;
+  by_status: Record<string, { count: number; cost: number }>;
+  by_mode: { mode: string; count: number; cost: number }[];
+}
+
+// ============================================================================
+// Simulation Types
+// ============================================================================
+
+export interface SimulationParams {
+  projects: string[];
+  budgetPerDay: number;
+  founderHoursPerWeek: number;
+  riskTolerance: 'low' | 'medium' | 'high';
+  timeHorizonWeeks: number;
+}
+
+export interface SimulationResult {
+  scenario: string;
+  projectedMrr: number;
+  experimentVelocity: number;
+  validationTimeline: string;
+  risks: string[];
+  recommendations: string[];
+}
+
+// ============================================================================
+// Schedule Types
+// ============================================================================
+
+export interface ScheduleEntry {
+  skill: string;
+  arguments?: string;
+  cron: string;
+  priority: string;
+  trust_tier: number;
+  description: string;
+}
+
+// ============================================================================
+// Tool Registry Types
+// ============================================================================
+
+export interface ToolManifest {
+  id: string;
+  name: string;
+  version: string;
+  description: string;
+  execution_type: 'in-process' | 'docker' | 'cli' | 'api';
+  trust_level: 'trusted' | 'verified' | 'community' | 'experimental';
+  capabilities: string[];
+  input_schema?: Record<string, unknown>;
+  output_schema?: Record<string, unknown>;
+  requires_approval: boolean;
+  cost_estimate?: string;
+}
+
+// ============================================================================
 // API Client Class
 // ============================================================================
 
@@ -399,9 +516,12 @@ export class VaultAPI {
    */
   private async request<T>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
+    timeoutMs = 15000
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const response = await fetch(url, {
@@ -410,6 +530,7 @@ export class VaultAPI {
           ...options?.headers,
         },
         ...options,
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -421,10 +542,15 @@ export class VaultAPI {
 
       return await response.json();
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new Error(`Request timeout: ${endpoint}`);
+      }
       if (error instanceof Error) {
         throw error;
       }
       throw new Error('An unexpected error occurred');
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -683,11 +809,16 @@ export class VaultAPI {
   async sendOrchestratorMessage(
     content: string,
     threadId?: string | null,
-    source: 'voice' | 'text' = 'text'
+    source: 'voice' | 'text' = 'text',
+    projectId?: string | null,
+    attachments?: Array<{ filename: string; url: string }>
   ): Promise<{ thread_id: string; content: string; tool_calls?: any[]; navigate_to?: string }> {
+    const body: Record<string, any> = { content, thread_id: threadId, source };
+    if (projectId) body.project_id = projectId;
+    if (attachments && attachments.length > 0) body.attachments = attachments;
     return this.request('/orchestrator/chat', {
       method: 'POST',
-      body: JSON.stringify({ content, thread_id: threadId, source }),
+      body: JSON.stringify(body),
     });
   }
 
@@ -1061,6 +1192,956 @@ export class VaultAPI {
   async getMemoryHealth(): Promise<{ status: string; available: boolean }> {
     return this.request('/memory/health');
   }
+
+  // ============================================================================
+  // Profile Methods
+  // ============================================================================
+
+  async getProfile(): Promise<any> {
+    return this.request('/profile');
+  }
+
+  async saveProfile(data: any): Promise<any> {
+    return this.request('/profile', {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async extractProfile(text: string): Promise<any> {
+    return this.request('/profile/extract', {
+      method: 'POST',
+      body: JSON.stringify({ text }),
+    });
+  }
+
+  async setArchetype(archetype: string): Promise<any> {
+    return this.request('/profile/archetype', {
+      method: 'PUT',
+      body: JSON.stringify({ archetype }),
+    });
+  }
+
+  async addProfileSkill(skill: any): Promise<any> {
+    return this.request('/profile/skills', {
+      method: 'POST',
+      body: JSON.stringify(skill),
+    });
+  }
+
+  async addProfileExperience(experience: any): Promise<any> {
+    return this.request('/profile/experience', {
+      method: 'POST',
+      body: JSON.stringify(experience),
+    });
+  }
+
+  // ============================================================================
+  // Financials Methods
+  // ============================================================================
+
+  async getPortfolioFinancials(): Promise<any> {
+    return this.request('/financials/portfolio');
+  }
+
+  async getFinancialGoals(): Promise<any> {
+    return this.request('/financials/goals');
+  }
+
+  async setFinancialGoals(goals: any): Promise<any> {
+    return this.request('/financials/goals', {
+      method: 'PUT',
+      body: JSON.stringify(goals),
+    });
+  }
+
+  async getProjectFinancials(projectId: string): Promise<any> {
+    return this.request(`/financials/${projectId}`);
+  }
+
+  async addRevenue(data: any): Promise<any> {
+    return this.request('/financials/revenue', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateRevenue(id: string, data: any): Promise<any> {
+    return this.request(`/financials/revenue/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteRevenue(id: string): Promise<{ status: string }> {
+    return this.request(`/financials/revenue/${id}`, { method: 'DELETE' });
+  }
+
+  async addCost(data: any): Promise<any> {
+    return this.request('/financials/cost', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateCost(id: string, data: any): Promise<any> {
+    return this.request(`/financials/cost/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteCost(id: string): Promise<{ status: string }> {
+    return this.request(`/financials/cost/${id}`, { method: 'DELETE' });
+  }
+
+  async createFinancialSnapshot(): Promise<any> {
+    return this.request('/financials/snapshot', { method: 'POST' });
+  }
+
+  async getFinancialSnapshots(): Promise<any> {
+    return this.request('/financials/snapshots');
+  }
+
+  // Income Strategy Methods
+  async getIncomeStrategies(): Promise<any> {
+    return this.request('/income/strategies');
+  }
+
+  async generateIncomeStrategies(): Promise<any> {
+    return this.request('/income/strategies/generate', { method: 'POST' });
+  }
+
+  async updateStrategyStatus(id: string, status: string): Promise<any> {
+    return this.request(`/income/strategies/${id}/status`, {
+      method: 'PUT',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async getGoalGapAnalysis(): Promise<any> {
+    return this.request('/income/goal-gap');
+  }
+
+  async getInferenceCosts(days?: number): Promise<any> {
+    const qs = days ? `?days=${days}` : '';
+    return this.request(`/financials/inference-costs${qs}`);
+  }
+
+  async scanOpportunities(): Promise<any> {
+    return this.request('/financials/scan-opportunities', { method: 'POST' });
+  }
+
+  async getOpportunities(): Promise<any> {
+    return this.request('/financials/opportunities');
+  }
+
+  // ============================================================================
+  // Network Methods
+  // ============================================================================
+
+  async importLinkedInNetwork(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = `${this.baseURL}/network/import/linkedin`;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Import failed' }));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
+  async importGoogleContacts(file: File): Promise<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const url = `${this.baseURL}/network/import/google`;
+    const response = await fetch(url, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({ error: 'Import failed' }));
+      throw new Error(err.error || `HTTP ${response.status}`);
+    }
+    return response.json();
+  }
+
+  async getNetworkContacts(search?: string, relationship?: string): Promise<{ contacts: any[]; count: number }> {
+    const params = new URLSearchParams();
+    if (search) params.set('search', search);
+    if (relationship) params.set('relationship', relationship);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/network/contacts${qs}`);
+  }
+
+  async getNetworkContact(id: string): Promise<any> {
+    return this.request(`/network/contacts/${id}`);
+  }
+
+  async updateNetworkContact(id: string, data: any): Promise<any> {
+    return this.request(`/network/contacts/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getNetworkGraph(): Promise<any> {
+    return this.request('/network/graph');
+  }
+
+  async getNetworkOpportunities(): Promise<{ opportunities: any[]; count: number }> {
+    return this.request('/network/opportunities');
+  }
+
+  // ============================================================================
+  // Agent State Methods
+  // ============================================================================
+
+  async getAgentState(): Promise<any> {
+    return this.request('/agent/state');
+  }
+
+  async approveAction(requestId: string): Promise<any> {
+    return this.request(`/agent/approve/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify({ approved: true }),
+    });
+  }
+
+  async rejectAction(requestId: string): Promise<any> {
+    return this.request(`/agent/approve/${requestId}`, {
+      method: 'POST',
+      body: JSON.stringify({ approved: false }),
+    });
+  }
+
+  // ============================================================================
+  // Council Verdict Methods
+  // ============================================================================
+
+  async getCouncilVerdict(verdictId: string): Promise<any> {
+    return this.request(`/council/verdicts/${verdictId}`);
+  }
+
+  async getCouncilVerdicts(projectId?: string): Promise<any> {
+    const url = projectId
+      ? `/council/verdicts?project_id=${encodeURIComponent(projectId)}`
+      : '/council/verdicts';
+    return this.request(url);
+  }
+
+  async applyCouncilActions(verdictId: string): Promise<any> {
+    return this.request(`/council/${verdictId}/apply-actions`, { method: 'POST' });
+  }
+
+  async runCouncilEvaluation(projectId: string): Promise<any> {
+    return this.request(`/council/evaluate`, {
+      method: 'POST',
+      body: JSON.stringify({ project_id: projectId }),
+    });
+  }
+
+  async getImportJobStatus(jobId: string): Promise<any> {
+    return this.request(`/network/import/${jobId}`);
+  }
+
+  getImportSSEUrl(): string {
+    return `${this.baseURL}/network/import/status`;
+  }
+
+  async enrichNetworkContacts(contactIds?: string[]): Promise<any> {
+    const body = contactIds ? { contact_ids: contactIds } : {};
+    return this.request('/network/enrich', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async getEnrichBudget(): Promise<{ month: string; used: number; limit: number; remaining: number }> {
+    return this.request('/network/enrich/budget');
+  }
+
+  // Network Leverage & Interactions
+  async getNetworkLeverage(projectId: string): Promise<{
+    score: number;
+    warm_paths: number;
+    potential_customers: number;
+    advisors: number;
+    summary: string;
+  }> {
+    return this.request(`/network/leverage/${projectId}`);
+  }
+
+  async getNetworkXref(projectId: string): Promise<{
+    project_id: string;
+    project_title: string;
+    relevant_contacts: Array<{
+      contact: any;
+      relevance_score: number;
+      value_types: string[];
+      reasoning: string;
+    }>;
+  }> {
+    return this.request(`/network/xref/${projectId}`);
+  }
+
+  async logContactInteraction(contactId: string, data: {
+    type: string;
+    summary: string;
+    project_id?: string;
+  }): Promise<any> {
+    return this.request(`/network/contacts/${contactId}/interactions`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getContactInteractions(contactId: string): Promise<{ interactions: any[]; count: number }> {
+    return this.request(`/network/contacts/${contactId}/interactions`);
+  }
+
+  async generateOutreachDraft(contactId: string, projectId: string): Promise<{
+    subject: string;
+    body: string;
+    channel_recommendation: string;
+  }> {
+    return this.request(`/network/contacts/${contactId}/outreach-draft`, {
+      method: 'POST',
+      body: JSON.stringify({ project_id: projectId }),
+    });
+  }
+
+  async getDormantContacts(days = 90): Promise<{
+    dormant: Array<{
+      contact_id: string;
+      full_name: string;
+      company: string;
+      position: string;
+      business_value: string;
+      days_dormant: number;
+      value_types: string[];
+    }>;
+    count: number;
+  }> {
+    return this.request(`/network/dormant?days=${days}`);
+  }
+
+  async createTaskFromOpportunity(opportunityId: string, data: {
+    title: string;
+    description: string;
+    project_id?: string;
+    contact_names?: string[];
+  }): Promise<any> {
+    return this.request(`/network/opportunities/${opportunityId}/create-task`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Usage / Inference Cost Methods
+  // ============================================================================
+
+  async getUsageSummary(days?: number, caller?: string): Promise<any> {
+    const params = new URLSearchParams();
+    if (days) params.set('days', String(days));
+    if (caller) params.set('caller', caller);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/usage/summary${qs}`);
+  }
+
+  async getUsageRaw(limit?: number, offset?: number, caller?: string): Promise<any> {
+    const params = new URLSearchParams();
+    if (limit) params.set('limit', String(limit));
+    if (offset) params.set('offset', String(offset));
+    if (caller) params.set('caller', caller);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/usage/raw${qs}`);
+  }
+
+  // ============================================================================
+  // Portfolio Methods
+  // ============================================================================
+
+  async getPortfolioDashboard(): Promise<any> {
+    return this.request('/portfolio/dashboard');
+  }
+
+  async getRankedIdeas(): Promise<any> {
+    return this.request('/portfolio/ideas/ranked');
+  }
+
+  async evaluateIdea(id: string): Promise<any> {
+    return this.request(`/portfolio/ideas/${id}/evaluate`, { method: 'POST' });
+  }
+
+  // ============================================================================
+  // Weekly Report Methods
+  // ============================================================================
+
+  async generateWeeklyReport(): Promise<any> {
+    return this.request('/reports/weekly/generate', { method: 'POST' });
+  }
+
+  async getLatestWeeklyReport(): Promise<any> {
+    return this.request('/reports/weekly/latest');
+  }
+
+  async getWeeklyReports(limit?: number): Promise<any> {
+    const params = limit ? `?limit=${limit}` : '';
+    return this.request(`/reports/weekly${params}`);
+  }
+
+  // ============================================================================
+  // Report Viewer Methods
+  // ============================================================================
+
+  async getReports(type?: string, limit?: number): Promise<{ reports: any[]; count: number }> {
+    const params = new URLSearchParams();
+    if (type) params.set('type', type);
+    if (limit) params.set('limit', String(limit));
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/reports${qs}`);
+  }
+
+  async getReport(id: string): Promise<any> {
+    return this.request(`/reports/${id}`);
+  }
+
+  async getReportTypes(): Promise<{ types: string[] }> {
+    return this.request('/reports/types');
+  }
+
+  async getNitaraGuide(): Promise<{ content: string }> {
+    return this.request('/reports/nitara-guide');
+  }
+
+  // ============================================================================
+  // Marketing / GTM Methods
+  // ============================================================================
+
+  async getMarketingDashboard(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/dashboard`);
+  }
+
+  async getGTMStrategy(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`);
+  }
+
+  async generateGTMStrategy(projectId: string, councilVerdictId?: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`, {
+      method: 'POST',
+      body: JSON.stringify({ generate: true, council_verdict_id: councilVerdictId }),
+    });
+  }
+
+  async updateGTMStrategy(projectId: string, updates: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/strategy`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async getCalendarEntries(projectId: string, filters?: { status?: string; channel?: string }): Promise<any> {
+    const params = new URLSearchParams();
+    if (filters?.status) params.set('status', filters.status);
+    if (filters?.channel) params.set('channel', filters.channel);
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/marketing/${projectId}/calendar${qs}`);
+  }
+
+  async createCalendarEntry(projectId: string, data: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async generateCalendar(projectId: string, weeksAhead?: number): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar`, {
+      method: 'POST',
+      body: JSON.stringify({ generate: true, weeks_ahead: weeksAhead || 4 }),
+    });
+  }
+
+  async updateCalendarEntry(projectId: string, entryId: string, updates: any): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar/${entryId}`, {
+      method: 'PATCH',
+      body: JSON.stringify(updates),
+    });
+  }
+
+  async deleteCalendarEntry(projectId: string, entryId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/calendar/${entryId}`, { method: 'DELETE' });
+  }
+
+  async draftDueEntries(projectId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/draft-due`, { method: 'POST' });
+  }
+
+  async publishCalendarEntry(projectId: string, entryId: string): Promise<any> {
+    return this.request(`/marketing/${projectId}/publish/${entryId}`, { method: 'POST' });
+  }
+
+  // ============================================================================
+  // Collaborator Methods
+  // ============================================================================
+
+  async getCollaborators(projectId: string): Promise<{ collaborators: any[]; count: number }> {
+    return this.request(`/projects/${projectId}/collaborators`);
+  }
+
+  async addCollaborator(projectId: string, data: any): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async removeCollaborator(projectId: string, collaboratorId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators/${collaboratorId}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async analyzeCollaborator(projectId: string, collaboratorId: string): Promise<any> {
+    return this.request(`/projects/${projectId}/collaborators/${collaboratorId}/analyze`, {
+      method: 'POST',
+    });
+  }
+
+  // ============================================================================
+  // Confidence Calibration Methods
+  // ============================================================================
+
+  async getCalibrationReport(): Promise<any> {
+    return this.request('/confidence/report');
+  }
+
+  async getConfidenceRecords(actionType?: string, limit?: number): Promise<any> {
+    const params = new URLSearchParams();
+    if (actionType) params.set('action_type', actionType);
+    if (limit) params.set('limit', String(limit));
+    const qs = params.toString() ? `?${params.toString()}` : '';
+    return this.request(`/confidence/records${qs}`);
+  }
+
+  async triggerCalibration(): Promise<any> {
+    return this.request('/confidence/calibrate', { method: 'POST' });
+  }
+
+  async getTrustEvolution(actionType?: string): Promise<any> {
+    const qs = actionType ? `?action_type=${encodeURIComponent(actionType)}` : '';
+    return this.request(`/confidence/trust-evolution${qs}`);
+  }
+
+  // ============================================================================
+  // YouTube / Knowledge Methods
+  // ============================================================================
+
+  async getYouTubePlaylists(): Promise<any> {
+    return this.request('/knowledge/youtube/playlists');
+  }
+
+  async registerYouTubePlaylist(data: { playlist_id: string; title?: string; tags?: string[] }): Promise<any> {
+    return this.request('/knowledge/youtube/playlists', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async indexYouTubePlaylist(id: string): Promise<any> {
+    return this.request(`/knowledge/youtube/playlists/${id}/index`, {
+      method: 'POST',
+    });
+  }
+
+  // ============================================================================
+  // LiveKit Methods
+  // ============================================================================
+
+  async getLiveKitToken(params: {
+    threadId?: string;
+    voicePreset?: string;
+    roomName?: string;
+  }): Promise<{ token: string; roomName: string; wsUrl: string; identity: string }> {
+    return this.request('/livekit/token', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  async getLiveKitStatus(): Promise<{ configured: boolean; wsUrl: string | null }> {
+    return this.request('/livekit/status');
+  }
+
+  async getYouTubeVideos(playlistId?: string): Promise<any> {
+    const qs = playlistId ? `?playlist_id=${encodeURIComponent(playlistId)}` : '';
+    return this.request(`/knowledge/youtube/videos${qs}`);
+  }
+
+  async deleteYouTubePlaylist(id: string): Promise<any> {
+    return this.request(`/knowledge/youtube/playlists/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  // ============================================================================
+  // Hypothesis Methods (v2)
+  // ============================================================================
+
+  async getHypotheses(projectId: string): Promise<{ hypotheses: any[]; count: number }> {
+    return this.request(`/projects/${encodeURIComponent(projectId)}/hypotheses`);
+  }
+
+  async createHypothesis(data: {
+    projectId: string;
+    statement: string;
+    type: 'problem' | 'solution' | 'channel' | 'pricing' | 'moat';
+    confidence?: number;
+    evidenceRefs?: string[];
+  }): Promise<any> {
+    return this.request('/hypotheses', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateHypothesisConfidence(id: string, confidence: number, newEvidence?: string): Promise<any> {
+    return this.request(`/hypotheses/${id}/confidence`, {
+      method: 'PATCH',
+      body: JSON.stringify({ confidence, newEvidence }),
+    });
+  }
+
+  // ============================================================================
+  // Experiment Methods (v2)
+  // ============================================================================
+
+  async getExperimentsV2(projectId?: string): Promise<{ experiments: any[]; count: number }> {
+    if (projectId && projectId !== 'all') {
+      return this.request(`/projects/${encodeURIComponent(projectId)}/experiments`);
+    }
+    return this.request('/experiments');
+  }
+
+  async getExperimentV2(id: string): Promise<any> {
+    return this.request(`/experiments/${id}`);
+  }
+
+  async createExperimentV2(data: {
+    projectId: string;
+    hypothesisId?: string;
+    metricName: string;
+    metricDefinition?: string;
+    successRule: string;
+  }): Promise<any> {
+    return this.request('/experiments', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExperimentResults(id: string, data: {
+    baseline: number;
+    variant: number;
+    lift?: number;
+    p_value?: number;
+    sample_size?: number;
+  }): Promise<any> {
+    return this.request(`/experiments/${id}/results`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateExperimentStatus(id: string, status: 'draft' | 'running' | 'completed'): Promise<any> {
+    return this.request(`/experiments/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  async recordExperimentDecision(id: string, data: {
+    decision: 'scale' | 'iterate' | 'pivot' | 'park' | 'kill';
+    rationale: string;
+  }): Promise<any> {
+    return this.request(`/experiments/${id}/decide`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Decision Methods (v2)
+  // ============================================================================
+
+  async getDecisions(projectId?: string): Promise<{ decisions: any[]; count: number }> {
+    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/decisions${qs}`);
+  }
+
+  // ============================================================================
+  // Playbook Methods (v2)
+  // ============================================================================
+
+  async getPlaybooks(projectId?: string): Promise<{ playbooks: any[]; count: number }> {
+    const qs = projectId ? `?project_id=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/playbooks${qs}`);
+  }
+
+  async getPlaybook(id: string): Promise<any> {
+    return this.request(`/playbooks/${id}`);
+  }
+
+  async createPlaybook(data: {
+    project_id?: string;
+    title: string;
+    context: string;
+    steps: any[];
+    success_metrics?: string[];
+    failure_modes?: string[];
+  }): Promise<{ status: string; playbook: any }> {
+    return this.request('/playbooks', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Approval Queue Methods (v2)
+  // ============================================================================
+
+  async getApprovals(status?: string): Promise<{ approvals: any[]; count: number }> {
+    const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.request(`/approvals${qs}`);
+  }
+
+  async decideApproval(id: string, status: 'approved' | 'rejected'): Promise<any> {
+    return this.request(`/approvals/${id}/decide`, {
+      method: 'POST',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // ============================================================================
+  // Auth Methods (v2)
+  // ============================================================================
+
+  async authRegister(data: { email: string; password: string; name: string }): Promise<{ token: string; user: any }> {
+    return this.request('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async authLogin(data: { email: string; password: string }): Promise<{ token: string; user: any }> {
+    return this.request('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async authLogout(token: string): Promise<{ status: string }> {
+    return this.request('/auth/logout', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  }
+
+  async authMe(token: string): Promise<{ user: any }> {
+    return this.request('/auth/me', {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+  }
+
+  // ============================================================================
+  // Budget Methods
+  // ============================================================================
+
+  async getBudget(): Promise<BudgetStatus> {
+    return this.request('/budget');
+  }
+
+  async updateBudget(data: Partial<BudgetConfig>): Promise<{ status: string; config: BudgetConfig }> {
+    return this.request('/budget', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Signals Methods
+  // ============================================================================
+
+  async getSignals(projectId?: string): Promise<{ signals: Signal[]; count: number }> {
+    const qs = projectId ? `?projectId=${encodeURIComponent(projectId)}` : '';
+    return this.request(`/signals${qs}`);
+  }
+
+  async createSignal(data: { projectId: string; experimentId?: string; type: string; valueJson?: unknown; source?: string }): Promise<{ signal: Signal }> {
+    return this.request('/signals', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  // ============================================================================
+  // Agent Runs Methods
+  // ============================================================================
+
+  async getAgentRuns(params?: { status?: string; mode?: string; limit?: number }): Promise<{ runs: AgentRun[]; count: number }> {
+    const qs = new URLSearchParams();
+    if (params?.status) qs.set('status', params.status);
+    if (params?.mode) qs.set('mode', params.mode);
+    if (params?.limit) qs.set('limit', String(params.limit));
+    const qsStr = qs.toString() ? `?${qs.toString()}` : '';
+    return this.request(`/agent-runs${qsStr}`);
+  }
+
+  async getAgentRunStats(): Promise<AgentRunStats> {
+    return this.request('/agent-runs/stats');
+  }
+
+  async getAgentRun(id: string): Promise<AgentRun> {
+    return this.request(`/agent-runs/${id}`);
+  }
+
+  // ============================================================================
+  // Simulation Methods
+  // ============================================================================
+
+  async runSimulation(params: SimulationParams): Promise<SimulationResult> {
+    return this.request('/simulations/run', {
+      method: 'POST',
+      body: JSON.stringify(params),
+    });
+  }
+
+  // ============================================================================
+  // Queue Schedule Methods
+  // ============================================================================
+
+  async getQueueSchedule(): Promise<{ schedule: ScheduleEntry[]; count: number }> {
+    return this.request('/queue/schedule');
+  }
+
+  async getQueueStats(): Promise<any> {
+    return this.request('/queue/stats');
+  }
+
+  async getQueueTasks(status?: string): Promise<{ tasks: any[]; count: number }> {
+    const qs = status ? `?status=${encodeURIComponent(status)}` : '';
+    return this.request(`/queue/tasks${qs}`);
+  }
+
+  // ============================================================================
+  // Tools Methods
+  // ============================================================================
+
+  async getTools(): Promise<{ tools: ToolManifest[]; count: number }> {
+    return this.request('/tools');
+  }
+
+  // ============================================================================
+  // Validation Engine Methods
+  // ============================================================================
+
+  async getValidationOverview(): Promise<ValidationEngineOverview> {
+    return this.request('/validation/overview');
+  }
+
+  async getSignalStrength(projectId: string): Promise<SignalStrengthScore> {
+    return this.request(`/validation/signal-strength/${projectId}`);
+  }
+
+  async getSignalStrengthHistory(projectId: string, days?: number): Promise<{ history: SignalStrengthScore[]; count: number }> {
+    const qs = days ? `?days=${days}` : '';
+    return this.request(`/validation/signal-strength/history/${projectId}${qs}`);
+  }
+
+  async computeSignalStrength(projectId?: string): Promise<any> {
+    return this.request('/validation/signal-strength/compute', {
+      method: 'POST',
+      body: JSON.stringify(projectId ? { projectId } : {}),
+    });
+  }
+
+  async getPruningRecommendations(): Promise<{ recommendations: PruningRecommendation[]; count: number }> {
+    return this.request('/validation/pruning-recommendations');
+  }
+
+  async recordEnjoyment(projectId: string, score: number, note?: string): Promise<any> {
+    return this.request(`/validation/enjoyment/${projectId}`, {
+      method: 'POST',
+      body: JSON.stringify({ score, note }),
+    });
+  }
+
+  async getEnjoymentHistory(projectId: string): Promise<{ latest: EnjoymentEntry | null; history: EnjoymentEntry[]; count: number }> {
+    return this.request(`/validation/enjoyment/${projectId}`);
+  }
+}
+
+// ============================================================================
+// Validation Engine Types
+// ============================================================================
+
+export interface SignalStrengthBreakdown {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface SignalStrengthScore {
+  id: string;
+  projectId: string;
+  teamId: string;
+  score: string;
+  breakdown: SignalStrengthBreakdown;
+  trend: 'rising' | 'flat' | 'falling';
+  previousScore: string | null;
+  daysAtCurrentLevel: number;
+  recommendation: 'scale' | 'double_down' | 'iterate' | 'park' | 'kill' | null;
+  computedAt: string;
+  createdAt: string;
+}
+
+export interface PruningRecommendation {
+  project_id: string;
+  project_name: string;
+  score: number;
+  trend: 'rising' | 'flat' | 'falling';
+  days_at_level: number;
+  recommendation: 'scale' | 'double_down' | 'iterate' | 'park' | 'kill';
+  rationale: string;
+  breakdown: SignalStrengthBreakdown;
+}
+
+export interface EnjoymentEntry {
+  id: string;
+  projectId: string;
+  score: number;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface ValidationEngineOverview {
+  total_projects: number;
+  scored_projects: number;
+  kill_candidates: number;
+  scale_candidates: number;
+  park_candidates: number;
+  average_score: number;
+  score_distribution: { range: string; count: number }[];
+  last_computed_at: string | null;
 }
 
 // ============================================================================

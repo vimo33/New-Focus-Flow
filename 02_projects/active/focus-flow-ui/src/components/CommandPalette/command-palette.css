@@ -1,0 +1,17 @@
+/* cmdk overrides for Nitara design system */
+[cmdk-group-heading] {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  padding: 8px 12px 4px;
+}
+
+[cmdk-input] {
+  caret-color: var(--color-primary);
+}
+
+[cmdk-item] {
+  min-height: 40px;
+}

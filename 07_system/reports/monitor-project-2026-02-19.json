@@ -1,0 +1,91 @@
+{
+  "task_type": "monitor-project",
+  "status": "healthy",
+  "checked_at": "2026-02-19T20:05:00Z",
+  "service_status": {
+    "focus-flow-backend": "active",
+    "focus-flow-frontend": "active",
+    "focus-flow-telegram": "inactive",
+    "openclaw-gateway": "inactive"
+  },
+  "api_health": {
+    "backend": "healthy",
+    "frontend": "healthy"
+  },
+  "disk": {
+    "usage_percent": 35,
+    "available": "25G",
+    "threshold_warning": 85,
+    "status": "healthy"
+  },
+  "inference_costs": {
+    "total_today_usd": 0.0,
+    "daily_budget_usd": 20.0,
+    "utilization_pct": 0,
+    "status": "within_budget"
+  },
+  "stale_tasks": [
+    "2026-02-03: task-053-integration-testing.json",
+    "2026-02-10: task-20260210-798204.json",
+    "2026-02-11: task-20260211-426909.json",
+    "2026-02-11: task-20260211-933146.json",
+    "2026-02-11: task-20260211-942218.json"
+  ],
+  "queue": {
+    "total_pending": 29,
+    "threshold_warning": 20,
+    "status": "elevated"
+  },
+  "alerts": [
+    {
+      "severity": "warning",
+      "message": "Queue depth at 29 items (>20 threshold). Consider reviewing pending agent tasks."
+    },
+    {
+      "severity": "info",
+      "message": "5 stale tasks found (not updated in >7 days). These may be completed or archived."
+    },
+    {
+      "severity": "info",
+      "message": "Telegram and OpenClaw Gateway services are inactive. Confirm if this is expected."
+    }
+  ],
+  "summary": {
+    "core_services": "\u2713 Healthy (backend + frontend running)",
+    "api_endpoints": "\u2713 Responding",
+    "infrastructure": "\u2713 35% disk usage, no critical alerts",
+    "recommendations": [
+      "Review 29 queue items to ensure tasks are progressing",
+      "Archive or cleanup 5 stale tasks from early-to-mid February",
+      "Verify Telegram bot and OpenClaw gateway configuration if needed"
+    ]
+  },
+  "satisfaction_score": 0.72,
+  "satisfaction_details": [
+    {
+      "name": "service_status_present",
+      "score": 1.0,
+      "weight": 0.25
+    },
+    {
+      "name": "health_checks_run",
+      "score": 1.0,
+      "weight": 0.2
+    },
+    {
+      "name": "log_analysis",
+      "score": 0.0,
+      "weight": 0.2
+    },
+    {
+      "name": "actionable_recommendations",
+      "score": 0.6,
+      "weight": 0.2
+    },
+    {
+      "name": "no_placeholders",
+      "score": 1.0,
+      "weight": 0.15
+    }
+  ]
+}

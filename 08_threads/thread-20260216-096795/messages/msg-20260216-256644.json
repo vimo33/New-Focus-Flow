@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-256644",
+  "thread_id": "thread-20260216-096795",
+  "role": "assistant",
+  "content": "You're right. Let me clarify.\n\nI have **two sets of powers**:\n\n**1. OpenClaw Native Tools** (the foundation)\n- File system (read/write/edit)\n- Shell execution\n- Web search & fetch\n- Browser control\n- Messaging (Signal, Telegram, Discord, etc.)\n- Cron jobs & scheduling\n- Node control (camera, screen, notifications)\n- Memory search (MEMORY.md + memory/*.md)\n- Session management & sub-agents\n\n**2. Nitara Tool Registry** (the 39 business capabilities)\n- All the domain-specific tools I listed before (inbox, projects, ideas council, CRM, financials, etc.)\n\nThe Nitara tools are **implemented on top of** OpenClaw's infrastructure. They call out to your backend services, but I invoke them through the tool calling mechanism you've built.\n\nSo when you ask \"what are my powers from the tool registry\" — do you mean specifically the Nitara-side registry, or are you asking about something else I'm missing?",
+  "source": "voice",
+  "created_at": "2026-02-16T20:54:16.644Z"
+}

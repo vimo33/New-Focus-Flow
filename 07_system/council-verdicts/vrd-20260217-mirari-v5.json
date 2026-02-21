@@ -1,0 +1,182 @@
+{
+  "id": "vrd-20260217-mirari-v5",
+  "project_id": "project-20260216-349467",
+  "decision_type": "idea_validation",
+  "verdict": "needs_more_info",
+  "confidence": 0.82,
+  "overall_score": 5.5,
+  "subject_title": "Mirari (AURA - Zurich Temporal Lens) v5.0",
+  "subject_description": "Zero-UI temporal companion overlaying history onto physical Zurich. Full-duplex multimodal AI using MiniCPM-o 4.5, Qwen3-VL spatial grounding, and generative world engine for unscripted historical roleplay. Voice-first, proactive landmark identification, 4-layer spatial audio, on-device privacy. Version 5.0 - Post-Freedom Design.",
+  "recommendation": "needs-info",
+  "executive_summary": "Mirari V5.0 is the most technically coherent and emotionally resonant project in the portfolio — a historical companion that speaks when it sees something interesting, generates personalized souvenirs of your walk, and lets you argue with Zwingli is genuinely compelling. The vision is right for 2026 and aligns with Vimo's strengths. But the submission conflates product quality with product discovery, and the financial projections assume a discovery mechanism that doesn't yet exist. Three validation gates must be cleared before build can begin: tourist WTP intercept test, hotel distribution commitment (not revenue — distribution), and architectural revision to GPS-first/cloud-conversation model. The council is not rejecting Mirari — it is saying the work to be done is in the real world, not in the product specification.",
+  "key_insight": "Distribution is a launch requirement, not a growth-phase activity. Every tourist who uses Mirari will have been placed there by a hotel key card, a Zürich Tourismus recommendation, or a viral travel vlogger video — not organic App Store discovery. The submission plans hotel partnerships as revenue streams; they are actually the primary distribution channel and must be secured before build begins.",
+  "dimension_scores": [
+    {
+      "dimension": "Market Viability",
+      "score": 6,
+      "weight": 0.25,
+      "reasoning": "Real market with genuine white space — no competitor currently offers generative, proactive, zero-UI historical roleplay tied to physical location. Concern: conversion assumptions are 3-5x optimistic. Realistic cold-start conversion is 5-7% vs. 12% projected. Tourism timing window (2.3 nights average stay) creates freemium mechanic misalignment."
+    },
+    {
+      "dimension": "Technical Feasibility",
+      "score": 5,
+      "weight": 0.20,
+      "reasoning": "Achievable with revised architecture, not as currently described. Simultaneous 4-model on-device stack (MiniCPM-o 4.5 + Qwen3-VL + MobileLLM-Pro P1 + NeuTTS-Nano) will cause thermal throttling within 8-10 minutes under real-world conditions, not the 15-minute target. Required fix: GPS-first trigger, cloud-conversation model, on-device only for activation — adds 3-4 weeks but solves thermal and hallucination risk simultaneously."
+    },
+    {
+      "dimension": "Business Model Strength",
+      "score": 5,
+      "weight": 0.25,
+      "reasoning": "Unit economics are actually healthy (CHF 3.04/month contribution margin at 61%). The problem is volume: at realistic 5% cold-start conversion, Year 1 revenue is CHF 21K against CHF 43K costs — a CHF 22K hole. CHF 9.99 one-time city pass deserves serious evaluation over subscription. Digital Souvenir should move from Pro add-on to free viral mechanic. iOS dev budget (CHF 18K) is 40-60% below Zürich market rate."
+    },
+    {
+      "dimension": "Execution Risk",
+      "score": 5,
+      "weight": 0.15,
+      "reasoning": "Primary execution risk is distribution failure, not technical failure. Historical hallucination without RAG grounding is a reputational risk that must be addressed before launch. Zürich Tourismus procurement cycle (6-12 months) should not appear in Year 1 financial projections."
+    },
+    {
+      "dimension": "Competitive Defensibility",
+      "score": 6,
+      "weight": 0.10,
+      "reasoning": "Genuine white space. True moat is quality of Character Constitutions and conversational coherence — harder to replicate than historian research alone. Window before Google/Apple absorbs this: 18-36 months. Move now or lose the timing advantage."
+    },
+    {
+      "dimension": "Timing & Market Readiness",
+      "score": 8,
+      "weight": 0.05,
+      "reasoning": "2026 is the right moment. First year that on-device multimodal AI (MiniCPM-o class) makes this experience viable. The inflection point is now."
+    }
+  ],
+  "council_composition": [
+    "Venture Strategy & Market Analyst",
+    "Technical Architecture & Feasibility Analyst",
+    "Product & UX Strategist",
+    "Business Model & Financial Analyst",
+    "India Market Specialist",
+    "AI Product & Agent Architecture Specialist",
+    "Open Source & Community Strategy Analyst"
+  ],
+  "evaluations": [
+    {
+      "agent": "Venture Strategy & Market Analyst",
+      "scores": {"Market Viability": 6, "Competitive Defensibility": 6, "Timing & Market Readiness": 8},
+      "key_finding": "Genuine white space, but conversion funnel is strained. Realistic install-to-paid funnel: 351K potential × 5% aware × 30% download × 10% convert = ~5,200 paid users, not 52K projected.",
+      "biggest_risk": "Discovery channel. Tourists don't browse App Stores for city-specific AI apps. Without hotel partnerships or Zürich Tourismus placement on day one, organic discovery will be near-zero."
+    },
+    {
+      "agent": "Technical Architecture & Feasibility Analyst",
+      "scores": {"Technical Feasibility": 5, "Execution Risk": 5},
+      "key_finding": "Simultaneous 4-model on-device stack will cause thermal throttling within 8-10 minutes. Required fix: cloud-first with on-device trigger only.",
+      "biggest_risk": "15-minute session target is unachievable with described architecture. Architectural revision required before build."
+    },
+    {
+      "agent": "Product & UX Strategist",
+      "scores": {"Market Viability": 6, "Execution Risk": 6},
+      "key_finding": "Zero-UI philosophy creates trust problem on first use — 'nothing is happening' reads as 'app is broken'. 20-second audio calibration intro required. Digital Souvenir is underrated viral mechanic buried as Pro feature.",
+      "biggest_risk": "Tourist abandonment within first 5 minutes because Zero-UI experience reads as broken. Onboarding calibration is critical."
+    },
+    {
+      "agent": "Business Model & Financial Analyst",
+      "scores": {"Business Model Strength": 5, "Execution Risk": 4},
+      "key_finding": "Unit economics are healthy (61% contribution margin) but volume projections are 3-5x optimistic. At 5% conversion: Year 1 loss of CHF 22K. CHF 9.99 one-time city pass deserves evaluation.",
+      "biggest_risk": "12% conversion assumption. At realistic 5% cold-start, Year 1 is a CHF 22K loss."
+    },
+    {
+      "agent": "AI Product & Agent Architecture Specialist",
+      "scores": {"Technical Feasibility": 6, "Execution Risk": 5},
+      "key_finding": "Historical hallucination without RAG grounding will generate trust-destroying errors at scale. RAG architecture required for all Character Constitutions. Persona drift under adversarial questioning is unaddressed.",
+      "biggest_risk": "Historical hallucination is a reputational risk. One viral screenshot of Mirari stating a false historical fact could be devastating."
+    }
+  ],
+  "recommended_actions": [
+    {
+      "action": "Tourist WTP validation sprint: recruit 20 tourists on Bahnhofstrasse, run 60-second Wizard of Oz demo, measure willingness to pay at CHF 4.99 and CHF 9.99 price points",
+      "priority": "high",
+      "category": "validation",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Tourist validation sprint: recruit 20 tourists on Bahnhofstrasse, run rough demo, measure willingness-to-pay",
+        "description": "Council requirement 1. Book a morning on Bahnhofstrasse. Use a rough prototype or mockup. Count yeses to a CHF 4.99 or CHF 9.99 price point. Target: 20 conversations minimum. Document objections. Film if possible for reference.",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Secure hotel distribution commitment: at least 1 boutique hotel agrees to QR card placement in rooms or key cards before build begins",
+      "priority": "high",
+      "category": "partnerships",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Secure one hotel distribution commitment — QR card placement in key cards or lobby",
+        "description": "Council requirement 2. Target boutique hotels in Zurich old town or near major tourist areas. Offer free, no commitment on their side. Just a handshake and QR cards at reception or in room key packets. One yes before build begins.",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Revise architecture to GPS-first / cloud-conversation model: on-device used only for landmark detection trigger, all conversation handled via Claude API. Add RAG fact-grounding for all Character Constitutions.",
+      "priority": "high",
+      "category": "technical",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Revise architecture: GPS-first trigger, cloud conversation model, on-device only for activation",
+        "description": "Council requirement 3. Current always-on multimodal design causes 2-3hr battery drain and thermal throttling. New model: GPS proximity triggers landmark detection, conversation handled in cloud. On-device used only for initial trigger. Add RAG grounding for historical facts. Estimate 3-4 weeks added to timeline.",
+        "category": "work",
+        "priority": "high"
+      }
+    },
+    {
+      "action": "Move Digital Souvenir mechanic to free tier — it is the product's strongest viral engine and should not be gated behind Pro",
+      "priority": "medium",
+      "category": "product",
+      "can_auto_create_task": true,
+      "task_template": {
+        "title": "Redesign Digital Souvenir as free core feature (not Pro add-on)",
+        "description": "Council insight: the personalized AI-generated souvenir is the most emotionally resonant and shareable element in the product. Moving it to Pro tier suppresses its viral potential. Free = organic discovery engine. Revise PRD pricing model accordingly.",
+        "category": "work",
+        "priority": "medium"
+      }
+    },
+    {
+      "action": "Evaluate CHF 9.99 one-time city pass pricing model vs. monthly subscription — aligns better with tourist behavior (experience mode, not subscription mode)",
+      "priority": "medium",
+      "category": "business_model",
+      "can_auto_create_task": false
+    }
+  ],
+  "risks": [
+    "Distribution failure: organic App Store discovery will produce <200 downloads/month without hotel/tourism board partnerships from day one",
+    "Historical hallucination: without RAG grounding, Claude will confidently state false historical facts — reputational risk at scale",
+    "Thermal throttling: always-on 4-model stack achieves 8-10 minutes before throttling, not the 15-minute target",
+    "Conversion miss: at 5% cold-start (vs. 12% assumed), Year 1 is a CHF 22K loss, not break-even",
+    "First-use abandonment: Zero-UI experience reads as 'app broken' without 20-second audio calibration intro",
+    "Tourist trust gap: unsolicited AI voice narration in a foreign city may feel disorienting rather than magical — requires Wizard of Oz validation"
+  ],
+  "open_questions": [
+    "Do tourists who experience a 60-second demo express genuine WTP — and at which price point (CHF 4.99/month vs. CHF 9.99 one-time city pass)?",
+    "Will tourists find the proactive, zero-UI voice interruptions magical or disorienting in Zürich's quiet urban environment?",
+    "Can a boutique hotel partnership be secured before build begins, confirming that B2B distribution is a viable launch channel?",
+    "Is CHF 18K sufficient for iOS development in Zürich, or should the build be offshored to reduce cost?"
+  ],
+  "consensus_areas": [
+    "The product vision is genuinely compelling and differentiable",
+    "2026 timing is right — on-device AI inflection point",
+    "Hotel QR distribution is the critical path, not App Store",
+    "The architecture needs revision: GPS-first, cloud conversation, on-device trigger only",
+    "Do not build until Wizard of Oz WTP test is complete"
+  ],
+  "disagreement_areas": [
+    "Pricing model: monthly subscription vs. one-time city pass — council split on which aligns better with tourist psychology",
+    "India market: no consensus on relevance for v1.0 (flagged for Year 3 expansion only)"
+  ],
+  "synthesized_reasoning": "Mirari V5.0 earns a 'needs-info' verdict not because the idea is weak, but because the two most critical unknowns — tourist WTP and hotel distribution viability — are 2-week field tests, not 6-month builds. The technical architecture has a fixable flaw (thermal + hallucination risk solved by GPS-first + RAG). The business model has a solvable gap (Digital Souvenir as free tier, city pass pricing evaluation). Run the intercept test first. If 12+ of 20 tourists express genuine WTP, the council expects to score this 6.8-7.2 on resubmission and recommend PROCEED.",
+  "next_steps": [
+    "Book morning on Bahnhofstrasse this week — 20 tourist intercepts, 60-second Wizard of Oz demo, count yeses",
+    "Schedule 3 coffee meetings with boutique hotel concierges — pitch QR card distribution (free to them, no commitment)",
+    "Revise V5 PRD: GPS-first architecture, cloud conversation, RAG fact-grounding for Character Constitutions",
+    "Move Digital Souvenir to free tier in PRD pricing model",
+    "Evaluate CHF 9.99 one-time city pass vs. CHF 4.99/month subscription"
+  ],
+  "created_at": "2026-02-17T09:00:00.000Z"
+}

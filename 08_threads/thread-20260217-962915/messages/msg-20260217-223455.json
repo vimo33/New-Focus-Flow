@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-223455",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "Yes — there's a coding-agent skill that lets me run Claude Code (or Codex, OpenCode) as a background sub-agent. I can spin it up for tasks like scaffolding, writing specs, building features, or running code against a project directory.\n\nWant me to load the skill and see what's wired up, or do you have a specific coding task for Mirari in mind?",
+  "source": "voice",
+  "created_at": "2026-02-17T08:50:23.455Z"
+}

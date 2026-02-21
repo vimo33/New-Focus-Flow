@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-252640",
+  "thread_id": "thread-20260216-235381",
+  "role": "assistant",
+  "content": "Your financial picture is half-drawn right now.\n\n**Current state:**\n- **Revenue:** $7,000/month across 2 streams\n- **Costs:** Not tracked yet (showing $0)\n- **Net:** $7,000 on paper, but the real number is lower\n\n**What this means:**\nYou're capturing income, which is good — that's the harder half to predict. But without cost tracking, we can't calculate actual runway or identify where money's leaking. Inference costs are also at zero, which tells me the system hasn't started logging API expenses yet.\n\n**Next step:**\nLet's add your recurring costs — hosting, tools, subscriptions, living expenses if this funds your life. Once we have that, the runway calculation activates and we can start surfacing income strategies when gaps appear.\n\nWant to walk through your cost structure together, or should I draft a template you can fill in?",
+  "source": "text",
+  "created_at": "2026-02-16T19:14:12.640Z"
+}

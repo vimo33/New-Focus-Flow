@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917379",
+  "first_name": "Armin",
+  "last_name": "Agic",
+  "full_name": "Armin Agic",
+  "company": "ecoinvent",
+  "position": "Outbound Sales Lead",
+  "linkedin_url": "https://www.linkedin.com/in/armin-agic",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["ESG", "LCA", "sustainability data", "Zurich", "sales"],
+  "last_contacted": "19 Nov 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.379Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 58,
+  "triage_score": 5.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "ecoinvent released v3.12 in November 2025 — the world's leading LCA (Life Cycle Assessment) database with 26,000+ peer-reviewed datasets",
+      "ecoinvent data is a core input for ESG and environmental reporting — mandatory for credible ESG compliance",
+      "ecoinvent is a Zürich-based non-profit with global reach — used by regulators, consultants, and sustainability teams worldwide",
+      "The v3.12 update expands sectors including batteries, textiles, and agriculture — relevant for Swiss SME reporting"
+    ],
+    "outreach_angle": "Armin is the outbound sales lead at ecoinvent — the world's leading LCA database. Bramha ESG's AI-native compliance platform needs to integrate ecoinvent's LCI database for credible scope 3 emissions reporting. Two angles: (1) a data licensing partnership where Bramha ESG uses ecoinvent data as a premium add-on; (2) ecoinvent as a distribution partner — they sell to ESG teams who need compliance tools. Reach out: 'Armin — I am building Bramha ESG, an AI-native ESG compliance platform for Swiss SMEs. We are exploring integrating ecoinvent's LCI data as the emissions factor backbone. I would love 20 minutes to discuss a data partnership. Are you open to a call?' Timeline: this month.",
+    "relevant_project": "Bramha ESG"
+  }
+}

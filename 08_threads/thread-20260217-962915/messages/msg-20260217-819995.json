@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-819995",
+  "thread_id": "thread-20260217-962915",
+  "role": "assistant",
+  "content": "Here's the short version across categories:\n\n**Files and code** — read, write, edit files, run shell commands, manage background processes.\n\n**Web** — search the web, fetch and read URLs, control a browser.\n\n**Projects and tasks** — create and manage projects, tasks, ideas, inbox items, contacts, deals, sales pipeline.\n\n**Intelligence** — morning briefings, weekly reports, financial summaries, AI Council validation, deep search across all your data.\n\n**Content** — draft blog posts, proposals, emails, social copy.\n\n**System** — canvas navigation, capability updates, strategic directive updates, profiling gaps.\n\n**Memory** — long-term memory search and storage across sessions.\n\n**Scheduling** — cron jobs, reminders, timed events.\n\n**Messaging** — send messages across channels like Telegram, Signal, Discord.\n\n**Coding agents** — spawn Claude Code, Codex, or OpenCode as background sub-agents pointed at any project directory.\n\n**TTS** — convert text to speech.\n\n**Vision** — analyze images.\n\nAnd on the Nitara side specifically, I have the full suite — inbox, tasks, projects, ideas council, CRM, deals, financials, health logging, content calendar, network analysis, and pipeline orchestration.\n\nBasically the full stack — strategy through execution.",
+  "source": "voice",
+  "created_at": "2026-02-17T09:00:19.995Z"
+}

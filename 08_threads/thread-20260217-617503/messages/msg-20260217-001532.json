@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-001532",
+  "thread_id": "thread-20260217-617503",
+  "role": "assistant",
+  "content": "I can't fix the chat infrastructure itself — that's outside my control. But **switching to voice might be a good workaround**:\n\nIf you're in voice mode, you could just **tell me the URL out loud** or **describe the key parts of the PRD**, and I'll capture it.\n\nOr if the PRD is long, you could:\n- Read me the URL in voice → I fetch it with `web_fetch`\n- Summarize the PRD verbally → I take notes and we work from that\n\nWant to try voice? Just hit the mic button and tell me the URL or walk me through the PRD's main points.",
+  "source": "voice",
+  "created_at": "2026-02-17T00:43:21.532Z"
+}

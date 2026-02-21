@@ -1,0 +1,34 @@
+{
+  "id": "blog-publisher",
+  "name": "Blog Publisher",
+  "version": "1.0.0",
+  "description": "Publishes drafted blog content as markdown files with YAML frontmatter. Requires Tier 3 approval before publishing.",
+  "capabilities": ["content_publishing", "blog"],
+  "execution_type": "in-process",
+  "invocation": {
+    "service": "blogPublisher",
+    "method": "publish"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["entry_id", "project_id"],
+    "properties": {
+      "entry_id": { "type": "string", "description": "Calendar entry ID to publish" },
+      "project_id": { "type": "string", "description": "Project ID" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "success": { "type": "boolean" },
+      "channel": { "type": "string" },
+      "url": { "type": "string" },
+      "approval_required": { "type": "boolean" },
+      "approval_id": { "type": "string" }
+    }
+  },
+  "trust_level": "privileged",
+  "requires_approval": true,
+  "max_execution_seconds": 30,
+  "cost_estimate": "free"
+}

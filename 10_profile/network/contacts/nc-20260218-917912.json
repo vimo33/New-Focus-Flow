@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917912",
+  "first_name": "Ganesh",
+  "last_name": "Kumar",
+  "full_name": "Ganesh Kumar",
+  "company": "Concentrix Catalyst",
+  "position": "Global Delivery Leader, Concentrix Catalyst",
+  "linkedin_url": "https://www.linkedin.com/in/ganeshkumarcnx",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "23 Oct 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.912Z",
+  "updated_at": "2026-02-18T23:32:27.832Z",
+  "phone": "+919880341306",
+  "phones": [
+    "+919880341306"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:27.832Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

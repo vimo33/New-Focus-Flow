@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917316",
+  "first_name": "Rodolphe",
+  "last_name": "Bocquet",
+  "full_name": "Rodolphe Bocquet",
+  "company": "ESG4Boards",
+  "position": "Contributing Member",
+  "linkedin_url": "https://www.linkedin.com/in/rodolphe-bocquet-07054939",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["ESG", "sustainable finance", "board governance", "Switzerland"],
+  "last_contacted": "04 Sep 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.316Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 72,
+  "triage_score": 7.2,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Rodolphe Bocquet has 20+ years in sustainable finance across London Stock Exchange, Stoxx, Swiss Re, Beyond Ratings, and Clarity AI",
+      "Former VP Partnerships & Regulation at Clarity AI (ESG data platform) and Global Head of ESG at Qontigo",
+      "Active contributor to ESG4Boards — governance-level ESG integration for corporate boards",
+      "Speaker at Building Bridges (Geneva sustainable finance conference) and Responsible Investor Europe events",
+      "Deeply embedded in Swiss sustainable finance regulatory and institutional circles"
+    ],
+    "outreach_angle": "Rodolphe is the most connected ESG practitioner in the network with direct board-level access. He is the ideal validator and potential first reference customer for Bramha ESG — AI-native ESG compliance for Swiss SMEs. Reach out referencing his work at ESG4Boards and asking for a 30-minute perspective on what Swiss SME boards actually struggle with in ESG reporting. Frame as research, not pitch. This conversation could yield the customer insight needed to validate Bramha ESG's wedge.",
+    "relevant_project": "Bramha ESG"
+  }
+}

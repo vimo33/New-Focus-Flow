@@ -116,7 +116,7 @@ export class AICouncil {
       recommendation = 'needs-info';
     }
 
-    const systemPrompt = `You are the Head of the AI Council of Elders for Focus Flow.
+    const systemPrompt = `You are the Head of the AI Council of Elders for Nitara.
 
 Your role is to synthesize evaluations from specialized agents into a coherent verdict.
 
@@ -163,7 +163,7 @@ Provide synthesized reasoning and actionable next steps. Ground your synthesis i
         systemPrompt,
         'synthesis',
         'standard',
-        { max_tokens: 2000, temperature: 0.5 }
+        { max_tokens: 2000, temperature: 0.5, caller: 'council' }
       );
 
       const jsonMatch = responseText.match(/\{[\s\S]*\}/);

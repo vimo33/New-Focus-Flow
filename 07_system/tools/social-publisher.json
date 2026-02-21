@@ -1,0 +1,35 @@
+{
+  "id": "social-publisher",
+  "name": "Social Publisher",
+  "version": "1.0.0",
+  "description": "Publishes drafted social media content to Twitter/LinkedIn. Requires Tier 3 approval before publishing.",
+  "capabilities": ["content_publishing", "social_media"],
+  "execution_type": "in-process",
+  "invocation": {
+    "service": "socialPublisher",
+    "method": "publish"
+  },
+  "input_schema": {
+    "type": "object",
+    "required": ["entry_id", "project_id", "channel"],
+    "properties": {
+      "entry_id": { "type": "string", "description": "Calendar entry ID to publish" },
+      "project_id": { "type": "string", "description": "Project ID" },
+      "channel": { "type": "string", "enum": ["twitter", "linkedin"], "description": "Social platform" }
+    }
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "success": { "type": "boolean" },
+      "channel": { "type": "string" },
+      "url": { "type": "string" },
+      "approval_required": { "type": "boolean" },
+      "approval_id": { "type": "string" }
+    }
+  },
+  "trust_level": "privileged",
+  "requires_approval": true,
+  "max_execution_seconds": 30,
+  "cost_estimate": "free"
+}

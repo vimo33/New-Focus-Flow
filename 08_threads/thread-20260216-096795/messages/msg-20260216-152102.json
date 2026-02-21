@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260216-152102",
+  "thread_id": "thread-20260216-096795",
+  "role": "assistant",
+  "content": "I have access to 39 capabilities across 15 domains. Here's the full registry:\n\n**Inbox & Capture**\n- capture_item, list_inbox, process_inbox_item\n\n**Task Management**\n- create_task, list_tasks, update_task\n\n**Project Management**\n- create_project, list_projects, get_project, update_project\n\n**Ideas Council**\n- create_idea, list_ideas, get_idea, validate_idea, promote_idea_to_project\n\n**Health & Wellbeing**\n- log_health\n\n**Memory**\n- search_memory\n\n**CRM**\n- create_contact, list_contacts\n\n**Sales Pipeline**\n- create_deal, list_deals, update_deal, get_sales_pipeline\n\n**Dev Flow**\n- scaffold_project, generate_specs\n\n**Financials**\n- get_financials_summary, get_income_strategies\n\n**Intelligence**\n- get_weekly_report, get_morning_briefing\n\n**Pipeline Orchestration**\n- start_pipeline, get_pipeline_status\n\n**Network**\n- get_network_contacts, get_network_opportunities\n\n**Content & GTM**\n- draft_content, get_calendar_entries\n\n**System**\n- get_dashboard_summary, navigate, update_capabilities\n\nRight now, your \"Bramha\" idea is sitting in the system waiting for council evaluation. Want me to run that through the AI Council to see what they think?",
+  "source": "voice",
+  "created_at": "2026-02-16T20:52:32.102Z"
+}

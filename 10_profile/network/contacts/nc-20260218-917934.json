@@ -1,0 +1,31 @@
+{
+  "id": "nc-20260218-917934",
+  "first_name": "Shreyas",
+  "last_name": "Bagalkot",
+  "full_name": "Shreyas Bagalkot",
+  "company": "Indie Collective Club",
+  "position": "Founder",
+  "linkedin_url": "https://www.linkedin.com/in/shreyas-bagalkot",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "23 Oct 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.934Z",
+  "updated_at": "2026-02-18T23:32:20.787Z",
+  "phone": "+919986746568",
+  "emails": [
+    "shreyasbagalkot@gmail.com"
+  ],
+  "phones": [
+    "+919986746568"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:20.786Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

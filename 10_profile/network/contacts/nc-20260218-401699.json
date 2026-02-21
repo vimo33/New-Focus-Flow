@@ -1,0 +1,20 @@
+{
+  "id": "nc-20260218-401699",
+  "first_name": "Omegle",
+  "last_name": "",
+  "full_name": "Omegle",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:40:01.699Z",
+  "updated_at": "2026-02-18T22:40:02.237Z",
+  "phone": "04590 933 01",
+  "phones": [
+    "04590 933 01"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

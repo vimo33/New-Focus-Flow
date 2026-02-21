@@ -1,0 +1,43 @@
+{
+  "skill": "outreach-draft",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "drafts_generated",
+      "description": "At least 3 outreach drafts generated with both email and LinkedIn versions",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "personalization_depth",
+      "description": "Each draft references specific contact details (role, company, recent news) not generic templates",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "value_proposition_clear",
+      "description": "Each draft leads with value offered, not a request — what the founder brings to the table",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "intro_requests_included",
+      "description": "Where intro chains exist, intro request drafts included for mutual connections",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "length_appropriate",
+      "description": "Email drafts under 150 words, LinkedIn under 50 words",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, [INSERT], or template brackets in drafts",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

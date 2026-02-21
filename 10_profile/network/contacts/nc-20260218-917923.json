@@ -1,0 +1,21 @@
+{
+  "id": "nc-20260218-917923",
+  "first_name": "kailash",
+  "last_name": "suryawamshi",
+  "full_name": "kailash suryawamshi",
+  "company": "The Car Rental Company",
+  "position": "Owner",
+  "linkedin_url": "https://www.linkedin.com/in/kailash-suryawamshi-5b996044",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "23 Oct 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.923Z",
+  "updated_at": "2026-02-18T23:32:37.219Z",
+  "enrichment_date": "2026-02-18T23:32:37.218Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

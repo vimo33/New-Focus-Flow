@@ -1,0 +1,43 @@
+{
+  "skill": "voice-briefing",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "briefing_text_present",
+      "description": "Briefing text is present with 200-300 words, TTS-optimized (no markdown, no abbreviations)",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "sources_referenced",
+      "description": "At least 2 different report types referenced in the briefing content",
+      "weight": 0.2,
+      "check": "sources_present"
+    },
+    {
+      "name": "focus_recommendation",
+      "description": "Contains a clear single-focus recommendation for the day",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "changes_since_yesterday",
+      "description": "Mentions specific changes or developments since the previous day",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "duration_reasonable",
+      "description": "Estimated duration between 60-90 seconds (word_count 200-300)",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, markdown formatting, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

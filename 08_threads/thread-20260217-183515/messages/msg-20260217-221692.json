@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-221692",
+  "thread_id": "thread-20260217-183515",
+  "role": "assistant",
+  "content": "The Google Doc isn't loading properly through web_fetch—I'm only getting the title. Google Docs renders content dynamically, so the extraction tool can't pull the actual text.\n\nThree ways to get me the content:\n\n1. **File → Download → Plain Text** and paste it here\n2. **Share with edit access** (I can try browser automation to read it)\n3. **Copy-paste the sections** you want me to focus on\n\nWhich works better for you?",
+  "source": "voice",
+  "created_at": "2026-02-17T01:03:41.692Z"
+}

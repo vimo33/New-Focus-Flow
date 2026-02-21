@@ -1,0 +1,43 @@
+{
+  "skill": "voice-profiling",
+  "version": 1,
+  "satisfaction_threshold": 0.6,
+  "criteria": [
+    {
+      "name": "target_domain_identified",
+      "description": "Target domain selected based on checklist gaps with priority ordering",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "questions_prepared",
+      "description": "At least 3 conversation questions prepared for the target domain",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "completeness_improved",
+      "description": "Profiling completeness increased after the session (improvement_delta > 0)",
+      "weight": 0.25,
+      "check": "novel_data"
+    },
+    {
+      "name": "session_recorded",
+      "description": "Voice session ID present and session record exists",
+      "weight": 0.15,
+      "check": "sources_present"
+    },
+    {
+      "name": "dnd_respected",
+      "description": "DND schedule was checked before attempting call",
+      "weight": 0.15,
+      "check": "recommendations"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, or incomplete data",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

@@ -76,6 +76,16 @@ interface AgentStore {
   fetchActivity: (limit?: number) => Promise<void>;
   toggleWorkPlanItem: (itemId: string) => void;
   subscribePush: () => Promise<void>;
+
+  // Real-time SSE callback registries
+  toolCompletedCallbacks: Map<string, (data: any) => void>;
+  councilProgressCallbacks: Map<string, (data: any) => void>;
+  councilCompletedCallbacks: Map<string, (data: any) => void>;
+
+  // Subscribe methods (return unsubscribe function)
+  onToolCompleted: (id: string, cb: (data: any) => void) => () => void;
+  onCouncilProgress: (id: string, cb: (data: any) => void) => () => void;
+  onCouncilCompleted: (id: string, cb: (data: any) => void) => () => void;
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
@@ -92,6 +102,22 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
   chatHistory: [],
   activity: [],
   skippedItems: [],
+  toolCompletedCallbacks: new Map(),
+  councilProgressCallbacks: new Map(),
+  councilCompletedCallbacks: new Map(),
+
+  onToolCompleted: (id, cb) => {
+    get().toolCompletedCallbacks.set(id, cb);
+    return () => { get().toolCompletedCallbacks.delete(id); };
+  },
+  onCouncilProgress: (id, cb) => {
+    get().councilProgressCallbacks.set(id, cb);
+    return () => { get().councilProgressCallbacks.delete(id); };
+  },
+  onCouncilCompleted: (id, cb) => {
+    get().councilCompletedCallbacks.set(id, cb);
+    return () => { get().councilCompletedCallbacks.delete(id); };
+  },
 
   connectSSE: () => {
     const existing = get().eventSource;
@@ -145,6 +171,27 @@ export const useAgentStore = create<AgentStore>((set, get) => ({
         set(state => ({
           activity: [data, ...state.activity].slice(0, 50),
         }));
+      } catch {}
+    });
+
+    es.addEventListener('tool_completed', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        get().toolCompletedCallbacks.forEach(cb => cb(data));
+      } catch {}
+    });
+
+    es.addEventListener('council_progress', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        get().councilProgressCallbacks.forEach(cb => cb(data));
+      } catch {}
+    });
+
+    es.addEventListener('council_completed', (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        get().councilCompletedCallbacks.forEach(cb => cb(data));
       } catch {}
     });
 

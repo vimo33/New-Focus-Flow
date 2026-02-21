@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-278728",
+  "thread_id": "thread-20260217-205062",
+  "role": "assistant",
+  "content": "Here's what we have:\n\n**`projects/mirari/`** — the main Mirari folder\n- `COUNCIL_SUBMISSION.md` — original council package\n- `COUNCIL_SUBMISSION_v5.md` — v5 council submission\n- `prd_mirari.txt` — PRD (text)\n- `PRD_v5.0_Zero-UI.md` — Zero-UI PRD v5.0\n\n**`projects/mirari-aura/`** — the AURA variant\n- `COUNCIL_SUBMISSION.md`\n- `prd-v5.0.md`\n\nPlus loose files at workspace root: `mirari-aura-prd.md` and `mirari-council-package.md`.\n\nWhere do you want to start — reviewing the PRD, the council submission, or something else?",
+  "source": "voice",
+  "created_at": "2026-02-17T07:44:38.728Z"
+}

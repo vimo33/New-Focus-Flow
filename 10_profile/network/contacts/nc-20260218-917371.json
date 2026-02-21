@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917371",
+  "first_name": "Alex",
+  "last_name": "Murawski",
+  "full_name": "Alex Murawski",
+  "company": "NOA Labs",
+  "position": "CEO & Founder",
+  "linkedin_url": "https://www.linkedin.com/in/alexmurawski",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": ["hardware", "prototyping", "Berlin", "Shenzhen", "deep tech", "maker"],
+  "last_contacted": "24 Dec 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.371Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 58,
+  "triage_score": 5.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "NOA Labs (Berlin/Shenzhen) is a hardware product design, engineering, and mass production company with 800+ completed projects",
+      "Alex Murawski is Y-Combinator and HAX alumni — connected to global hardware and deep tech accelerator networks",
+      "NOA Labs works with 300+ customers across 60+ countries; startup clients have raised $10M+ on crowdfunding",
+      "Co-founder at Makeblock, Senic, and nexpaq — serial deep tech entrepreneur"
+    ],
+    "outreach_angle": "Alex's NOA Labs is a hardware product development house — relevant for Kavach AI's edge box hardware development. Kavach AI needs a reliable hardware partner to produce the edge box device for deployment at Indian and Swiss sites. NOA Labs has the manufacturing connections in Shenzhen and the engineering team. Reach out: 'Alex — following up from December. I am building Kavach AI, an edge-AI security monitoring platform that needs a hardware partner for the edge box device (IP cameras + edge compute). Given NOA Labs' track record with hardware startups, I would love to explore whether you could help us prototype and manufacture. 15-minute call?' Timeline: this month.",
+    "relevant_project": "Kavach AI"
+  }
+}

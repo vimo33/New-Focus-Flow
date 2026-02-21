@@ -1,7 +1,9 @@
 ---
 name: plan-feature
 description: Read uploaded plan documents and break them into development tasks
-allowed-tools: Read, Glob, Grep, Bash, Task
+context: fork
+model: opus
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep, Task
 user-invocable: true
 ---
 
@@ -24,7 +26,7 @@ Read an uploaded plan document from the vault and break it into structured devel
 
 ## Conventions
 
-- Follow the existing Focus Flow architecture (VaultService, Express routes, React components with Tailwind)
+- Follow the existing Nitara architecture (VaultService, Express routes, React canvas components with Tailwind)
 - Backend at `/srv/focus-flow/02_projects/active/focus-flow-backend/`
 - Frontend at `/srv/focus-flow/02_projects/active/focus-flow-ui/`
 - Use the `/add-feature` skill pattern for each identified feature

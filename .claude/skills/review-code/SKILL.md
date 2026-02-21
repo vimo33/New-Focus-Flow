@@ -1,7 +1,9 @@
 ---
 name: review-code
 description: Perform a read-only code review of recent changes or specific files
-allowed-tools: Read, Glob, Grep, Bash
+context: fork
+model: sonnet
+allowed-tools: Read, Glob, Grep
 user-invocable: true
 ---
 

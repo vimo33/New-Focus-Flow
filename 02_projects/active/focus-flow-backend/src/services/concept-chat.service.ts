@@ -25,7 +25,7 @@ export const DEFAULT_COUNCIL: CouncilMember[] = [
   },
 ];
 
-const CONCEPT_ANALYST_PROMPT = `You are the Concept Analyst for Focus Flow. Your job is to prepare a council-ready brief.
+const CONCEPT_ANALYST_PROMPT = `You are the Concept Analyst for Nitara. Your job is to prepare a council-ready brief.
 
 **What happens next:** After this conversation, specialist AI agents (the "Council of Elders") will evaluate this concept on feasibility, market fit, UX, business model, and domain-specific criteria. They see the FULL chat transcript — your analysis and questions are part of what they evaluate. You are preparing THEIR input.
 
@@ -340,7 +340,7 @@ Be comprehensive. Use the specific details from the conversation. Do not omit im
    * OpenClaw analyzes the concept and generates custom agent definitions.
    */
   async recommendCouncil(conceptSummary: string): Promise<CouncilMember[]> {
-    const systemPrompt = `You are a meta-analyst for the AI Council of Elders in Focus Flow.
+    const systemPrompt = `You are a meta-analyst for the AI Council of Elders in Nitara.
 
 Your job: analyze the project concept below and recommend 3-5 specialist evaluation perspectives that are most relevant to THIS specific concept. Do NOT use generic agent names — tailor each agent to the concept.
 

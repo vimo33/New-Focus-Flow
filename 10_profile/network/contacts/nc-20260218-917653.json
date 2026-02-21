@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917653",
+  "first_name": "Sunil",
+  "last_name": "Reddy",
+  "full_name": "Sunil Reddy",
+  "company": "Spring Designs",
+  "position": "Head of Marketing",
+  "linkedin_url": "https://www.linkedin.com/in/sunilhimself",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "24 Sep 2018",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.653Z",
+  "updated_at": "2026-02-18T23:32:19.982Z",
+  "phone": "+91 96208 00222",
+  "phones": [
+    "+91 96208 00222"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:19.982Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

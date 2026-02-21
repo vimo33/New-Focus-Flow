@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917344",
+  "first_name": "Mariella",
+  "last_name": "Reffo",
+  "full_name": "Mariella Reffo",
+  "company": "Inventsys",
+  "position": "Chief Executive Officer",
+  "linkedin_url": "https://www.linkedin.com/in/mariellareffo",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["SaaS", "infrastructure", "Switzerland", "municipalities", "CEO", "Antler alumni"],
+  "last_contacted": "14 Mar 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.344Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 68,
+  "triage_score": 6.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Inventsys AG (Zürich) received a non-diluting UBS growth loan — marking the beginning of their scale-up phase",
+      "Platform serves municipalities, water suppliers, and energy service providers with digital maintenance management",
+      "Mariella has background in M&A, Strategy, Banking, and is an Antler alumni (entrepreneur in residence)",
+      "Company growing strongly — now a real revenue-generating SaaS business serving Swiss public sector"
+    ],
+    "outreach_angle": "Mariella is a Zürich-based CEO who has successfully navigated the Swiss SME market with a SaaS product and secured a growth loan from UBS — she understands the Swiss market deeply. She is an ideal reference point for validating Bramha ESG's pricing and GTM for Swiss SME clients. Additionally, Inventsys serves municipalities — a segment with mandatory ESG reporting coming. Reach out: 'Mariella — congrats on the UBS growth milestone. I am building Bramha ESG, an AI-native compliance platform for Swiss SMEs. Would love 20 minutes to learn from your experience selling SaaS to Swiss municipalities and public infrastructure clients. Happy to exchange notes on the Swiss B2B journey.'",
+    "relevant_project": "Bramha ESG"
+  }
+}

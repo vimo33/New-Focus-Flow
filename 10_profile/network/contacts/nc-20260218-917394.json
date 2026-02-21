@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917394",
+  "first_name": "Leandro",
+  "last_name": "Davies",
+  "full_name": "Leandro Davies",
+  "company": "OOMNIUM AG",
+  "position": "Co-Founder & CEO",
+  "linkedin_url": "https://www.linkedin.com/in/leandro-davies-476474136",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": ["Switzerland", "founder", "CEO", "startup"],
+  "last_contacted": "13 Nov 2024",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.394Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 55,
+  "triage_score": 5.5,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "OOMNIUM AG is a Zürich-based startup founded by Leandro Davies — limited public information available",
+      "CEO of an active Swiss startup — potential Bramha ESG or Nitara customer"
+    ],
+    "outreach_angle": "Leandro leads a Swiss startup and is a peer founder in Zürich. He could be an early adopter of Nitara (conversation-first AI business partner for solo entrepreneurs) or Bramha ESG (Swiss SME compliance). Reach out with a product invite: 'Leandro — I have been building Nitara, an AI business partner for Swiss founders. We are opening a small early access cohort. Would love to have you try it and give feedback. 5 minutes to set up, no obligation.' This is a low-friction outreach that could yield a paying customer or referral.",
+    "relevant_project": "Focus Flow OS / Nitara"
+  }
+}

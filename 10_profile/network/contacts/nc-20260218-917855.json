@@ -1,0 +1,32 @@
+{
+  "id": "nc-20260218-917855",
+  "first_name": "Niharika",
+  "last_name": "Mckenzie",
+  "full_name": "Niharika Mckenzie",
+  "company": "The Omnisol",
+  "position": "Client and Delivery Partner",
+  "linkedin_url": "https://www.linkedin.com/in/niharikamckenzie",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "21 Nov 2013",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.855Z",
+  "updated_at": "2026-02-18T23:32:25.020Z",
+  "phone": "+91 98 80 990571",
+  "emails": [
+    "niharikamckenzie@gmail.com",
+    "Niharika.Mckenzie@in.tesco.com"
+  ],
+  "phones": [
+    "+91 98 80 990571"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:25.020Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

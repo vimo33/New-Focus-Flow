@@ -1,69 +1,132 @@
-# Focus Flow OS — Project Constitution
+# Nitara — Project Constitution
+
+## Identity
+- **Product Name:** Nitara (Sanskrit: Niti=strategy + Tara=star = Strategic Star)
+- **Formerly:** Focus Flow OS
+- **One-line:** Conversation-first AI business partner for solo entrepreneurs
+- **Agent Name:** Nitara — the AI the user talks to
 
 ## Architecture
 
-Focus Flow OS is a full-stack productivity system with three services:
+Nitara is a conversation-first application. The user talks to Nitara (voice or text) and Nitara controls what appears on the visual canvas.
 
-- **Backend API** (Express + TypeScript) — port 3001, systemd: `focus-flow-backend`
-- **Frontend UI** (React 19 + Vite + Tailwind) — port 5173, systemd: `focus-flow-frontend`
-- **Telegram Bot** (grammy + TypeScript) — systemd: `focus-flow-telegram`
+**Three interface layers:**
+1. **Conversation Rail** — persistent bottom bar on every screen (voice + text input, action cards, approval flows)
+2. **Canvas** — the main content area Nitara controls (morning briefing, portfolio, network, financials, project detail, calendar, settings, council evaluation, weekly report, onboarding)
+3. **Command Palette** — Cmd+K overlay for power-user navigation
 
-All services run as systemd units on this server. Manage with `systemctl restart focus-flow-*`.
+**Five sidebar items (48px icon rail):**
+1. ✦ Nitara (home/conversation + morning briefing)
+2. ◈ Portfolio (all projects and ideas)
+3. ⊛ Network (contacts, partners, relationships)
+4. ◷ Calendar (time-based view)
+5. ⚙ Settings (profile, preferences, integrations)
 
-## Vault Structure
-
-The data layer is a file-based vault at `/srv/focus-flow/`:
-
-```
-00_inbox/raw/          → JSON files, one per captured item
-00_inbox/archive/      → Processed inbox items
-01_tasks/{work,personal,scheduled}/  → Task JSON files
-02_projects/{active,paused,completed}/ → Project JSON files (also contains source code repos)
-03_ideas/{inbox,validated,rejected}/   → Idea JSON files
-04_notes/              → Markdown notes
-05_events/             → Calendar events
-06_health/logs/        → Health metrics (JSON + CSV)
-07_system/             → System config, secrets, logs
-```
+## Tech Stack
+- **Frontend:** React 19, Vite, TypeScript, Tailwind CSS 4, Zustand
+- **Backend:** Express 5, TypeScript, Node.js 22
+- **AI:** Claude via OpenClaw gateway (port 18789)
+- **Memory:** Mem0 (semantic memory), Qdrant (vector store)
+- **Storage:** File-based JSON vault at `/srv/focus-flow/` (symlinked from `/srv/nitara/`)
 
 ## Key Source Locations
-
 - Backend: `/srv/focus-flow/02_projects/active/focus-flow-backend/src/`
 - Frontend: `/srv/focus-flow/02_projects/active/focus-flow-ui/src/`
 - Telegram: `/srv/focus-flow/02_projects/active/focus-flow-telegram-bot/src/`
+- Design exports: `/srv/focus-flow/design-exports/`
 
-## Code Conventions
+## Design Tokens
 
-### Backend
-- **VaultService** (`services/vault.service.ts`) — all vault CRUD goes through here
-- **file-operations.ts** (`utils/file-operations.ts`) — low-level file I/O, `getVaultPath()` for path resolution
+### Colors (CSS Variables in index.css)
+```css
+--color-base: #06080F;          /* Deep void black */
+--color-surface: #0C1220;       /* Card backgrounds */
+--color-elevated: #141E30;      /* Interactive elements */
+--color-border: rgba(30, 48, 80, 0.4);
+
+--color-primary: #00E5FF;       /* Electric cyan — Nitara's voice */
+--color-secondary: #FFB800;     /* Warm amber — attention, finance */
+--color-tertiary: #8B5CF6;      /* Soft violet — AI council */
+--color-success: #22C55E;       /* Phosphor green */
+--color-danger: #EF4444;        /* Error red */
+
+--color-text-primary: #E8ECF1;
+--color-text-secondary: #7B8FA3;
+--color-text-tertiary: #4A5568;
+
+--glass-bg: rgba(12, 18, 32, 0.7);
+--glass-blur: blur(12px);
+--glass-border: rgba(30, 48, 80, 0.3);
+```
+
+### Typography
+- `Syncopate` — Brand mark ONLY ("NITARA" text, section numbers)
+- `DM Sans` — All body text, UI elements, headings
+- `JetBrains Mono` — Numbers, code, data, financial figures
+
+## File Structure
+
+### Frontend Components
+```
+src/components/
+├── Canvas/              # CanvasRouter + all canvas views
+├── ConversationRail/    # Persistent bottom bar
+├── Sidebar/             # IconRail.tsx
+├── CommandPalette/      # Cmd+K overlay
+├── Pipeline/            # PlaybookPipeline visualization
+├── Onboarding/          # 5-step first-run flow
+├── shared/              # GlassCard, ActionCard, StatCard, Badge, SparkLine, etc.
+└── _legacy/             # Old components preserved for reference
+```
+
+### Stores (Zustand)
+- `stores/canvas.ts` — Active canvas state
+- `stores/conversation.ts` — Messages, thread state
+- `stores/app.ts` — Global app state
+
+## Backend Patterns
+- **VaultService** (`services/vault.service.ts`) — all vault CRUD
+- **file-operations.ts** (`utils/file-operations.ts`) — `getVaultPath()` returns `/srv/focus-flow`
 - **Routes** in `routes/*.routes.ts` — Express Router patterns
+- **Types** in `models/types.ts` — shared TypeScript types
 - IDs generated by `utils/id-generator.ts`
-- TypeScript strict mode, CommonJS output
 
-### Frontend
-- React 19 with functional components and hooks
-- Zustand for state management (`stores/`)
-- Tailwind CSS for styling
-- Vite for build tooling
-- `VITE_API_URL` env var for API base URL (baked in at build time)
-- API client singleton at `services/api.ts`
-
-### Telegram Bot
-- grammy framework
-- Talks to backend API on localhost:3001
-- Independent of OpenClaw/AI services
+## Vault Structure
+```
+/srv/focus-flow/
+├── 00_inbox/raw/          → Captured items
+├── 01_tasks/              → Task JSON files
+├── 02_projects/active/    → Project metadata + source code repos
+├── 03_ideas/              → Idea JSON files
+├── 07_system/playbooks/   → Playbook templates
+├── 10_profile/            → Founder profile, network contacts
+├── 10_financials/         → Financial data, snapshots
+└── design-exports/        → Stitch design PNGs + HTML
+```
 
 ## Development Workflow
-
 1. Edit source files
 2. Build: `cd <service-dir> && npm run build`
-3. Restart: `systemctl restart focus-flow-<service>`
-4. Verify: `curl http://localhost:3001/health` (backend), `curl http://localhost:5173/` (frontend)
+3. Restart: `systemctl restart focus-flow-backend` / `focus-flow-frontend`
+4. Verify: `curl http://localhost:3001/health`
 
-## Important Notes
+## Migration Notes
+- "Focus Flow" → "Nitara" in all user-facing strings
+- "venture" → "project"
+- "Co-CEO" / "Core Agent" → "Nitara" (user-facing) / "NitaraAgent" (code)
+- Physical paths stay at `/srv/focus-flow/` — use `/srv/nitara/` symlink
+- systemd units: `focus-flow-*` (transitioning to `nitara-*`)
 
-- AI features (classification, idea validation) depend on OpenClaw gateway which is currently disabled. They will fail with a 5s timeout. This is expected.
-- The vault path is hardcoded to `/srv/focus-flow` in `file-operations.ts`
-- Frontend must be rebuilt (`npm run build`) for changes to take effect since it runs via `vite preview`
-- The `02_projects/active/` directory contains both project JSON metadata files AND the actual source code repos (focus-flow-backend, focus-flow-ui, focus-flow-telegram-bot)
+## Naming Conventions
+- Files: kebab-case for services, PascalCase for React components
+- Variables: camelCase
+- Types/Interfaces: PascalCase
+- API routes: `/api/` prefix, kebab-case paths
+- CSS: Tailwind utilities + CSS variables for design tokens
+
+## Important Constraints
+- Single-user system (no multi-tenancy)
+- All external communications are hard-gate (Tier 3) — never auto-send
+- Financial data is decision-support, not accounting
+- Voice: push-to-talk only
+- Canvas architecture: NO react-router page navigation for canvas states

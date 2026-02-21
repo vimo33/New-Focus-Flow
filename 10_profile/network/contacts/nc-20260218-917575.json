@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917575",
+  "first_name": "Alexander",
+  "last_name": "Maag",
+  "full_name": "Alexander Maag",
+  "company": "Amt für Wirtschaft und Arbeit AWA Kanton Thurgau",
+  "position": "Arbeitgeberservice / Personalberater Thurgau",
+  "linkedin_url": "https://www.linkedin.com/in/alexander-maag-21597915b",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "16 Jul 2019",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.575Z",
+  "updated_at": "2026-02-18T23:32:30.498Z",
+  "phone": "+41 52 269 20 22",
+  "phones": [
+    "+41 52 269 20 22",
+    "+41 78 863 70 73"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:30.497Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

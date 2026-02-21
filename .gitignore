@@ -10,9 +10,13 @@
 .env
 node_modules/
 dist/
+venv/
 local_cache/
 playwright-report/
 test-results/
 *.png
+!design/**/*.png
+!design-exports/**/*.png
 *.docx
 package-lock.json
+__pycache__/

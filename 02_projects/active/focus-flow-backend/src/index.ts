@@ -9,8 +9,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // Load secrets from secure location (must happen after dotenv, before routes)
-import { loadOpenClawSecrets } from './config/load-secrets';
+import { loadOpenClawSecrets, loadLiveKitSecrets, loadPDLSecrets } from './config/load-secrets';
 loadOpenClawSecrets();
+loadLiveKitSecrets();
+loadPDLSecrets();
 
 // Import routes
 import inboxRoutes from './routes/inbox.routes';
@@ -37,6 +39,36 @@ import inferenceRoutes from './routes/inference.routes';
 import toolsRoutes from './routes/tools.routes';
 import councilRoutes from './routes/council.routes';
 import agentRoutes from './routes/agent.routes';
+import profileRoutes from './routes/profile.routes';
+import financialsRoutes from './routes/financials.routes';
+import incomeStrategyRoutes from './routes/income-strategy.routes';
+import networkRoutes from './routes/network.routes';
+import portfolioRoutes from './routes/portfolio.routes';
+import reportRoutes from './routes/report.routes';
+import weeklyReportRoutes from './routes/weekly-report.routes';
+import marketingRoutes from './routes/marketing.routes';
+import confidenceRoutes from './routes/confidence.routes';
+import knowledgeRoutes from './routes/knowledge.routes';
+import livekitRoutes from './routes/livekit.routes';
+import voiceSessionRoutes from './routes/voice-session.routes';
+import knowledgeGraphRoutes from './routes/knowledge-graph.routes';
+import briefingRoutes from './routes/briefing.routes';
+import queueRoutes from './routes/queue.routes';
+import authRoutes from './routes/auth.routes';
+import hypothesesRoutes from './routes/hypotheses.routes';
+import experimentsRoutes from './routes/experiments.routes';
+import playbooksRoutes from './routes/playbooks.routes';
+import approvalsRoutes from './routes/approvals.routes';
+import budgetRoutes from './routes/budget.routes';
+import signalsRoutes from './routes/signals.routes';
+import agentRunsRoutes from './routes/agent-runs.routes';
+import simulationRoutes from './routes/simulation.routes';
+import validationEngineRoutes from './routes/validation-engine.routes';
+import { queueAuth } from './middleware/queue-auth.middleware';
+import { knowledgeDigestService } from './services/knowledge-digest.service';
+import { taskQueueService } from './services/task-queue.service';
+import { telegramHitlService } from './services/telegram-hitl.service';
+import { migrate } from './db/migrate';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3001;
@@ -96,7 +128,7 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    service: 'focus-flow-backend',
+    service: 'nitara-backend',
     version: '1.0.0'
   });
 });
@@ -125,6 +157,32 @@ app.use('/api', inferenceRoutes);
 app.use('/api', toolsRoutes);
 app.use('/api', aiLimiter, councilRoutes);
 app.use('/api', agentRoutes);
+app.use('/api', profileRoutes);
+app.use('/api', financialsRoutes);
+app.use('/api', incomeStrategyRoutes);
+app.use('/api', networkRoutes);
+app.use('/api', portfolioRoutes);
+app.use('/api', reportRoutes);
+app.use('/api', weeklyReportRoutes);
+app.use('/api', marketingRoutes);
+app.use('/api', confidenceRoutes);
+app.use('/api', knowledgeRoutes);
+app.use('/api', livekitRoutes);
+app.use('/api', voiceSessionRoutes);
+app.use('/api', knowledgeGraphRoutes);
+app.use('/api', briefingRoutes);
+app.use('/api/queue', queueAuth);
+app.use('/api', queueRoutes);
+app.use('/api', authRoutes);
+app.use('/api', hypothesesRoutes);
+app.use('/api', experimentsRoutes);
+app.use('/api', playbooksRoutes);
+app.use('/api', approvalsRoutes);
+app.use('/api', budgetRoutes);
+app.use('/api', signalsRoutes);
+app.use('/api', agentRunsRoutes);
+app.use('/api', simulationRoutes);
+app.use('/api', validationEngineRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {
@@ -173,10 +231,42 @@ app.use((req: Request, res: Response) => {
   });
 });
 
+// Initialize PostgreSQL schema
+migrate().then(() => {
+  console.log('[Startup] PostgreSQL schema ready');
+}).catch(err => {
+  console.error('[Startup] PostgreSQL migration failed:', err.message);
+});
+
+// Initialize knowledge digest on startup
+knowledgeDigestService.initialize().then(() => {
+  console.log('[Startup] Knowledge digest service initialized');
+}).catch(err => {
+  console.error('[Startup] Knowledge digest init failed:', err.message);
+});
+
+// Initialize task queue service
+taskQueueService.initialize().then(() => {
+  console.log('[Startup] Task queue service initialized');
+}).catch(err => {
+  console.error('[Startup] Task queue init failed:', err.message);
+});
+
+// Initialize Telegram HITL service (long polling mode)
+telegramHitlService.initialize().then((ok) => {
+  if (ok) {
+    console.log('[Startup] Telegram HITL active (long polling)');
+  } else {
+    console.log('[Startup] Telegram HITL not configured — skipping');
+  }
+}).catch(err => {
+  console.error('[Startup] Telegram HITL init failed:', err.message);
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log('==========================================');
-  console.log('🚀 Focus Flow Backend API Server');
+  console.log('Nitara Backend API Server');
   console.log('==========================================');
   console.log(`Server running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);

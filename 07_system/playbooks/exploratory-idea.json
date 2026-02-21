@@ -1,0 +1,40 @@
+{
+  "id": "exploratory-idea",
+  "name": "Exploratory Idea",
+  "description": "Lightweight pipeline for exploring and evaluating new ideas before committing",
+  "phases": [
+    {
+      "id": "capture",
+      "name": "Capture",
+      "order": 1,
+      "substeps": ["Initial thought", "Quick notes", "Context dump"],
+      "approval_gate": false,
+      "tools": []
+    },
+    {
+      "id": "expand",
+      "name": "Expand",
+      "order": 2,
+      "substeps": ["Research", "Problem definition", "Solution brainstorm"],
+      "approval_gate": false,
+      "tools": ["content-engine"]
+    },
+    {
+      "id": "evaluate",
+      "name": "Evaluate",
+      "order": 3,
+      "substeps": ["Council review", "Feasibility check", "Market analysis"],
+      "approval_gate": true,
+      "tools": ["council"]
+    },
+    {
+      "id": "decide",
+      "name": "Decide",
+      "order": 4,
+      "substeps": ["Go/No-go decision", "Select playbook", "Transition to project"],
+      "approval_gate": true,
+      "tools": []
+    }
+  ],
+  "default_tools": ["council"]
+}

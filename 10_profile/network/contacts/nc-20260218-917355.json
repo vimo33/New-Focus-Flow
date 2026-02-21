@@ -1,0 +1,30 @@
+{
+  "id": "nc-20260218-917355",
+  "first_name": "Dan-George",
+  "last_name": "Filimon",
+  "full_name": "Dan-George Filimon",
+  "company": "Amulet AI",
+  "position": "Founder",
+  "linkedin_url": "https://www.linkedin.com/in/dg-filimon",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["AI", "Swiss founder", "on-device LLM", "Zurich"],
+  "last_contacted": "20 Feb 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.355Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 78,
+  "triage_score": 7.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Amulet AI AG (also known as Qybala) is a Zürich-based AI startup founded April 2024 building on-device LLMs blended with psychology/narrative analysis",
+      "Flagship product: Qybala v1 — an AI-powered, tarot-inspired self-reflection app, currently pre-seed stage",
+      "Dan-George is a former Google Staff Engineer with 10+ years scaling systems to billions of users (YouTube Ads, Search Ads)",
+      "Currently pursuing MSc in Psychology & Neuroscience of Mental Health at King's College London"
+    ],
+    "outreach_angle": "Fellow Zürich AI founder building on-device LLM products. Reach out referencing the shared Zürich AI founder scene and the intersection of AI and human experience. The Multiplium orchestration platform could be directly relevant as infrastructure for Amulet AI's multi-model pipeline. Additionally, Amulet AI's narrative psychology angle aligns well with the ATX (Agentic Trust Exchange) vision of AI-mediated human compatibility evaluation.",
+    "relevant_project": "Multiplium"
+  }
+}

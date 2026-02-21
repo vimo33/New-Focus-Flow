@@ -1,0 +1,65 @@
+{
+  "task_type": "monitor-project",
+  "status": "healthy",
+  "checked_at": "2026-02-18T20:05:00Z",
+  "service_status": {
+    "focus-flow-backend": "active",
+    "focus-flow-frontend": "active",
+    "focus-flow-telegram": "active",
+    "openclaw-gateway": "unknown"
+  },
+  "api_health": {
+    "backend": "responding",
+    "frontend": "responding"
+  },
+  "disk": {
+    "usage_percent": 34,
+    "available_gb": 48,
+    "total_gb": 75,
+    "log_entries_today": 6,
+    "log_directory_size_mb": 0.5
+  },
+  "inference_costs": {
+    "total_today_usd": 0.0,
+    "daily_budget_usd": 20.0,
+    "utilization_pct": 0,
+    "status": "within_budget"
+  },
+  "stale_tasks": [
+    {
+      "age_days": 15,
+      "path": "/srv/focus-flow/01_tasks/active/task-053-integration-testing.json"
+    },
+    {
+      "age_days": 7,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260211-426909.json"
+    },
+    {
+      "age_days": 7,
+      "path": "/srv/focus-flow/01_tasks/work/task-20260210-798204.json"
+    }
+  ],
+  "queue": {
+    "pending": 8,
+    "in_progress": 0,
+    "archived": 1,
+    "total": 9,
+    "status": "healthy"
+  },
+  "alerts": [
+    {
+      "severity": "info",
+      "message": "Task task-053-integration-testing.json stale for 15 days — review and close or reassign"
+    }
+  ],
+  "summary": {
+    "core_services": "✓ All running",
+    "health_endpoints": "✓ Responding",
+    "disk_space": "✓ Healthy (34% used)",
+    "inference_budget": "✓ Well within limits (0% of $20 daily)",
+    "action_items": [
+      "Review stale active task (15 days old)",
+      "Verify openclaw-gateway status"
+    ]
+  }
+}

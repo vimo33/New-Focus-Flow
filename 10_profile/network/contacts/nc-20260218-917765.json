@@ -1,0 +1,33 @@
+{
+  "id": "nc-20260218-917765",
+  "first_name": "Matty",
+  "last_name": "Ochmanek",
+  "full_name": "Matty Ochmanek",
+  "company": "M&H, LLP",
+  "position": "Associate Attorney",
+  "linkedin_url": "https://www.linkedin.com/in/mattyochmanek",
+  "relationship_type": "vendor",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": [],
+  "last_contacted": "01 Feb 2016",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.765Z",
+  "updated_at": "2026-02-18T23:32:18.603Z",
+  "emails": [
+    "ochmanek@gmail.com",
+    "matty@lvrt.com"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "ai_tags": [
+    "legal",
+    "law",
+    "attorney"
+  ],
+  "enrichment_date": "2026-02-18T23:32:18.602Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

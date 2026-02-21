@@ -1,5 +1,5 @@
 /**
- * Mem0 Memory Service - Semantic memory layer for Focus Flow OS
+ * Mem0 Memory Service - Semantic memory layer for Nitara
  *
  * Implements Mem0-style memory extraction and semantic search using:
  * - Qdrant for vector storage (already running on port 6333)
@@ -15,7 +15,7 @@ import crypto from 'crypto';
 import { cachedInference } from './cached-inference.service';
 
 const LOG_PREFIX = '[Mem0]';
-const DEFAULT_USER = 'focus-flow-user';
+const DEFAULT_USER = 'nitara-user';
 const DEFAULT_TOKEN_BUDGET = 4000;
 const COLLECTION_NAME = 'focus-flow-memories';
 const EMBEDDING_DIM = 384; // BAAI/bge-small-en-v1.5

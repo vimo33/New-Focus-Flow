@@ -1,0 +1,18 @@
+{
+  "id": "task-1771502409994-95lo0r",
+  "skill": "monitor-project",
+  "arguments": "all",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-19T12:00:09.994Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-19T12:00:10.027Z",
+  "pid": 2184098,
+  "completed_at": "2026-02-19T12:01:15.647Z",
+  "result_file": "/srv/focus-flow/07_system/reports/monitor-project-2026-02-19.json"
+}

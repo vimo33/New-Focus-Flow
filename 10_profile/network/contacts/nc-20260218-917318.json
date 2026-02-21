@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917318",
+  "first_name": "Ajith Govind",
+  "last_name": "Satheesh",
+  "full_name": "Ajith Govind Satheesh",
+  "company": "Cactus",
+  "position": "Co-Founder & CEO",
+  "linkedin_url": "https://www.linkedin.com/in/ajith-govind",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "medium",
+  "tags": ["founder", "CEO", "startup", "recent contact"],
+  "last_contacted": "26 Aug 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.318Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 63,
+  "triage_score": 6.3,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Ajith Govind Satheesh is Co-Founder & CEO of Cactus — limited public data available on company focus",
+      "Last contacted August 2025 — very warm relationship, only 6 months ago",
+      "CEO-level contact with founder background — high leverage for referrals and introductions"
+    ],
+    "outreach_angle": "Ajith was contacted most recently of any founder in the network (August 2025 — 6 months ago). This is a warm relationship that needs only a light touch to reactivate. Reach out with an update and ask for one specific introduction: 'Ajith — checking in after our August chat. I have been heads-down building Multiplium and Kavach AI. Would love a quick catch-up. Also — do you know anyone in the security or AI infrastructure space in India or Singapore who might find Kavach interesting? Happy to make introductions in return.' Low effort, high potential return on referrals.",
+    "relevant_project": "Kavach AI"
+  }
+}

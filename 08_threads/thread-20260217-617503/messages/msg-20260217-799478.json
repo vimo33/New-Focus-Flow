@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-799478",
+  "thread_id": "thread-20260217-617503",
+  "role": "assistant",
+  "content": "No worries — here are your options:\n\n**Easiest ways to share it with me:**\n\n1. **Paste it directly** — Copy the PRD text and paste it into the chat. If it's long, that's fine — I can handle it.\n\n2. **Save it to the workspace** — If you have it as a file on your machine:\n   - Save it to `[REDACTED_PATH] (like `mirari-prd.md`)\n   - Then tell me the filename and I'll read it\n\n3. **Link** — If it's in Google Docs, Notion, or anywhere online, share the link and I'll fetch it with `web_fetch`\n\n4. **Upload** — If the webchat has a file upload button (paperclip icon?), use that\n\nWhat's easiest for you? If you have it open somewhere, pasting directly usually works best.",
+  "source": "voice",
+  "created_at": "2026-02-17T00:39:59.478Z"
+}

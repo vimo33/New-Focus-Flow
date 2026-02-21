@@ -1,0 +1,161 @@
+{
+  "id": "idea-20260217-742256",
+  "title": "Mirari v5.0 - Zero-UI Temporal Companion (Full Vision)",
+  "description": "PRD: AURA — The Zurich Temporal Lens (Project Mirari)\n\nStatus: Ideal Vision Specification (Post-Freedom Design Update)\nVersion: 5.0 (Zero-UI & Invisible Companion Focus)\n\nExecutive Summary:\nAURA is no longer a mobile application, but a Temporal Lens—an invisible, Zero-UI companion that overlays history directly onto the user's perception of the physical city. By utilizing full-duplex multimodal models, AURA proactively identifies landmarks and initiates unscripted, voice-driven roleplays based on the user's real-time emotional context and spatial position.\n\nCore Interaction Loop:\n- See & Listen: Full-duplex VLA processing identifies high-relevance landmarks before user raises phone\n- Whisper: AI proactively delivers historical hooks through spatial audio\n- Co-Create: Natural voice-first conversation drives narrative evolution\n\nTechnical Stack (2026 Invisible Architecture):\n- Omnimodal Engine: MiniCPM-o 4.5 (full-duplex proactive multimodal live streaming)\n- Spatial Grounding: Qwen3-VL Nano (3D grounding with centimeter precision)\n- Flash Reasoning: MobileLLM-Pro P1 (1.08B params, 128k context)\n- Streaming Speech: NeuTTS-Nano (zero-shot voice cloning, 3s sample)\n- Execution: BitNet b1.58 (94% memory reduction), unified CPU-GPU-NPU distribution\n\nContent Strategy - Generative World Engine:\n- Character Constitutions: High-dimensional embeddings of historical figures' beliefs\n- Adaptive Persona Barriers: Maintains character integrity while navigating user questions\n- Digital Souvenirs: Unique generated mementos reflecting specific user journey\n\nUI/UX: Liquid Glass & Spatial Harmony\n- Adaptive transparency blending with physical environment\n- Ultra-contextual navigation (menus materialize only when needed)\n- Gesture & eye-controlled flows replacing tap-and-scroll\n\n4-Layer Spatial Audio:\n- Ambient Base: Low-frequency emotional tone\n- Spatial Layer: 3D object-based audio positioning\n- Reactive Layer: Movement-responsive sound effects\n- Functional Layer: Navigation and accessibility cues\n\nPrivacy Architecture:\n- Secure Enclave Reasoning: On-device encrypted processing\n- Differential Anonymization: Cloud interactions sanitized via differential privacy\n\nSuccess Metrics:\n- Immersion Score: >80% positive sentiment on presence/temporal layering\n- Natural Conversation: Average >10 turns per interaction without friction\n- Retention: >25% Day-30 retention\n\nTarget: Zurich pilot, aiming to transform into a Discovery Habit for locals and affluent tech-native travelers.",
+  "status": "inbox",
+  "created_at": "2026-02-17T01:12:22.256Z",
+  "council_verdict": {
+    "recommendation": "needs-info",
+    "overall_score": 5,
+    "evaluations": [
+      {
+        "agent_name": "Feasibility Agent",
+        "score": 4,
+        "reasoning": "AURA v5.0 is technically ambitious to the point of self-contradiction on several fronts. Web search was unavailable, so this assessment draws on existing knowledge of the named model families and mobile AI state-of-art as of mid-2025, projected to 2026.\n\nThe named stack is a mix of real research lineages (MiniCPM-o exists up to 2.6, Qwen-VL is a real Alibaba family, BitNet b1.58 is real Microsoft Research work) and fabricated/aspirational version numbers. MiniCPM-o '4.5', Qwen3-VL Nano with centimeter 3D grounding, 'MobileLLM-Pro P1', and 'NeuTTS-Nano' do not exist as shipping products. The PRD is writing 2026 model names as if they are known quantities, which they are not.\n\nThe most critical incoherence: 'AURA proactively identifies landmarks before user raises phone.' On a smartphone, the camera is occluded when the phone is pocketed. This is physically impossible unless the device is AR glasses or a wearable with an always-on camera — neither of which is specified. This is a design assumption that breaks the entire 'Zero-UI' premise on the primary form factor (phone).\n\nCentimeter-precision 3D spatial grounding from a monocular RGB camera is beyond the current state of the art even for server-class models. Metric 3D grounding without a depth sensor (LiDAR or structured light) requires SLAM pipelines, not a VLM inference call. The A17 Pro and Snapdragon 8 Gen 4 do have capable NPUs, but coordinating CPU-GPU-NPU across a full-duplex VLA + TTS + spatial audio pipeline simultaneously is an unsolved systems engineering problem, not a product configuration.\n\nWhat IS technically sound: 4-layer spatial audio on iOS/Android is mature. On-device LLM inference at 1-3B params is real and fast. Zero-shot voice cloning with short samples exists in cloud form. Differential privacy for cloud interactions is well-understood. Basic AR landmark overlay (Google Lens-class) works today.\n\nNet: the concept cherry-picks real research directions and combines them into an integration that would require 3-5 simultaneous breakthroughs, plus a hardware form-factor shift to always-on wearable cameras, none of which are on a predictable 2026 path.",
+        "concerns": [
+          "Core 'proactive before user raises phone' premise is physically impossible on a smartphone — requires always-on exterior camera (AR glasses or wearable) which is not the stated form factor",
+          "Several named models (MiniCPM-o 4.5, MobileLLM-Pro P1, NeuTTS-Nano) do not exist; version numbers are invented, making the stack non-verifiable",
+          "Centimeter-precision 3D grounding from monocular camera is not achievable with a VLM alone — requires depth sensor hardware or SLAM pipeline, neither mentioned",
+          "Full-duplex on-device VLA streaming while maintaining 128k context, spatial audio rendering, and encrypted Secure Enclave processing simultaneously exceeds current and near-term mobile thermal/power budgets",
+          "Eye-tracking as a primary interaction modality is absent from virtually all mass-market Android devices and is accessibility-only on iPhone — not a viable primary UX layer by 2026",
+          "94% memory reduction via BitNet b1.58 is only valid for the BitNet-native model, not when composing with non-1-bit models in the same pipeline",
+          "'Character Constitutions' and 'Adaptive Persona Barriers' for historical figures raise hallucination and historical accuracy risk that are technically hard to bound"
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "technical_complexity",
+            "score": 2,
+            "weight": 0.35,
+            "reasoning": "Requires simultaneous on-device full-duplex VLA, metric 3D grounding, spatial audio, voice cloning, and secure enclave processing — each individually hard, their real-time integration is unsolved. The form-factor incoherence adds a foundational blocker."
+          },
+          {
+            "dimension": "resource_requirements",
+            "score": 5,
+            "weight": 0.2,
+            "reasoning": "Hardware (A18 Pro or equivalent NPU) exists or will by 2026. A strong ML systems team, $3-8M pre-launch budget, and Zurich content licensing are realistic asks for a well-funded startup. The resource bar is high but not impossible."
+          },
+          {
+            "dimension": "time_to_build",
+            "score": 3,
+            "weight": 0.25,
+            "reasoning": "The full vision as described is 3-5 years out, not 12-18 months. A degraded MVP with cloud inference and explicit camera activation could ship in 12-18 months, but would not match the Zero-UI promise at all."
+          },
+          {
+            "dimension": "risk_assessment",
+            "score": 2,
+            "weight": 0.2,
+            "reasoning": "Three independent high-risk bets must all land simultaneously: (1) on-device model maturity, (2) always-on camera hardware becoming mainstream, (3) centimeter 3D grounding from RGB. Any one failing collapses the core loop. Risk concentration is very high."
+          }
+        ],
+        "confidence": 0.78,
+        "key_insight": "The fundamental physics problem — a pocketed phone has no camera feed, so proactive landmark detection before the phone is raised is impossible without a form-factor shift to always-on wearable cameras — invalidates the core Zero-UI interaction loop entirely on smartphones, meaning the MVP would need to be an AR headset product, not a phone app, which is an entirely different technical and market problem."
+      },
+      {
+        "agent_name": "Market Agent",
+        "score": 5,
+        "reasoning": "Web search unavailable; assessment draws on training data through early 2025. AURA targets the intersection of AI-powered tourism, ambient computing, and cultural experience — a real but fragmented market. Demand signals are genuine: the experience economy is growing, cultural tourism generates ~$266B globally, and AI companion apps (Character.ai, Pi) have demonstrated strong user attachment. However, this specific niche — proactive, Zero-UI, location-anchored historical roleplay — has no proven demand curve. The Zurich pilot is strategically smart (affluent, compact, tech-literate city), but it limits initial addressable market severely. The 'Discovery Habit' thesis requires sustained behavioral change from users who must learn to trust and enjoy proactive AI interruptions in a public setting — a high behavioral bar. Monetization is conspicuously absent from the PRD, which is a red flag at the market readiness stage. The competitive landscape includes platform giants (Google Maps + Lens, Apple Maps + Vision, Google Gemini Live with camera) who can absorb this feature set without a dedicated app, plus a long graveyard of AR tourism apps (Detour acquired by Bose and shut down, Layar, Wikitude declining) that failed to achieve retention. The 25% Day-30 retention target is notably ambitious — typical travel utility apps see 10-15% at D30, and novelty-driven apps often spike then crater. The differentiation is real but fragile: proactive spatial AI is a genuinely novel interaction model, but Google and Apple have structural advantages in location data, OS integration, and distribution that could replicate core features quickly once the concept is validated.",
+        "concerns": [
+          "No monetization model presented — premium app, subscription, city licensing, B2B tourism bureau deals?",
+          "Distribution is unsolved — tourists don't browse App Store for 'temporal companion' apps; discovery CAC will be high",
+          "Google Maps + Gemini Live / Apple Maps + Vision are direct platform-level threats with zero friction to adopt",
+          "Long graveyard of AR/location tourism apps (Detour, Layar, Wikitude, Field Trip) signals structural adoption challenges",
+          "Proactive AI interruptions in public spaces carry a real 'creepiness threshold' — unsolicited audio whispers may trigger rejection rather than delight",
+          "Zurich-only pilot creates a micro-market ceiling; scaling to new cities requires expensive content/data investment per city",
+          "25% Day-30 retention for a location-triggered experience is extremely ambitious with no comparable benchmark to cite",
+          "Target audience 'affluent tech-native travelers' is real but small and hard to reach efficiently",
+          "Zero-UI paradigm requires significant user education and trust-building — not a frictionless onboarding proposition"
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "Market Demand",
+            "score": 6,
+            "weight": 0.3,
+            "reasoning": "Experience economy and cultural tourism are genuine growth vectors. AI companion engagement patterns (Character.ai DAUs) validate voice-roleplay demand. But proactive Zero-UI historical narration is an unvalidated demand format — proxy markets exist, direct demand unproven."
+          },
+          {
+            "dimension": "Competitive Landscape",
+            "score": 3,
+            "weight": 0.25,
+            "reasoning": "Google (Maps + Lens + Gemini Live), Apple (Maps + Vision Pro + Intelligence), and Meta (Ray-Ban smart glasses) all have platform-level location-AI integration already. Prior pure-play competitors (Detour, Layar, Historypin) mostly failed or stagnated. Moat against platform encroachment is thin."
+          },
+          {
+            "dimension": "Differentiation",
+            "score": 7,
+            "weight": 0.25,
+            "reasoning": "Proactive spatial AI initiation (vs. on-demand queries) is a genuinely novel interaction model. Historical character roleplay with 'Character Constitutions' is meaningfully differentiated from Google's factual overlays. On-device privacy-first architecture is a real differentiator for European (GDPR) market. Differentiation is strong but execution-dependent."
+          },
+          {
+            "dimension": "Timing",
+            "score": 5,
+            "weight": 0.2,
+            "reasoning": "On-device AI capability is arriving on schedule for 2026 (Apple Intelligence, Qualcomm NPUs). AR glasses (Meta Ray-Ban, Apple Vision successor) could make this the right concept on the wrong platform — phone-based Zero-UI is somewhat contradictory. European AI regulation uncertainty adds friction. Window is open but form-factor bet on smartphones may age poorly within 2-3 years."
+          }
+        ],
+        "confidence": 0.72,
+        "key_insight": "The core demand risk isn't whether people want immersive city experiences (they do) — it's whether they'll accept proactive, unsolicited AI narration as a companion rather than an intrusion; every failed AR tourism app foundered on this same behavioral adoption gap, and AURA needs a validated answer to this question before market viability can be confirmed."
+      },
+      {
+        "agent_name": "UX Agent",
+        "score": 6,
+        "reasoning": "AURA presents a genuinely novel and evocative concept — the 'Temporal Lens' framing is memorable and the core experience (historical figures whispering to you as you walk past landmarks) has real delight potential. However, several structural UX decisions introduce significant friction that could prevent users from ever reaching that magical core.\n\nThe central tension is a classic Zero-UI paradox: the product's entire identity is invisibility, yet Zero-UI interfaces suffer acutely from the Gulf of Execution — users cannot perceive affordances, cannot discover what the system can do, and cannot recover gracefully when it fails or misbehaves. This has historically killed otherwise promising ambient/proactive products (Google Glass, Amazon Halo, early Alexa ambient modes). The PRD has no onboarding strategy, which is arguably the most critical UX artifact for a Zero-UI product — without scaffolded trust-building, users will experience the proactive 'whisper' as startling or intrusive rather than magical.\n\nThe proactive initiation model ('AI identifies landmarks before user raises phone') is unproven at scale. Every successful voice AI to date (Siri, Alexa, Hey Google, ChatGPT voice) is reactive — user-initiated. Flipping this to proactive AI-initiated interaction is a UX paradigm shift that requires extremely high precision and contextual sensitivity. A single mis-timed or irrelevant whisper in the first session could permanently erode user trust.\n\nThe Zurich context adds cultural friction. Zurich is notably reserved — public voice interactions with devices carry social stigma. The PRD doesn't acknowledge this, yet it's the pilot city. Spatial audio is also severely degraded in urban noise environments (trams, traffic, crowds on Bahnhofstrasse), which could undercut the immersion score target.\n\nAlways-on camera for 'VLA processing before user raises phone' will face visceral perception resistance. Even with strong on-device privacy architecture, users are deeply uncomfortable with cameras that watch without their active command. The technical privacy story is solid but the perceived privacy story is not addressed.\n\nOn the positive side: the 4-layer spatial audio architecture is thoughtful and well-decomposed. Character Constitutions for historical figures maintaining integrity is smart content design. The 'Discovery Habit' framing for locals shows understanding of long-term retention. Digital Souvenirs as journey artifacts are a clever retention and shareability mechanic. The 10-turn natural conversation target, if achievable, would represent genuinely compelling engagement.",
+        "concerns": [
+          "Zero-UI discoverability gap: no affordances means new users have no mental model of what's possible — critical onboarding entirely absent from PRD",
+          "Proactive AI initiation without user consent is a trust anti-pattern; first mis-fired whisper could cause permanent churn",
+          "Public voice use in Zurich's reserved urban culture creates social friction — users may feel self-conscious speaking to device on busy streets",
+          "Always-on camera perception problem: technical on-device privacy doesn't resolve user's visceral discomfort with passive camera surveillance",
+          "Spatial audio quality degrades sharply in real urban noise (trams, traffic, crowds) — the 4-layer system may not survive street conditions",
+          "Battery drain from always-on camera+VLA processing is a real-world adoption blocker on current hardware",
+          "'Ultra-contextual navigation' and 'menus materialize when needed' creates unpredictability — users cannot develop reliable mental models",
+          "Target audience tension: locals (repeat routes, habituation risk) vs affluent travelers (one-time use, no retention) require fundamentally different UX strategies",
+          "Eye-tracking and gesture control are unreliable on consumer-grade hardware, creating interaction failures at critical moments",
+          "No error recovery or graceful degradation UX described — what happens when the system misidentifies a landmark or mishears a response?"
+        ],
+        "dimension_scores": [
+          {
+            "dimension": "user_need_clarity",
+            "score": 7,
+            "weight": 0.2,
+            "reasoning": "The underlying need (contextual historical immersion in a walkable city) is real, emotionally resonant, and underserved. Target demographic (affluent tech-native travelers + curious locals) is plausible. Loses points for the locals-vs-travelers tension — these are fundamentally different use patterns requiring different UX — and for 'Discovery Habit' framing that's more aspirational than evidenced."
+          },
+          {
+            "dimension": "usability",
+            "score": 5,
+            "weight": 0.35,
+            "reasoning": "Zero-UI's invisibility makes affordance discovery impossible. No feedback loops, no error states, no recovery paths described. Proactive interruption is high-risk. Always-on camera perception problem unaddressed. Public voice use carries real friction. Eye/gesture controls unreliable on current hardware. The spatial audio architecture is the strongest usability element."
+          },
+          {
+            "dimension": "user_journey",
+            "score": 4,
+            "weight": 0.3,
+            "reasoning": "Critical gap: zero onboarding strategy for a Zero-UI product. How does a first-time user learn to trust and use a system with no visible interface? Proactive AI initiation before any trust is established is a journey anti-pattern. No error recovery flow. Urban noise and social context not accounted for. Day-30 retention of 25% is ambitious without habit formation mechanics beyond 'the experience is good'."
+          },
+          {
+            "dimension": "delight_potential",
+            "score": 8,
+            "weight": 0.15,
+            "reasoning": "Genuinely high ceiling. Historical figure roleplays with Character Constitutions, 3D spatial audio tied to real landmarks, Digital Souvenirs as journey artifacts — these are distinctive and emotionally compelling. The 'Temporal Lens' concept is beautifully framed. If the delivery friction is resolved, the core experience could be transformative. This is the product's strongest asset."
+          }
+        ],
+        "confidence": 0.82,
+        "key_insight": "The core concept is magical but the delivery mechanism is built on an unproven UX paradigm — proactive Zero-UI requires near-perfect precision and a trust-scaffolding path that the PRD completely omits; without a deliberate onboarding strategy, the first interaction will likely feel invasive rather than delightful."
+      }
+    ],
+    "synthesized_reasoning": "AURA v5.0 presents a genuinely compelling vision — the Temporal Lens framing is evocative, the 4-layer spatial audio architecture is thoughtful, and the core experience of historical figures whispering as you walk past landmarks has real delight potential. The team clearly has sophisticated taste. However, the submission has a foundational contradiction that no amount of polish can paper over: the entire Zero-UI premise collapses at the hardware layer. The 'proactive identification before user raises phone' is physically impossible on a smartphone — the camera is occluded in a pocket. This isn't a roadmap gap; it's a physics constraint. The PRD is written as if an always-on exterior camera (AR glasses, wearable) is the form factor, but never states this. Every downstream claim — VLA streaming, centimeter spatial grounding, ambient whisper initiation — inherits this broken assumption. Compounding this: the named technical stack (MiniCPM-o 4.5, MobileLLM-Pro P1, NeuTTS-Nano, Qwen3-VL Nano with centimeter 3D grounding) does not exist as shipping or reliably roadmapped product. This makes feasibility assessment impossible — the council cannot evaluate a stack it cannot verify. On the market side, the graveyard of AR tourism apps (Detour, Layar, Wikitude, Field Trip) is not just historical trivia — it signals a structural adoption problem with location-triggered experiences that the PRD does not address. The absence of any monetization model at this stage of spec is a red flag, not an oversight. Platform-level threats from Google Maps + Gemini Live and Apple Maps + Vision are existential, not peripheral. The Zurich pilot is strategically smart for cultural richness but creates a cultural friction the PRD ignores: Zurich is reserved, public voice interaction carries stigma, and urban noise (trams, Bahnhofstrasse crowds) will materially degrade the 4-layer spatial audio experience that is central to the immersion score target. The UX concern most likely to kill the product before the platform giants get there is the Zero-UI onboarding gap — there is no scaffolded trust-building described, and a single mis-timed proactive whisper in the first session is a permanent churn event. The 10-turn natural conversation target and Digital Souvenirs mechanic are genuinely strong ideas, but they require users to survive onboarding first. The council's verdict: the vision deserves to exist, but it needs a form factor decision, a real stack, and a monetization thesis before it can be responsibly evaluated for investment or development.",
+    "next_steps": [
+      "Resolve the form factor contradiction explicitly: decide if AURA is a smartphone app (requires rearchitecting the 'proactive before raise' loop to a user-initiated trigger) or a wearable/AR glasses experience (requires a hardware partner, device spec, and revised go-to-market entirely) — this single decision changes every downstream assumption",
+      "Audit and replace the fabricated technical stack: replace MiniCPM-o 4.5, MobileLLM-Pro P1, NeuTTS-Nano, and Qwen3-VL Nano with verified shipping or credibly roadmapped models, or clearly label them as 'target capability class' and describe the integration architecture around capability requirements rather than named versions",
+      "Validate the centimeter 3D grounding claim: if depth-sensor hardware (LiDAR) is assumed, state it explicitly and confirm target device compatibility; if monocular camera only, replace the centimeter-precision claim with a realistic SLAM or ARKit/ARCore-bounded accuracy spec",
+      "Build and present a monetization model before next council review: evaluate premium one-time purchase, subscription, city/tourism bureau B2B licensing, and hotel/concierge partnership tiers — the absence of this is a blocker, not a follow-up item",
+      "Design a formal onboarding experience as the highest-priority UX artifact: Zero-UI products live or die on their first 3 minutes; the council requires a scaffolded trust-building flow that teaches users what AURA can do before it initiates proactively — consider a guided 'first landmark' walkthrough that transitions to ambient mode only after explicit user consent",
+      "Conduct a Zurich cultural sensitivity and noise environment audit: run a small ethnographic study (10-15 participants) on willingness to engage in public voice interactions on Zurich streets, and a field test of spatial audio intelligibility against tram and traffic noise on Bahnhofstrasse and Niederdorf — report results before committing to the immersion score target",
+      "Address the platform threat directly in the next submission: articulate a specific defensible moat against Google Maps + Gemini Live and Apple Maps + Vision — distribution advantage, content depth, character fidelity, or exclusive city partnerships are all viable axes, but one must be chosen and substantiated",
+      "Define error recovery and graceful degradation UX for at least three failure modes: landmark misidentification, speech mishear mid-roleplay, and connectivity loss — these are not edge cases in a street environment, and their absence signals the product has not been walked through a real use session"
+    ],
+    "council_composition": [
+      "Feasibility Agent",
+      "Market Agent",
+      "UX Agent"
+    ]
+  },
+  "council_evaluated_at": "2026-02-17T08:48:35.661Z"
+}

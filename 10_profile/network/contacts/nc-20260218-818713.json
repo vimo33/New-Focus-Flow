@@ -1,0 +1,20 @@
+{
+  "id": "nc-20260218-818713",
+  "first_name": "Chekuri",
+  "last_name": "Swarochish",
+  "full_name": "Chekuri Swarochish",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:30:18.713Z",
+  "updated_at": "2026-02-18T22:34:52.091Z",
+  "phone": "+91 96327 06666",
+  "phones": [
+    "+91 96327 06666"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "nc-20260218-917320",
+  "first_name": "Kevin",
+  "last_name": "Sartori",
+  "full_name": "Kevin Sartori",
+  "company": "Nivek",
+  "position": "Scaling & Growths Advisor to Deep Tech Ventures",
+  "linkedin_url": "https://www.linkedin.com/in/sartorikevin",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "high",
+  "tags": ["deep tech", "advisor", "scaling", "Switzerland", "growth"],
+  "last_contacted": "22 Apr 2025",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.320Z",
+  "updated_at": "2026-02-19T00:00:00.000Z",
+  "warmth_score": 68,
+  "triage_score": 6.8,
+  "enrichment_date": "2026-02-19",
+  "enrichment_data": {
+    "recent_news": [
+      "Kevin Sartori advises deep tech ventures on scaling and growth strategy — based in Switzerland",
+      "Specializes in growth advisor roles for early-stage deep tech companies in the Swiss ecosystem",
+      "Last contacted April 2025 — relationship still warm (10 months ago)"
+    ],
+    "outreach_angle": "Kevin is a growth advisor for deep tech ventures — exactly what Vimo's portfolio needs. He could serve as advisor for Kavach AI (deep tech, edge AI) or Multiplium (AI infrastructure). The conversation has two angles: (1) exploring whether he would advise on a project on a light advisory arrangement; (2) whether his current portfolio of advised companies includes potential clients for Bramha ESG or Kavach AI. Reach out this week: 'Kevin — checking back in after our April conversation. I have been heads-down on two projects — Kavach AI and Multiplium. Would love 20 minutes to share updates and explore whether there is an advisory fit. Are you available for a quick call?'",
+    "relevant_project": "Kavach AI"
+  }
+}

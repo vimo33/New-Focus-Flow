@@ -1,0 +1,135 @@
+{
+  "last_updated": "2026-02-16",
+  "version": "2.0",
+  "domains": {
+    "inbox_capture": {
+      "description": "Capture and process incoming thoughts, ideas, and items",
+      "tools": [
+        { "name": "capture_item", "description": "Quick-capture text to inbox", "tier": 1 },
+        { "name": "list_inbox", "description": "List/filter inbox items", "tier": 1 },
+        { "name": "process_inbox_item", "description": "Convert to task/project/idea/archive", "tier": 1 }
+      ]
+    },
+    "task_management": {
+      "description": "Create, track, and manage tasks across projects",
+      "tools": [
+        { "name": "create_task", "description": "Create with category, priority, due date", "tier": 1 },
+        { "name": "list_tasks", "description": "List/filter by status or category", "tier": 1 },
+        { "name": "update_task", "description": "Update status, priority, title", "tier": 1 }
+      ]
+    },
+    "project_management": {
+      "description": "Full project lifecycle from idea to deployment",
+      "tools": [
+        { "name": "create_project", "description": "Create a new project", "tier": 1 },
+        { "name": "list_projects", "description": "List projects by status", "tier": 1 },
+        { "name": "get_project", "description": "Get full project details with tasks and progress", "tier": 1 },
+        { "name": "update_project", "description": "Update phase, status, or details", "tier": 1 }
+      ]
+    },
+    "ideas_council": {
+      "description": "Capture, expand, and validate ideas through the AI Council",
+      "tools": [
+        { "name": "create_idea", "description": "Capture a new idea", "tier": 1 },
+        { "name": "list_ideas", "description": "List ideas by status", "tier": 1 },
+        { "name": "get_idea", "description": "Get full idea details and council verdict", "tier": 1 },
+        { "name": "validate_idea", "description": "Run AI Council evaluation with scoring", "tier": 2 },
+        { "name": "promote_idea_to_project", "description": "Convert validated idea to active project", "tier": 2 }
+      ]
+    },
+    "health_wellbeing": {
+      "description": "Track founder health and wellbeing metrics",
+      "tools": [
+        { "name": "log_health", "description": "Log sleep, exercise, mood, energy, focus, stress", "tier": 1 }
+      ]
+    },
+    "memory": {
+      "description": "Long-term memory search and context retrieval",
+      "tools": [
+        { "name": "search_memory", "description": "Search persistent memory for relevant past context", "tier": 1 }
+      ]
+    },
+    "crm": {
+      "description": "Contact relationship management",
+      "tools": [
+        { "name": "create_contact", "description": "Create a CRM contact", "tier": 1 },
+        { "name": "list_contacts", "description": "Search and list contacts", "tier": 1 }
+      ]
+    },
+    "sales": {
+      "description": "Deal tracking and sales pipeline management",
+      "tools": [
+        { "name": "create_deal", "description": "Create a sales deal/lead", "tier": 1 },
+        { "name": "list_deals", "description": "List deals by stage", "tier": 1 },
+        { "name": "update_deal", "description": "Update deal stage or value", "tier": 1 },
+        { "name": "get_sales_pipeline", "description": "Pipeline summary with counts per stage", "tier": 1 }
+      ]
+    },
+    "dev_flow": {
+      "description": "Project scaffolding and spec generation",
+      "tools": [
+        { "name": "scaffold_project", "description": "Scaffold project directory with boilerplate", "tier": 2 },
+        { "name": "generate_specs", "description": "Generate technical specifications", "tier": 2 }
+      ]
+    },
+    "financials": {
+      "description": "Revenue tracking, cost management, and runway analysis",
+      "tools": [
+        { "name": "get_financials_summary", "description": "Portfolio revenue, costs, and runway overview", "tier": 1 },
+        { "name": "get_income_strategies", "description": "Income planning and gap analysis", "tier": 1 }
+      ]
+    },
+    "intelligence": {
+      "description": "Reports, briefings, and strategic intelligence",
+      "tools": [
+        { "name": "get_weekly_report", "description": "Generate or retrieve weekly summary with KPIs", "tier": 1 },
+        { "name": "get_morning_briefing", "description": "Daily priorities, opportunities, and recommendations", "tier": 1 }
+      ]
+    },
+    "pipeline": {
+      "description": "Project pipeline orchestration (concept to deploy)",
+      "tools": [
+        { "name": "start_pipeline", "description": "Start project pipeline at concept phase", "tier": 2 },
+        { "name": "get_pipeline_status", "description": "Check pipeline progress for a project", "tier": 1 }
+      ]
+    },
+    "network": {
+      "description": "Professional network analysis and opportunity discovery",
+      "tools": [
+        { "name": "get_network_contacts", "description": "Search professional network graph", "tier": 1 },
+        { "name": "get_network_opportunities", "description": "Find network-based opportunities", "tier": 1 }
+      ]
+    },
+    "content_gtm": {
+      "description": "Content creation and go-to-market execution",
+      "tools": [
+        { "name": "draft_content", "description": "Draft marketing, blog, email, or social content", "tier": 2 },
+        { "name": "get_calendar_entries", "description": "Upcoming content calendar entries", "tier": 1 }
+      ]
+    },
+    "system": {
+      "description": "Dashboard, navigation, and system management",
+      "tools": [
+        { "name": "get_dashboard_summary", "description": "Overview of inbox, projects, and tasks", "tier": 1 },
+        { "name": "navigate", "description": "Direct the frontend to a specific page", "tier": 1 },
+        { "name": "update_capabilities", "description": "Add or update capability in this registry", "tier": 2 },
+        { "name": "update_directive", "description": "Update Nitara's active strategic focus directive", "tier": 2 }
+      ]
+    },
+    "research": {
+      "description": "Web research and deep internal search across all data",
+      "tools": [
+        { "name": "web_search", "description": "Search the web for current market, regulatory, and industry information", "tier": 1 },
+        { "name": "deep_search", "description": "Semantic search across all internal data — projects, ideas, contacts, memories", "tier": 1 }
+      ]
+    },
+    "profiling": {
+      "description": "Systematic knowledge building about the founder and their business reality",
+      "tools": [
+        { "name": "get_profiling_gaps", "description": "Check what Nitara doesn't know — returns highest-priority gaps", "tier": 1 },
+        { "name": "update_profile_data", "description": "Store information learned in conversation to vault and checklist", "tier": 1 },
+        { "name": "get_profiling_summary", "description": "Report knowledge completeness by domain", "tier": 1 }
+      ]
+    }
+  }
+}

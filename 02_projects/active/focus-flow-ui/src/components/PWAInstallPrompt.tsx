@@ -25,8 +25,8 @@ export function PWAInstallPrompt() {
     const wasDismissed = localStorage.getItem('pwa-install-dismissed');
     if (wasDismissed) {
       const dismissedAt = parseInt(wasDismissed, 10);
-      // Show again after 7 days
-      if (Date.now() - dismissedAt < 7 * 24 * 60 * 60 * 1000) {
+      // Show again after 90 days
+      if (Date.now() - dismissedAt < 90 * 24 * 60 * 60 * 1000) {
         setDismissed(true);
       }
     }
@@ -66,7 +66,7 @@ export function PWAInstallPrompt() {
             <span className="material-symbols-outlined text-primary">install_mobile</span>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="text-sm font-bold text-white">Install Focus Flow</h3>
+            <h3 className="text-sm font-bold text-white">Install Nitara</h3>
             <p className="text-xs text-gray-400 mt-1">
               Tap <span className="material-symbols-outlined text-[14px] align-middle">ios_share</span> then "Add to Home Screen"
             </p>
@@ -89,7 +89,7 @@ export function PWAInstallPrompt() {
           <span className="material-symbols-outlined text-primary">install_desktop</span>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-white">Install Focus Flow</h3>
+          <h3 className="text-sm font-bold text-white">Install Nitara</h3>
           <p className="text-xs text-gray-400 mt-1">Install as an app for a better experience</p>
           <div className="flex gap-2 mt-3">
             <button

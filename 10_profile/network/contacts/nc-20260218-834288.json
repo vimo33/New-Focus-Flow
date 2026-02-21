@@ -1,0 +1,20 @@
+{
+  "id": "nc-20260218-834288",
+  "first_name": "Raghu Embassy",
+  "last_name": "",
+  "full_name": "Raghu Embassy",
+  "relationship_type": "other",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "imported_from": "google",
+  "created_at": "2026-02-18T22:30:34.288Z",
+  "updated_at": "2026-02-18T22:41:01.949Z",
+  "phone": "+91 90713 80220",
+  "phones": [
+    "+91 90713 80220"
+  ],
+  "import_sources": [
+    "google"
+  ]
+}

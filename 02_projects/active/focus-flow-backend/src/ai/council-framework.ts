@@ -6,6 +6,7 @@ import {
   CouncilDecisionType,
   EnhancedCouncilVerdict,
   VerdictLevel,
+  Project,
 } from '../models/types';
 
 const LOG_PREFIX = '[CouncilFramework]';
@@ -65,23 +66,90 @@ class CouncilFramework {
   }
 
   async getVerdict(id: string): Promise<EnhancedCouncilVerdict | null> {
+    // Try standalone file first
     const filePath = path.join(this.verdictsDir, `${id}.json`);
-    return readJsonFile<EnhancedCouncilVerdict>(filePath);
+    const verdict = await readJsonFile<EnhancedCouncilVerdict>(filePath);
+    if (verdict) return verdict;
+
+    // Check if it's an embedded verdict (id = "embedded-{projectId}")
+    if (id.startsWith('embedded-')) {
+      const projectId = id.replace('embedded-', '');
+      const verdicts = await this.listVerdicts(projectId);
+      return verdicts.find(v => v.id === id) || verdicts[0] || null;
+    }
+
+    return null;
   }
 
   async listVerdicts(projectId?: string): Promise<EnhancedCouncilVerdict[]> {
+    const verdictIds = new Set<string>();
+    const verdicts: EnhancedCouncilVerdict[] = [];
+
+    // 1. Scan standalone verdict files
     const files = await listFiles(this.verdictsDir);
     const jsonFiles = files.filter(f => f.endsWith('.json'));
-
-    const verdicts: EnhancedCouncilVerdict[] = [];
     for (const file of jsonFiles) {
       const filePath = path.join(this.verdictsDir, file);
       const verdict = await readJsonFile<EnhancedCouncilVerdict>(filePath);
       if (verdict) {
         if (!projectId || verdict.project_id === projectId) {
           verdicts.push(verdict);
+          if (verdict.id) verdictIds.add(verdict.id);
         }
       }
+    }
+
+    // 2. Scan project artifacts for embedded council verdicts
+    const projectsDir = getVaultPath('02_projects', 'active');
+    const projectFiles = await listFiles(projectsDir);
+    const projectJsons = projectFiles.filter(f => f.startsWith('project-') && f.endsWith('.json'));
+    for (const file of projectJsons) {
+      const filePath = path.join(projectsDir, file);
+      const project = await readJsonFile<Project>(filePath);
+      if (!project?.artifacts?.council_verdict) continue;
+      if (projectId && project.id !== projectId) continue;
+
+      // Cast to any for flexible access — project artifacts may have extra fields
+      const cv: any = project.artifacts.council_verdict;
+      // Skip if we already have this verdict from standalone files
+      if (cv.id && verdictIds.has(cv.id)) continue;
+
+      // Normalize project artifact verdict to EnhancedCouncilVerdict shape
+      const normalized: EnhancedCouncilVerdict = {
+        id: cv.id || `embedded-${project.id}`,
+        decision_type: cv.decision_type || 'idea_validation',
+        verdict: cv.verdict || (cv.recommendation === 'approve' ? 'proceed_with_caution' : cv.recommendation === 'reject' ? 'reconsider' : 'needs_more_info'),
+        confidence: cv.confidence ?? 0.5,
+        overall_score: cv.overall_score || 0,
+        executive_summary: cv.executive_summary || cv.synthesized_reasoning || '',
+        key_insight: cv.key_insight || '',
+        dimension_scores: cv.dimension_scores || [],
+        evaluations: (cv.evaluations || []).map((e: any) => ({
+          agent_name: e.agent_name || e.evaluator_name || 'Agent',
+          role: e.role || e.perspective || '',
+          score: e.score || 0,
+          reasoning: e.reasoning || e.analysis || '',
+          concerns: e.concerns || [],
+          dimension_scores: e.dimension_scores || [],
+          confidence: e.confidence ?? 0.5,
+          key_insight: e.key_insight || '',
+        })),
+        recommended_actions: cv.recommended_actions || [],
+        risks: cv.risks || [],
+        open_questions: cv.open_questions || [],
+        consensus_areas: cv.consensus_areas || [],
+        disagreement_areas: cv.disagreement_areas || [],
+        synthesized_reasoning: cv.synthesized_reasoning || '',
+        council_composition: cv.council_composition || (cv.evaluations || []).map((e: any) => e.agent_name || e.evaluator_name || 'Agent'),
+        created_at: cv.created_at || project.updated_at || new Date().toISOString(),
+        project_id: project.id,
+        subject_title: cv.subject_title || project.title,
+        subject_description: cv.subject_description || project.description || '',
+        recommendation: cv.recommendation || 'needs-info',
+        next_steps: cv.next_steps || [],
+      };
+
+      verdicts.push(normalized);
     }
 
     // Sort newest first

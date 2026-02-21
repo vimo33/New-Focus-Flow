@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { mem0Service } from '../services/mem0.service';
 
 const router = Router();
-const DEFAULT_USER = 'focus-flow-user';
+const DEFAULT_USER = 'nitara-user';
 
 // GET /api/memory/search - Search memories (semantic)
 router.get('/memory/search', async (req: Request, res: Response) => {

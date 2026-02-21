@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Onboarding: Network Constellation Sync</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Using Material Icons for avatars placeholders/icons -->
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00b8cc",
+                        "accent-violet": "#a855f7",
+                        "background-light": "#f5f8f8",
+                        "background-dark": "#06080F", /* Deep void black per request */
+                        "glass": "rgba(255, 255, 255, 0.05)",
+                        "glass-border": "rgba(255, 255, 255, 0.1)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "mono": ["Space Grotesk", "monospace"], /* Using Space Grotesk for mono feel as requested to stick to theme font, but styled monospaced */
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px", "2xl": "1rem"},
+                    backgroundImage: {
+                        'star-field': 'radial-gradient(circle at center, #111827 0%, #06080F 100%)',
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
+                        }
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #06080F;
+            color: white;
+            overflow: hidden; /* Prevent scrolling for immersive feel */
+        }
+        
+        /* Custom Star Field Background */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            z-index: 0;
+        }
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        /* Constellation Lines & Nodes */
+        .constellation-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .node {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00e5ff;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #00e5ff;
+        }
+        .node-violet {
+            background: #a855f7;
+            box-shadow: 0 0 8px #a855f7;
+        }
+
+        .line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0, 229, 255, 0), rgba(0, 229, 255, 0.4), rgba(0, 229, 255, 0));
+            transform-origin: left center;
+        }
+
+        /* Frosted Glass Utilities */
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Text Glow */
+        .text-glow {
+            text-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+        }
+        
+        /* Progress Ring SVG Styles */
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display antialiased h-screen w-screen flex flex-col relative">
+<!-- DECORATIVE BACKGROUND ELEMENTS -->
+<!-- Star field simulation with divs -->
+<div class="stars">
+<div class="star" style="top: 10%; left: 20%; width: 2px; height: 2px; animation: pulse 3s infinite;"></div>
+<div class="star" style="top: 30%; left: 80%; width: 1px; height: 1px; animation: pulse 5s infinite;"></div>
+<div class="star" style="top: 70%; left: 10%; width: 2px; height: 2px; animation: pulse 4s infinite;"></div>
+<div class="star" style="top: 85%; left: 60%; width: 1px; height: 1px; animation: pulse 6s infinite;"></div>
+<div class="star" style="top: 15%; left: 90%; width: 2px; height: 2px; animation: pulse 2s infinite;"></div>
+<div class="star" style="top: 50%; left: 5%; width: 1px; height: 1px; opacity: 0.1;"></div>
+<div class="star" style="top: 60%; left: 95%; width: 2px; height: 2px; opacity: 0.2;"></div>
+</div>
+<!-- Central Constellation Visualization -->
+<div class="constellation-wrapper">
+<!-- Central YOU Node -->
+<div class="absolute top-1/2 left-1/2 w-4 h-4 bg-primary rounded-full transform -translate-x-1/2 -translate-y-1/2 shadow-[0_0_30px_#00e5ff] z-10 animate-pulse"></div>
+<div class="absolute top-1/2 left-1/2 w-64 h-64 border border-primary/10 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-spin-slow"></div>
+<div class="absolute top-1/2 left-1/2 w-96 h-96 border border-primary/5 rounded-full transform -translate-x-1/2 -translate-y-1/2" style="animation: spin-slow 12s reverse linear infinite;"></div>
+<!-- Drifting Nodes (Static simulation of movement) -->
+<div class="node animate-float" style="top: 30%; left: 40%; animation-delay: 0s;"></div>
+<div class="line" style="top: 30%; left: 40%; width: 150px; transform: rotate(25deg); opacity: 0.3;"></div>
+<div class="node node-violet animate-float" style="top: 60%; left: 70%; animation-delay: 1s;"></div>
+<div class="line" style="top: 60%; left: 70%; width: 200px; transform: rotate(-150deg); opacity: 0.2;"></div>
+<div class="node animate-float" style="top: 20%; left: 60%; animation-delay: 2s;"></div>
+<div class="line" style="top: 20%; left: 60%; width: 100px; transform: rotate(120deg); opacity: 0.4;"></div>
+<div class="node node-violet animate-float" style="top: 80%; left: 30%; animation-delay: 3s;"></div>
+<div class="line" style="top: 80%; left: 30%; width: 180px; transform: rotate(-45deg); opacity: 0.2;"></div>
+<div class="node animate-float" style="top: 45%; left: 80%; animation-delay: 0.5s;"></div>
+<div class="line" style="top: 45%; left: 80%; width: 300px; transform: rotate(-170deg); opacity: 0.1;"></div>
+<!-- Faint connecting mesh -->
+<svg class="absolute inset-0 w-full h-full opacity-20 pointer-events-none">
+<line stroke="#00e5ff" stroke-width="1" x1="40%" x2="50%" y1="30%" y2="50%"></line>
+<line stroke="#a855f7" stroke-width="1" x1="70%" x2="50%" y1="60%" y2="50%"></line>
+<line stroke="#00e5ff" stroke-width="1" x1="60%" x2="50%" y1="20%" y2="50%"></line>
+<line stroke="#a855f7" stroke-width="1" x1="30%" x2="50%" y1="80%" y2="50%"></line>
+</svg>
+</div>
+<!-- UI CONTENT LAYER -->
+<div class="relative z-10 w-full max-w-7xl mx-auto px-6 h-full flex flex-col items-center">
+<!-- STEPPER -->
+<div class="mt-12 flex space-x-4 mb-16">
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#00e5ff]"></div>
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#00e5ff]"></div>
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_#00e5ff]"></div>
+<div class="w-3 h-3 rounded-full bg-gray-700"></div>
+<div class="w-3 h-3 rounded-full bg-gray-700"></div>
+</div>
+<!-- HEADER -->
+<div class="text-center mb-12">
+<h1 class="text-4xl md:text-5xl font-bold tracking-[0.2em] text-white mb-4 uppercase text-glow">
+                Mapping Your Constellation
+            </h1>
+<p class="text-gray-400 font-display text-lg tracking-wide max-w-2xl mx-auto">
+                Nitara is analyzing your network to identify warm leads and strategic partners.
+            </p>
+</div>
+<!-- MAIN CARD -->
+<div class="flex-grow flex flex-col justify-center items-center w-full max-w-4xl relative">
+<!-- SYNC STATUS CARD -->
+<div class="glass-panel rounded-2xl p-10 w-full max-w-lg text-center relative overflow-hidden group hover:border-primary/30 transition-colors duration-500">
+<!-- Scan line effect inside card -->
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent animate-scan" style="animation: scan 3s linear infinite;"></div>
+<style>
+                    @keyframes scan {
+                        0% { top: -10%; opacity: 0; }
+                        50% { opacity: 1; }
+                        100% { top: 110%; opacity: 0; }
+                    }
+                </style>
+<!-- Progress Ring -->
+<div class="relative w-32 h-32 mx-auto mb-8">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<!-- Background Circle -->
+<circle class="text-gray-800 stroke-current" cx="50" cy="50" fill="transparent" r="40" stroke-width="6"></circle>
+<!-- Progress Circle -->
+<circle --="" 64%="" <!--="" approx="" class="text-primary progress-ring__circle stroke-current drop-shadow-[0_0_4px_#00e5ff]" complete="" cx="50" cy="50" fill="transparent" r="40" stroke-dasharray="251.2" stroke-dashoffset="90" stroke-linecap="round" stroke-width="6">
+                        &gt;</circle>
+</svg>
+<!-- Center Icon/Text -->
+<div class="absolute inset-0 flex items-center justify-center flex-col">
+<span class="text-2xl font-bold text-white">64%</span>
+</div>
+</div>
+<h2 class="text-xl font-medium text-white mb-2 tracking-wide animate-pulse">Scanning LinkedIn...</h2>
+<div class="space-y-3 mt-6 text-left border-t border-white/5 pt-6">
+<div class="flex items-center justify-between font-mono text-sm">
+<span class="text-gray-400">Total Contacts Found</span>
+<span class="text-primary font-bold tracking-wider">312</span>
+</div>
+<div class="flex items-center justify-between font-mono text-sm">
+<span class="text-gray-400">High-Value Opps</span>
+<span class="text-accent-violet font-bold tracking-wider drop-shadow-[0_0_5px_#a855f7]">12 IDENTIFIED</span>
+</div>
+</div>
+</div>
+<!-- INTERACTIVE PREVIEW (Glimmers below card) -->
+<div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 w-full">
+<!-- Card 1 -->
+<div class="glass-panel rounded-lg p-3 flex items-center space-x-3 transform transition-all duration-500 hover:scale-105 hover:bg-white/5 opacity-0 animate-[float_4s_ease-in-out_infinite] cursor-pointer border-l-2 border-l-primary/50" style="animation-fill-mode: forwards; animation: fadeIn 0.5s ease-out forwards 0.5s;">
+<img alt="User avatar" class="w-10 h-10 rounded-full border border-primary/30" data-alt="Savya User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0gLtJKDFhtNs8CdZDIQ8m31TBXE8cy7jR2sxfISQvxGqNFQGlrzGYBGjJZQdjYSPyhd1PwqXVryEoRC1I-iTRlt4H_p5ohQCIwXCM89txJKMChaK2grH0mNjj-bD56zMYU-P3FpEKyTZ63BRCjnt_qL8I4NpFRJSIG-qF2rc8aNxTguMLOpo75Ifr2l0td_xEmYNfoGfOdDHrnRpVngZqbCRG-VHsq7JCXpVred4MU8ukq_ke_Mx40YahqLbwli8adsCh3BD6eXkK"/>
+<div>
+<div class="text-sm font-bold text-white">Savya</div>
+<div class="text-xs text-primary/80">Co-Founder Partner</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="glass-panel rounded-lg p-3 flex items-center space-x-3 transform transition-all duration-500 hover:scale-105 hover:bg-white/5 opacity-0 cursor-pointer border-l-2 border-l-accent-violet/50" style="animation: fadeIn 0.5s ease-out forwards 1.2s;">
+<img alt="User avatar" class="w-10 h-10 rounded-full border border-accent-violet/30" data-alt="Thomas M User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMebdz-RSkSWW8MfYHovdZ7EWrCbKrt-SyQFYpXMPN_Z0laMTVUr-1a6u3zcdH6HhevIafFIkQll4NfhMF-dubN7eqW18_PzbJ2vCDAMyaPPV5hi0ZcyfCH_uC7eCJe6C20jbrmdTdUCHy251GbAawCn0za7K66C891UOkCVtIRCvQAEgBwV3fkfYhPmXaCR-K4kYS9pEHzuELzn6qmHn8lZfXh5cG0U5UmtNt6y7FZesDn78q4MzfoJYPxbOUabhe6i8pL3mSgNIg"/>
+<div>
+<div class="text-sm font-bold text-white">Thomas M.</div>
+<div class="text-xs text-accent-violet/80">SwissHR Lead</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="glass-panel rounded-lg p-3 flex items-center space-x-3 transform transition-all duration-500 hover:scale-105 hover:bg-white/5 opacity-0 cursor-pointer border-l-2 border-l-primary/50" style="animation: fadeIn 0.5s ease-out forwards 2s;">
+<img alt="User avatar" class="w-10 h-10 rounded-full border border-primary/30" data-alt="Marcus R User Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC25CuJL6pMR8Rb6t88ElaveL8ti0Gx9-meUGaDHQqDwbMKhni5WoLNjDeYwJpFpC07OLFs0PbvB_uaFV9IBjtKoG6g16Ja5r78patjK3sB3eTWoc_d_Jzmd3zU6d5PxGvm0luzVvrXxUKATQgofSh_tR3ddwmDvmaBIhUswjdmh6Ixfl9wiBdC7RGgLWlq2S50Ktt1S78pItxwaqRXdAVN8oAm3UwOF1xFxbMguwzkJ7uqoeCZA1cx1CmpWvJhZM5OPzhtN1Tp-9kT"/>
+<div>
+<div class="text-sm font-bold text-white">Marcus R.</div>
+<div class="text-xs text-primary/80">Fintech Lead</div>
+</div>
+</div>
+</div>
+<!-- Fade in keyframes -->
+<style>
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(10px); }
+                    to { opacity: 1; transform: translateY(0); }
+                }
+            </style>
+</div>
+<!-- BOTTOM CONVERSATION RAIL & ACTIONS -->
+<div class="w-full max-w-4xl mt-auto pb-12 flex flex-col md:flex-row items-end justify-between gap-6">
+<!-- Nitara Chat -->
+<div class="flex items-start space-x-4 max-w-xl animate-float" style="animation-duration: 5s;">
+<div class="relative">
+<div class="w-12 h-12 rounded-full bg-gradient-to-tr from-primary to-accent-violet p-[2px]">
+<div class="w-full h-full rounded-full bg-black flex items-center justify-center overflow-hidden">
+<span class="material-icons text-primary text-xl">smart_toy</span>
+</div>
+</div>
+<!-- Status dot -->
+<div class="absolute bottom-0 right-0 w-3 h-3 bg-green-400 rounded-full border-2 border-black"></div>
+</div>
+<div class="glass-panel rounded-2xl rounded-tl-none p-5 text-sm leading-relaxed border-l-4 border-l-primary">
+<div class="flex items-center space-x-2 mb-2">
+<span class="text-primary font-bold text-xs uppercase tracking-widest">Nitara AI</span>
+<span class="text-gray-500 text-[10px]">Just now</span>
+</div>
+<p class="text-gray-200">
+                        I'm seeing strong clusters in <span class="text-white font-medium border-b border-white/20">Swiss Fintech</span> and <span class="text-white font-medium border-b border-white/20">AI Research</span>. This network is perfectly positioned for the Studio launch.
+                    </p>
+</div>
+</div>
+<!-- Navigation Actions -->
+<div class="flex flex-col items-end space-y-4">
+<button class="group relative px-8 py-3 bg-gray-800 text-gray-500 font-bold rounded-lg cursor-not-allowed overflow-hidden" disabled="">
+<span class="relative z-10 flex items-center space-x-2">
+<span>CONTINUE</span>
+<span class="material-icons text-sm opacity-50">arrow_forward</span>
+</span>
+<!-- Loading shimmer for disabled button -->
+<div class="absolute top-0 left-0 h-full w-full bg-gradient-to-r from-transparent via-white/5 to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+</button>
+<a class="text-gray-500 hover:text-gray-300 text-sm transition-colors border-b border-transparent hover:border-gray-500" href="#">Skip for now</a>
+</div>
+</div>
+</div>
+<!-- Global Keyframes for shimmer -->
+<style>
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
+</body></html>

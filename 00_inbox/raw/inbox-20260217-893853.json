@@ -1,0 +1,19 @@
+{
+  "id": "inbox-20260217-893853",
+  "text": "7666153891:AAFU14vsRC_hkTz3F3bruqZaRgzmvchXEQ0",
+  "category": "work",
+  "source": "telegram",
+  "created_at": "2026-02-17T22:54:53.854Z",
+  "metadata": {
+    "userId": 1123733534,
+    "username": "Vimo33",
+    "firstName": "Vimo"
+  },
+  "ai_classification": {
+    "category": "work",
+    "confidence": 0.72,
+    "suggested_action": "note",
+    "suggested_project": "Telegram Bot Setup",
+    "reasoning": "This appears to be a Telegram Bot API token (format: <bot_id>:<secret>). It's a technical credential, likely related to a development or automation project. Best stored securely as a reference note rather than treated as an actionable task."
+  }
+}

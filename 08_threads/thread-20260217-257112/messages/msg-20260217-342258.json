@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-342258",
+  "thread_id": "thread-20260217-257112",
+  "role": "assistant",
+  "content": "I can see the doc title (\"PRD: AURA — The Zurich Discovery Engine (2026 Pilot)\") but can't access the actual content—Google Docs sharing doesn't expose the text to web scrapers even when the link is public.\n\nTwo options:\n\n**Quick:** Copy the full text and paste it here directly. I'll read it and we can talk through it.\n\n**Clean:** Download it as a `.md` or `.txt` file and I'll save it to the workspace. That way it lives in the project context permanently.\n\nWhich do you prefer?",
+  "source": "voice",
+  "created_at": "2026-02-17T01:05:42.258Z"
+}

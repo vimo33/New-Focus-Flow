@@ -1,0 +1,8 @@
+{
+  "kill_threshold": 30,
+  "kill_days_required": 14,
+  "scale_threshold": 70,
+  "scale_positive_experiments": 2,
+  "park_threshold": 40,
+  "park_days_required": 21
+}

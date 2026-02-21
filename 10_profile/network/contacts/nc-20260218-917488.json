@@ -1,0 +1,28 @@
+{
+  "id": "nc-20260218-917488",
+  "first_name": "Ondrej",
+  "last_name": "Hrabal",
+  "full_name": "Ondrej Hrabal",
+  "company": "Whalebone",
+  "position": "Service GTM & Growth Lead",
+  "linkedin_url": "https://www.linkedin.com/in/ondrej-hrabal",
+  "relationship_type": "colleague",
+  "relationship_strength": "moderate",
+  "business_value": "unknown",
+  "tags": [],
+  "last_contacted": "07 Dec 2021",
+  "imported_from": "linkedin",
+  "created_at": "2026-02-18T22:15:17.488Z",
+  "updated_at": "2026-02-18T23:32:23.957Z",
+  "phone": "+420 776 747 824",
+  "phones": [
+    "+420 776 747 824"
+  ],
+  "import_sources": [
+    "google"
+  ],
+  "enrichment_date": "2026-02-18T23:32:23.956Z",
+  "enrichment_data": {
+    "pdl_likelihood": 9
+  }
+}

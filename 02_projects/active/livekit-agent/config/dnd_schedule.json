@@ -1,0 +1,13 @@
+{
+  "quiet_hours": {
+    "start": "22:00",
+    "end": "08:00",
+    "timezone": "Europe/Zurich"
+  },
+  "max_outbound_calls_per_day": 3,
+  "critical_alert_override": {
+    "enabled": true,
+    "delay_minutes": 15,
+    "description": "Critical alerts can override DND after 15min delay"
+  }
+}

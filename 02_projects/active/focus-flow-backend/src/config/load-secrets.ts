@@ -51,3 +51,65 @@ export function loadOpenClawSecrets(): void {
     throw new Error('Failed to load OpenClaw secrets. OpenClaw services will not function.');
   }
 }
+
+export function loadLiveKitSecrets(): void {
+  const secretsPath = '/srv/focus-flow/07_system/secrets/.livekit.env';
+
+  if (!fs.existsSync(secretsPath)) {
+    console.warn(`[Security] LiveKit secrets file not found: ${secretsPath}`);
+    console.warn('[Security] LiveKit voice will not function without credentials');
+    return;
+  }
+
+  try {
+    const secrets = fs.readFileSync(secretsPath, 'utf8');
+    const lines = secrets.split('\n');
+
+    let loadedCount = 0;
+    for (const line of lines) {
+      if (line.trim() && !line.startsWith('#')) {
+        const [key, ...valueParts] = line.split('=');
+        if (key && valueParts.length > 0) {
+          const value = valueParts.join('=').trim();
+          process.env[key.trim()] = value;
+          loadedCount++;
+        }
+      }
+    }
+
+    console.log(`[Security] LiveKit secrets loaded from secure location (${loadedCount} variables)`);
+  } catch (error) {
+    console.error('[Security] Failed to load LiveKit secrets:', error);
+  }
+}
+
+export function loadPDLSecrets(): void {
+  const secretsPath = '/srv/focus-flow/07_system/secrets/.pdl.env';
+
+  if (!fs.existsSync(secretsPath)) {
+    console.warn(`[Security] PDL secrets file not found: ${secretsPath}`);
+    console.warn('[Security] PDL enrichment will not function without PDL_API_KEY');
+    return;
+  }
+
+  try {
+    const secrets = fs.readFileSync(secretsPath, 'utf8');
+    const lines = secrets.split('\n');
+
+    let loadedCount = 0;
+    for (const line of lines) {
+      if (line.trim() && !line.startsWith('#')) {
+        const [key, ...valueParts] = line.split('=');
+        if (key && valueParts.length > 0) {
+          const value = valueParts.join('=').trim();
+          process.env[key.trim()] = value;
+          loadedCount++;
+        }
+      }
+    }
+
+    console.log(`[Security] PDL secrets loaded from secure location (${loadedCount} variables)`);
+  } catch (error) {
+    console.error('[Security] Failed to load PDL secrets:', error);
+  }
+}

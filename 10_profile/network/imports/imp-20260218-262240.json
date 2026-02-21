@@ -1,0 +1,12 @@
+{
+  "id": "imp-20260218-262240",
+  "source": "google",
+  "status": "failed",
+  "total_contacts": 0,
+  "processed_contacts": 0,
+  "created_contacts": 0,
+  "errors": [
+    "No contacts found in CSV"
+  ],
+  "started_at": "2026-02-18T22:21:02.240Z"
+}

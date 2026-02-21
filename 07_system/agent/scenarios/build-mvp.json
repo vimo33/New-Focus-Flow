@@ -1,0 +1,43 @@
+{
+  "skill": "build-mvp",
+  "version": 1,
+  "satisfaction_threshold": 0.6,
+  "criteria": [
+    {
+      "name": "build_status_complete",
+      "description": "build_status object present with at least phase_1 and phase_2 marked complete",
+      "weight": 0.25,
+      "check": "service_status"
+    },
+    {
+      "name": "endpoints_verified",
+      "description": "endpoints array present with at least 1 healthy endpoint",
+      "weight": 0.2,
+      "check": "health_checks"
+    },
+    {
+      "name": "spec_adherence",
+      "description": "Implementation matches original project spec requirements",
+      "weight": 0.2,
+      "check": "recommendations"
+    },
+    {
+      "name": "convergence_evidence",
+      "description": "Notes or build_status show iteration/fix cycles (not single-shot)",
+      "weight": 0.15,
+      "check": "log_analysis"
+    },
+    {
+      "name": "elapsed_time_reasonable",
+      "description": "Completed within the 2-hour build guard timeout",
+      "weight": 0.1,
+      "check": "novel_data"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER in code or report",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

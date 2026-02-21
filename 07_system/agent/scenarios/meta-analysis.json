@@ -1,0 +1,43 @@
+{
+  "skill": "meta-analysis",
+  "version": 1,
+  "satisfaction_threshold": 0.7,
+  "criteria": [
+    {
+      "name": "reports_reviewed",
+      "description": "At least 5 recent reports reviewed with quality assessment per report",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "satisfaction_trends",
+      "description": "Satisfaction score trends analyzed per skill with direction (up/stable/down)",
+      "weight": 0.2,
+      "check": "novel_data"
+    },
+    {
+      "name": "spec_proposals",
+      "description": "At least 1 specific NLSpec improvement proposal with before/after comparison",
+      "weight": 0.25,
+      "check": "recommendations"
+    },
+    {
+      "name": "cost_analysis",
+      "description": "Cost per agent type analyzed with efficiency recommendations",
+      "weight": 0.15,
+      "check": "novel_data"
+    },
+    {
+      "name": "changelog_written",
+      "description": "Proposals written to meta-changelog.md in the required format",
+      "weight": 0.1,
+      "check": "sources_present"
+    },
+    {
+      "name": "no_placeholders",
+      "description": "No TODO, TBD, PLACEHOLDER, lorem ipsum, or [INSERT text",
+      "weight": 0.1,
+      "check": "no_placeholders"
+    }
+  ]
+}

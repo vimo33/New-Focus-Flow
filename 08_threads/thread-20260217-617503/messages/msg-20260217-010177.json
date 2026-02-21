@@ -1,0 +1,8 @@
+{
+  "id": "msg-20260217-010177",
+  "thread_id": "thread-20260217-617503",
+  "role": "assistant",
+  "content": "Ah, I see the issue — you're in voice chat and sending text messages there, but those aren't syncing to this session. We're in separate conversation contexts. That's why I can see your voice transcriptions but not the pastes or URLs you're sending.\n\n**Quick fix:**\n\nSave the PRD to your workspace:\n- Path: `[REDACTED_PATH]`\n- Filename: `mirari-prd.md` (or whatever you like)\n\nOnce it's there, just tell me \"it's saved\" and I'll read it immediately.\n\nThat'll bypass the session sync issue entirely. Sound good?",
+  "source": "voice",
+  "created_at": "2026-02-17T00:43:30.177Z"
+}

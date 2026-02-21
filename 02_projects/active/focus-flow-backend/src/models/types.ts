@@ -1,4 +1,4 @@
-// Type definitions for Focus Flow OS
+// Type definitions for Nitara
 
 // ============================================================================
 // Thread / Conversation Types
@@ -94,6 +94,8 @@ export interface Task {
 
 export type ProjectPhase = 'concept' | 'spec' | 'design' | 'dev' | 'test' | 'deploy' | 'live';
 
+export type PlaybookType = 'software-build' | 'client-engagement' | 'content-course' | 'studio-project' | 'exploratory-idea';
+
 export type ConceptStep = 'refining' | 'council_selection' | 'council_running' | 'council_review' | 'prd_generation' | 'prd_review';
 
 export interface CouncilMember {
@@ -150,6 +152,7 @@ export interface Project {
   description?: string;
   status: 'active' | 'paused' | 'completed';
   phase?: ProjectPhase;
+  playbook_type?: PlaybookType;
   idea_id?: string;
   concept_thread_id?: string;
   created_at: string;
@@ -602,7 +605,8 @@ export type NotificationType =
   | 'daily_briefing' | 'work_plan' | 'progress_update' | 'stalled_pipeline'
   | 'approval_request' | 'verdict_delivered' | 'task_overdue'
   | 'implementation_complete' | 'test_results' | 'deploy_ready'
-  | 'agent_status' | 'cost_alert' | 'end_of_day_summary';
+  | 'agent_status' | 'cost_alert' | 'end_of_day_summary'
+  | 'tool_completed';
 
 export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent';
 
@@ -625,6 +629,7 @@ export interface PendingApproval {
   status: 'pending' | 'approved' | 'rejected' | 'auto_executed' | 'cancelled';
   resolved_at?: string;
   feedback?: string;
+  predicted_confidence?: number;
 }
 
 export interface WorkPlanItem {
@@ -666,6 +671,7 @@ export interface Briefing {
   pending_approvals_summary: { id: string; action: string; tier: TrustTier; created_at: string }[];
   cost_estimate: { estimated_tokens: number; estimated_cost_usd: number };
   ai_summary: string;
+  financial_insights?: { top_opportunities: Opportunity[]; summary: string };
 }
 
 export interface DailyStats {
@@ -676,6 +682,7 @@ export interface DailyStats {
   notifications_sent: number;
   ai_calls_made: number;
   estimated_cost_usd: number;
+  confidence_records_created: number;
 }
 
 export interface CoreAgentState {
@@ -723,4 +730,714 @@ export interface AgentResponse {
   message: string;
   actions_taken?: string[];
   state: CoreAgentState;
+}
+
+// ============================================================================
+// Phase 1: Founder Profile Types
+// ============================================================================
+
+export type ArchetypePreference = 'strategist' | 'cofounder' | 'critic';
+
+export interface FounderSkill {
+  id: string;
+  name: string;
+  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
+  category: string;
+  added_at: string;
+}
+
+export interface FounderExperience {
+  id: string;
+  title: string;
+  company?: string;
+  description: string;
+  start_date?: string;
+  end_date?: string;
+  tags: string[];
+  added_at: string;
+}
+
+export interface FounderProfile {
+  id: string;
+  name: string;
+  bio?: string;
+  location?: string;
+  timezone?: string;
+  preferred_archetype: ArchetypePreference;
+  skills: FounderSkill[];
+  experience: FounderExperience[];
+  active_work: string[];
+  strategic_focus_tags: string[];
+  onboarding_completed: boolean;
+  settings?: {
+    reasoning_depth?: number;
+    auto_drafting?: boolean;
+    network_alerts?: boolean;
+    risk_monitoring?: boolean;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================================================
+// Phase 1: Financials Types
+// ============================================================================
+
+export type RevenueType = 'recurring' | 'one_time' | 'retainer' | 'royalty' | 'equity';
+export type CostCategory = 'tools' | 'hosting' | 'contractors' | 'marketing' | 'office' | 'insurance' | 'other';
+
+export interface RevenueStream {
+  id: string;
+  project_id?: string;
+  source: string;
+  type: RevenueType;
+  amount_monthly: number;
+  currency: string;
+  start_date?: string;
+  end_date?: string;
+  active: boolean;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CostItem {
+  id: string;
+  name: string;
+  category: CostCategory;
+  amount_monthly: number;
+  currency: string;
+  active: boolean;
+  notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FinancialGoals {
+  income_goal: number;
+  safety_net_months: number;
+  runway_months?: number;
+  currency: string;
+  updated_at: string;
+}
+
+export interface PortfolioFinancials {
+  total_monthly_revenue: number;
+  total_monthly_costs: number;
+  net_monthly: number;
+  currency: string;
+  revenue_streams: RevenueStream[];
+  cost_items: CostItem[];
+  goals: FinancialGoals | null;
+  runway_months: number | null;
+  inference_costs?: {
+    total_cost_usd: number;
+    daily_average_usd: number;
+    monthly_estimate_usd: number;
+  };
+}
+
+export interface FinancialSnapshot {
+  id: string;
+  month: string;
+  year: number;
+  total_revenue: number;
+  total_costs: number;
+  net: number;
+  currency: string;
+  revenue_breakdown: { source: string; amount: number }[];
+  cost_breakdown: { category: string; amount: number }[];
+  created_at: string;
+}
+
+// ============================================================================
+// Phase 3: Income Strategy & Opportunity Types
+// ============================================================================
+
+export type StrategyType = 'retainer' | 'productized_service' | 'digital_product' | 'consulting' | 'saas' | 'course' | 'licensing';
+export type StrategyStatus = 'suggested' | 'exploring' | 'dismissed' | 'active';
+
+export interface IncomeStrategy {
+  id: string;
+  title: string;
+  description: string;
+  type: StrategyType;
+  estimated_monthly_revenue: number;
+  estimated_effort_hours: number;
+  confidence: number; // 0-1
+  time_to_revenue_weeks: number;
+  leveraged_skills: string[];
+  prerequisites: string[];
+  status: StrategyStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GoalGapAnalysis {
+  income_goal: number;
+  current_revenue: number;
+  gap: number;
+  gap_percentage: number;
+  currency: string;
+  strategies_to_close: IncomeStrategy[];
+  projected_with_strategies: number;
+  analysis_text: string;
+}
+
+export type OpportunityType = 'pricing_gap' | 'high_cost_ratio' | 'stagnant_revenue' | 'underutilized_skill' | 'network_leverage';
+
+export interface Opportunity {
+  id: string;
+  type: OpportunityType;
+  title: string;
+  description: string;
+  impact_score: number; // 1-10
+  effort_score: number; // 1-10
+  confidence: number; // 0-1
+  related_project_id?: string;
+  suggested_action: string;
+  created_at: string;
+}
+
+export interface ScanResult {
+  opportunities: Opportunity[];
+  scanned_at: string;
+  summary: string;
+}
+
+// ============================================================================
+// Phase 1: Network Types
+// ============================================================================
+
+export type RelationshipType = 'colleague' | 'client' | 'investor' | 'mentor' | 'friend' | 'partner' | 'vendor' | 'other';
+export type RelationshipStrength = 'strong' | 'moderate' | 'weak' | 'dormant';
+export type BusinessValue = 'high' | 'medium' | 'low' | 'unknown';
+
+export type SeniorityLevel = 'c_suite' | 'vp' | 'director' | 'manager' | 'individual_contributor' | 'founder' | 'unknown';
+
+export type InteractionType = 'email' | 'call' | 'meeting' | 'linkedin_message' | 'note';
+
+export interface ContactInteraction {
+  id: string;
+  type: InteractionType;
+  date: string;
+  project_id?: string;
+  summary: string;
+}
+
+export interface NetworkContact {
+  id: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
+
+  // Identity (multi-value, cross-source dedup)
+  email?: string;
+  emails?: string[];
+  phone?: string;
+  phones?: string[];
+  company?: string;
+  position?: string;
+  location?: string;
+  linkedin_url?: string;
+  imported_from?: string;
+  import_sources?: string[];    // e.g., ['linkedin', 'gmail', 'manual']
+
+  // Professional
+  industry?: string;
+  seniority?: SeniorityLevel;
+  skills?: string[];
+  company_size?: string;        // e.g., '1-10', '11-50', '51-200', '201-1000', '1000+'
+
+  // Relationship
+  relationship_type: RelationshipType;
+  relationship_strength: RelationshipStrength;
+  business_value: BusinessValue;
+  warmth_score?: number;        // 0-100, time-decaying
+  warmth_last_computed?: string;
+  communication_frequency?: 'weekly' | 'monthly' | 'quarterly' | 'yearly' | 'dormant';
+  last_contacted?: string;
+
+  // Strategic value
+  project_relevance?: Record<string, number>;  // projectId → relevance score 0-10
+  potential_value_type?: string[];              // e.g., ['customer', 'advisor', 'beta_tester', 'distributor']
+  intro_chain_available?: boolean;
+  intro_chain_path?: string[];                  // contact IDs forming an introduction chain
+
+  // Interaction history (detailed)
+  interactions?: ContactInteraction[];
+  interaction_summary?: string;
+  conversation_topics?: string[];
+  commitments?: string[];       // pending follow-ups, promises made
+  last_interaction_type?: string;
+
+  // Enrichment
+  enrichment_date?: string;
+  enrichment_data?: {
+    recent_news?: string[];
+    company_funding?: string;
+    job_changes?: string[];
+    outreach_angle?: string;
+  };
+
+  // AI classification
+  tags: string[];
+  notes?: string;
+  ai_summary?: string;
+  ai_tags?: string[];
+
+  created_at: string;
+  updated_at: string;
+}
+
+export type ImportJobStatus = 'pending' | 'extracting' | 'enriching' | 'completed' | 'failed';
+
+export interface ImportJob {
+  id: string;
+  source: 'linkedin' | 'google';
+  status: ImportJobStatus;
+  total_contacts: number;
+  processed_contacts: number;
+  created_contacts: number;
+  errors: string[];
+  started_at: string;
+  completed_at?: string;
+}
+
+// ============================================================================
+// Phase 1: Network Graph Types
+// ============================================================================
+
+export interface IndustryCluster {
+  industry: string;
+  count: number;
+  contacts: string[];
+}
+
+export interface GeographicDistribution {
+  location: string;
+  count: number;
+  contacts: string[];
+}
+
+export interface NetworkGraphSummary {
+  total_contacts: number;
+  industry_clusters: IndustryCluster[];
+  geographic_distribution: GeographicDistribution[];
+  relationship_breakdown: Record<RelationshipType, number>;
+  strength_breakdown: Record<RelationshipStrength, number>;
+  avg_business_value: number;
+}
+
+export interface NetworkOpportunity {
+  id: string;
+  type: 'reconnect' | 'introduction' | 'collaboration' | 'business_development';
+  title: string;
+  description: string;
+  contacts: string[];
+  priority: 'high' | 'medium' | 'low';
+  reasoning: string;
+  created_at: string;
+}
+
+// ============================================================================
+// Phase 2: Portfolio Dashboard Types
+// ============================================================================
+
+export interface ProjectHealthIndicator {
+  project_id: string;
+  score: number;
+  factors: {
+    pipeline_velocity: number;
+    task_completion_rate: number;
+    days_since_update: number;
+    has_overdue_tasks: boolean;
+    financial_health: number;
+  };
+  status: 'thriving' | 'healthy' | 'stalling' | 'at_risk';
+}
+
+export interface CouncilVerdictSummary {
+  overall_score: number;
+  recommendation: 'approve' | 'reject' | 'needs-info';
+  num_evaluations: number;
+  council_composition: string[];
+}
+
+export interface PortfolioProjectSummary {
+  id: string;
+  title: string;
+  playbook_type: PlaybookType | undefined;
+  phase: ProjectPhase | undefined;
+  phase_sub_state: PhaseSubState | undefined;
+  status: 'active' | 'paused' | 'completed';
+  health: ProjectHealthIndicator;
+  monthly_revenue: number;
+  monthly_costs: number;
+  task_count: number;
+  completed_tasks: number;
+  collaborators: string[];
+  updated_at: string;
+  council_verdict?: CouncilVerdictSummary;
+}
+
+export interface RankedIdea {
+  idea: Idea;
+  composite_score: number;
+  breakdown: {
+    council_score: number;
+    skill_alignment: number;
+    network_advantage: number;
+    financial_viability: number;
+    time_to_revenue: number;
+  };
+  evaluated: boolean;
+}
+
+export interface PortfolioDashboard {
+  projects: PortfolioProjectSummary[];
+  active_count: number;
+  paused_count: number;
+  completed_count: number;
+  total_monthly_revenue: number;
+  total_monthly_costs: number;
+  net_monthly: number;
+  currency: string;
+  ranked_ideas: RankedIdea[];
+  unevaluated_ideas_count: number;
+}
+
+// ============================================================================
+// Phase 2: Weekly Report Types
+// ============================================================================
+
+export interface WeeklyKPI {
+  label: string;
+  value: string;
+  trend_direction: 'up' | 'down' | 'flat';
+  trend_percentage: string;
+  spark_data: number[];
+}
+
+export interface WeeklyReport {
+  id: string;
+  week_start: string;
+  week_end: string;
+  overall_momentum: number;
+  kpis: WeeklyKPI[];
+  strategic_intelligence: string[];
+  activity_volume: number[];
+  retrospective: string;
+  created_at: string;
+}
+
+// ============================================================================
+// Phase 2: Partner Analysis Types
+// ============================================================================
+
+export interface ProjectCollaborator {
+  id: string;
+  project_id: string;
+  contact_id?: string;
+  name: string;
+  role: string;
+  email?: string;
+  company?: string;
+  added_at: string;
+}
+
+export interface PartnerAnalysis {
+  collaborator_id: string;
+  network_overlap: { shared_contacts: string[]; shared_industries: string[] };
+  business_possibilities: {
+    type: 'joint_venture' | 'referral_channel' | 'skill_complement' | 'market_access';
+    title: string;
+    description: string;
+    confidence: number;
+  }[];
+  analyzed_at: string;
+}
+
+// ============================================================================
+// Phase 4: GTM & Marketing Types
+// ============================================================================
+
+export type ContentChannel = 'blog' | 'twitter' | 'linkedin' | 'email' | 'newsletter';
+export type CalendarEntryStatus = 'planned' | 'drafted' | 'approved' | 'published' | 'skipped';
+export type GTMStrategyStatus = 'planned' | 'active' | 'paused' | 'completed';
+
+// Re-export canonical content types from content-engine
+export type { ContentType, ContentTone } from '../services/content-engine.service';
+
+export interface GTMStrategy {
+  id: string;
+  project_id: string;
+  status: GTMStrategyStatus;
+  council_verdict_id?: string;
+  target_audience: string;
+  value_proposition: string;
+  channels: ContentChannel[];
+  messaging_pillars: string[];
+  launch_date?: string;
+  kpis: { name: string; target: number; current?: number }[];
+  playbook_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ContentCalendarEntry {
+  id: string;
+  project_id: string;
+  title: string;
+  content_type: string;
+  brief: string;
+  tone: string;
+  channel: ContentChannel;
+  scheduled_date: string;
+  status: CalendarEntryStatus;
+  draft_content?: string;
+  published_url?: string;
+  published_at?: string;
+  approval_id?: string;
+  metadata?: Record<string, any>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GTMDashboard {
+  strategy: GTMStrategy | null;
+  calendar_entries: ContentCalendarEntry[];
+  upcoming_count: number;
+  drafted_count: number;
+  published_count: number;
+  leads_generated: number;
+}
+
+export interface PublishResult {
+  success: boolean;
+  channel: ContentChannel;
+  url?: string;
+  error?: string;
+  approval_required?: boolean;
+  approval_id?: string;
+}
+
+// ============================================================================
+// Phase 5: Confidence Calibration Types
+// ============================================================================
+
+export type ConfidenceOutcome = 'success' | 'failure' | 'cancelled' | 'pending';
+
+export interface ConfidenceRecord {
+  id: string;
+  action_id: string;
+  action_type: string;
+  predicted_confidence: number;
+  outcome: ConfidenceOutcome;
+  actual_confidence?: number;
+  resolved_at?: string;
+  created_at: string;
+  metadata?: Record<string, any>;
+}
+
+export interface CalibrationBucket {
+  action_type: string;
+  total_instances: number;
+  successes: number;
+  failures: number;
+  cancelled: number;
+  pending: number;
+  avg_predicted_confidence: number;
+  actual_success_rate: number;
+  calibration_score: number;
+  qualifies_for_evolution: boolean;
+}
+
+export interface CalibrationReport {
+  generated_at: string;
+  period_start: string;
+  period_end: string;
+  total_records: number;
+  buckets: CalibrationBucket[];
+  overall_calibration: number;
+  trust_evolution_candidates: TrustEvolutionCandidate[];
+}
+
+export interface TrustEvolutionCandidate {
+  action_type: string;
+  current_tier: TrustTier;
+  proposed_tier: TrustTier;
+  instance_count: number;
+  avg_confidence: number;
+  approval_rate: number;
+  calibration_score: number;
+  meets_all_criteria: boolean;
+  failing_criteria: string[];
+}
+
+// ============================================================================
+// Phase 6: YouTube Indexer / Knowledge Types
+// ============================================================================
+
+export interface YouTubePlaylist {
+  id: string;
+  playlist_id: string; // YouTube playlist ID
+  title: string;
+  description?: string;
+  tags: string[];
+  video_count: number;
+  indexed_count: number;
+  last_indexed_at?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// ============================================================================
+// Validation Engine Types
+// ============================================================================
+
+export type GrowthArchetype =
+  | 'bootstrapped_cashflow' | 'vc_backed_scale' | 'lifestyle_business'
+  | 'content_engine' | 'acquisition_flip' | 'platform_play';
+
+export interface SignalStrengthBreakdown {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface SignalStrengthWeights {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface ThresholdConfig {
+  kill_threshold: number;
+  kill_days_required: number;
+  scale_threshold: number;
+  scale_positive_experiments: number;
+  park_threshold: number;
+  park_days_required: number;
+}
+
+export type KillScaleRecommendation = 'scale' | 'double_down' | 'iterate' | 'park' | 'kill';
+
+export type SignalTrend = 'rising' | 'flat' | 'falling';
+
+export interface SignalStrengthScore {
+  id: string;
+  project_id: string;
+  team_id: string;
+  score: number;
+  breakdown: SignalStrengthBreakdown;
+  trend: SignalTrend;
+  previous_score: number | null;
+  days_at_current_level: number;
+  recommendation: KillScaleRecommendation | null;
+  computed_at: string;
+  created_at: string;
+}
+
+export interface PortfolioPruningRecommendation {
+  project_id: string;
+  project_name: string;
+  score: number;
+  trend: SignalTrend;
+  days_at_level: number;
+  recommendation: KillScaleRecommendation;
+  rationale: string;
+  breakdown: SignalStrengthBreakdown;
+}
+
+export interface ValidationEngineOverview {
+  total_projects: number;
+  scored_projects: number;
+  kill_candidates: number;
+  scale_candidates: number;
+  park_candidates: number;
+  average_score: number;
+  score_distribution: { range: string; count: number }[];
+  last_computed_at: string | null;
+}
+
+export interface EnjoymentEntry {
+  id: string;
+  project_id: string;
+  score: number;
+  note: string | null;
+  created_at: string;
+}
+
+export interface ExperimentStep {
+  order: number;
+  title: string;
+  description: string;
+  tool_or_action: string;
+  estimated_cost_usd: number;
+  estimated_hours: number;
+  completion_criteria: string;
+}
+
+export interface ExperimentPlan {
+  id: string;
+  experiment_id: string;
+  steps: ExperimentStep[];
+  budget_usd: number | null;
+  spent_usd: number;
+  sprint_start_date: string | null;
+  sprint_end_date: string | null;
+  sprint_days: number;
+}
+
+export interface SprintRanking {
+  project_id: string;
+  experiment_id: string;
+  pre_sprint_score: number;
+  post_sprint_score: number;
+  delta: number;
+  recommendation: string;
+}
+
+export interface SprintResults {
+  rankings: SprintRanking[];
+  total_spent_usd: number;
+  key_learnings: string[];
+  patterns_extracted: string[];
+}
+
+export interface PatternMemoryEntry {
+  id: string;
+  team_id: string;
+  project_id: string | null;
+  experiment_id: string | null;
+  pattern: string;
+  category: 'success_pattern' | 'failure_pattern' | 'market_signal' | 'timing_pattern';
+  tags: string[];
+  confidence: number | null;
+  applies_to: string[];
+  created_at: string;
+}
+
+export interface YouTubeVideo {
+  id: string;
+  video_id: string; // YouTube video ID
+  playlist_id: string; // Internal playlist ID
+  title: string;
+  channel?: string;
+  duration_seconds?: number;
+  transcript_path?: string;
+  summary?: string;
+  summary_word_count?: number;
+  mem0_id?: string;
+  status: 'pending' | 'indexed' | 'failed' | 'skipped';
+  error?: string;
+  indexed_at?: string;
+  created_at: string;
 }

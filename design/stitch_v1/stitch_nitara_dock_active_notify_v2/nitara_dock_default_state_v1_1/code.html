@@ -1,0 +1,191 @@
+<html class="dark" lang="en"><head></head><body class="bg-[#050408] font-display text-slate-100 min-h-screen overflow-hidden flex items-center justify-center relative selection:bg-red-500/30">```html
+
+
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Termination Ritual &amp; Archive</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "crimson-glow": "#9b2c2c",
+                        "crimson-muted": "#771d1d",
+                        "glass-border": "rgba(255, 255, 255, 0.08)",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .glass-modal {
+            background: rgba(15, 10, 20, 0.65);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .sunset-blur {
+            background: linear-gradient(135deg, #1a0b14 0%, #3f1016 40%, #5c2025 100%);
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+        .input-glow:focus {
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.25);
+        }
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #ef4444;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #ef4444;
+        }.tooltip-trigger:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .tooltip-content {
+            visibility: hidden;
+            opacity: 0;
+            transform: translateY(5px);
+            transition: all 0.2s ease;
+        }
+    </style>
+
+
+<div class="fixed inset-0 z-0">
+<div class="absolute inset-0 bg-[#0f0a0a]"></div>
+<div class="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] rounded-full sunset-blur"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] rounded-full bg-slate-900 blur-[100px] opacity-80"></div>
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImgridIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9InJnYmEoMjU1LDI1NSwyNTUsMC4wMykiIHN0cm9rZS13aWR0aD0iMSIvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNncmlkKSIvPjwvc3ZnPg==')] z-0 pointer-events-none"></div>
+</div>
+<div class="relative z-20 w-full max-w-2xl mx-4">
+<div class="flex justify-center mb-6">
+<div class="flex items-center gap-2 px-4 py-1.5 rounded-full bg-red-950/40 border border-red-500/20 backdrop-blur-md">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
+</span>
+<span class="text-xs font-semibold text-red-300 uppercase tracking-widest">Severity Level: Critical</span>
+</div>
+</div>
+<div class="glass-modal rounded-2xl overflow-hidden shadow-2xl shadow-red-900/10">
+<div class="p-8 pb-4 border-b border-white/5">
+<h1 class="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+<span class="material-symbols-outlined text-red-500">warning</span>
+                    Termination &amp; Salvage Ritual
+                </h1>
+<p class="text-slate-400 text-sm mt-2 ml-9">
+                    You are initiating the termination sequence for <span class="text-white font-medium">Project Altair</span>. This action cannot be undone once the cryptographic keys are burned.
+                </p>
+</div>
+<div class="p-8 pt-6 space-y-6">
+<div>
+<h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center justify-between">
+                    Salvage Checklist
+                    <span class="text-[10px] font-normal text-slate-500 bg-white/5 px-2 py-0.5 rounded">AUTO-TAGGING ENABLED</span>
+</h3>
+<div class="space-y-3">
+<div class="group flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-white/10 transition-colors relative tooltip-trigger">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-[18px]">library_books</span>
+</div>
+<div>
+<div class="text-sm font-medium text-slate-200 flex items-center gap-2">
+                                        Extracted Playbook Entries
+                                        <span class="material-symbols-outlined text-[14px] text-slate-500 cursor-help">help</span>
+</div>
+<div class="text-[10px] text-slate-500">Converting operational logs to knowledge base articles</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600/80"></div>
+</label>
+<div class="tooltip-content absolute left-10 bottom-full mb-2 w-64 p-3 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-50">
+<p class="text-xs text-slate-300">Playbook entries will be indexed for future AI model training on failure scenarios.</p>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-white/10 transition-colors relative tooltip-trigger">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-[18px]">recycling</span>
+</div>
+<div>
+<div class="text-sm font-medium text-slate-200 flex items-center gap-2">
+                                        Salvaged Assets
+                                        <span class="material-symbols-outlined text-[14px] text-slate-500 cursor-help">help</span>
+</div>
+<div class="text-[10px] text-slate-500">Design tokens &amp; component library export</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600/80"></div>
+</label>
+<div class="tooltip-content absolute left-10 bottom-full mb-2 w-64 p-3 bg-slate-900 border border-slate-700 rounded-lg shadow-xl z-50">
+<p class="text-xs text-slate-300">Reusable UI components and utility functions will be moved to the common repository.</p>
+</div>
+</div>
+<div class="group flex items-center justify-between p-3 rounded-lg bg-white/5 border border-white/5 hover:border-white/10 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-slate-800 flex items-center justify-center text-slate-400">
+<span class="material-symbols-outlined text-[18px]">code</span>
+</div>
+<div>
+<div class="text-sm font-medium text-slate-200">Git Repository (Read-Only)</div>
+<div class="text-[10px] text-slate-500">Tagging v.FINAL</div>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-700 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-red-500/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600/80"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 rounded-lg bg-emerald-900/10 border border-emerald-500/20 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-r from-emerald-500/5 to-transparent pointer-events-none"></div>
+<div class="mt-1 min-w-[20px] text-emerald-400">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+</div>
+<div>
+<p class="text-sm font-bold text-emerald-100 uppercase tracking-wide text-xs mb-1">Resource Reallocation Preview</p>
+<p class="text-sm text-emerald-200/90 font-medium">Termination will immediately free up <span class="text-white font-bold">15% GPU compute</span> and <span class="text-white font-bold">2 Agents</span> for reassignment.</p>
+</div>
+</div>
+<div class="space-y-2 pt-2">
+<label class="block text-sm font-bold text-slate-100 uppercase tracking-wider" for="confirm_text">
+                        Type <span class="text-red-400 select-all font-mono bg-red-950/30 px-1 rounded">TERMINATE ALTAIR</span> to confirm
+                    </label>
+<div class="relative group">
+<input class="w-full bg-black/40 border border-white/20 rounded-lg px-4 py-3 text-white placeholder-slate-500 focus:border-red-500 focus:ring-2 focus:ring-red-500 input-glow transition-all font-mono text-sm shadow-inner" id="confirm_text" placeholder="TERMINATE ALTAIR" type="text"/>
+<div class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-red-400 transition-colors">
+<span class="material-symbols-outlined text-sm">lock</span>
+</div>
+</div>
+</div>
+</div>
+<div class="p-6 bg-black/20 border-t border-white/5 flex items-center justify-between">
+<button class="px-6 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400">
+                    Cancel
+                </button>
+<button class="px-6 py-2.5 rounded-lg bg-red-600/90 hover:bg-red-600 text-white text-sm font-bold shadow-lg shadow-red-900/40 border border-red-500/50 flex items-center gap-2 transition-all hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-red-500">
+<span class="material-symbols-outlined text-[18px]">delete_forever</span>
+                    Confirm Termination
+                </button>
+</div>
+</div>
+<div class="mt-8 text-center">
+<p class="text-[10px] text-slate-500 uppercase tracking-widest opacity-60">Nitara Mission Control • v4.2.0-beta</p>
+</div>
+</div>
+```</body></html>

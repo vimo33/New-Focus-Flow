@@ -61,3 +61,27 @@ export function generateAgentActionId(): string {
 export function generateActivityId(): string {
   return generateId('atv');
 }
+
+export function generateProfileId(): string {
+  return generateId('profile');
+}
+
+export function generateRevenueId(): string {
+  return generateId('rev');
+}
+
+export function generateCostId(): string {
+  return generateId('cost');
+}
+
+export function generateSnapshotId(): string {
+  return generateId('snap');
+}
+
+export function generateNetworkContactId(): string {
+  return generateId('nc');
+}
+
+export function generateImportJobId(): string {
+  return generateId('imp');
+}

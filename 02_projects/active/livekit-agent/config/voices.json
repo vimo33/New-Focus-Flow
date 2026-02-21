@@ -1,0 +1,19 @@
+{
+  "personas": {
+    "nitara-main": {
+      "voice_id": "f786b574-daa5-4673-aa0c-cbe3e8534c02",
+      "voice_name": "nova",
+      "description": "Warm, confident — general conversation, task submission, briefings"
+    },
+    "nitara-analyst": {
+      "voice_id": "228fca29-3a0a-435c-8728-5cb483251068",
+      "voice_name": "atlas",
+      "description": "Authoritative, calm — portfolio discussion, strategic recs"
+    },
+    "nitara-profiler": {
+      "voice_id": "6ccbfb76-1fc6-48f7-b71d-91ac6298247b",
+      "voice_name": "lyra",
+      "description": "Friendly, curious — profiling conversations, context extraction"
+    }
+  }
+}

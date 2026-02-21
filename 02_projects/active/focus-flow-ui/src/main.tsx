@@ -1,11 +1,42 @@
-import { StrictMode } from 'react'
+import { StrictMode, Component, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 
+// Error boundary to catch React crashes and display a visible error instead of white screen
+class ErrorBoundary extends Component<{ children: ReactNode }, { error: Error | null }> {
+  state = { error: null as Error | null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{ background: '#06080F', color: '#E8ECF1', minHeight: '100vh', display: 'flex', flexDirection: 'column' as const, alignItems: 'center', justifyContent: 'center', padding: '2rem', fontFamily: 'system-ui, sans-serif' }}>
+          <h1 style={{ color: '#EF4444', fontSize: '1.25rem', marginBottom: '1rem' }}>Something went wrong</h1>
+          <pre style={{ color: '#7B8FA3', fontSize: '0.875rem', maxWidth: '90vw', overflow: 'auto', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            {this.state.error.message}
+          </pre>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '1.5rem', padding: '0.5rem 1.5rem', background: '#00E5FF', color: '#06080F', border: 'none', borderRadius: '0.5rem', cursor: 'pointer', fontWeight: 600 }}
+          >
+            Reload
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ErrorBoundary>
+      <App />
+    </ErrorBoundary>
   </StrictMode>,
 )
 
@@ -25,18 +56,14 @@ if ('serviceWorker' in navigator) {
           registration.update();
         }, 60000); // Check every minute
 
-        // Listen for updates
+        // Listen for updates — silently activate new SW without prompting
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('[SW] New service worker available. Refresh to update.');
-                // Optionally show a notification to the user
-                if (confirm('A new version of Focus Flow is available. Reload to update?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
+                console.log('[SW] New service worker available, activating silently.');
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
               }
             });
           }
@@ -64,10 +91,10 @@ if ('serviceWorker' in navigator) {
         console.error('[SW] Service Worker registration failed:', error);
       });
 
-    // Handle controller change (new service worker activated)
+    // Handle controller change — log only, no forced reload
+    // Navigation requests use network-first so next navigation gets fresh content
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('[SW] Controller changed, reloading page...');
-      window.location.reload();
+      console.log('[SW] Controller changed. Fresh content will load on next navigation.');
     });
   });
 }

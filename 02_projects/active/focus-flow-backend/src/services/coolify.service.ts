@@ -4,7 +4,7 @@ import axios from 'axios';
  * CoolifyService - Wraps the Coolify API for deployment triggers.
  *
  * Coolify is a self-hosted PaaS. This service triggers builds/deployments
- * for Focus Flow applications.
+ * for Nitara applications.
  */
 
 interface CoolifyApp {

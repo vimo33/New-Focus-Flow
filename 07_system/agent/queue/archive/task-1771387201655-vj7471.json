@@ -1,0 +1,17 @@
+{
+  "id": "task-1771387201655-vj7471",
+  "skill": "monitor-project",
+  "arguments": "all",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "queued",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-18T04:00:01.655Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 2,
+  "created_by": "system",
+  "started_at": "2026-02-18T06:11:56.975Z",
+  "pid": 1972030,
+  "error": "Exit code 143: "
+}
