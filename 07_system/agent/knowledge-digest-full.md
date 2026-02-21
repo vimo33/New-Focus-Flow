@@ -14,7 +14,7 @@
 - Revenue streams:
   - AI Course Creation: ? USD/mo
   - Explainer Video with FTR: ? USD/mo
-- AI inference costs: {"total_cost_usd":44.56339899999999,"daily_average_usd":1.485446633333333,"monthly_estimate_usd":44.56339899999999}
+- AI inference costs: {"total_cost_usd":44.57884899999999,"daily_average_usd":1.485961633333333,"monthly_estimate_usd":44.57884899999999}
 
 ## SALES PIPELINE (1 deals)
 - Orthoanalytics | Stage: closed_won | Value: 9000 USD

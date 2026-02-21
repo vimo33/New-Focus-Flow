@@ -154,12 +154,49 @@ Founder captures idea (inbox, Telegram, or PWA)
     → Project moved to 02_projects/paused/ or completed/
 ```
 
-**Status**: **Council evaluation works** — 2 verdicts exist (`vrd-20260214-559501.json`, `vrd-20260217-mirari-v5.json`). Mirari V5.0 was evaluated and REJECTED at 4.7/10. Work plan references 5 pending verdicts to process (tier 3, requires approval). Build pipeline is defined but untested end-to-end. Validation engine skills exist but no experiments have been run.
+**Status**: **Council evaluation works** — 17 total verdicts across two storage locations. Mirari V5.0 was evaluated as `needs_more_info` at 5.5/10.
+
+**Verdict storage** (two formats, two locations):
+- **Standalone files** (new `EnhancedCouncilVerdict` format): `07_system/council-verdicts/vrd-{YYYYMMDD}-{suffix}.json` — 2 files
+- **Embedded in project JSONs** (legacy `CouncilVerdict` format): `02_projects/active/project-*.json` → `artifacts.council_verdict` — 15 projects have embedded verdicts
+- Backend normalizes both at query time via `councilFramework.listVerdicts()` (embedded get synthetic ID `embedded-{projectId}`)
+
+**Standalone verdicts:**
+
+| File | Subject | Verdict | Score |
+|------|---------|---------|-------|
+| `vrd-20260214-559501.json` | AI-powered meeting summarizer | `reconsider` | 4.7 |
+| `vrd-20260217-mirari-v5.json` | Mirari (AURA - Zurich Temporal Lens) | `needs_more_info` | 5.5 |
+
+**Embedded verdicts** (15 in project JSONs):
+
+| Project | Recommendation | Score |
+|---------|---------------|-------|
+| Bramha ESG (×2) | needs-info / reject | 5.6 / 4.8 |
+| Overture (×2) | reject / needs-info | 4.8 / 5.0 |
+| Global Foundation (×2) | reject / needs-info | 4.6 / 5.6 |
+| Focus Flow OS (×2) | reject / needs-info | 3.6 / null |
+| Sentio | reject | 4.0 |
+| Jass Card design | reject | 3.6 |
+| ATX | reject | 4.6 |
+| AURA - Discover your city | needs-info | 5.7 |
+| AURA AI Travel Guide | reject | 4.6 |
+| Kavach AI | needs-info | 5.4 |
+| Mirari (AURA) | needs-info | 5.0 |
+
+**5 decision type configs** at `07_system/council-configs/`: `idea_validation`, `architecture_review`, `go_to_market`, `pricing`, `risk_assessment` — each with agent selection prompts, synthesis prompts, dimension weights, and verdict thresholds.
+
+Build pipeline is defined but untested end-to-end. Validation engine skills exist but no experiments have been run.
 
 **Key files**:
+- Creation pipeline: `ai/council-composer.ts` → `ai/ai-council.ts` → `ai/council-synthesis.ts` → `ai/council-framework.ts`
+- Routes: `routes/council.routes.ts` (`POST /api/council/evaluate`, `GET /api/council/verdicts`, `POST /api/council/:id/apply-actions`)
+- Frontend: `CouncilEvaluationCanvas.tsx` (full verdict display), `ProjectDetailCanvas.tsx` (inline summary)
+- Types: `models/types.ts:502-594` (`EnhancedCouncilVerdict`, `VerdictLevel`, `DimensionScore`, `RecommendedAction`)
 - Skills: `think-intake-idea.md`, `think-generate-hypotheses.md`, `think-score-project.md`, `validate-create-experiment.md`, `validate-measure-experiment.md`, `validate-decision-gate.md`, `validate-sprint-orchestrator.md`, `validate-portfolio-prune.md`, `build-mvp.md`
 - Agents: `nitara-think.md` (Opus), `nitara-validate.md` (Opus), `nitara-builder.md` (Opus), `nitara-experimenter.md` (Sonnet)
-- Verdicts: `07_system/council-verdicts/`
+- Verdicts: `07_system/council-verdicts/` (standalone) + `02_projects/active/project-*.json` (embedded)
+- Configs: `07_system/council-configs/` (5 decision types)
 - Build guard: `.claude/scripts/build-guard.sh`
 
 ---
@@ -443,7 +480,9 @@ Profiling fills gaps → Knowledge digest gets richer
 | Build guard (2-hour timeout) | `.claude/scripts/build-guard.sh` |
 | Hook scripts (14) | Safety, cost, build, profiling, notification, validation |
 | Orchestrator AI service | Tool execution loop, voice/text routing, model tiering |
-| Council evaluation service | Multi-agent parallel evaluation with synthesis |
+| Council evaluation service | Multi-agent parallel evaluation with synthesis, 17 verdicts generated |
+| LiveKit voice (browser) | Real cloud credentials (`wss://nitara-tagq5i4y.livekit.cloud`), token service, frontend hook, 3 voice personas |
+| LiveKit Python agent | `livekit-agent/agent.py` — 3 personas (Main, Analyst, Profiler), systemd service installed |
 | OAuth credential sync | Root → nitara user before each task spawn |
 | Knowledge graph entities | 5 entity files in `07_system/reports/kg-entities/` |
 | Monitor project | 4 monitoring reports (Feb 18–21) |
@@ -454,7 +493,7 @@ Profiling fills gaps → Knowledge digest gets richer
 |-----------|--------|---------|
 | Work plan approval | Plans generate but none approved | User hasn't approved any tier 3 actions |
 | Portfolio analysis | Ran once (Feb 18), report exists | Needs weekly execution via approval |
-| Council evaluation | 2 verdicts exist (1 rejection) | Work plan says 5 pending — only 2 files found |
+| Council evaluation | 17 total verdicts (2 standalone + 15 embedded in project JSONs) | Work plan references "5 pending to process" — may mean unactioned standalone + high-score embedded |
 | Telegram bot | Real tokens exist, 2 messages sent Feb 15 | Service running status unverified |
 | Task queue execution | 31 tasks queued, 9 archived | 0 tasks actually executed (all awaiting approval) |
 | Semantic memory (Mem0) | 100 memories stored | Unclear which flows are actively depositing |
@@ -469,8 +508,8 @@ Profiling fills gaps → Knowledge digest gets richer
 | Component | Blocker |
 |-----------|---------|
 | Telegram onboarding | Bot status unverified — needs service confirmation |
-| Voice briefing | Requires LiveKit + real tokens (not configured) |
-| Voice profiling | Requires LiveKit + real tokens (not configured) |
+| Voice briefing | LiveKit tokens configured but SIP trunks unprovisioned — browser voice works, outbound calls don't |
+| Voice profiling | LiveKit tokens configured but SIP trunks unprovisioned — browser voice works, outbound calls don't |
 | Network import/analysis | **No contact data imported** (0 contacts in vault) |
 | Build pipeline (full) | `build-mvp` skill defined but never executed end-to-end |
 | Playbook extraction | No projects completed/killed → no playbooks to extract |
@@ -486,12 +525,13 @@ Profiling fills gaps → Knowledge digest gets richer
 | Item | Current State | Action Required |
 |------|--------------|-----------------|
 | Telegram bot verification | Real tokens in `.telegram.env` | Verify `focus-flow-telegram` systemd service is running |
-| LiveKit tokens | Not configured | Provide real LiveKit credentials for voice features |
+| LiveKit SIP trunks | `SIP_OUTBOUND_TRUNK_ID` and `SIP_INBOUND_TRUNK_ID` are empty | Provision SIP trunks in LiveKit Cloud for outbound/inbound phone calls |
+| LiveKit founder phone | `FOUNDER_PHONE_NUMBER` empty in livekit-agent `.env` | Provide phone number for outbound profiling calls |
 | Work plan approval | 7 items pending since Feb 20 | Approve via frontend (`POST /api/agent/work-plan/approve`) or Telegram (`/approve`) |
 | Profiling data | 16% complete, 3 unanswered Qs | Answer pending questions or complete onboarding wizard |
 | Contact import | 0 contacts | Import LinkedIn ZIP or Gmail CSV via `network-import` skill |
 | PostgreSQL migration | Schema exists, vault is file-based | Decide: migrate to DB or stay file-based |
-| Council verdict discrepancy | 2 files vs. 5 referenced in work plan | Investigate whether remaining 3 verdicts need generation |
+| Council verdict actions | 17 verdicts exist (2 standalone + 15 embedded), none have had `apply-actions` called | Review verdicts and apply recommended actions via `POST /api/council/:id/apply-actions` |
 
 ---
 
@@ -527,9 +567,9 @@ SUNDAY
 DAILY (weekdays)
   06:00  event-detect — Scan for competitor/market events
   07:00  morning-briefing — Daily narrative briefing
-  07:30  voice-briefing — Voice narrative (requires LiveKit)
+  07:30  voice-briefing — Voice narrative (browser-ready, SIP pending)
   10:00  profiling-question — Generate 1 profiling question
-  14:00  voice-profiling — Voice call if <80% complete (requires LiveKit)
+  14:00  voice-profiling — Voice call if <80% complete (SIP pending)
 
 EVERY 4 HOURS
   */4    monitor-project — Health checks on all active projects
@@ -598,6 +638,25 @@ NIGHTLY
 | `evaluate-scenario.py` | Python scenario evaluator |
 | `test-safety-gate.sh` | Test harness for safety gate |
 
+### LiveKit Voice Integration (6 layers)
+
+| Layer | Path | What |
+|-------|------|------|
+| Python voice agent | `02_projects/active/livekit-agent/agent.py` (697 lines) | 3 personas: NitaraMain (general), NitaraAnalyst (portfolio), NitaraProfiler (outbound). Deepgram STT + Cartesia TTS + Claude/OpenClaw LLM |
+| Backend token service | `src/services/livekit.service.ts` | `createToken()` via `livekit-server-sdk ^2.15.0` |
+| Backend SIP service | `src/services/voice-session.service.ts` | `SipClient` + `AgentDispatchClient` for outbound calls. DND 22:00–08:00 Zurich, max 3/day |
+| Backend routes | `src/routes/livekit.routes.ts` + `voice-session.routes.ts` | `/api/livekit/token`, `/api/livekit/status`, `/api/livekit/keywords`, `/api/voice/call`, `/api/voice/sessions` |
+| Frontend hook | `src/hooks/useLiveKitVoice.ts` (312 lines) | `livekit-client ^2.17.1` — room connect, mic, transcription, data channel (`nitara.canvas` topic) |
+| Frontend UI | `ConversationRail.tsx` | VoicePill + VoiceOverlay |
+
+**Credentials**: Real cloud credentials configured (`wss://nitara-tagq5i4y.livekit.cloud`). API key/secret in both `livekit-agent/.env` and `07_system/secrets/.livekit.env`.
+
+**What works**: Browser-based voice (token generation, room connect, STT/TTS, data channel canvas events).
+
+**What's blocked**: Outbound phone calls — `SIP_OUTBOUND_TRUNK_ID`, `SIP_INBOUND_TRUNK_ID`, and `FOUNDER_PHONE_NUMBER` are empty. Need SIP trunk provisioning in LiveKit Cloud.
+
+**Systemd**: `/etc/systemd/system/focus-flow-livekit-agent.service` (installed, runs from `livekit-agent/venv/`).
+
 ### Key Data Paths
 
 ```
@@ -622,7 +681,7 @@ NIGHTLY
 │   │   ├── pending-questions/   # 3 unanswered profiling Qs
 │   │   ├── answered-questions/  # 2 answered profiling Qs
 │   │   └── loop-detection/      # Loop detection state
-│   ├── council-verdicts/        # 2 verdict files
+│   ├── council-verdicts/        # 2 standalone verdict files (+ 15 embedded in project JSONs)
 │   ├── reports/
 │   │   ├── kg-entities/         # Knowledge graph entity files
 │   │   ├── portfolio-analysis-*
