@@ -915,6 +915,16 @@ export type BusinessValue = 'high' | 'medium' | 'low' | 'unknown';
 
 export type SeniorityLevel = 'c_suite' | 'vp' | 'director' | 'manager' | 'individual_contributor' | 'founder' | 'unknown';
 
+export type InteractionType = 'email' | 'call' | 'meeting' | 'linkedin_message' | 'note';
+
+export interface ContactInteraction {
+  id: string;
+  type: InteractionType;
+  date: string;
+  project_id?: string;
+  summary: string;
+}
+
 export interface NetworkContact {
   id: string;
   first_name: string;
@@ -954,7 +964,8 @@ export interface NetworkContact {
   intro_chain_available?: boolean;
   intro_chain_path?: string[];                  // contact IDs forming an introduction chain
 
-  // Interaction history (summarized)
+  // Interaction history (detailed)
+  interactions?: ContactInteraction[];
   interaction_summary?: string;
   conversation_topics?: string[];
   commitments?: string[];       // pending follow-ups, promises made
@@ -1279,6 +1290,139 @@ export interface YouTubePlaylist {
   last_indexed_at?: string;
   created_at: string;
   updated_at: string;
+}
+
+// ============================================================================
+// Validation Engine Types
+// ============================================================================
+
+export type GrowthArchetype =
+  | 'bootstrapped_cashflow' | 'vc_backed_scale' | 'lifestyle_business'
+  | 'content_engine' | 'acquisition_flip' | 'platform_play';
+
+export interface SignalStrengthBreakdown {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface SignalStrengthWeights {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface ThresholdConfig {
+  kill_threshold: number;
+  kill_days_required: number;
+  scale_threshold: number;
+  scale_positive_experiments: number;
+  park_threshold: number;
+  park_days_required: number;
+}
+
+export type KillScaleRecommendation = 'scale' | 'double_down' | 'iterate' | 'park' | 'kill';
+
+export type SignalTrend = 'rising' | 'flat' | 'falling';
+
+export interface SignalStrengthScore {
+  id: string;
+  project_id: string;
+  team_id: string;
+  score: number;
+  breakdown: SignalStrengthBreakdown;
+  trend: SignalTrend;
+  previous_score: number | null;
+  days_at_current_level: number;
+  recommendation: KillScaleRecommendation | null;
+  computed_at: string;
+  created_at: string;
+}
+
+export interface PortfolioPruningRecommendation {
+  project_id: string;
+  project_name: string;
+  score: number;
+  trend: SignalTrend;
+  days_at_level: number;
+  recommendation: KillScaleRecommendation;
+  rationale: string;
+  breakdown: SignalStrengthBreakdown;
+}
+
+export interface ValidationEngineOverview {
+  total_projects: number;
+  scored_projects: number;
+  kill_candidates: number;
+  scale_candidates: number;
+  park_candidates: number;
+  average_score: number;
+  score_distribution: { range: string; count: number }[];
+  last_computed_at: string | null;
+}
+
+export interface EnjoymentEntry {
+  id: string;
+  project_id: string;
+  score: number;
+  note: string | null;
+  created_at: string;
+}
+
+export interface ExperimentStep {
+  order: number;
+  title: string;
+  description: string;
+  tool_or_action: string;
+  estimated_cost_usd: number;
+  estimated_hours: number;
+  completion_criteria: string;
+}
+
+export interface ExperimentPlan {
+  id: string;
+  experiment_id: string;
+  steps: ExperimentStep[];
+  budget_usd: number | null;
+  spent_usd: number;
+  sprint_start_date: string | null;
+  sprint_end_date: string | null;
+  sprint_days: number;
+}
+
+export interface SprintRanking {
+  project_id: string;
+  experiment_id: string;
+  pre_sprint_score: number;
+  post_sprint_score: number;
+  delta: number;
+  recommendation: string;
+}
+
+export interface SprintResults {
+  rankings: SprintRanking[];
+  total_spent_usd: number;
+  key_learnings: string[];
+  patterns_extracted: string[];
+}
+
+export interface PatternMemoryEntry {
+  id: string;
+  team_id: string;
+  project_id: string | null;
+  experiment_id: string | null;
+  pattern: string;
+  category: 'success_pattern' | 'failure_pattern' | 'market_signal' | 'timing_pattern';
+  tags: string[];
+  confidence: number | null;
+  applies_to: string[];
+  created_at: string;
 }
 
 export interface YouTubeVideo {

@@ -63,6 +63,7 @@ import budgetRoutes from './routes/budget.routes';
 import signalsRoutes from './routes/signals.routes';
 import agentRunsRoutes from './routes/agent-runs.routes';
 import simulationRoutes from './routes/simulation.routes';
+import validationEngineRoutes from './routes/validation-engine.routes';
 import { queueAuth } from './middleware/queue-auth.middleware';
 import { knowledgeDigestService } from './services/knowledge-digest.service';
 import { taskQueueService } from './services/task-queue.service';
@@ -181,6 +182,7 @@ app.use('/api', budgetRoutes);
 app.use('/api', signalsRoutes);
 app.use('/api', agentRunsRoutes);
 app.use('/api', simulationRoutes);
+app.use('/api', validationEngineRoutes);
 
 // Dashboard summary endpoint
 app.get('/api/summary', async (req: Request, res: Response) => {

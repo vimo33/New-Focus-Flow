@@ -1,4 +1,4 @@
-# NITARA WORLD STATE — 2026-02-19
+# NITARA WORLD STATE — 2026-02-21
 
 ## FOUNDER: Vikas Mohan (VIMO)
 - Location: Zurich, Switzerland
@@ -14,12 +14,16 @@
 - Revenue streams:
   - AI Course Creation: ? USD/mo
   - Explainer Video with FTR: ? USD/mo
-- AI inference costs: {"total_cost_usd":3.9106460000000003,"daily_average_usd":0.13035486666666668,"monthly_estimate_usd":3.9106460000000003}
+- AI inference costs: {"total_cost_usd":44.56339899999999,"daily_average_usd":1.485446633333333,"monthly_estimate_usd":44.56339899999999}
 
 ## SALES PIPELINE (1 deals)
 - Orthoanalytics | Stage: closed_won | Value: 9000 USD
 
-## PORTFOLIO (19 total, 18 active)
+## PORTFOLIO (20 total, 19 active)
+
+### Test Venture
+- ID: project-20260219-222466 | Phase: concept | Status: active
+- Description: Testing the E2E flow
 
 ### Mirari (AURA - Zurich Temporal Lens)
 - ID: project-20260216-349467 | Phase: concept | Status: active
@@ -258,13 +262,17 @@ Critical gaps:
 - [high] Network Intelligence: Dormant connections worth reactivating and why
 
 ## TODAY'S PRIORITIES (from morning briefing)
-- [critical] council_evaluation (project: system)
-- [critical] create_tasks_from_verdict (project: system)
-- [high] validation_sprint_review (project: mirari)
-- [high] dedup_and_consolidate (project: system)
-- [high] commercial_triage (project: system)
 
 Stalled items:
+- Agentic Trust Exchange (ATX) — stalled for ? days
+- Multiplium — stalled for ? days
+- 03 Global Foundation for Transparent Collective Gatherings — stalled for ? days
+- Global Foundation for Transparent Collective Gatherings — stalled for ? days
+- Global Foundation for Transparent Collective Gatherings — stalled for ? days
+- Focus Flow OS — stalled for ? days
+- Sentio — stalled for ? days
+- Jass Card design — stalled for ? days
+- Overture Event — stalled for ? days
 - Bramha ESG — stalled for ? days
 - Bramha ESG — stalled for ? days
 - Overture — stalled for ? days

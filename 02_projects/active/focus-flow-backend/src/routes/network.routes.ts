@@ -252,6 +252,126 @@ router.post('/network/enrich', async (req: Request, res: Response) => {
   }
 });
 
+// POST /api/network/contacts/:id/interactions — Log an interaction
+router.post('/network/contacts/:id/interactions', async (req: Request, res: Response) => {
+  try {
+    const { type, summary, project_id } = req.body;
+    if (!type || !summary) {
+      return res.status(400).json({ error: 'Missing required fields: type, summary' });
+    }
+    const interaction = await networkImporterService.addInteraction(
+      String(req.params.id),
+      { type, summary, project_id }
+    );
+    if (!interaction) {
+      return res.status(404).json({ error: 'Contact not found' });
+    }
+    res.status(201).json(interaction);
+  } catch (error: any) {
+    console.error('Error logging interaction:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/network/contacts/:id/interactions — Get interaction history
+router.get('/network/contacts/:id/interactions', async (req: Request, res: Response) => {
+  try {
+    const interactions = await networkImporterService.getInteractions(String(req.params.id));
+    res.json({ interactions, count: interactions.length });
+  } catch (error: any) {
+    console.error('Error fetching interactions:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/network/contacts/:id/outreach-draft — AI-generate outreach message
+router.post('/network/contacts/:id/outreach-draft', async (req: Request, res: Response) => {
+  try {
+    const { project_id } = req.body;
+    if (!project_id) {
+      return res.status(400).json({ error: 'Missing required field: project_id' });
+    }
+    const draft = await networkGraphService.generateOutreachDraft(
+      String(req.params.id),
+      project_id
+    );
+    res.json(draft);
+  } catch (error: any) {
+    console.error('Error generating outreach draft:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// GET /api/network/dormant — Dormant high-value contacts
+router.get('/network/dormant', async (req: Request, res: Response) => {
+  try {
+    const days = parseInt(req.query.days as string) || 90;
+    const dormant = await networkGraphService.getDormantHighValue(days);
+    res.json({
+      dormant: dormant.map(d => ({
+        contact_id: d.contact.id,
+        full_name: d.contact.full_name,
+        company: d.contact.company,
+        position: d.contact.position,
+        business_value: d.contact.business_value,
+        days_dormant: d.days_dormant,
+        value_types: d.value_types,
+      })),
+      count: dormant.length,
+    });
+  } catch (error: any) {
+    console.error('Error fetching dormant contacts:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/network/xref/:projectId/persist — Persist xref results to contact files
+router.post('/network/xref/:projectId/persist', async (req: Request, res: Response) => {
+  try {
+    const updated = await networkGraphService.persistXrefResults(String(req.params.projectId));
+    res.json({ ok: true, contacts_updated: updated });
+  } catch (error: any) {
+    console.error('Error persisting xref results:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// POST /api/network/opportunities/:id/create-task — Convert opportunity to a vault task
+router.post('/network/opportunities/:id/create-task', async (req: Request, res: Response) => {
+  try {
+    const { title, description, project_id, contact_names } = req.body;
+    if (!title) {
+      return res.status(400).json({ error: 'Missing required field: title' });
+    }
+
+    const dueDate = new Date();
+    dueDate.setDate(dueDate.getDate() + 7);
+
+    const task = {
+      id: generateId('tsk'),
+      title,
+      description: description || '',
+      status: 'todo',
+      priority: 'medium',
+      tags: ['network', ...(contact_names || []).map((n: string) => `contact:${n}`)],
+      project_id: project_id || undefined,
+      due_date: dueDate.toISOString().split('T')[0],
+      created_at: new Date().toISOString(),
+      source: 'network-opportunity',
+    };
+
+    // Write task to vault
+    const taskPath = path.join('/srv/focus-flow/01_tasks', `${task.id}.json`);
+    fs.mkdirSync(path.dirname(taskPath), { recursive: true });
+    fs.writeFileSync(taskPath, JSON.stringify(task, null, 2));
+
+    res.status(201).json(task);
+  } catch (error: any) {
+    console.error('Error creating task from opportunity:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
 // Multer error handling
 router.use((err: any, _req: Request, res: Response, next: any) => {
   if (err instanceof multer.MulterError) {

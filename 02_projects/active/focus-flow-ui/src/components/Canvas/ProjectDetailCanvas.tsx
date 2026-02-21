@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useCanvasStore } from '../../stores/canvas';
 import { useConversationStore } from '../../stores/conversation';
 import { api } from '../../services/api';
-import { FileText } from 'lucide-react';
-import { GlassCard, Badge, PipelineNode, ConfidenceRing } from '../shared';
+import { FileText, AlertTriangle } from 'lucide-react';
+import { GlassCard, Badge, PipelineNode, ConfidenceRing, SignalStrengthBadge, EnjoymentWidget } from '../shared';
+import { useValidationStore } from '../../stores/validation';
 import type { Task, Project, ActivityEntry } from '../../services/api';
 
 const PHASES = ['concept', 'spec', 'design', 'dev', 'test', 'deploy', 'live'] as const;
@@ -50,6 +51,20 @@ export default function ProjectDetailCanvas() {
   const [newCollabName, setNewCollabName] = useState('');
   const [newCollabRole, setNewCollabRole] = useState('');
   const [projectReports, setProjectReports] = useState<any[]>([]);
+  const [networkLeverage, setNetworkLeverage] = useState<{
+    score: number;
+    warm_paths: number;
+    potential_customers: number;
+    advisors: number;
+    summary: string;
+  } | null>(null);
+  const [networkXref] = useState<Array<{
+    contact: any;
+    relevance_score: number;
+    value_types: string[];
+    reasoning: string;
+  }>>([]);
+  const { scores, fetchScore, fetchEnjoyment } = useValidationStore();
 
   // Set project context for Nitara when viewing this project
   useEffect(() => {
@@ -67,20 +82,20 @@ export default function ProjectDetailCanvas() {
 
     Promise.all([
       api.getProject(projectId),
-      api.getProjectFinancials(projectId),
-      api.getCollaborators(projectId),
-      api.getProjectActivity(projectId),
+      api.getProjectFinancials(projectId).catch(() => null),
+      api.getCollaborators(projectId).catch(() => ({ collaborators: [] })),
+      api.getProjectActivity(projectId).catch(() => ({ entries: [] })),
       api.getProjectMemories(projectId, 5).catch(() => ({ memories: [] })),
       api.getReports(undefined, 50).catch(() => ({ reports: [] })),
     ])
       .then(([proj, fin, collab, act, mem, reports]) => {
         setProject(proj);
         setFinancials(fin);
-        setCollaborators(collab.collaborators || []);
-        setActivity(act.entries || []);
-        setMemories(mem.memories?.map((m: any) => m.memory) || []);
+        setCollaborators(collab?.collaborators || []);
+        setActivity(act?.entries || []);
+        setMemories(mem?.memories?.map((m: any) => m.memory) || []);
         // Filter reports for this project
-        const projReports = (reports.reports || []).filter((r: any) => r.project_id === projectId);
+        const projReports = (reports?.reports || []).filter((r: any) => r.project_id === projectId);
         setProjectReports(projReports);
         // Update conversation store with project name for context indicator
         if (proj?.title) {
@@ -89,6 +104,15 @@ export default function ProjectDetailCanvas() {
       })
       .catch(console.error)
       .finally(() => setLoading(false));
+
+    // Fetch validation data
+    fetchScore(projectId);
+    fetchEnjoyment(projectId);
+
+    // Fetch network leverage (fast — reads persisted data, no AI call)
+    api.getNetworkLeverage(projectId)
+      .then(setNetworkLeverage)
+      .catch(() => setNetworkLeverage(null));
   }, [projectId]);
 
   const handleAddTask = async () => {
@@ -259,6 +283,12 @@ export default function ProjectDetailCanvas() {
             {project.description && (
               <p className="text-text-secondary text-sm mt-2 max-w-2xl">{project.description}</p>
             )}
+            <div className="flex items-center gap-4 mt-3">
+              {scores.get(project.id) && (
+                <SignalStrengthBadge score={scores.get(project.id)!} />
+              )}
+              <EnjoymentWidget projectId={project.id} />
+            </div>
           </div>
 
           {/* Lead Partner (top right) */}
@@ -504,6 +534,74 @@ export default function ProjectDetailCanvas() {
               </div>
             </div>
           </GlassCard>
+
+          {/* Network Leverage */}
+          {(networkLeverage || networkXref.length > 0) && (
+            <GlassCard>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-xs font-semibold tracking-wider text-text-primary uppercase">Network Leverage</h3>
+                {networkLeverage && (
+                  <div className={`px-2 py-0.5 rounded-full text-xs font-bold ${
+                    networkLeverage.score >= 7 ? 'bg-success/20 text-success' :
+                    networkLeverage.score >= 4 ? 'bg-warning/20 text-warning' :
+                    'bg-danger/20 text-danger'
+                  }`}>
+                    {networkLeverage.score}/10
+                  </div>
+                )}
+              </div>
+
+              {networkLeverage && (
+                <div className="grid grid-cols-3 gap-2 mb-4">
+                  <div className="text-center p-2 bg-elevated/40 rounded-lg">
+                    <div className="text-lg font-bold text-text-primary">{networkLeverage.potential_customers}</div>
+                    <div className="text-[9px] text-text-tertiary uppercase tracking-wider">Customers</div>
+                  </div>
+                  <div className="text-center p-2 bg-elevated/40 rounded-lg">
+                    <div className="text-lg font-bold text-text-primary">{networkLeverage.advisors}</div>
+                    <div className="text-[9px] text-text-tertiary uppercase tracking-wider">Advisors</div>
+                  </div>
+                  <div className="text-center p-2 bg-elevated/40 rounded-lg">
+                    <div className="text-lg font-bold text-text-primary">{networkLeverage.warm_paths}</div>
+                    <div className="text-[9px] text-text-tertiary uppercase tracking-wider">Warm Paths</div>
+                  </div>
+                </div>
+              )}
+
+              {networkXref.length > 0 && (
+                <div className="space-y-2">
+                  <p className="text-[10px] tracking-wider text-primary uppercase">Top Relevant Contacts</p>
+                  {networkXref.slice(0, 5).map((rc, i) => (
+                    <div key={i} className="flex items-center gap-2 py-1.5 px-2 bg-elevated/30 rounded-lg">
+                      <div className="w-7 h-7 rounded-full bg-elevated flex items-center justify-center text-text-secondary text-[10px] font-medium flex-shrink-0">
+                        {rc.contact.full_name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-text-primary text-xs font-medium truncate">{rc.contact.full_name}</p>
+                        <p className="text-text-tertiary text-[10px] truncate">
+                          {rc.value_types.join(', ')} — {rc.reasoning.substring(0, 80)}
+                        </p>
+                      </div>
+                      <div className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                        rc.relevance_score >= 8 ? 'bg-success/20 text-success' :
+                        rc.relevance_score >= 6 ? 'bg-warning/20 text-warning' :
+                        'bg-text-tertiary/20 text-text-tertiary'
+                      }`}>
+                        {rc.relevance_score}/10
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {networkLeverage && networkLeverage.score === 0 && networkXref.length === 0 && (
+                <div className="flex items-center gap-2 text-text-tertiary text-xs">
+                  <AlertTriangle className="w-3.5 h-3.5" />
+                  <span>No network connections for this project</span>
+                </div>
+              )}
+            </GlassCard>
+          )}
 
           {/* Client Context */}
           {clientCollab && (

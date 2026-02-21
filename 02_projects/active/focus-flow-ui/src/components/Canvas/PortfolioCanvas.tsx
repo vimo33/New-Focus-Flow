@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, RefreshCw } from 'lucide-react';
 import { useCanvasStore } from '../../stores/canvas';
 import { api } from '../../services/api';
-import { GlassCard, StatCard, Badge } from '../shared';
+import { GlassCard, StatCard, Badge, SignalStrengthBadge, PruningRecommendations } from '../shared';
+import { useValidationStore } from '../../stores/validation';
 
 interface ProjectHealth {
   project_id: string;
@@ -78,14 +79,33 @@ export default function PortfolioCanvas() {
   const { setCanvas } = useCanvasStore();
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterTab>('all');
+  const { scores, pruningRecs, computing, fetchScore, fetchPruningRecommendations, computeScores } = useValidationStore();
 
-  useEffect(() => {
+  const loadDashboard = () => {
+    setLoading(true);
+    setError(null);
     api.getPortfolioDashboard()
       .then(setDashboard)
-      .catch(console.error)
+      .catch((err) => {
+        console.error('Failed to load portfolio:', err);
+        setError('Failed to load portfolio data. Check your connection.');
+      })
       .finally(() => setLoading(false));
+    fetchPruningRecommendations();
+  };
+
+  useEffect(() => {
+    loadDashboard();
   }, []);
+
+  // Fetch signal strength scores for all projects once dashboard loads
+  useEffect(() => {
+    if (dashboard?.projects) {
+      dashboard.projects.forEach(p => fetchScore(p.id));
+    }
+  }, [dashboard]);
 
   if (loading) {
     return (
@@ -95,10 +115,16 @@ export default function PortfolioCanvas() {
     );
   }
 
-  if (!dashboard) {
+  if (error || !dashboard) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-text-tertiary">Failed to load portfolio data.</div>
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <div className="text-text-tertiary">{error || 'Failed to load portfolio data.'}</div>
+        <button
+          onClick={loadDashboard}
+          className="px-4 py-2 text-xs font-semibold text-primary border border-primary/30 rounded-lg hover:bg-primary/10 transition-colors"
+        >
+          Retry
+        </button>
       </div>
     );
   }
@@ -152,8 +178,16 @@ export default function PortfolioCanvas() {
         />
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2 mb-6">
+      {/* Pruning Recommendations */}
+      {pruningRecs.length > 0 && (
+        <div className="mb-8">
+          <PruningRecommendations recommendations={pruningRecs} />
+        </div>
+      )}
+
+      {/* Filter Tabs + Compute */}
+      <div className="flex items-center justify-between mb-6">
+      <div className="flex gap-2">
         {([
           { key: 'all', label: 'All' },
           { key: 'active', label: 'Active' },
@@ -171,6 +205,15 @@ export default function PortfolioCanvas() {
             {tab.label}
           </button>
         ))}
+      </div>
+      <button
+        onClick={() => computeScores()}
+        disabled={computing}
+        className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-elevated/50 text-text-secondary text-xs font-medium hover:text-primary border border-[var(--glass-border)] transition-colors disabled:opacity-50"
+      >
+        <RefreshCw size={12} className={computing ? 'animate-spin' : ''} />
+        {computing ? 'Computing...' : 'Compute Scores'}
+      </button>
       </div>
 
       {/* Projects Grid */}
@@ -202,6 +245,9 @@ export default function PortfolioCanvas() {
                   <h3 className="text-text-primary font-medium truncate">{project.title}</h3>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
+                  {scores.get(project.id) && (
+                    <SignalStrengthBadge score={scores.get(project.id)!} compact />
+                  )}
                   {project.council_verdict && (
                     <span className={`font-mono text-xs font-bold px-1.5 py-0.5 rounded ${
                       project.council_verdict.overall_score >= 7 ? 'bg-success/15 text-success' :

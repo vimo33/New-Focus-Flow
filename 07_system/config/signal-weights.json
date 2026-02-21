@@ -1,0 +1,60 @@
+{
+  "default": {
+    "experiment_score": 0.25,
+    "council_score": 0.20,
+    "revenue_proximity": 0.20,
+    "market_signals": 0.15,
+    "enjoyment_score": 0.10,
+    "network_advantage": 0.10
+  },
+  "archetypes": {
+    "bootstrapped_cashflow": {
+      "experiment_score": 0.20,
+      "council_score": 0.10,
+      "revenue_proximity": 0.35,
+      "market_signals": 0.15,
+      "enjoyment_score": 0.10,
+      "network_advantage": 0.10
+    },
+    "vc_backed_scale": {
+      "experiment_score": 0.30,
+      "council_score": 0.15,
+      "revenue_proximity": 0.10,
+      "market_signals": 0.25,
+      "enjoyment_score": 0.05,
+      "network_advantage": 0.15
+    },
+    "lifestyle_business": {
+      "experiment_score": 0.15,
+      "council_score": 0.10,
+      "revenue_proximity": 0.20,
+      "market_signals": 0.10,
+      "enjoyment_score": 0.25,
+      "network_advantage": 0.20
+    },
+    "content_engine": {
+      "experiment_score": 0.25,
+      "council_score": 0.10,
+      "revenue_proximity": 0.15,
+      "market_signals": 0.25,
+      "enjoyment_score": 0.15,
+      "network_advantage": 0.10
+    },
+    "acquisition_flip": {
+      "experiment_score": 0.30,
+      "council_score": 0.15,
+      "revenue_proximity": 0.25,
+      "market_signals": 0.15,
+      "enjoyment_score": 0.05,
+      "network_advantage": 0.10
+    },
+    "platform_play": {
+      "experiment_score": 0.25,
+      "council_score": 0.15,
+      "revenue_proximity": 0.10,
+      "market_signals": 0.20,
+      "enjoyment_score": 0.05,
+      "network_advantage": 0.25
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "task_type": "knowledge-graph-update",
+  "status": "completed",
+  "generated_at": "2026-02-19T22:30:00.000Z",
+  "reports_processed": [
+    "network-analysis-2026-02-19",
+    "network-enrich-2026-02-19",
+    "monitor-project-2026-02-19"
+  ],
+  "entities_extracted": 50,
+  "entities_new": 50,
+  "entities_updated": 0,
+  "entities_unchanged": 26,
+  "relationships_extracted": 17,
+  "contradictions_detected": 1,
+  "by_type": {
+    "person": 20,
+    "market": 4,
+    "opportunity": 9,
+    "project": 0,
+    "relationship": 17
+  },
+  "entity_files_written": [
+    "07_system/reports/kg-entities/people.jsonl",
+    "07_system/reports/kg-entities/markets.jsonl",
+    "07_system/reports/kg-entities/opportunities.jsonl",
+    "07_system/reports/kg-entities/relationships.jsonl"
+  ],
+  "staging_note": "Entities written to reports/kg-entities/ staging area. Target 07_system/knowledge-graph/entities/ is root-owned and not writable by nitara user. Files must be moved by root or permissions fixed: sudo chown -R nitara:nitara /srv/focus-flow/07_system/knowledge-graph/",
+  "cumulative_totals": {
+    "people": 22,
+    "projects": 6,
+    "opportunities": 13,
+    "markets": 8,
+    "relationships": 27,
+    "total_entities": 76
+  },
+  "contradictions": [
+    {
+      "id": "contradiction-001",
+      "entity": "Bramha ESG",
+      "conflict": "Portfolio analysis (2026-02-18) recommends PARK for Bramha ESG — do not build. Network analysis (2026-02-19) generates multiple active investment opportunities for Bramha ESG: Climate Week Zurich sponsorship (CHF 2-5K), ecoinvent data partnership, Rodolphe Bocquet outreach. These actions presuppose active investment, which contradicts the PARK recommendation.",
+      "severity": "low",
+      "resolution": "Not a true contradiction — PARK applies to the build decision (do not code/ship a product), while the network outreach activities are validation and market discovery actions that are appropriate even for PARKED projects. However, the distinction should be explicit in the product strategy. Left for meta agent to clarify.",
+      "status": "flagged-for-meta-agent"
+    }
+  ],
+  "key_entities": {
+    "people_new_tier1": [
+      {
+        "name": "Tommy Fliski",
+        "company": "Green Marmot Capsule Hotel",
+        "urgency": "this-week",
+        "action": "AURA hotel QR card distribution pilot — HIGHEST OPERATIONAL PRIORITY"
+      },
+      {
+        "name": "Rodolphe Bocquet",
+        "company": "ESG4Boards",
+        "urgency": "this-week",
+        "action": "Bramha ESG thesis validation conversation — CHF 50K-500K customer potential"
+      },
+      {
+        "name": "Nathalie Manetti",
+        "company": "Venturelab",
+        "urgency": "this-week",
+        "action": "Swiss VC introduction path — CHF 2.4B+ market deployment in 2026"
+      },
+      {
+        "name": "Johannes Pokorny",
+        "company": "Climate Week Zurich",
+        "urgency": "this-week",
+        "action": "Climate Week Zurich May 4-9 2026 — 8-week lead time expires soon"
+      }
+    ],
+    "markets_new": [
+      "Swiss Startup VC Funding Market 2026 (CHF 2.4B+)",
+      "Swiss/European Creative Tech Accelerator Market",
+      "Swiss Insurtech / AI-First Insurance Innovation",
+      "Singapore AI Regulation & Enterprise Tech Market (critical network gap)"
+    ],
+    "opportunities_new": [
+      "AURA Hotel QR Distribution Pilot (this-week, blocking build decision)",
+      "Bramha ESG Thesis Validation via Rodolphe Bocquet (this-week)",
+      "SICTIC Swiss Angel Investor Access (1-3 months, CHF 25K-100K checks)",
+      "Climate Week Zurich 2026 Sponsorship / Speaking (contact now)",
+      "Zurich AI Founder Cluster Reactivation (this-week)",
+      "Venturelab Swiss VC Introduction Path (this-week)",
+      "Overture AX Accelerator Application (this-month)",
+      "Kavach AI + Futurae Bundled Security Partnership (this-month)",
+      "ecoinvent LCA Data Partnership for Bramha ESG (this-month)"
+    ],
+    "network_clusters_captured": [
+      "Zurich AI Founders: Dan-George Filimon, Penny Schiffer, Jan Fülscher, Julie Rielle",
+      "ESG/Sustainability Switzerland: Rodolphe Bocquet, Johannes Pokorny, Armin Agic, Mariella Reffo",
+      "Swiss Institutional Gateways: Nathalie Manetti (Venturelab), Thomas Ackermann (ETH Zurich), Mathias Vazquez Rodriguez (HITS)",
+      "Security Deep Tech: Alexander Ginsburg (Futurae), Alex Murawski (NOA Labs), Kevin Sartori (Nivek)"
+    ],
+    "network_gaps_documented": [
+      "No Swiss angel investors / seed-stage VC partners in active network",
+      "Only 1 hospitality/hotel contact (Tommy Fliski) for AURA distribution",
+      "No Swiss regulatory/compliance body contacts (FINMA, BAFU, SECO)",
+      "Singapore network effectively empty — critical for ATX and Kavach AI",
+      "India enterprise network entirely dormant (2012-2018 connections)"
+    ]
+  },
+  "strategic_insights_captured": [
+    "Network of 1,801 contacts analyzed — top 94 enriched (2024-2025 active contacts)",
+    "Tommy Fliski at Green Marmot is the single most operationally urgent contact — AURA build decision hangs on this",
+    "Four Zurich AI founders form a natural cluster for mass reactivation this week",
+    "Venturelab (Nathalie Manetti) is the highest-leverage institutional relationship for Swiss VC access",
+    "Climate Week Zurich 2026 (May 4-9) is 10 weeks away — sponsorship requires immediate contact",
+    "SICTIC (200+ Swiss angels) is the most accessible funding path at current stage",
+    "ecoinvent LCA data partnership would give Bramha ESG instant emissions factor credibility",
+    "Singapore is a critical geographic gap with zero actionable contacts for ATX or Kavach AI",
+    "India enterprise network dormant since 2012-2018 — Ajith Govind Satheesh is the only active gateway"
+  ],
+  "monitor_data_captured": {
+    "queue_depth": 29,
+    "queue_status": "elevated",
+    "stale_tasks": 5,
+    "disk_usage_pct": 35,
+    "inference_costs_today_usd": 0.0,
+    "daily_budget_usd": 20.0,
+    "services_healthy": ["focus-flow-backend", "focus-flow-frontend"],
+    "services_inactive": ["focus-flow-telegram", "openclaw-gateway"]
+  },
+  "confidence": 0.88,
+  "next_run": "2026-02-20",
+  "satisfaction_score": 0.82,
+  "satisfaction_details": [
+    {
+      "name": "reports_processed",
+      "score": 1.0,
+      "weight": 0.25,
+      "note": "All 3 new reports processed (network-analysis, network-enrich, monitor)"
+    },
+    {
+      "name": "entities_extracted",
+      "score": 1.0,
+      "weight": 0.2,
+      "note": "50 new entities extracted — 20 persons, 4 markets, 9 opportunities, 17 relationships"
+    },
+    {
+      "name": "source_traceability",
+      "score": 1.0,
+      "weight": 0.2,
+      "note": "All entities include source_report and extracted_at fields"
+    },
+    {
+      "name": "dedup_respected",
+      "score": 0.9,
+      "weight": 0.15,
+      "note": "Existing 26 entities from 2026-02-18 left unchanged. 0 duplicates created."
+    },
+    {
+      "name": "relationships_extracted",
+      "score": 1.0,
+      "weight": 0.1,
+      "note": "17 new relationships extracted — person-to-project, person-to-market, opportunity-to-market"
+    },
+    {
+      "name": "no_placeholders",
+      "score": 1.0,
+      "weight": 0.1,
+      "note": "All entities contain real extracted data — no placeholder values"
+    }
+  ]
+}

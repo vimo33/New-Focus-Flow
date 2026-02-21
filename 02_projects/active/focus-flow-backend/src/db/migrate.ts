@@ -241,6 +241,130 @@ async function migrate() {
       )
     `);
 
+    // ─── Validation Engine Tables ───────────────────────────────────────────
+
+    // Enums for validation engine
+    const validationEnumStatements = [
+      `DO $$ BEGIN CREATE TYPE growth_archetype AS ENUM ('bootstrapped_cashflow', 'vc_backed_scale', 'lifestyle_business', 'content_engine', 'acquisition_flip', 'platform_play'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+      `DO $$ BEGIN CREATE TYPE sprint_status AS ENUM ('planning', 'active', 'completed', 'cancelled'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+      `DO $$ BEGIN CREATE TYPE experiment_step_status AS ENUM ('pending', 'in_progress', 'completed', 'skipped'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+      `DO $$ BEGIN CREATE TYPE pattern_category AS ENUM ('success_pattern', 'failure_pattern', 'market_signal', 'timing_pattern'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+      `DO $$ BEGIN CREATE TYPE signal_trend AS ENUM ('rising', 'flat', 'falling'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+      `DO $$ BEGIN CREATE TYPE kill_scale_recommendation AS ENUM ('scale', 'double_down', 'iterate', 'park', 'kill'); EXCEPTION WHEN duplicate_object THEN null; END $$`,
+    ];
+
+    for (const stmt of validationEnumStatements) {
+      await db.execute(sql.raw(stmt));
+    }
+
+    // Add growth_archetype column to projects (nullable)
+    await db.execute(sql`
+      DO $$ BEGIN
+        ALTER TABLE projects ADD COLUMN growth_archetype growth_archetype;
+      EXCEPTION WHEN duplicate_column THEN null;
+      END $$
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS signal_strength_scores (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        project_id TEXT NOT NULL,
+        team_id UUID NOT NULL REFERENCES teams(id),
+        score NUMERIC(5,2) NOT NULL,
+        breakdown JSONB NOT NULL,
+        trend signal_trend NOT NULL DEFAULT 'flat',
+        previous_score NUMERIC(5,2),
+        days_at_current_level INTEGER NOT NULL DEFAULT 0,
+        recommendation kill_scale_recommendation,
+        computed_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS enjoyment_scores (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        project_id TEXT NOT NULL,
+        team_id UUID NOT NULL REFERENCES teams(id),
+        score INTEGER NOT NULL CHECK (score >= 1 AND score <= 5),
+        note TEXT,
+        created_by UUID REFERENCES users(id),
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS experiment_plans (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        experiment_id UUID NOT NULL REFERENCES experiments(id),
+        steps JSONB DEFAULT '[]',
+        budget_usd NUMERIC(10,2),
+        spent_usd NUMERIC(10,2) DEFAULT 0,
+        sprint_start_date TIMESTAMPTZ,
+        sprint_end_date TIMESTAMPTZ,
+        sprint_days INTEGER NOT NULL DEFAULT 14,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+        updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS experiment_steps (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        plan_id UUID NOT NULL REFERENCES experiment_plans(id),
+        order_index INTEGER NOT NULL,
+        title TEXT NOT NULL,
+        description TEXT,
+        tool_or_action TEXT,
+        estimated_cost_usd NUMERIC(10,2),
+        estimated_hours NUMERIC(5,1),
+        completion_criteria TEXT,
+        status experiment_step_status NOT NULL DEFAULT 'pending',
+        result TEXT,
+        completed_at TIMESTAMPTZ,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS validation_sprints (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        team_id UUID NOT NULL REFERENCES teams(id),
+        name TEXT NOT NULL,
+        start_date TIMESTAMPTZ,
+        end_date TIMESTAMPTZ,
+        total_budget_usd NUMERIC(10,2),
+        status sprint_status NOT NULL DEFAULT 'planning',
+        results JSONB,
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS sprint_experiments (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        sprint_id UUID NOT NULL REFERENCES validation_sprints(id),
+        experiment_id UUID NOT NULL REFERENCES experiments(id),
+        budget_allocation NUMERIC(10,2),
+        rank INTEGER
+      )
+    `);
+
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS pattern_memory (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        team_id UUID NOT NULL REFERENCES teams(id),
+        project_id TEXT,
+        experiment_id UUID REFERENCES experiments(id),
+        pattern TEXT NOT NULL,
+        category pattern_category NOT NULL,
+        tags TEXT[],
+        confidence NUMERIC(3,2),
+        applies_to TEXT[],
+        created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+      )
+    `);
+
     // Create indexes
     await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_projects_team ON projects(team_id)`);
     await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_projects_status ON projects(status)`);
@@ -257,6 +381,40 @@ async function migrate() {
     await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id)`);
     await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_team_members_team ON team_members(team_id)`);
     await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_team_members_user ON team_members(user_id)`);
+
+    // Validation engine indexes
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_signal_scores_project ON signal_strength_scores(project_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_signal_scores_team ON signal_strength_scores(team_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_signal_scores_computed ON signal_strength_scores(computed_at DESC)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_enjoyment_project ON enjoyment_scores(project_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_enjoyment_team ON enjoyment_scores(team_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_experiment_plans_experiment ON experiment_plans(experiment_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_experiment_steps_plan ON experiment_steps(plan_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_validation_sprints_team ON validation_sprints(team_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_sprint_experiments_sprint ON sprint_experiments(sprint_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_pattern_memory_team ON pattern_memory(team_id)`);
+    await db.execute(sql`CREATE INDEX IF NOT EXISTS idx_pattern_memory_project ON pattern_memory(project_id)`);
+
+    // Fix: project_id columns must be TEXT not UUID — vault projects use string IDs
+    await db.execute(sql`
+      ALTER TABLE signal_strength_scores
+        ALTER COLUMN project_id DROP DEFAULT,
+        ALTER COLUMN project_id TYPE TEXT USING project_id::TEXT,
+        DROP CONSTRAINT IF EXISTS signal_strength_scores_project_id_projects_id_fk
+    `).catch(() => { /* already text */ });
+
+    await db.execute(sql`
+      ALTER TABLE enjoyment_scores
+        ALTER COLUMN project_id DROP DEFAULT,
+        ALTER COLUMN project_id TYPE TEXT USING project_id::TEXT,
+        DROP CONSTRAINT IF EXISTS enjoyment_scores_project_id_projects_id_fk
+    `).catch(() => { /* already text */ });
+
+    await db.execute(sql`
+      ALTER TABLE pattern_memory
+        ALTER COLUMN project_id TYPE TEXT USING project_id::TEXT,
+        DROP CONSTRAINT IF EXISTS pattern_memory_project_id_projects_id_fk
+    `).catch(() => { /* already text */ });
 
     console.log('[DB] Schema migration complete — all tables created.');
   } catch (error) {

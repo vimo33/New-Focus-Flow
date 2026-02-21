@@ -7,6 +7,8 @@ import { cachedInference } from './cached-inference.service';
 import { sseManager } from './sse-manager.service';
 import type {
   NetworkContact,
+  ContactInteraction,
+  InteractionType,
   RelationshipType,
   RelationshipStrength,
   BusinessValue,
@@ -597,6 +599,47 @@ export class NetworkImporterService {
       sseManager.send(sseClientId, 'import_progress', data);
     }
     sseManager.broadcast('import_progress', data);
+  }
+
+  /**
+   * Add an interaction to a contact's history.
+   * Stored inline in the contact JSON file.
+   */
+  async addInteraction(
+    contactId: string,
+    interaction: { type: InteractionType; summary: string; project_id?: string }
+  ): Promise<ContactInteraction | null> {
+    const contact = await this.getContact(contactId);
+    if (!contact) return null;
+
+    const entry: ContactInteraction = {
+      id: generateId('int'),
+      type: interaction.type,
+      date: new Date().toISOString(),
+      project_id: interaction.project_id,
+      summary: interaction.summary,
+    };
+
+    const interactions = contact.interactions || [];
+    interactions.unshift(entry); // newest first
+
+    await this.updateContact(contactId, {
+      interactions,
+      last_contacted: entry.date,
+      last_interaction_type: entry.type,
+      updated_at: new Date().toISOString(),
+    } as any);
+
+    return entry;
+  }
+
+  /**
+   * Get all interactions for a contact.
+   */
+  async getInteractions(contactId: string): Promise<ContactInteraction[]> {
+    const contact = await this.getContact(contactId);
+    if (!contact) return [];
+    return contact.interactions || [];
   }
 }
 

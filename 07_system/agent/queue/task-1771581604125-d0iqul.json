@@ -1,0 +1,14 @@
+{
+  "id": "task-1771581604125-d0iqul",
+  "skill": "profiling-question",
+  "arguments": "",
+  "priority": "background",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "queued",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-20T10:00:04.125Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system"
+}

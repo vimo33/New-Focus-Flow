@@ -1,0 +1,18 @@
+{
+  "id": "task-1771542007166-1bika4",
+  "skill": "knowledge-graph-update",
+  "arguments": "",
+  "priority": "background",
+  "directive_aligned": false,
+  "trust_tier": 1,
+  "status": "completed",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-19T23:00:07.166Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system",
+  "started_at": "2026-02-19T23:00:07.196Z",
+  "pid": 2266010,
+  "completed_at": "2026-02-19T23:06:13.051Z",
+  "result_file": "/srv/focus-flow/07_system/reports/knowledge-graph-update-2026-02-19.json"
+}

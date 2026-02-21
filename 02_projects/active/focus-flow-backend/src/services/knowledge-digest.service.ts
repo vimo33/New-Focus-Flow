@@ -14,6 +14,7 @@ import * as path from 'path';
 import { VaultService } from './vault.service';
 import { founderProfileService } from './founder-profile.service';
 import { mem0Service } from './mem0.service';
+import { agentMemoryService } from './agent-memory.service';
 import { briefingGenerator } from './briefing-generator.service';
 import { salesService } from './sales.service';
 import { crmService } from './crm.service';
@@ -97,6 +98,10 @@ class KnowledgeDigestService {
         strategies,
         memories,
         briefing,
+        experimentOutcomes,
+        patterns,
+        failurePatterns,
+        networkInsights,
       ] = await Promise.allSettled([
         vaultService.getProjects(),
         vaultService.getTasks(),
@@ -108,6 +113,10 @@ class KnowledgeDigestService {
         incomeStrategyService.getStrategies(),
         mem0Service.isAvailable ? mem0Service.getAllMemories() : Promise.resolve([]),
         briefingGenerator.getLatestBriefing(),
+        agentMemoryService.getExperimentOutcomes(10),
+        agentMemoryService.getPatterns(5),
+        agentMemoryService.getFailurePatterns(5),
+        agentMemoryService.getNetworkInsights(10),
       ]);
 
       const projectData = projects.status === 'fulfilled' ? projects.value : [];
@@ -120,6 +129,10 @@ class KnowledgeDigestService {
       const strategyData = strategies.status === 'fulfilled' ? strategies.value : [];
       const memoryData = memories.status === 'fulfilled' ? memories.value : [];
       const briefingData = briefing.status === 'fulfilled' ? briefing.value : null;
+      const experimentOutcomeData = experimentOutcomes.status === 'fulfilled' ? experimentOutcomes.value : [];
+      const patternData = patterns.status === 'fulfilled' ? patterns.value : [];
+      const failurePatternData = failurePatterns.status === 'fulfilled' ? failurePatterns.value : [];
+      const networkInsightData = networkInsights.status === 'fulfilled' ? networkInsights.value : [];
 
       const now = new Date().toISOString().split('T')[0];
       const pendingTasks = taskData.filter(t => t.status !== 'done');
@@ -136,6 +149,7 @@ class KnowledgeDigestService {
         date: now, profileData, financialData, dealData,
         activeProjects, projectData, taskData, pendingTasks,
         ideaData, contactData, memoryData, briefingData, strategyData,
+        experimentOutcomeData, patternData, failurePatternData, networkInsightData,
       });
 
       // Persist
@@ -245,11 +259,16 @@ class KnowledgeDigestService {
     memoryData: any[];
     briefingData: any;
     strategyData: any[];
+    experimentOutcomeData: any[];
+    patternData: any[];
+    failurePatternData: string[];
+    networkInsightData: any[];
   }): string {
     const {
       date, profileData, financialData, dealData, activeProjects,
       projectData, taskData, pendingTasks, ideaData, contactData,
       memoryData, briefingData, strategyData,
+      experimentOutcomeData, patternData, failurePatternData, networkInsightData,
     } = data;
 
     let digest = `# NITARA WORLD STATE — ${date}\n\n`;
@@ -380,6 +399,41 @@ class KnowledgeDigestService {
       digest += `\n## STRATEGIC MEMORIES (${memoryData.length} total, showing top 20)\n`;
       for (const m of memoryData.slice(0, 20)) {
         digest += `- ${(m.memory || m.text || '').substring(0, 150)}\n`;
+      }
+    }
+
+    // Validation learnings (from agent memory)
+    if (experimentOutcomeData.length > 0 || patternData.length > 0 || failurePatternData.length > 0) {
+      digest += `\n## VALIDATION LEARNINGS\n`;
+
+      if (experimentOutcomeData.length > 0) {
+        digest += `\n### Recent Experiment Outcomes (${experimentOutcomeData.length})\n`;
+        for (const e of experimentOutcomeData) {
+          digest += `- ${(e.memory || '').substring(0, 200)}\n`;
+        }
+      }
+
+      if (patternData.length > 0) {
+        digest += `\n### Cross-Project Patterns (${patternData.length})\n`;
+        for (const p of patternData) {
+          const conf = typeof p.confidence === 'number' ? ` (confidence: ${(p.confidence * 100).toFixed(0)}%)` : '';
+          digest += `- [${p.category || 'pattern'}] ${(p.memory || '').substring(0, 200)}${conf}\n`;
+        }
+      }
+
+      if (failurePatternData.length > 0) {
+        digest += `\n### ⚠ Failure Patterns to Avoid\n`;
+        for (const f of failurePatternData) {
+          digest += `- ${f.substring(0, 200)}\n`;
+        }
+      }
+    }
+
+    // Network intelligence (from agent memory)
+    if (networkInsightData.length > 0) {
+      digest += `\n## NETWORK INTELLIGENCE (${networkInsightData.length} insights)\n`;
+      for (const n of networkInsightData) {
+        digest += `- ${(n.memory || '').substring(0, 200)}\n`;
       }
     }
 

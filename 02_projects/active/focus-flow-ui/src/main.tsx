@@ -56,18 +56,14 @@ if ('serviceWorker' in navigator) {
           registration.update();
         }, 60000); // Check every minute
 
-        // Listen for updates
+        // Listen for updates — silently activate new SW without prompting
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('[SW] New service worker available. Refresh to update.');
-                // Optionally show a notification to the user
-                if (confirm('A new version of Nitara is available. Reload to update?')) {
-                  newWorker.postMessage({ type: 'SKIP_WAITING' });
-                  window.location.reload();
-                }
+                console.log('[SW] New service worker available, activating silently.');
+                newWorker.postMessage({ type: 'SKIP_WAITING' });
               }
             });
           }
@@ -95,10 +91,10 @@ if ('serviceWorker' in navigator) {
         console.error('[SW] Service Worker registration failed:', error);
       });
 
-    // Handle controller change (new service worker activated)
+    // Handle controller change — log only, no forced reload
+    // Navigation requests use network-first so next navigation gets fresh content
     navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.log('[SW] Controller changed, reloading page...');
-      window.location.reload();
+      console.log('[SW] Controller changed. Fresh content will load on next navigation.');
     });
   });
 }

@@ -12,3 +12,6 @@ export { ProgressBar } from './ProgressBar';
 export { KillSwitchToggle } from './KillSwitchToggle';
 export { AgentCard } from './AgentCard';
 export { SignalBadge } from './SignalBadge';
+export { SignalStrengthBadge } from './SignalStrengthBadge';
+export { EnjoymentWidget } from './EnjoymentWidget';
+export { PruningRecommendations } from './PruningRecommendations';

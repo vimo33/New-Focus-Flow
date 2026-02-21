@@ -209,6 +209,129 @@ export const approvals = pgTable('approvals', {
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });
 
+// ─── Validation Engine ───────────────────────────────────────────────────────
+
+export const growthArchetypeEnum = pgEnum('growth_archetype', [
+  'bootstrapped_cashflow', 'vc_backed_scale', 'lifestyle_business',
+  'content_engine', 'acquisition_flip', 'platform_play'
+]);
+
+export const sprintStatusEnum = pgEnum('sprint_status', ['planning', 'active', 'completed', 'cancelled']);
+
+export const experimentStepStatusEnum = pgEnum('experiment_step_status', ['pending', 'in_progress', 'completed', 'skipped']);
+
+export const patternCategoryEnum = pgEnum('pattern_category', ['success_pattern', 'failure_pattern', 'market_signal', 'timing_pattern']);
+
+export const signalTrendEnum = pgEnum('signal_trend', ['rising', 'flat', 'falling']);
+
+export const killScaleRecommendationEnum = pgEnum('kill_scale_recommendation', ['scale', 'double_down', 'iterate', 'park', 'kill']);
+
+export const signalStrengthScores = pgTable('signal_strength_scores', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: text('project_id').notNull(),
+  teamId: uuid('team_id').notNull().references(() => teams.id),
+  score: numeric('score', { precision: 5, scale: 2 }).$type<number>().notNull(),
+  breakdown: jsonb('breakdown').$type<{
+    council_score: number;
+    experiment_score: number;
+    market_signals: number;
+    network_advantage: number;
+    revenue_proximity: number;
+    enjoyment_score: number;
+  }>().notNull(),
+  trend: signalTrendEnum('trend').notNull().default('flat'),
+  previousScore: numeric('previous_score', { precision: 5, scale: 2 }).$type<number>(),
+  daysAtCurrentLevel: integer('days_at_current_level').notNull().default(0),
+  recommendation: killScaleRecommendationEnum('recommendation'),
+  computedAt: timestamp('computed_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const enjoymentScores = pgTable('enjoyment_scores', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  projectId: text('project_id').notNull(),
+  teamId: uuid('team_id').notNull().references(() => teams.id),
+  score: integer('score').notNull(),
+  note: text('note'),
+  createdBy: uuid('created_by').references(() => users.id),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const experimentPlans = pgTable('experiment_plans', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  experimentId: uuid('experiment_id').notNull().references(() => experiments.id),
+  steps: jsonb('steps').$type<{
+    order: number;
+    title: string;
+    description: string;
+    tool_or_action: string;
+    estimated_cost_usd: number;
+    estimated_hours: number;
+    completion_criteria: string;
+  }[]>().default([]),
+  budgetUsd: numeric('budget_usd', { precision: 10, scale: 2 }).$type<number>(),
+  spentUsd: numeric('spent_usd', { precision: 10, scale: 2 }).$type<number>().default(0),
+  sprintStartDate: timestamp('sprint_start_date', { withTimezone: true }),
+  sprintEndDate: timestamp('sprint_end_date', { withTimezone: true }),
+  sprintDays: integer('sprint_days').notNull().default(14),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const experimentSteps = pgTable('experiment_steps', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  planId: uuid('plan_id').notNull().references(() => experimentPlans.id),
+  orderIndex: integer('order_index').notNull(),
+  title: text('title').notNull(),
+  description: text('description'),
+  toolOrAction: text('tool_or_action'),
+  estimatedCostUsd: numeric('estimated_cost_usd', { precision: 10, scale: 2 }).$type<number>(),
+  estimatedHours: numeric('estimated_hours', { precision: 5, scale: 1 }).$type<number>(),
+  completionCriteria: text('completion_criteria'),
+  status: experimentStepStatusEnum('status').notNull().default('pending'),
+  result: text('result'),
+  completedAt: timestamp('completed_at', { withTimezone: true }),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const validationSprints = pgTable('validation_sprints', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  teamId: uuid('team_id').notNull().references(() => teams.id),
+  name: text('name').notNull(),
+  startDate: timestamp('start_date', { withTimezone: true }),
+  endDate: timestamp('end_date', { withTimezone: true }),
+  totalBudgetUsd: numeric('total_budget_usd', { precision: 10, scale: 2 }).$type<number>(),
+  status: sprintStatusEnum('status').notNull().default('planning'),
+  results: jsonb('results').$type<{
+    rankings: { project_id: string; experiment_id: string; pre_sprint_score: number; post_sprint_score: number; delta: number; recommendation: string }[];
+    total_spent_usd: number;
+    key_learnings: string[];
+    patterns_extracted: string[];
+  }>(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const sprintExperiments = pgTable('sprint_experiments', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  sprintId: uuid('sprint_id').notNull().references(() => validationSprints.id),
+  experimentId: uuid('experiment_id').notNull().references(() => experiments.id),
+  budgetAllocation: numeric('budget_allocation', { precision: 10, scale: 2 }).$type<number>(),
+  rank: integer('rank'),
+});
+
+export const patternMemory = pgTable('pattern_memory', {
+  id: uuid('id').defaultRandom().primaryKey(),
+  teamId: uuid('team_id').notNull().references(() => teams.id),
+  projectId: text('project_id'),
+  experimentId: uuid('experiment_id').references(() => experiments.id),
+  pattern: text('pattern').notNull(),
+  category: patternCategoryEnum('category').notNull(),
+  tags: text('tags').array(),
+  confidence: numeric('confidence', { precision: 3, scale: 2 }).$type<number>(),
+  appliesTo: text('applies_to').array(),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+});
+
 // ─── Audit Log ────────────────────────────────────────────────────────────────
 
 export const auditLog = pgTable('audit_log', {

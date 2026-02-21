@@ -2,7 +2,7 @@
   "id": "thread-20260219-525885",
   "title": "Inspect what’s wrong and report back",
   "created_at": "2026-02-19T12:02:05.885Z",
-  "updated_at": "2026-02-19T12:03:01.745Z",
-  "message_count": 2,
-  "last_message_preview": "Here's what I found across system, workspace, and data layers:\n\n---\n\n## Issues Found\n\n### 🔴 Critica..."
+  "updated_at": "2026-02-21T08:00:23.415Z",
+  "message_count": 14,
+  "last_message_preview": "Yes. Claude API is working — you're talking to me right now via `anthropic/claude-sonnet-4-5`.\n\nFrom..."
 }

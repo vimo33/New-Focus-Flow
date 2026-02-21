@@ -49,3 +49,24 @@ One of: **BUILD-NEXT**, **INVEST**, **PIVOT**, **PARK**, **KILL**
 Write BOTH to `07_system/reports/`:
 - `portfolio-analysis-YYYY-MM-DD.md` — human-readable report
 - `portfolio-analysis-YYYY-MM-DD.json` — structured data with `task_type: "portfolio-analysis"`, `status: "completed"`, `top_recommendations` array, project scores, and cross-project analysis
+
+## Memory Hooks (Post-Analysis)
+
+After completing the portfolio analysis, persist key insights to semantic memory:
+
+For each notable insight (max 5), call:
+```
+POST http://localhost:3001/api/memory/agent
+{
+  "type": "pattern",
+  "content": "<the insight, e.g. '3 projects in the portfolio share the same audience segment but aren't cross-promoting'>",
+  "category": "success_pattern|failure_pattern|market_signal|timing_pattern",
+  "relatedProjects": ["<project_id_1>", "<project_id_2>"],
+  "confidence": 0.7
+}
+```
+
+Focus on:
+- Recurring patterns across projects (e.g. "Projects with council score < 5 always stall at concept phase")
+- Synergies or conflicts discovered between projects
+- Resource allocation insights (e.g. "Revenue proximity drops when more than 5 projects are active")

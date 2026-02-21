@@ -1,0 +1,14 @@
+{
+  "id": "task-1771610401368-f1efpx",
+  "skill": "time-value-analyze",
+  "arguments": "",
+  "priority": "low",
+  "directive_aligned": false,
+  "trust_tier": 2,
+  "status": "queued",
+  "max_duration_minutes": 120,
+  "created_at": "2026-02-20T18:00:01.368Z",
+  "hitl_timeout_hours": 24,
+  "retry_count": 0,
+  "created_by": "system"
+}

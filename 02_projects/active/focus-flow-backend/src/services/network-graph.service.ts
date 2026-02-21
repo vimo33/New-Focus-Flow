@@ -234,6 +234,11 @@ class NetworkGraphService {
    * Compute network leverage score for a project (used by portfolio analyst).
    * Score 0-10 based on number and quality of relevant contacts.
    */
+  /**
+   * Fast leverage score from persisted project_relevance on contacts.
+   * Does NOT call AI — reads previously persisted xref data from contact files.
+   * Use persistXrefResults() or the network-analyze agent to populate xref data.
+   */
   async getNetworkLeverageScore(projectId: string): Promise<{
     score: number;
     warm_paths: number;
@@ -241,8 +246,12 @@ class NetworkGraphService {
     advisors: number;
     summary: string;
   }> {
-    const xref = await this.getContactsForProject(projectId);
-    const relevant = xref.relevant_contacts;
+    const contacts = await networkImporterService.getContacts();
+
+    // Find contacts that have persisted relevance for this project
+    const relevant = contacts.filter(c =>
+      c.project_relevance && c.project_relevance[projectId] && c.project_relevance[projectId] >= 5
+    );
 
     if (relevant.length === 0) {
       return {
@@ -250,24 +259,127 @@ class NetworkGraphService {
         warm_paths: 0,
         potential_customers: 0,
         advisors: 0,
-        summary: 'No network connections relevant to this project.',
+        summary: 'No network connections mapped to this project yet. Run /network-analyze to discover relevant contacts.',
       };
     }
 
-    const customers = relevant.filter(r => r.value_types.includes('customer') || r.value_types.includes('beta_tester'));
-    const advisors = relevant.filter(r => r.value_types.includes('advisor') || r.value_types.includes('domain_expert'));
-    const warmPaths = relevant.filter(r => r.relevance_score >= 7);
+    const customers = relevant.filter(c =>
+      c.potential_value_type?.some(t => t === 'customer' || t === 'beta_tester')
+    );
+    const advisorContacts = relevant.filter(c =>
+      c.potential_value_type?.some(t => t === 'advisor' || t === 'domain_expert')
+    );
+    const warmPaths = relevant.filter(c => (c.project_relevance?.[projectId] || 0) >= 7);
 
-    // Score: 0-10 based on coverage
     let score = 0;
-    score += Math.min(customers.length, 5) * 0.8;   // up to 4 for customers
-    score += Math.min(advisors.length, 3) * 0.67;    // up to 2 for advisors
-    score += Math.min(warmPaths.length, 5) * 0.8;    // up to 4 for warm paths
+    score += Math.min(customers.length, 5) * 0.8;
+    score += Math.min(advisorContacts.length, 3) * 0.67;
+    score += Math.min(warmPaths.length, 5) * 0.8;
     score = Math.min(Math.round(score * 10) / 10, 10);
 
-    const summary = `${relevant.length} relevant contacts: ${customers.length} potential customers, ${advisors.length} advisors, ${warmPaths.length} warm paths.`;
+    const summary = `${relevant.length} relevant contacts: ${customers.length} potential customers, ${advisorContacts.length} advisors, ${warmPaths.length} warm paths.`;
 
-    return { score, warm_paths: warmPaths.length, potential_customers: customers.length, advisors: advisors.length, summary };
+    return { score, warm_paths: warmPaths.length, potential_customers: customers.length, advisors: advisorContacts.length, summary };
+  }
+
+  /**
+   * Persist xref results back to contact files.
+   * After getContactsForProject computes relevance, save project_relevance
+   * and potential_value_type back to each contact.
+   */
+  async persistXrefResults(projectId: string): Promise<number> {
+    const xref = await this.getContactsForProject(projectId);
+    let updated = 0;
+
+    for (const rc of xref.relevant_contacts) {
+      const contact = rc.contact;
+      const projectRelevance = contact.project_relevance || {};
+      projectRelevance[projectId] = rc.relevance_score;
+
+      // Merge value types (don't overwrite existing types from other projects)
+      const existingTypes = new Set(contact.potential_value_type || []);
+      for (const vt of rc.value_types) existingTypes.add(vt);
+
+      await networkImporterService.updateContact(contact.id, {
+        project_relevance: projectRelevance,
+        potential_value_type: Array.from(existingTypes),
+      } as any);
+      updated++;
+    }
+
+    return updated;
+  }
+
+  /**
+   * Find dormant high-value contacts that haven't been contacted recently.
+   */
+  async getDormantHighValue(daysSinceContact = 90): Promise<Array<{
+    contact: NetworkContact;
+    days_dormant: number;
+    value_types: string[];
+  }>> {
+    const contacts = await networkImporterService.getContacts();
+    const cutoff = new Date();
+    cutoff.setDate(cutoff.getDate() - daysSinceContact);
+    const cutoffStr = cutoff.toISOString();
+
+    return contacts
+      .filter(c => {
+        if (c.business_value !== 'high' && c.business_value !== 'medium') return false;
+        // No last_contacted or it's before cutoff
+        if (!c.last_contacted) return true;
+        return c.last_contacted < cutoffStr;
+      })
+      .map(c => {
+        const lastContact = c.last_contacted ? new Date(c.last_contacted) : new Date(c.created_at);
+        const daysDormant = Math.floor((Date.now() - lastContact.getTime()) / (1000 * 60 * 60 * 24));
+        return {
+          contact: c,
+          days_dormant: daysDormant,
+          value_types: c.potential_value_type || [],
+        };
+      })
+      .sort((a, b) => b.days_dormant - a.days_dormant)
+      .slice(0, 20);
+  }
+
+  /**
+   * Generate a personalized outreach message for a contact regarding a project.
+   */
+  async generateOutreachDraft(contactId: string, projectId: string): Promise<{
+    subject: string;
+    body: string;
+    channel_recommendation: string;
+  }> {
+    const contact = await networkImporterService.getContact(contactId);
+    if (!contact) throw new Error('Contact not found');
+
+    const vaultService = new VaultService();
+    const projects = await vaultService.getProjects();
+    const project = projects.find(p => p.id === projectId);
+    if (!project) throw new Error('Project not found');
+
+    const contactContext = [
+      `Name: ${contact.full_name}`,
+      contact.position ? `Position: ${contact.position}` : '',
+      contact.company ? `Company: ${contact.company}` : '',
+      contact.relationship_type ? `Relationship: ${contact.relationship_type}` : '',
+      contact.enrichment_data?.outreach_angle ? `Outreach angle: ${contact.enrichment_data.outreach_angle}` : '',
+      contact.ai_summary ? `Background: ${contact.ai_summary}` : '',
+    ].filter(Boolean).join('\n');
+
+    const projectContext = `Project: ${project.title}\nDescription: ${project.description || ''}\nPhase: ${project.phase || 'concept'}`;
+
+    const result = await cachedInference.complete(
+      `Draft a personalized outreach message to this contact about this project.\n\n` +
+      `Contact:\n${contactContext}\n\nProject:\n${projectContext}\n\n` +
+      `Return JSON: { "subject": "email subject line", "body": "message body (2-3 paragraphs, professional but warm)", "channel_recommendation": "email|linkedin|call" }`,
+      'You are a professional networking strategist. Return ONLY valid JSON.',
+      'fast_classification',
+      'standard'
+    );
+
+    return JSON.parse(result);
   }
 }
 

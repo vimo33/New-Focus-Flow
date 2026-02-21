@@ -67,3 +67,31 @@ Write decision JSON:
   "decided_at": "ISO-8601"
 }
 ```
+
+## Memory Hooks (Post-Decision)
+
+After recording the decision, persist learnings to semantic memory via API:
+
+1. **Record decision context:**
+   ```
+   POST http://localhost:3001/api/memory/agent
+   {
+     "type": "decision_context",
+     "projectId": "<project_id>",
+     "content": "Decision: <action> for <project_name>. Rationale: <rationale>. Key signals: <evidence_sources joined>"
+   }
+   ```
+
+2. **Record experiment outcome:**
+   ```
+   POST http://localhost:3001/api/memory/agent
+   {
+     "type": "experiment_outcome",
+     "projectId": "<project_id>",
+     "experimentId": "<experiment_id>",
+     "outcome": "<positive|negative|inconclusive based on action>",
+     "content": "<key learning from the experiment results>"
+   }
+   ```
+
+Map action to outcome: scale/iterate → positive, pivot → inconclusive, park/kill → negative.

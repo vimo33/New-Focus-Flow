@@ -35,3 +35,24 @@ If this is a resumed task, first check `07_system/agent/answered-questions/` for
 Write to `07_system/reports/`:
 - `network-analysis-YYYY-MM-DD.md` — narrative with top 5 opportunities and network health score
 - `network-analysis-YYYY-MM-DD.json` — structured data with `task_type: "network-analyze"`, `status`, `opportunities` array (each with `suggested_action`), `clusters`, `gaps`
+
+## Memory Hooks (Post-Analysis)
+
+After completing the network analysis, persist insights to semantic memory:
+
+For each high-value opportunity found (max 5), call:
+```
+POST http://localhost:3001/api/memory/agent
+{
+  "type": "network_insight",
+  "contactId": "<contact_id>",
+  "projectId": "<project_id if relevant, or null>",
+  "content": "<the insight, e.g. 'John Smith at Acme Corp has budget authority for SaaS tools and matches ICP for ProjectX'>"
+}
+```
+
+Focus on:
+- Revenue-adjacent contacts (one conversation from a deal)
+- Strategic introduction chains discovered
+- Network gaps that need filling for active projects
+- Dormant high-value contacts that should be reconnected

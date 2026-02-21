@@ -516,9 +516,12 @@ export class VaultAPI {
    */
   private async request<T>(
     endpoint: string,
-    options?: RequestInit
+    options?: RequestInit,
+    timeoutMs = 15000
   ): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
     try {
       const response = await fetch(url, {
@@ -527,6 +530,7 @@ export class VaultAPI {
           ...options?.headers,
         },
         ...options,
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -538,10 +542,15 @@ export class VaultAPI {
 
       return await response.json();
     } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new Error(`Request timeout: ${endpoint}`);
+      }
       if (error instanceof Error) {
         throw error;
       }
       throw new Error('An unexpected error occurred');
+    } finally {
+      clearTimeout(timeoutId);
     }
   }
 
@@ -1456,6 +1465,83 @@ export class VaultAPI {
     return this.request('/network/enrich/budget');
   }
 
+  // Network Leverage & Interactions
+  async getNetworkLeverage(projectId: string): Promise<{
+    score: number;
+    warm_paths: number;
+    potential_customers: number;
+    advisors: number;
+    summary: string;
+  }> {
+    return this.request(`/network/leverage/${projectId}`);
+  }
+
+  async getNetworkXref(projectId: string): Promise<{
+    project_id: string;
+    project_title: string;
+    relevant_contacts: Array<{
+      contact: any;
+      relevance_score: number;
+      value_types: string[];
+      reasoning: string;
+    }>;
+  }> {
+    return this.request(`/network/xref/${projectId}`);
+  }
+
+  async logContactInteraction(contactId: string, data: {
+    type: string;
+    summary: string;
+    project_id?: string;
+  }): Promise<any> {
+    return this.request(`/network/contacts/${contactId}/interactions`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async getContactInteractions(contactId: string): Promise<{ interactions: any[]; count: number }> {
+    return this.request(`/network/contacts/${contactId}/interactions`);
+  }
+
+  async generateOutreachDraft(contactId: string, projectId: string): Promise<{
+    subject: string;
+    body: string;
+    channel_recommendation: string;
+  }> {
+    return this.request(`/network/contacts/${contactId}/outreach-draft`, {
+      method: 'POST',
+      body: JSON.stringify({ project_id: projectId }),
+    });
+  }
+
+  async getDormantContacts(days = 90): Promise<{
+    dormant: Array<{
+      contact_id: string;
+      full_name: string;
+      company: string;
+      position: string;
+      business_value: string;
+      days_dormant: number;
+      value_types: string[];
+    }>;
+    count: number;
+  }> {
+    return this.request(`/network/dormant?days=${days}`);
+  }
+
+  async createTaskFromOpportunity(opportunityId: string, data: {
+    title: string;
+    description: string;
+    project_id?: string;
+    contact_names?: string[];
+  }): Promise<any> {
+    return this.request(`/network/opportunities/${opportunityId}/create-task`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
   // ============================================================================
   // Usage / Inference Cost Methods
   // ============================================================================
@@ -1960,6 +2046,102 @@ export class VaultAPI {
   async getTools(): Promise<{ tools: ToolManifest[]; count: number }> {
     return this.request('/tools');
   }
+
+  // ============================================================================
+  // Validation Engine Methods
+  // ============================================================================
+
+  async getValidationOverview(): Promise<ValidationEngineOverview> {
+    return this.request('/validation/overview');
+  }
+
+  async getSignalStrength(projectId: string): Promise<SignalStrengthScore> {
+    return this.request(`/validation/signal-strength/${projectId}`);
+  }
+
+  async getSignalStrengthHistory(projectId: string, days?: number): Promise<{ history: SignalStrengthScore[]; count: number }> {
+    const qs = days ? `?days=${days}` : '';
+    return this.request(`/validation/signal-strength/history/${projectId}${qs}`);
+  }
+
+  async computeSignalStrength(projectId?: string): Promise<any> {
+    return this.request('/validation/signal-strength/compute', {
+      method: 'POST',
+      body: JSON.stringify(projectId ? { projectId } : {}),
+    });
+  }
+
+  async getPruningRecommendations(): Promise<{ recommendations: PruningRecommendation[]; count: number }> {
+    return this.request('/validation/pruning-recommendations');
+  }
+
+  async recordEnjoyment(projectId: string, score: number, note?: string): Promise<any> {
+    return this.request(`/validation/enjoyment/${projectId}`, {
+      method: 'POST',
+      body: JSON.stringify({ score, note }),
+    });
+  }
+
+  async getEnjoymentHistory(projectId: string): Promise<{ latest: EnjoymentEntry | null; history: EnjoymentEntry[]; count: number }> {
+    return this.request(`/validation/enjoyment/${projectId}`);
+  }
+}
+
+// ============================================================================
+// Validation Engine Types
+// ============================================================================
+
+export interface SignalStrengthBreakdown {
+  council_score: number;
+  experiment_score: number;
+  market_signals: number;
+  network_advantage: number;
+  revenue_proximity: number;
+  enjoyment_score: number;
+}
+
+export interface SignalStrengthScore {
+  id: string;
+  projectId: string;
+  teamId: string;
+  score: string;
+  breakdown: SignalStrengthBreakdown;
+  trend: 'rising' | 'flat' | 'falling';
+  previousScore: string | null;
+  daysAtCurrentLevel: number;
+  recommendation: 'scale' | 'double_down' | 'iterate' | 'park' | 'kill' | null;
+  computedAt: string;
+  createdAt: string;
+}
+
+export interface PruningRecommendation {
+  project_id: string;
+  project_name: string;
+  score: number;
+  trend: 'rising' | 'flat' | 'falling';
+  days_at_level: number;
+  recommendation: 'scale' | 'double_down' | 'iterate' | 'park' | 'kill';
+  rationale: string;
+  breakdown: SignalStrengthBreakdown;
+}
+
+export interface EnjoymentEntry {
+  id: string;
+  projectId: string;
+  score: number;
+  note: string | null;
+  createdAt: string;
+}
+
+export interface ValidationEngineOverview {
+  total_projects: number;
+  scored_projects: number;
+  kill_candidates: number;
+  scale_candidates: number;
+  park_candidates: number;
+  average_score: number;
+  score_distribution: { range: string; count: number }[];
+  last_computed_at: string | null;
 }
 
 // ============================================================================

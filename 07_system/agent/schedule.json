@@ -142,5 +142,29 @@
     "priority": "low",
     "trust_tier": 2,
     "description": "Time-value allocation analysis every Friday at 6pm"
+  },
+  {
+    "skill": "validate-sprint-orchestrator",
+    "arguments": "",
+    "cron": "0 8 * * 1",
+    "priority": "high",
+    "trust_tier": 2,
+    "description": "Create validation sprint with 3-5 uncertain projects every Monday at 8am"
+  },
+  {
+    "skill": "validate-portfolio-prune",
+    "arguments": "",
+    "cron": "0 6 * * 3",
+    "priority": "medium",
+    "trust_tier": 2,
+    "description": "Recompute signal scores, generate kill/scale recommendations bi-weekly Wednesday 6am"
+  },
+  {
+    "skill": "network-career-leverage",
+    "arguments": "",
+    "cron": "0 9 1 * *",
+    "priority": "low",
+    "trust_tier": 1,
+    "description": "Career leverage analysis on 1st of each month at 9am"
   }
 ]

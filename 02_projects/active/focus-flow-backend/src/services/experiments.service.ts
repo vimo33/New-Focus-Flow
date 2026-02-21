@@ -11,6 +11,7 @@ import { db } from '../db/connection';
 import { eq, and, desc } from 'drizzle-orm';
 import * as schema from '../db/schema';
 import { audit } from './db.service';
+import { patternMemoryService } from './pattern-memory.service';
 
 type ExperimentStatus = 'draft' | 'running' | 'paused' | 'completed';
 type DecisionAction = 'scale' | 'iterate' | 'pivot' | 'park' | 'kill';
@@ -215,6 +216,11 @@ async function recordDecision(id: string, teamId: string, input: RecordDecisionI
   if (updated) {
     await audit(teamId, input.decidedBy ?? null, null, 'experiment.recordDecision', 'experiment', id, {
       decision: input.decision,
+    });
+
+    // Side effect: extract patterns from this decision
+    patternMemoryService.extractFromExperiment(id, teamId).catch(err => {
+      console.error('Pattern extraction failed (non-blocking):', err.message);
     });
   }
 
