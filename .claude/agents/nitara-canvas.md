@@ -21,6 +21,9 @@ Build canvas components in `src/components/Canvas/` at `/srv/focus-flow/02_proje
 - CouncilEvaluationCanvas — Council verdict display with ConfidenceRing
 - WeeklyReportCanvas — KPIs + activity chart + intelligence bullets
 
+## Design Guidance
+For new canvas screens without Stitch exports, consult ui-ux-pro-max for design patterns. Nitara's design tokens always override generated recommendations.
+
 ## Rules
 - Each canvas is self-contained (no cross-canvas imports except shared components)
 - Canvas receives context from Zustand `canvas.ts` store via `useCanvasStore()`

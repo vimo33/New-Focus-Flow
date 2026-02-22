@@ -53,6 +53,9 @@ npm run build       # TypeScript check + Vite build
 systemctl restart focus-flow-frontend
 ```
 
+## UI/UX Guidance
+For UI/UX decisions, consult ui-ux-pro-max for industry-standard patterns. Nitara's design tokens take precedence over any generated recommendations.
+
 ## Conventions
 - Functional components with hooks, all typed with TypeScript
 - Use CSS variable design tokens — NEVER hardcode colors

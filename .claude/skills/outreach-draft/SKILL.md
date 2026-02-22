@@ -40,6 +40,9 @@ Each message must be:
 - **Concise**: Under 150 words for email, under 50 words for LinkedIn
 - **Authentic**: Match the founder's voice and Swiss business norms (trust-first, not pushy)
 
+### Copywriting Frameworks
+When drafting messages, apply the AIDA framework (Attention, Interest, Desire, Action) for professional outreach. Reference `copy-david-ogilvy` for headline principles and `copy-dan-kennedy` for direct response patterns. Adapt to casual reconnection tone for dormant contacts.
+
 ## Message Structure
 
 1. **Opening hook**: Something personal or specific (not "Hope you're doing well")

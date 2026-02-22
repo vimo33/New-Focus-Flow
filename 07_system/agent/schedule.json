@@ -166,5 +166,13 @@
     "priority": "low",
     "trust_tier": 1,
     "description": "Career leverage analysis on 1st of each month at 9am"
+  },
+  {
+    "skill": "marketing-analysis",
+    "arguments": "",
+    "cron": "0 10 * * 4",
+    "priority": "medium",
+    "trust_tier": 1,
+    "description": "Marketing strategy analysis every Thursday at 10am"
   }
 ]

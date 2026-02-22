@@ -45,6 +45,13 @@ Machine-readable with `task_type`, `status`, `sources` array, `findings` array, 
 }
 ```
 
+## Copywriting Reference
+When generating content strategy recommendations, reference copywriting skills for proven frameworks:
+- `copy-david-ogilvy` for headline and long-form principles
+- `copy-dan-kennedy` for direct response and conversion copy
+- `copy-eugene-schwartz` for market awareness levels
+- `copy-gary-halbert` for persuasion and storytelling
+
 ## Behavioral Rules
 
 1. Never fabricate sources or URLs. If you cannot find evidence, say so.

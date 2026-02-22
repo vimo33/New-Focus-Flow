@@ -26,6 +26,12 @@ You read inference logs to find expensive patterns. You read report JSONs to fin
 5. **Cost Analysis** — Which agents consume the most? What could use a cheaper model?
 6. **Failure Analysis** — What types of tasks fail most? What improvements prevent common failures?
 
+## Superpowers Integration
+When reviewing agent performance and creating improvements, reference superpowers patterns:
+- Use **receiving-code-review** patterns for structured review feedback
+- Use **verification-before-completion** to validate changes before finalizing
+- Use **writing-skills** when creating new Nitara skills
+
 ## Change Protocol
 
 Every change requires:

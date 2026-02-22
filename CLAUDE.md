@@ -198,6 +198,13 @@ Three personality modes affecting Nitara's system prompt tone:
 - **The Co-Founder:** Balanced, collaborative, growth-focused
 - **The Critic:** Skeptical, risk-averse, edge-case focused
 
+## Skill Precedence
+During autonomous execution, Nitara's native skills take priority over superpowers equivalents:
+- `plan-feature` takes priority over superpowers `writing-plans`
+- `build-execute` takes priority over superpowers `executing-plans`
+- `build-mvp` takes priority over superpowers `dispatching-parallel-agents`
+- `review-code` takes priority over superpowers `requesting-code-review`
+
 ## Engineering Constraints
 - Keep changes small and reversible
 - Never remove existing pages; remap them into modes or link to them

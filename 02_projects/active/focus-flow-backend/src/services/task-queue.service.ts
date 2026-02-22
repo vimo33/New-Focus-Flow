@@ -815,7 +815,7 @@ class TaskQueueService {
     // Skills directly aligned with income-generation directive
     const incomeAligned = [
       'portfolio-analysis', 'research-market', 'research-passive-income',
-      'network-analyze', 'build-mvp',
+      'network-analyze', 'build-mvp', 'marketing-analysis',
     ];
     return incomeAligned.includes(skill);
   }

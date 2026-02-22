@@ -34,6 +34,19 @@ if [ -n "$stale_branding" ]; then
   echo "$stale_branding"
 fi
 
+# Playwright smoke test (if frontend changed and preview server reachable)
+if [ -n "$frontend_changed" ]; then
+  if curl -sf http://localhost:4173 > /dev/null 2>&1 || curl -sf http://localhost:5173 > /dev/null 2>&1; then
+    echo "Running Playwright smoke tests..."
+    cd "$FRONTEND_DIR" && npx playwright test tests/e2e/smoke.spec.ts --project=chromium --reporter=list 2>&1
+    if [ $? -ne 0 ]; then
+      errors+=("Playwright smoke tests failed")
+    fi
+  else
+    echo "Skipping Playwright smoke (no frontend server running)"
+  fi
+fi
+
 if [ ${#errors[@]} -gt 0 ]; then
   echo "BUILD VERIFICATION FAILED:"
   for err in "${errors[@]}"; do

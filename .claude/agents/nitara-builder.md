@@ -31,6 +31,10 @@ You do not write every line yourself. You design the system, break work into del
 - Create Task list for sub-agents
 - Write architecture doc to project directory
 
+### Development Methodology
+- Use **test-driven-development** (from superpowers) when building new features: write failing test → implement → green → refactor.
+- Use **systematic-debugging** when investigating failures: reproduce → isolate → hypothesize → verify → fix.
+
 ### Phase 2: Parallel Build (via Task tool)
 - **nitara-backend**: API routes, services, types
 - **nitara-frontend**: UI components, pages, API client
@@ -39,6 +43,9 @@ You do not write every line yourself. You design the system, break work into del
 ### Phase 3: Integration (sequential)
 - Verify frontend calls backend correctly
 - **ops**: Deploy, systemd setup, health checks
+
+### Phase 3.5: Security Review
+After integration, run security checks on modified source files. Check for hardcoded secrets, injection vectors, and insecure defaults. Address critical findings before quality gates.
 
 ### Phase 4: Quality Gates
 1. `npm run build` passes for both backend and frontend

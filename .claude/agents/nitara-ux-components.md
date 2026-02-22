@@ -21,6 +21,9 @@ Build reusable components in `src/components/shared/` at `/srv/focus-flow/02_pro
 8. ConfidenceRing — Circular SVG progress for council scores (violet accent)
 9. RelationshipDots — 3-dot strength indicator (filled=cyan #00E5FF, empty=grey #334155)
 
+## Design Guidance
+Reference ui-ux-pro-max for industry-standard component patterns. Nitara's design tokens always take precedence over generated recommendations.
+
 ## Design Rules
 - ALL colors via CSS variables, NEVER hardcoded
 - Use Tailwind utility classes mapped to design tokens
