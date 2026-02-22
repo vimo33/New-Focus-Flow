@@ -1,6 +1,6 @@
 # Nitara System Deep Analysis
 
-> **Generated**: 2026-02-21 | **System Version**: Post-autonomous-upgrade
+> **Generated**: 2026-02-22 | **System Version**: Post-skills-integration (83 skills)
 > **Purpose**: Definitive reference for what exists, how it connects, what works, and what doesn't.
 
 ---
@@ -148,7 +148,9 @@ Founder captures idea (inbox, Telegram, or PWA)
       Phase 2: Parallel build (backend + frontend agents)
       Phase 3: Integration (sequential)
       Phase 4: Quality gates (builds pass, no secrets, health 200)
+    → Phase 3.5: Security review (sec-* skills, security-check.sh hook)
     → 2-hour session timeout enforced by build-guard.sh
+    → Playwright smoke tests run via verify-builds.sh
   → If KILL/PARK:
     → leverage-extract-playbook captures reusable patterns
     → Project moved to 02_projects/paused/ or completed/
@@ -475,10 +477,13 @@ Profiling fills gaps → Knowledge digest gets richer
 | Frontend PWA + service worker | Offline support, background sync |
 | Queue API (authenticated) | Bearer token auth with constant-time comparison |
 | Agent definitions (20) | All in `.claude/agents/` with full prompts |
-| Skill definitions (57) | All in `.claude/skills/` with full prompts |
-| Schedule (21 cron tasks) | Full weekly/daily/monthly schedule in `schedule.json` |
+| Skill definitions (83) | All in `.claude/skills/` — 56 core + 14 marketing + 7 copywriting + 5 security + 1 UI/UX |
+| Superpowers plugin (14 skills) | obra/superpowers v4.3.1 — TDD, systematic debugging, verification, brainstorming, code review, git worktrees |
+| Schedule (22 cron tasks) | Full weekly/daily/monthly schedule in `schedule.json` |
 | Build guard (2-hour timeout) | `.claude/scripts/build-guard.sh` |
-| Hook scripts (14) | Safety, cost, build, profiling, notification, validation |
+| Hook scripts (15) | Safety, cost, build, profiling, notification, validation, security check |
+| Security check hook | `.claude/scripts/security-check.sh` — warns on hardcoded secrets, eval(), innerHTML |
+| Playwright smoke tests | `focus-flow-ui/tests/e2e/smoke.spec.ts` — app loads, no console errors, API health, canvas renders |
 | Orchestrator AI service | Tool execution loop, voice/text routing, model tiering |
 | Council evaluation service | Multi-agent parallel evaluation with synthesis, 17 verdicts generated |
 | LiveKit voice (browser) | Real cloud credentials (`wss://nitara-tagq5i4y.livekit.cloud`), token service, frontend hook, 3 voice personas |
@@ -553,6 +558,7 @@ WEDNESDAY
   10:00  network-portfolio-xref (tier 1) — Contact ↔ project mapping
 
 THURSDAY
+  10:00  marketing-analysis (tier 1) — Marketing strategy analysis
   22:00  network-enrich (tier 1) — Deep enrich top 20% contacts
 
 FRIDAY
@@ -586,7 +592,7 @@ NIGHTLY
 
 | Tier | Auto-approval | Skills |
 |------|--------------|--------|
-| **Tier 1** (read_vault) | Yes | network-analyze, research-market, research-youtube, network-enrich, network-portfolio-xref, decision-journal-evaluate, knowledge-graph-update, event-detect, profiling-question, monitor-project |
+| **Tier 1** (read_vault) | Yes | network-analyze, research-market, research-youtube, network-enrich, network-portfolio-xref, decision-journal-evaluate, knowledge-graph-update, event-detect, profiling-question, monitor-project, marketing-analysis, network-career-leverage, research-passive-income |
 | **Tier 2** (analysis) | After timeout | portfolio-analysis, validate-sprint-orchestrator, validate-portfolio-prune, time-value-analyze, meta-analysis, serendipity-scan, morning-briefing, voice-briefing, voice-profiling |
 | **Tier 3** (execution) | Requires explicit approval | council-evaluation, build-mvp, consolidate-duplicates, portfolio-triage |
 
@@ -619,7 +625,7 @@ NIGHTLY
 | nitara-ux-components | sonnet | Shared UI components |
 | nitara-ops | haiku | systemd, deployment, server config |
 
-### Hook Scripts (14 total)
+### Hook Scripts (15 total)
 
 | Script | Purpose |
 |--------|---------|
@@ -631,7 +637,8 @@ NIGHTLY
 | `telegram-notify.sh` | Sends notifications via Telegram |
 | `validate-analysis.sh` | Evaluates against hidden scenario file |
 | `validate-edit.sh` | Validates file edits |
-| `verify-builds.sh` | Checks build outputs |
+| `verify-builds.sh` | Checks build outputs + Playwright smoke tests |
+| `security-check.sh` | PostToolUse hook — warns on hardcoded secrets, eval(), innerHTML/dangerouslySetInnerHTML |
 | `profiling-session-writer.sh` | Writes profiling session data |
 | `knowledge-graph-trigger.sh` | Triggers knowledge graph updates |
 | `event-escalation.sh` | Escalates detected events |
@@ -672,7 +679,7 @@ NIGHTLY
 ├── 07_system/
 │   ├── agent/
 │   │   ├── state.json           # Agent state, work plans, activity log
-│   │   ├── schedule.json        # 21 cron tasks
+│   │   ├── schedule.json        # 22 cron tasks
 │   │   ├── cost-budget.json     # $20/day, $100/week
 │   │   ├── profiling-checklist.json  # 16% complete
 │   │   ├── briefings/           # 7 daily briefings
@@ -698,13 +705,35 @@ NIGHTLY
 ├── 09_crm/                      # Contact data (empty)
 ├── .claude/
 │   ├── agents/                  # 20 agent definitions
-│   ├── skills/                  # 57 skill definitions
-│   └── scripts/                 # 14 hook scripts
+│   ├── skills/                  # 83 skill definitions (+ 14 via superpowers plugin)
+│   └── scripts/                 # 15 hook scripts
 └── docs/
     └── NITARA-SYSTEM-ANALYSIS.md  # This document
 ```
 
-### System Health Snapshot (2026-02-21)
+### Skills Inventory (83 local + 14 plugin)
+
+| Category | Prefix | Count | Source |
+|----------|--------|-------|--------|
+| Core Nitara | (none) | 56 | Built in-house |
+| Marketing | `mkt-` | 14 | coreyhaines31/marketingskills |
+| Copywriting | `copy-` | 7 | karausab590-ops/copywriting-guru-skills |
+| Security | `sec-` | 5 | trailofbits/skills |
+| UI/UX | (none) | 1 | nextlevelbuilder/ui-ux-pro-max-skill |
+| Testing | (none) | 1 | lackeyjb/playwright-skill |
+| **Subtotal (local)** | | **83** | |
+| Superpowers (plugin) | (none) | 14 | obra/superpowers v4.3.1 |
+| **Total effective** | | **97** | |
+
+**Marketing skills (mkt-*)**: content-strategy, copywriting, cold-email, email-sequence, launch-strategy, marketing-ideas, marketing-psychology, pricing-strategy, seo-audit, ai-seo, copy-editing, social-content, referral-program, analytics-tracking
+
+**Copywriting frameworks (copy-*)**: dan-kennedy, david-ogilvy, eugene-schwartz, gary-halbert, joe-sugarman, ray-edwards, brand-foundation
+
+**Security skills (sec-*)**: insecure-defaults, sharp-edges, differential-review, static-analysis, property-testing
+
+**Superpowers plugin skills**: test-driven-development, systematic-debugging, verification-before-completion, brainstorming, receiving-code-review, using-git-worktrees, finishing-a-development-branch, writing-skills, writing-plans, executing-plans, dispatching-parallel-agents, subagent-driven-development, requesting-code-review, using-superpowers
+
+### System Health Snapshot (2026-02-22)
 
 | Metric | Value |
 |--------|-------|
@@ -719,7 +748,12 @@ NIGHTLY
 | Contact count | 0 |
 | Semantic memories | 100 |
 | Active projects | 19 (7 duplicates) |
+| Skills (local) | 83 |
+| Skills (plugin) | 14 (superpowers) |
+| Agents | 20 |
+| Hook scripts | 15 |
+| Scheduled tasks | 22 |
 
 ---
 
-*This document reflects the system state as of 2026-02-21. Update when significant changes occur.*
+*This document reflects the system state as of 2026-02-22. Update when significant changes occur.*
