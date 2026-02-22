@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Unified Design System</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00e5ff20",
+                        "muted-teal": "#3BBFB2","amber": "#ffb703",
+                        "violet": "#a78bfa",
+                        "background-dark": "#06080F",
+                        "background-light": "#f5f8f8",
+                        "surface": "#0f131a",
+                        "surface-glass": "rgba(15, 19, 26, 0.6)",
+                        "border-dim": "rgba(30, 48, 80, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],"heading": ["DM Sans", "sans-serif"],"body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 15px rgba(0, 229, 255, 0.3)",
+                        "glow-amber": "0 0 15px rgba(255, 183, 3, 0.3)",
+                        "glow-text": "0 0 8px rgba(0, 229, 255, 0.6)",
+                        "glow-teal": "0 0 10px rgba(59, 191, 178, 0.2)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>.bg-starfield {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }.glass-panel {
+            background: rgba(15, 19, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 191, 178, 0.2);}
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.3);}::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3050;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00e5ff;
+        }
+    </style>
+</head>
+<body class="bg-starfield text-slate-300 font-body antialiased selection:bg-primary selection:text-black min-h-screen flex">
+<nav class="fixed left-0 top-0 h-screen w-16 border-r border-muted-teal/20 glass-panel flex flex-col items-center py-8 z-50">
+<div class="mb-12">
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-sm">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-8 w-full items-center">
+<button class="group relative flex items-center justify-center w-full h-10">
+<div class="absolute left-0 h-6 w-0.5 bg-primary shadow-glow-primary rounded-r"></div>
+<span class="material-icons text-primary shadow-glow-text text-2xl transition-all group-hover:scale-110">dashboard</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">memory</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">insights</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">forum</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-2xl">settings</span>
+</button>
+</div>
+<div class="mt-auto">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-muted-teal/40">
+<img alt="User Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" data-alt="Cyberpunk profile avatar abstract" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKwuEergf5rSF5IHWOlG6-tHBkcH7qlyVfLnob_8Mp88STMSwLCdcdJYZ57hHZduBFJbjrnDyraAXHHKpMzithkFp7-pQ8OmKh9Oe7DbHS2F_nzNlB6TvUOSNa0u-9oEik49pNVXBZRj6D5M6yMlDlsSZ7EtLQbjLoyWQ4z1uSO1dsws0yTmRq8FsiX0oJaiOr5XYzmUZz23fQ9Q39Bo4qSBecsT0IRzpEQAY8R00MEb4TcFuGE3w-uKCJ3ZIP-CdFb6yyB2o4859"/>
+</div>
+</div>
+</nav>
+<main class="ml-16 w-full p-12 lg:p-20 max-w-[1600px] mx-auto">
+<header class="mb-20 border-b border-muted-teal/20 pb-8 flex justify-between items-end relative">
+<div>
+<h1 class="font-display font-bold text-5xl tracking-[0.2em] text-white mb-2 uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">Nitara</h1>
+<p class="text-primary font-mono text-sm tracking-widest opacity-80">UNIFIED DESIGN SYSTEM // V2.5</p>
+</div>
+<div class="text-right hidden md:block">
+<div class="flex items-center gap-2 justify-end mb-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)] animate-pulse"></span>
+<span class="font-mono text-xs text-muted-teal">SYSTEM ONLINE</span>
+</div>
+<p class="font-mono text-xs text-slate-600">LAST SYNC: 04:20:99</p>
+</div>
+<div class="absolute -bottom-[1px] right-0 w-32 h-[1px] bg-primary shadow-glow-primary"></div>
+<div class="absolute -bottom-[1px] left-0 w-8 h-[1px] bg-primary"></div>
+</header>
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
+<div class="lg:col-span-7 space-y-12">
+<div class="flex items-center gap-4 mb-6">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">01</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Typography</h4>
+</div>
+<div class="space-y-10">
+<div class="group border-l-2 border-muted-teal/30 pl-6 py-2">
+<span class="block font-mono text-xs text-muted-teal mb-2 group-hover:text-primary transition-colors">Display H1 // DM Sans Bold 48px</span>
+<h1 class="font-heading font-bold text-5xl text-white tracking-tight">Future Vision</h1>
+</div>
+<div class="group border-l-2 border-muted-teal/30 pl-6 py-2">
+<span class="block font-mono text-xs text-muted-teal mb-2 group-hover:text-primary transition-colors">Heading H2 // DM Sans Medium 32px</span>
+<h2 class="font-heading font-medium text-3xl text-white tracking-normal">Neural Link Established</h2>
+</div>
+<div class="group border-l-2 border-muted-teal/30 pl-6 py-2">
+<span class="block font-mono text-xs text-muted-teal mb-2 group-hover:text-primary transition-colors">Heading H3 // DM Sans Bold 20px</span>
+<h3 class="font-heading font-bold text-xl text-white tracking-wide uppercase">Core Protocols</h3>
+</div>
+<div class="grid grid-cols-2 gap-8 pt-4">
+<div>
+<span class="block font-mono text-xs text-muted-teal mb-2">Body // DM Sans Regular</span>
+<p class="leading-relaxed text-slate-300">The interface combines high density data with humanist readability. Typography carries the weight of structure, reducing the need for heavy borders.</p>
+</div>
+<div>
+<span class="block font-mono text-xs text-muted-teal mb-2">Code // JetBrains Mono</span>
+<p class="font-mono text-sm text-primary/80 bg-surface-glass p-4 rounded border border-muted-teal/20">
+                                 &gt; nitara.init(mode="zen")<br/>
+                                 &gt; Loading modules...<br/>
+                                 &gt; Ready.
+                             </p>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 space-y-8">
+<div class="flex items-center gap-4 mb-6">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">02</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Color Palette</h4>
+</div>
+<div class="space-y-4">
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group hover:border-primary/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded bg-primary shadow-glow-primary group-hover:scale-105 transition-transform"></div>
+<div>
+<p class="font-heading font-bold text-white tracking-wide">ELECTRIC CYAN</p>
+<p class="text-sm text-slate-400">Primary Actions, Active States</p>
+</div>
+</div>
+<span class="font-mono text-primary text-sm">#00E5FF</span>
+</div>
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group hover:border-muted-teal/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded bg-muted-teal shadow-glow-teal group-hover:scale-105 transition-transform"></div>
+<div>
+<p class="font-heading font-bold text-white tracking-wide">MUTED TEAL</p>
+<p class="text-sm text-slate-400">Structure, Borders, Passive</p>
+</div>
+</div>
+<span class="font-mono text-muted-teal text-sm">#3BBFB2</span>
+</div>
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group hover:border-amber/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded bg-amber shadow-glow-amber group-hover:scale-105 transition-transform"></div>
+<div>
+<p class="font-heading font-bold text-white tracking-wide">WARM AMBER</p>
+<p class="text-sm text-slate-400">Warnings, Highlights</p>
+</div>
+</div>
+<span class="font-mono text-amber text-sm">#FFB703</span>
+</div>
+<div class="glass-card p-5 rounded-lg flex items-center justify-between group hover:border-violet/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-16 h-16 rounded bg-violet shadow-[0_0_15px_rgba(167,139,250,0.3)] group-hover:scale-105 transition-transform"></div>
+<div>
+<p class="font-heading font-bold text-white tracking-wide">SOFT VIOLET</p>
+<p class="text-sm text-slate-400">Creative, Insights</p>
+</div>
+</div>
+<span class="font-mono text-violet text-sm">#A78BFA</span>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-24">
+<div class="flex items-center gap-4 mb-10">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">03</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Interactive Elements</h4>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-16">
+<div class="space-y-8">
+<h5 class="font-mono text-xs text-muted-teal uppercase tracking-wider mb-6">Button States</h5>
+<div class="flex flex-wrap gap-6 items-center">
+<div class="space-y-2 text-center">
+<button class="bg-primary text-black font-heading font-bold text-sm px-8 py-3 rounded hover:bg-white hover:shadow-glow-primary transition-all uppercase tracking-wider">
+                                Initialize
+                            </button>
+<p class="font-mono text-[10px] text-slate-600">PRIMARY</p>
+</div>
+<div class="space-y-2 text-center">
+<button class="bg-transparent border border-muted-teal text-primary font-heading font-bold text-sm px-8 py-3 rounded hover:bg-primary/10 hover:border-primary hover:shadow-glow-text transition-all uppercase tracking-wider">
+                                Configure
+                            </button>
+<p class="font-mono text-[10px] text-slate-600">OUTLINE</p>
+</div>
+<div class="space-y-2 text-center">
+<button class="bg-transparent text-slate-400 hover:text-white font-heading font-bold text-sm px-6 py-3 rounded hover:bg-white/5 transition-all uppercase tracking-wider flex items-center gap-2">
+<span class="material-icons text-base">history</span> History
+                            </button>
+<p class="font-mono text-[10px] text-slate-600">GHOST</p>
+</div>
+</div>
+</div>
+<div class="space-y-8 w-full max-w-lg">
+<h5 class="font-mono text-xs text-muted-teal uppercase tracking-wider mb-6">Input Fields</h5>
+<div class="relative">
+<label class="block font-mono text-xs text-muted-teal mb-2">PROJECT NAME</label>
+<input class="w-full bg-surface-glass border border-muted-teal/30 text-white p-3 rounded focus:border-primary focus:ring-1 focus:ring-primary focus:shadow-glow-text transition-all outline-none font-mono text-sm placeholder-slate-600" placeholder="Enter identifier..." type="text"/>
+</div>
+<div class="relative">
+<div class="relative group">
+<input class="w-full bg-surface border border-muted-teal/30 text-white p-4 pr-12 rounded-lg focus:border-primary focus:ring-0 focus:shadow-glow-primary transition-all outline-none font-body placeholder-slate-500" placeholder="Ask Nitara anything..." type="text"/>
+<button class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-primary transition-colors">
+<span class="material-icons">mic_none</span>
+</button>
+</div>
+<div class="absolute -bottom-1 left-4 right-4 h-[1px] bg-gradient-to-r from-transparent via-primary/30 to-transparent"></div>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-24">
+<div class="flex items-center gap-4 mb-10">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">04</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Data Containers</h4>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-56 relative overflow-hidden">
+<div class="absolute top-0 right-0 p-4 opacity-10">
+<span class="material-icons text-6xl">grid_view</span>
+</div>
+<div>
+<h3 class="font-heading font-bold text-white text-lg mb-3">Resource Monitor</h3>
+<p class="text-slate-400 text-sm leading-relaxed">System resources are operating within optimal parameters. No anomalies detected in the current sector.</p>
+</div>
+<div class="flex items-center gap-2 mt-4">
+<div class="h-1.5 flex-1 bg-slate-700 rounded-full overflow-hidden">
+<div class="h-full w-2/3 bg-primary shadow-glow-text rounded-full"></div>
+</div>
+<span class="font-mono text-xs text-primary">67%</span>
+</div>
+</div>
+<div class="bg-surface-glass border border-muted-teal/20 rounded-xl overflow-hidden relative flex flex-col h-56">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-amber shadow-glow-amber"></div>
+<div class="p-6 flex-1 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-amber font-mono text-xs mb-2 block">ATTENTION REQUIRED</span>
+<h3 class="font-heading font-bold text-white text-lg">Network Latency</h3>
+</div>
+<span class="material-icons text-amber">warning_amber</span>
+</div>
+<div class="flex gap-3 mt-4">
+<button class="bg-amber/10 text-amber border border-amber/30 hover:bg-amber/20 px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all">Diagnose</button>
+<button class="text-slate-400 hover:text-white px-2 text-xs font-bold uppercase tracking-wider transition-all">Dismiss</button>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl flex flex-col justify-between h-56 border-t-2 border-t-violet">
+<div>
+<div class="flex justify-between items-center mb-4">
+<span class="font-mono text-xs text-violet tracking-widest">WEEKLY OUTPUT</span>
+<span class="text-green-400 text-xs font-mono flex items-center">
+<span class="material-icons text-xs mr-1">arrow_upward</span> 12.4%
+                            </span>
+</div>
+<h2 class="font-mono font-bold text-5xl text-white">8,492</h2>
+<p class="text-xs text-slate-500 mt-2">units processed</p>
+</div>
+<div class="h-16 w-full mt-2 relative">
+<svg class="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 25">
+<defs>
+<linearGradient id="gradientViolet" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"></stop>
+<stop offset="100%" stop-color="#a78bfa" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+<path d="M0 20 C 10 20, 15 10, 25 15 S 40 25, 50 10 S 70 5, 80 15 S 90 20, 100 5" fill="url(#gradientViolet)" stroke="none"></path>
+<path d="M0 20 C 10 20, 15 10, 25 15 S 40 25, 50 10 S 70 5, 80 15 S 90 20, 100 5" fill="none" stroke="#a78bfa" stroke-width="2"></path>
+</svg>
+<div class="absolute right-0 top-[20%] w-2 h-2 bg-violet rounded-full shadow-[0_0_8px_#a78bfa]"></div>
+</div>
+</div>
+</div>
+</section>
+<section class="grid grid-cols-1 lg:grid-cols-2 gap-16 mb-24">
+<div>
+<div class="flex items-center gap-4 mb-8">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">05</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Pipeline Visualization</h4>
+</div>
+<div class="glass-card p-10 rounded-xl relative">
+<div class="absolute left-10 top-10 bottom-10 w-px bg-muted-teal/30"></div>
+<div class="space-y-10 relative z-10 pl-12">
+<div class="relative">
+<div class="absolute -left-[57px] w-5 h-5 rounded-full bg-surface border-2 border-primary flex items-center justify-center top-1">
+<div class="w-2 h-2 bg-primary rounded-full"></div>
+</div>
+<h5 class="text-primary font-heading font-bold text-sm mb-1 uppercase tracking-wider">Data Ingestion</h5>
+<p class="text-slate-500 text-xs font-mono">COMPLETED: 23ms</p>
+</div>
+<div class="relative">
+<div class="absolute -left-[63px] w-8 h-8 rounded-full bg-primary shadow-glow-primary flex items-center justify-center top-0 animate-pulse">
+<span class="material-icons text-black text-[14px] font-bold">sync</span>
+</div>
+<h5 class="text-white font-heading font-bold text-sm mb-1 flex items-center gap-2 uppercase tracking-wider">
+                                Processing
+                                <span class="text-[10px] bg-primary/20 text-primary px-1.5 py-0.5 rounded font-mono">RUNNING</span>
+</h5>
+<div class="w-full h-1 bg-slate-800 rounded-full mt-3 overflow-hidden">
+<div class="h-full bg-primary w-2/3 shadow-glow-text relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20 w-full animate-[shimmer_1s_infinite]"></div>
+</div>
+</div>
+</div>
+<div class="relative opacity-50">
+<div class="absolute -left-[57px] w-5 h-5 rounded-full bg-surface border-2 border-muted-teal/40 top-1"></div>
+<h5 class="text-slate-400 font-heading font-bold text-sm mb-1 uppercase tracking-wider">Analysis &amp; Output</h5>
+<p class="text-slate-600 text-xs font-mono">PENDING</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-center gap-8">
+<div class="flex justify-around items-center glass-card p-10 rounded-xl">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="80" cy="80" fill="none" r="70" stroke="#1e3050" stroke-width="6"></circle>
+<circle class="drop-shadow-[0_0_4px_rgba(0,229,255,0.5)]" cx="80" cy="80" fill="none" r="70" stroke="#00e5ff" stroke-dasharray="440" stroke-dashoffset="110" stroke-width="6"></circle>
+</svg>
+<div class="absolute text-center">
+<span class="block text-4xl font-mono font-bold text-white">75<span class="text-lg">%</span></span>
+<span class="text-[10px] text-muted-teal font-heading tracking-[0.2em] mt-1">CONFIDENCE</span>
+</div>
+</div>
+<div class="space-y-6 w-1/2">
+<div>
+<div class="flex justify-between text-xs mb-2">
+<span class="text-slate-400 font-heading font-bold">CPU LOAD</span>
+<span class="text-primary font-mono">42%</span>
+</div>
+<div class="h-1.5 w-full bg-slate-800 rounded-full">
+<div class="h-full bg-primary w-[42%] rounded-full shadow-glow-text"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-xs mb-2">
+<span class="text-slate-400 font-heading font-bold">MEMORY</span>
+<span class="text-violet font-mono">88%</span>
+</div>
+<div class="h-1.5 w-full bg-slate-800 rounded-full">
+<div class="h-full bg-violet w-[88%] rounded-full shadow-[0_0_8px_#a78bfa]"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="mb-12">
+<div class="flex items-center gap-4 mb-10">
+<span class="text-primary font-display text-lg border border-primary/30 px-3 py-1 rounded">06</span>
+<h4 class="font-heading font-bold text-xl tracking-wide text-slate-400 uppercase">Conversational Interface</h4>
+</div>
+<div class="glass-card rounded-2xl p-10 max-w-4xl mx-auto border-t border-t-primary/20">
+<div class="space-y-10">
+<div class="flex justify-end">
+<div class="bg-surface border border-muted-teal/30 text-slate-200 px-8 py-5 rounded-2xl rounded-tr-sm max-w-[80%] shadow-sm">
+<p class="text-base leading-relaxed font-body">Can you analyze the quarterly growth projections based on the new dataset?</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="flex-shrink-0 mt-1">
+<div class="w-12 h-12 rounded-full bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-white text-lg">auto_awesome</span>
+</div>
+</div>
+<div class="space-y-4 max-w-[85%]">
+<div class="text-muted-teal text-xs font-mono mb-1">NITARA AI • 14:02</div>
+<div class="text-slate-200 text-base leading-relaxed font-body">
+                                I've processed the dataset. The projections indicate a <span class="text-primary font-bold">15% increase</span> in Q4 revenue, primarily driven by the Asian market expansion.
+                            </div>
+<div class="bg-surface/50 border border-muted-teal/30 rounded-lg p-5 flex items-center justify-between gap-6 mt-3 hover:border-primary/40 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center text-primary border border-primary/20">
+<span class="material-icons">insert_chart</span>
+</div>
+<div>
+<div class="text-white text-sm font-bold font-heading">Q4_Projection_Report.pdf</div>
+<div class="text-slate-500 text-xs mt-1">2.4 MB • Generated just now</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="p-2 hover:bg-white/10 rounded text-slate-400 hover:text-white transition-colors">
+<span class="material-icons text-xl">visibility</span>
+</button>
+<button class="bg-primary text-black px-5 py-2 rounded text-xs font-bold uppercase hover:bg-white transition-colors tracking-wide">
+                                        Approve
+                                    </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<footer class="mt-20 border-t border-muted-teal/20 pt-8 text-center">
+<p class="font-mono text-xs text-slate-600">NITARA SYSTEMS // CONFIDENTIAL</p>
+</footer>
+</main>
+<script>
+        // No JS logic required for static design system view
+    </script>
+
+</body></html>

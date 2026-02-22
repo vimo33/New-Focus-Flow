@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Deep Space Dashboard</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00E5FF", 
+                        "primary-dim": "#00E5FF33",
+                        "phosphor-green": "#22C55E",
+                        "muted-teal": "#3BBFB2",
+                        "amber": "#ffb703",
+                        "violet": "#a78bfa",
+                        "background-dark": "#000000","background-light": "#f5f8f8",
+                        "surface": "#000000",
+                        "surface-glass": "rgba(0, 0, 0, 0.8)",
+                        "border-cyan": "rgba(0, 229, 255, 0.8)","border-green": "rgba(34, 197, 94, 0.8)",},
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],
+                        "heading": ["DM Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 25px rgba(0, 229, 255, 0.6)","glow-amber": "0 0 20px rgba(255, 183, 3, 0.5)",
+                        "glow-text": "0 0 12px rgba(0, 229, 255, 0.9)",
+                        "glow-teal": "0 0 15px rgba(59, 191, 178, 0.4)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-starfield {
+            background-color: #000000;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.3) 1px, transparent 2px),radial-gradient(#00E5FF, rgba(0, 229, 255,.2) 1px, transparent 1px);background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);backdrop-filter: blur(24px);-webkit-backdrop-filter: blur(24px);
+            border-right: 1px solid rgba(0, 229, 255, 0.8);}
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%);backdrop-filter: blur(24px);-webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(0, 229, 255, 0.8);box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }.border-phosphor {
+             border-color: rgba(34, 197, 94, 0.8) !important;
+        }
+        .breathing-pulse {
+            animation: pulse-glow 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse-glow {
+            0%, 100% { border-color: rgba(0, 229, 255, 0.5); box-shadow: 0 0 10px rgba(0, 229, 255, 0.3); }
+            50% { border-color: #00E5FF; box-shadow: 0 0 25px rgba(0, 229, 255, 0.6); }
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #00E5FF;border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ffffff;
+        }
+    </style>
+</head>
+<body class="bg-starfield text-white font-body antialiased selection:bg-primary selection:text-black min-h-screen flex overflow-hidden">
+<nav class="w-[48px] h-screen glass-panel flex flex-col items-center py-6 z-50 fixed left-0 top-0 border-r border-cyan">
+<div class="mb-10">
+<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-cyan-200 flex items-center justify-center shadow-glow-primary animate-pulse">
+<span class="material-icons text-black text-[10px] font-bold">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-6 w-full items-center">
+<button class="group relative flex items-center justify-center w-full h-10">
+<div class="absolute left-0 h-4 w-0.5 bg-primary shadow-[0_0_10px_#00E5FF] rounded-r"></div>
+<span class="material-icons text-primary shadow-glow-text text-xl transition-all group-hover:scale-110 drop-shadow-[0_0_5px_rgba(0,229,255,0.8)]">star</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-slate-400 hover:text-white transition-colors">
+<span class="material-icons text-xl group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">grid_view</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-slate-400 hover:text-white transition-colors">
+<span class="material-icons text-xl group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">hub</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-slate-400 hover:text-white transition-colors">
+<span class="material-icons text-xl group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">schedule</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-slate-400 hover:text-white transition-colors">
+<span class="material-icons text-xl group-hover:drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">settings</span>
+</button>
+</div>
+</nav>
+<main class="ml-[48px] w-full h-screen flex flex-col p-8 lg:p-12 relative overflow-y-auto">
+<header class="flex justify-between items-end mb-12 relative z-10">
+<div>
+<h1 class="font-display font-bold text-4xl lg:text-5xl text-white mb-3 uppercase tracking-wider drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">
+                Good morning, Vimo.
+            </h1>
+<p class="text-slate-200 font-heading text-lg max-w-2xl leading-relaxed drop-shadow-md">
+                You have <span class="text-primary font-bold drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">3 priorities</span> today, <span class="text-amber font-bold drop-shadow-[0_0_8px_rgba(255,183,3,0.6)]">2 approvals</span> pending, and a warm lead from your Zürich network.
+            </p>
+</div>
+<div class="text-right hidden md:block">
+<div class="font-mono text-3xl text-white font-bold tracking-tight mb-1 drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">08:42</div>
+<div class="font-mono text-xs text-primary tracking-widest uppercase drop-shadow-[0_0_5px_rgba(0,229,255,0.4)]">Tuesday, Oct 24</div>
+</div>
+</header>
+<div class="grid grid-cols-12 gap-6 mb-24 flex-1">
+<div class="col-span-12 lg:col-span-7 glass-card rounded-xl p-6 relative group hover:shadow-[0_0_30px_rgba(0,229,255,0.15)] transition-all duration-500">
+<div class="flex justify-between items-center mb-6 border-b border-cyan pb-4">
+<h3 class="font-heading font-bold text-white text-lg flex items-center gap-2 drop-shadow-md">
+<span class="material-icons text-primary text-sm drop-shadow-[0_0_5px_rgba(0,229,255,0.8)]">filter_center_focus</span>
+                    Today's Focus
+                </h3>
+<span class="text-xs font-mono text-primary bg-primary/20 border border-primary/40 px-2 py-1 rounded drop-shadow-sm">3 ACTIVE</span>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between p-3 rounded hover:bg-white/10 transition-colors cursor-pointer group/item border border-transparent hover:border-primary/50">
+<div class="flex items-center gap-4">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-400 group-hover/item:bg-primary group-hover/item:shadow-[0_0_8px_#00E5FF] transition-all"></div>
+<div>
+<h4 class="text-white font-medium text-base">Draft ESG Proposal</h4>
+<p class="text-xs text-slate-300 font-mono mt-0.5">Bramha Project • Due 2pm</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-mono text-primary border border-primary/50 px-2 py-0.5 rounded opacity-0 group-hover/item:opacity-100 transition-opacity shadow-[0_0_10px_rgba(0,229,255,0.2)]">START</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded bg-white/[0.05] border border-primary relative overflow-hidden shadow-[0_0_15px_rgba(0,229,255,0.15)]">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary shadow-[0_0_15px_#00E5FF]"></div>
+<div class="flex items-center gap-4 relative z-10">
+<div class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary shadow-[0_0_8px_#00E5FF]"></span>
+</div>
+<div>
+<h4 class="text-white font-bold text-base drop-shadow-sm">Client Sync</h4>
+<p class="text-xs text-primary font-mono mt-0.5 drop-shadow-[0_0_3px_rgba(0,229,255,0.5)]">Consulting • Nitara Active</p>
+</div>
+</div>
+<div class="flex items-center gap-3 relative z-10">
+<span class="text-xs font-mono text-black bg-primary px-2 py-0.5 rounded font-bold shadow-[0_0_10px_rgba(0,229,255,0.4)]">IN PROGRESS</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-3 rounded hover:bg-white/10 transition-colors cursor-pointer group/item border border-transparent hover:border-primary/50">
+<div class="flex items-center gap-4">
+<div class="w-1.5 h-1.5 rounded-full bg-slate-400 group-hover/item:bg-primary group-hover/item:shadow-[0_0_8px_#00E5FF] transition-all"></div>
+<div>
+<h4 class="text-white font-medium text-base">Review Dev Logs</h4>
+<p class="text-xs text-slate-300 font-mono mt-0.5">Studio • Pending</p>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-mono text-primary border border-primary/50 px-2 py-0.5 rounded opacity-0 group-hover/item:opacity-100 transition-opacity shadow-[0_0_10px_rgba(0,229,255,0.2)]">VIEW</span>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 glass-card rounded-xl p-6 flex flex-col gap-4 border-phosphor" style="border-color: rgba(34, 197, 94, 0.8);">
+<div class="flex justify-between items-center mb-2 border-b border-phosphor pb-4">
+<h3 class="font-heading font-bold text-white text-lg flex items-center gap-2 drop-shadow-md">
+<span class="material-icons text-amber text-sm drop-shadow-[0_0_8px_rgba(255,183,3,0.8)]">gavel</span>
+                    Pending Approvals
+                </h3>
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-amber shadow-[0_0_8px_#FFB703]"></span>
+</span>
+</div>
+<div class="bg-surface/60 border-l-2 border-amber p-4 rounded-r-lg relative group border-t border-r border-b border-white/10 hover:border-amber/50 transition-colors">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="text-white font-medium text-sm">Publish blog post</h4>
+<p class="text-xs text-slate-400 mt-1">"The Future of AI Governance"</p>
+</div>
+<span class="material-icons text-slate-400 text-sm">article</span>
+</div>
+<div class="flex gap-2 justify-end">
+<button class="text-[10px] font-mono uppercase tracking-wider text-muted-teal hover:text-white px-3 py-1.5 border border-muted-teal/50 rounded hover:bg-muted-teal/20 transition-colors shadow-[0_0_5px_rgba(59,191,178,0.2)]">Edit</button>
+<button class="text-[10px] font-mono uppercase tracking-wider text-black bg-muted-teal hover:bg-white px-3 py-1.5 rounded transition-colors shadow-[0_0_10px_rgba(59,191,178,0.6)] font-bold">Approve</button>
+</div>
+</div>
+<div class="bg-surface/60 border-l-2 border-amber p-4 rounded-r-lg relative group border-t border-r border-b border-white/10 hover:border-amber/50 transition-colors">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="text-white font-medium text-sm">Invoicing: Acme Corp</h4>
+<p class="text-xs text-slate-400 mt-1">#INV-2024-001 • $12,500.00</p>
+</div>
+<span class="material-icons text-slate-400 text-sm">receipt_long</span>
+</div>
+<div class="flex gap-2 justify-end">
+<button class="text-[10px] font-mono uppercase tracking-wider text-muted-teal hover:text-white px-3 py-1.5 border border-muted-teal/50 rounded hover:bg-muted-teal/20 transition-colors shadow-[0_0_5px_rgba(59,191,178,0.2)]">Edit</button>
+<button class="text-[10px] font-mono uppercase tracking-wider text-black bg-muted-teal hover:bg-white px-3 py-1.5 rounded transition-colors shadow-[0_0_10px_rgba(59,191,178,0.6)] font-bold">Approve</button>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-5 glass-card rounded-xl p-6 flex flex-col justify-between border-phosphor" style="border-color: rgba(34, 197, 94, 0.8);">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-heading font-bold text-white text-lg drop-shadow-md">Financial Pulse</h3>
+<span class="material-icons text-slate-400 text-lg">show_chart</span>
+</div>
+<div class="grid grid-cols-3 gap-4">
+<div class="space-y-1">
+<p class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Revenue</p>
+<p class="text-2xl font-mono text-white font-bold drop-shadow-[0_0_5px_rgba(255,255,255,0.3)]">4,200</p>
+<div class="h-8 w-full">
+<svg class="w-full h-full" viewBox="0 0 50 20">
+<path d="M0 15 L10 12 L20 16 L30 8 L40 10 L50 2" fill="none" filter="drop-shadow(0 0 2px #ffb703)" stroke="#ffb703" stroke-opacity="0.8" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Costs</p>
+<p class="text-2xl font-mono text-slate-300 font-bold">890</p>
+<div class="h-8 w-full">
+<svg class="w-full h-full" viewBox="0 0 50 20">
+<path d="M0 18 L10 15 L20 16 L30 14 L40 15 L50 12" fill="none" stroke="#94a3b8" stroke-opacity="0.8" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<div class="space-y-1">
+<p class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Net</p>
+<p class="text-2xl font-mono text-[#22C55E] font-bold drop-shadow-[0_0_8px_rgba(34,197,94,0.6)]">3,310</p>
+<div class="h-8 w-full">
+<svg class="w-full h-full" viewBox="0 0 50 20">
+<path d="M0 15 L10 12 L20 16 L30 8 L40 10 L50 2" fill="none" filter="drop-shadow(0 0 4px #22C55E)" stroke="#22C55E" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-4 glass-card rounded-xl p-6 relative overflow-hidden group hover:border-violet transition-colors">
+<div class="absolute -right-6 -top-6 w-24 h-24 bg-violet/20 rounded-full blur-xl group-hover:bg-violet/30 transition-all"></div>
+<div class="relative z-10">
+<h3 class="font-heading font-bold text-white text-lg mb-4 flex items-center gap-2 drop-shadow-md">
+<span class="material-icons text-violet text-sm drop-shadow-[0_0_8px_rgba(167,139,250,0.8)]">hub</span>
+                    Network Intel
+                </h3>
+<div class="flex items-start gap-4 mb-4">
+<div class="w-10 h-10 rounded bg-violet/20 flex items-center justify-center text-violet font-bold font-mono border border-violet/50 shadow-[0_0_10px_rgba(167,139,250,0.3)]">RK</div>
+<div>
+<h4 class="text-white font-bold text-base">Rajesh K.</h4>
+<p class="text-xs text-primary">CTO @ SwissFintech AG</p>
+</div>
+</div>
+<p class="text-sm text-slate-300 leading-relaxed mb-4 border-l-2 border-violet/50 pl-3">
+                    Rajesh just posted about blockchain integration. Good timing to re-engage regarding our secure API modules.
+                </p>
+<button class="w-full py-2 bg-white/5 hover:bg-white/10 border border-white/20 hover:border-white/50 rounded text-xs font-mono uppercase tracking-wider text-slate-300 hover:text-white transition-all flex items-center justify-center gap-2 group-hover:shadow-[0_0_15px_rgba(167,139,250,0.2)]">
+<span class="material-icons text-sm">send</span> Draft Message
+                </button>
+</div>
+</div>
+<div class="col-span-12 md:col-span-6 lg:col-span-3 glass-card rounded-xl p-6">
+<h3 class="font-heading font-bold text-white text-lg mb-4 flex items-center gap-2 drop-shadow-md">
+<span class="material-icons text-muted-teal text-sm drop-shadow-[0_0_8px_rgba(59,191,178,0.8)]">calendar_month</span>
+                Calendar
+            </h3>
+<div class="space-y-4">
+<div class="flex items-center justify-between text-sm">
+<span class="text-slate-200 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-slate-500 rounded-full box-shadow-[0_0_5px_white]"></span> Blog Post</span>
+<span class="text-[10px] font-mono bg-amber/20 text-amber px-1.5 py-0.5 rounded border border-amber/40 shadow-[0_0_5px_rgba(255,183,3,0.3)]">DRAFTED</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-slate-200 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-slate-500 rounded-full"></span> LinkedIn</span>
+<span class="text-[10px] font-mono bg-blue-500/20 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/40 shadow-[0_0_5px_rgba(59,130,246,0.3)]">PLANNED</span>
+</div>
+<div class="flex items-center justify-between text-sm">
+<span class="text-slate-200 flex items-center gap-2"><span class="w-1.5 h-1.5 bg-slate-500 rounded-full"></span> Twitter</span>
+<span class="text-[10px] font-mono bg-slate-700/60 text-slate-400 px-1.5 py-0.5 rounded border border-slate-500/50">QUEUE</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-[48px] right-0 p-6 z-40 pointer-events-none flex flex-col items-center justify-end h-48 bg-gradient-to-t from-[#000000] via-[#000000]/95 to-transparent">
+<div class="pointer-events-auto w-full max-w-3xl relative">
+<div class="absolute -top-16 left-0 right-0 text-center opacity-0 animate-[fadeIn_0.5s_ease-out_forwards] animation-delay-500">
+<p class="inline-block bg-black/80 border border-primary/40 backdrop-blur-xl px-6 py-2 rounded-full text-white text-sm shadow-[0_0_20px_rgba(0,0,0,0.8)]">
+<span class="text-primary mr-2 font-bold text-lg drop-shadow-[0_0_8px_#00E5FF]">●</span> I've drafted the proposal for the Weiterbildung course. Ready for your review when you are.
+                </p>
+</div>
+<div class="relative group mt-4">
+<input class="w-full bg-black/80 backdrop-blur-xl border-2 border-cyan text-white p-4 pl-6 pr-14 rounded-full breathing-pulse focus:outline-none focus:ring-2 focus:ring-primary font-body placeholder-slate-400 shadow-[0_0_30px_rgba(0,0,0,0.8)]" placeholder="Talk to Nitara..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-primary/20 hover:bg-primary/40 flex items-center justify-center group-focus-within:bg-primary group-focus-within:shadow-[0_0_20px_rgba(0,229,255,0.8)] transition-all duration-300">
+<span class="material-icons text-primary group-focus-within:text-black font-bold">mic</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animation-delay-500 {
+        animation-delay: 0.5s;
+        animation-fill-mode: forwards;
+    }
+</style>
+
+</body></html>

@@ -1,0 +1,236 @@
+notes:
+  baseline: Old UI library (dark glass + cyan/teal) is canonical.
+  nav: Bottom nav is primary. Add a persistent Voice button (center) that opens Voice
+    Console / Overlay.
+  ventures_first: Make Think->Ventures the default landing for portfolio management;
+    Strategy becomes portfolio insights.
+screens:
+- id: 01-think-strategy
+  route: /think/strategy
+  primary_ref: nitara_observatory (strategic suggestions pattern)
+  components:
+  - MetricTile
+  - StrategicSuggestionCard
+  - EvidenceDrawer
+  - StatusChip
+  ux: 'Venture-first: reduce duplication with Ventures; Strategy becomes Insights
+    view'
+- id: 02-think-ventures
+  route: /think/ventures
+  primary_ref: Portfolio (old UI)
+  components:
+  - ProjectCard
+  - StageStepper
+  - ExpandableText(3-line)
+  - QuickActionBar
+  ux: Default Think landing; fix linking/display; add skeleton/progress
+- id: 03-think-finance
+  route: /think/finance
+  primary_ref: Financial Gravity + Observatory
+  components:
+  - MetricTile
+  - DonutBreakdown
+  - SuggestionCard
+  ux: Show baseline + editable fields (gated if global)
+- id: 04-think-comms
+  route: /think/comms
+  primary_ref: Morning Briefing approvals module
+  components:
+  - ApprovalList
+  - DraftComposer
+  - StatusChip
+  ux: All external comms create approval cards
+- id: 05-validate-stack
+  route: /validate/stack
+  primary_ref: Experiment Stack (Crucible)
+  components:
+  - ExperimentCard
+  - DecisionGatePanel
+  - ConfidenceBadge
+  - EvidenceDrawer
+  ux: Decision Required queue pinned top
+- id: 06-validate-variant-testing
+  route: /validate/variant-testing
+  primary_ref: Crucible decision card patterns
+  components:
+  - VariantCard
+  - GuardrailEditor
+  - RollbackPreview
+  ux: Rollback always visible; launch gated
+- id: 07-validate-data-sources
+  route: /validate/data-sources
+  primary_ref: Design System pipeline visualization
+  components:
+  - ConnectorTile
+  - FreshnessChip
+  - IngestLogTable
+  ux: Explain impact if source down
+- id: 08-build-build
+  route: /build/build
+  primary_ref: Autonomous Builder (old purple builder screen patterns)
+  components:
+  - ExecutionPreview
+  - AgentActivityFeed
+  - ApproveDeployCTA
+  ux: Shows plan + cost/risk + approval
+- id: 09-build-control
+  route: /build/control
+  primary_ref: System settings panels
+  components:
+  - Toggle
+  - BudgetCard
+  - SetupModeBanner
+  ux: Setup Mode prominent; typed confirm
+- id: 10-build-agents
+  route: /build/agents
+  primary_ref: Agent timeline/activity feed
+  components:
+  - AgentCard
+  - PermissionMatrix
+  - MemoryScopeTag
+  ux: Agent x tool permissions visible
+- id: 11-build-data
+  route: /build/data
+  primary_ref: Secure Data Room patterns
+  components:
+  - ArtifactList
+  - PdfViewer
+  - AuditTrail
+  ux: Provenance on artifacts
+- id: 12-build-tune
+  route: /build/tune
+  primary_ref: Archetype Selection
+  components:
+  - ArchetypeCard
+  - VoicePreview
+  - PromptPresetSelector
+  ux: Preview persona tone + confidence
+- id: 13-grow-resources
+  route: /grow/resources
+  primary_ref: Resource & Simulation Engine
+  components:
+  - StackedAllocationBars
+  - RadarBalance
+  - ApplyAdjustmentCTA
+  ux: Rebalance always approval-gated
+- id: 14-grow-kpis
+  route: /grow/kpis
+  primary_ref: Observatory KPI tiles
+  components:
+  - MetricTile
+  - TrendSparkline
+  - CoverageBadge
+  ux: Confidence + data coverage per KPI
+- id: 15-grow-simulation
+  route: /grow/simulation
+  primary_ref: Simulation Engine V3
+  components:
+  - ScenarioSliders
+  - ProjectionChart
+  - ApplyAdjustmentCTA
+  ux: Save/compare scenarios
+- id: 16-grow-market
+  route: /grow/market
+  primary_ref: Deck Preview market gap slide + council market analysis
+  components:
+  - SignalCard
+  - MarketInsightCard
+  - RunEvaluationCTA
+  ux: Signals map to next actions
+- id: 17-leverage-network
+  route: /leverage/network
+  primary_ref: Network View (old UI)
+  components:
+  - GraphCanvas
+  - ContactListVirtualized
+  - DraftOutreachCTA
+  ux: Virtualize list; add loading progress
+- id: 18-leverage-playbooks
+  route: /leverage/playbooks
+  primary_ref: Knowledge Harvest / playbook repository patterns
+  components:
+  - PlaybookCard
+  - ApplyTemplateCTA
+  - TriggerRulesPanel
+  ux: From experiment result → playbook entry
+- id: 19-leverage-tools
+  route: /leverage/tools
+  primary_ref: DS component library / tool registry
+  components:
+  - ToolCard
+  - InstallCTA
+  - AgentToolMatrix
+  ux: Install/enable gated as needed
+- id: 20-leverage-partnerships
+  route: /leverage/partnerships
+  primary_ref: Network + outreach patterns
+  components:
+  - PartnerCard
+  - DraftIntroCTA
+  - ApprovalBadge
+  ux: All outbound comms gated
+- id: 21-canvas-settings
+  route: /canvas/settings
+  primary_ref: DS tokens/settings
+  components:
+  - TokenViewer
+  - Toggle
+  - KeyValueList
+  ux: No surprises; audit changes
+- id: 22-canvas-calendar
+  route: /canvas/calendar
+  primary_ref: Morning briefing calendar tile
+  components:
+  - CalendarList
+  - StatusChip
+  ux: Fast load; skeletons
+- id: 23-canvas-financials
+  route: /canvas/financials
+  primary_ref: Observatory finance cards
+  components:
+  - MetricTile
+  - BreakdownCard
+  ux: Fast load; cache
+- id: 24-canvas-portfolio
+  route: /canvas/portfolio
+  primary_ref: Portfolio cards
+  components:
+  - ProjectCard
+  - StageStepper
+  ux: Fast load; virtualization if list
+- id: 26-canvas-venture-wizard
+  route: /canvas/venture-wizard
+  primary_ref: Onboarding wizard patterns
+  components:
+  - WizardStepper
+  - FormCard
+  - VoiceAssistCTA
+  ux: Voice-first profiling hooks
+- id: 27-canvas-morning-briefing
+  route: /canvas/morning-briefing
+  primary_ref: Morning Briefing (old UI)
+  components:
+  - PrioritiesList
+  - ApprovalsList
+  - NetworkIntelCard
+  - VoiceBar
+  ux: Primary daily home option
+- id: 28-command-palette
+  route: /command
+  primary_ref: Global Search Portal
+  components:
+  - CommandPalette
+  - RecentContextChips
+  - SuggestionsRow
+  ux: Keyboard-first; instant open
+voice:
+  nav_integration: Add a persistent center Voice button in bottom nav; opens /voice
+    console + overlay.
+  refs:
+  - nitara_voice_interaction_states.png
+  - ConversationRail.tsx
+  - VoiceOverlay
+  - VoicePill
+  livekit:
+    transcription_topic: lk.transcription
+    data_channel_topic: nitara.canvas

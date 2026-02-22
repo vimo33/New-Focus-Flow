@@ -5,10 +5,14 @@
   "priority": "low",
   "directive_aligned": false,
   "trust_tier": 1,
-  "status": "queued",
+  "status": "completed",
   "max_duration_minutes": 120,
   "created_at": "2026-02-20T09:00:01.784Z",
   "hitl_timeout_hours": 24,
   "retry_count": 0,
-  "created_by": "system"
+  "created_by": "system",
+  "started_at": "2026-02-22T00:00:02.105Z",
+  "pid": 2593787,
+  "completed_at": "2026-02-22T00:08:03.466Z",
+  "result_file": "/srv/focus-flow/07_system/reports/research-youtube-2026-02-22.json"
 }

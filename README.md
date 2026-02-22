@@ -1,125 +1,94 @@
-# Focus Flow OS
+# Nitara
 
-**A Personal Productivity & Wellbeing Operating System with Autonomous AI Capabilities**
+**AI Co-Founder for Solo Entrepreneurs**
 
-Focus Flow OS is a comprehensive personal productivity system that combines task management, project planning, idea validation, and health tracking into a unified platform. Built with modern web technologies and powered by AI, it helps you capture, organize, and execute on what matters most.
-
----
-
-## Quick Start
-
-### Prerequisites
-- Node.js 22+
-- Docker & Docker Compose
-- Linux (Ubuntu 22.04+ recommended)
-
-### Installation
-
-```bash
-# Clone repository (if using Git)
-git clone <repository-url>
-cd /srv/focus-flow
-
-# Install backend
-cd 02_projects/active/focus-flow-backend
-npm install
-cp .env.example .env
-# Edit .env with your configuration
-npm run build
-npm start
-
-# Install frontend
-cd ../focus-flow-ui
-npm install
-npm run build
-npm run preview
-
-# Start Docker services
-cd /srv/focus-flow/07_system/config
-docker compose up -d
-```
-
-### Quick Test
-
-```bash
-# Test backend API
-curl http://localhost:3001/health
-
-# Capture an item
-curl -X POST http://localhost:3001/api/capture \
-  -H "Content-Type: application/json" \
-  -d '{"text": "My first quick capture!"}'
-
-# View inbox
-curl http://localhost:3001/api/inbox
-```
-
-Access the UI at: `http://localhost:3008`
+Nitara (Sanskrit: Niti + Tara = Strategic Star) is an autonomous AI agent platform that helps solo entrepreneurs manage a portfolio of ventures. It turns uncertainty into decisions across idea validation, building, growth, and strategic leverage — powered by Claude Code as the execution engine.
 
 ---
 
-## Features
+## What Nitara Does
 
-### Core Capabilities
+Nitara operates in **five modes**, each with specialized agents:
 
-- **Quick Capture**: Capture thoughts instantly via web, Telegram, or API
-- **AI Classification**: Automatic categorization of inbox items using Claude AI
-- **Task Management**: Organize tasks by category, priority, and due date
-- **Project Planning**: Full project lifecycle management with workspaces
-- **Idea Validation**: AI Council for evaluating ideas from multiple perspectives
-- **Health Tracking**: Log and visualize wellbeing metrics
-- **Voice Input**: Web Speech API integration for hands-free capture
-- **Telegram Bot**: Mobile quick capture and notifications
-- **Real-time Updates**: WebSocket support for live UI updates
+| Mode | Purpose | Key Agents |
+|------|---------|------------|
+| **Think** | Portfolio strategy, idea intake, scoring, hypothesis generation | nitara-think, nitara-portfolio-analyst |
+| **Validate** | Experiment design, measurement, decision gates (Scale/Iterate/Pivot/Park/Kill) | nitara-validate, nitara-experimenter |
+| **Build** | Autonomous builder with agent runs, HITL checkpoints, approval queue | nitara-builder, nitara-backend, nitara-frontend |
+| **Grow** | Resource allocation, KPI dashboards, simulation, go-to-market | nitara-grow, nitara-researcher |
+| **Leverage** | Network intelligence, playbook library, partnerships | nitara-leverage, nitara-network-analyst |
 
-### AI Features
+### Autonomous Agent System
 
-- **Auto-classification**: Intelligent categorization of inbox items
-- **AI Council**: Multi-agent debate system for idea validation
-- **Smart Suggestions**: Context-aware recommendations
-- **Personal Memory**: mem0 integration for personalized AI responses
-- **Voice Transcription**: Whisper API for voice notes
+- **83 skills** across development, marketing, security, copywriting, research, and operations
+- **20 agents** with specialized capabilities (Opus for reasoning, Sonnet for execution, Haiku for checks)
+- **14 hook scripts** for safety gates, cost tracking, design token validation, and security checks
+- **Scheduled tasks** via cron — morning briefings, portfolio analysis, market research, network enrichment, marketing analysis
+- **Human-in-the-loop** via Telegram for approvals and profiling questions
+- **Kill switch** — `touch 07_system/agent/KILL_SWITCH` halts all autonomous operations
+- **Cost budget** — configurable daily spend limit ($20/day default)
 
-### Architecture
+### Skills Inventory (83 total)
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  INPUT: Telegram • PWA • Voice • API                       │
-├─────────────────────────────────────────────────────────────┤
-│  BACKEND: Node.js + Express + TypeScript                   │
-├─────────────────────────────────────────────────────────────┤
-│  AI: Claude API • Auto-classification • AI Council         │
-├─────────────────────────────────────────────────────────────┤
-│  SERVICES: OpenClaw • Qdrant • mem0 • Coolify             │
-├─────────────────────────────────────────────────────────────┤
-│  STORAGE: File-based Vault (/srv/focus-flow)              │
-└─────────────────────────────────────────────────────────────┘
-```
+| Category | Count | Examples |
+|----------|-------|---------|
+| Core Nitara | 56 | portfolio-analysis, build-mvp, experiment-loop, network-enrich, morning-briefing |
+| Marketing (mkt-*) | 14 | content-strategy, seo-audit, pricing-strategy, launch-strategy, cold-email |
+| Copywriting (copy-*) | 7 | david-ogilvy, dan-kennedy, eugene-schwartz, brand-foundation |
+| Security (sec-*) | 5 | insecure-defaults, sharp-edges, differential-review, static-analysis |
+| UI/UX | 1 | ui-ux-pro-max |
+| Testing | 1 | playwright-test (E2E smoke tests) |
+
+**Superpowers plugin** (obra/superpowers v4.3.1) adds 14 more via Claude Code plugin system: TDD, systematic debugging, verification, brainstorming, code review, git worktrees.
 
 ---
 
-## Technology Stack
+## Tech Stack
 
-### Frontend
-- **React 19** - UI framework
-- **Vite** - Build tool
-- **TypeScript** - Type safety
-- **Tailwind CSS 4** - Styling
-- **Zustand** - State management
-- **React Router 7** - Navigation
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 19, Vite, TypeScript, Tailwind CSS 4, Zustand |
+| Backend | Express 5, TypeScript, Node.js 22 |
+| Database | PostgreSQL 16 (Drizzle ORM) + file-based vault |
+| AI | Claude via OpenClaw gateway (Opus/Sonnet/Haiku) |
+| Memory | Mem0 (semantic), Qdrant (vector), file vault (artifacts) |
+| Voice | LiveKit Agents (Deepgram STT + Cartesia TTS) |
+| Agent Engine | Claude Code CLI with queue at `07_system/agent/queue/` |
+| Testing | Playwright (E2E), TypeScript strict mode |
+| Infrastructure | systemd, UFW, Tailscale |
 
-### Backend
-- **Node.js 22** - Runtime
-- **Express** - Web framework
-- **TypeScript** - Type safety
-- **Anthropic Claude API** - AI capabilities
+---
 
-### Infrastructure
-- **Docker** - Containerization
-- **Tailscale** - Secure networking
-- **UFW** - Firewall
-- **Qdrant** - Vector database
-- **mem0** - Personal memory layer
+## Architecture
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│  INPUT: Telegram Bot • Web UI • Voice • API • Scheduled Cron  │
+├────────────────────────────────────────────────────────────────┤
+│  FRONTEND: React 19 + Canvas Architecture (5 modes)           │
+│  ├── Dock Nav (bottom) → Mode-contextual sub-items            │
+│  ├── Canvas Router → State-driven screen rendering            │
+│  └── Conversation Rail → Persistent AI chat + approvals       │
+├────────────────────────────────────────────────────────────────┤
+│  BACKEND: Express 5 + TypeScript                              │
+│  ├── REST API (projects, experiments, decisions, network)     │
+│  ├── Task Queue Service (polls 07_system/agent/queue/)        │
+│  └── Telegram HITL Service (grammY webhook)                   │
+├────────────────────────────────────────────────────────────────┤
+│  AGENT SYSTEM: Claude Code CLI                                │
+│  ├── 20 Agents (Opus/Sonnet/Haiku by task complexity)         │
+│  ├── 83 Skills (atomic, orchestrator, user-facing)            │
+│  ├── 14 Hook Scripts (safety, cost, validation, security)     │
+│  └── Autonomy Tiers: T1 (auto) / T2 (soft gate) / T3 (hard) │
+├────────────────────────────────────────────────────────────────┤
+│  AI LAYER: OpenClaw Gateway → Claude API                      │
+│  ├── Inference logging + cost tracking                        │
+│  └── Knowledge graph + serendipity scanning                   │
+├────────────────────────────────────────────────────────────────┤
+│  STORAGE: PostgreSQL 16 + File Vault (/srv/focus-flow)        │
+│  └── Qdrant (vectors) + Mem0 (semantic memory)                │
+└────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -127,445 +96,126 @@ Access the UI at: `http://localhost:3008`
 
 ```
 /srv/focus-flow/
-├── 00_inbox/              # Quick capture inbox
-│   ├── raw/              # Unprocessed items
-│   ├── processing/       # Being classified
-│   └── archive/          # Processed items
-├── 01_tasks/             # Task management
-│   ├── work/            # Work tasks
-│   ├── personal/        # Personal tasks
-│   └── scheduled/       # Scheduled tasks
-├── 02_projects/          # Project management
-│   ├── active/          # Active projects
-│   │   ├── focus-flow-backend/     # Backend API
-│   │   ├── focus-flow-ui/          # Frontend PWA
-│   │   └── focus-flow-telegram-bot/ # Telegram bot
-│   ├── paused/          # Paused projects
-│   └── completed/       # Completed projects
-├── 03_ideas/            # Idea validation
-│   ├── inbox/          # New ideas
-│   ├── validated/      # Approved ideas
-│   └── rejected/       # Rejected ideas
-├── 04_notes/           # Notes (future)
-├── 05_events/          # Calendar (future)
-├── 06_health/          # Health tracking
-│   └── logs/          # Health metrics
-└── 07_system/          # System configuration
-    ├── config/        # Docker Compose, configs
-    ├── secrets/       # API keys, tokens
-    ├── logs/          # System logs
-    ├── memory/        # AI memory storage
-    └── scripts/       # Automation scripts
+├── CLAUDE.md                        # Agent system rules + design tokens
+├── docs/nitara/                     # Context pack (19 docs)
+├── design/                          # Design tokens, Stitch exports
+├── 02_projects/active/
+│   ├── focus-flow-backend/src/      # Express API
+│   └── focus-flow-ui/src/           # React frontend
+│       ├── components/Canvas/       # Mode-specific screens
+│       ├── components/shared/       # GlassCard, StatCard, Badge, etc.
+│       ├── stores/                  # Zustand state
+│       └── services/                # API client
+├── .claude/
+│   ├── agents/                      # 20 agent definitions
+│   ├── skills/                      # 83 skill definitions
+│   ├── scripts/                     # 14 hook scripts
+│   └── hooks/validators/            # Deterministic validators
+├── 07_system/
+│   ├── agent/queue/                 # Autonomous task queue
+│   ├── agent/cost-budget.json       # Daily budget ($20)
+│   ├── agent/schedule.json          # 22 scheduled tasks
+│   ├── agent/KILL_SWITCH            # Touch to halt all agents
+│   ├── reports/                     # Generated analysis reports
+│   ├── config/                      # Docker Compose, configs
+│   └── secrets/                     # API keys (not in Git)
+├── 08_threads/                      # Conversation transcripts
+└── 10_profile/                      # Founder profile data
 ```
 
 ---
 
-## Usage Examples
+## Quick Start
 
-### Quick Capture via API
+### Prerequisites
+- Node.js 22+
+- PostgreSQL 16+
+- Docker & Docker Compose
+- Linux (Ubuntu 22.04+ recommended)
+
+### Installation
 
 ```bash
-# Capture a thought
-curl -X POST http://localhost:3001/api/capture \
-  -H "Content-Type: application/json" \
-  -d '{
-    "text": "Schedule dentist appointment for next week",
-    "prefix": "🦷"
-  }'
+git clone https://github.com/vimo33/New-Focus-Flow.git /srv/focus-flow
+cd /srv/focus-flow
+
+# Backend
+cd 02_projects/active/focus-flow-backend
+npm install
+cp .env.example .env  # Edit with your config
+npm run build && npm start
+
+# Frontend
+cd ../focus-flow-ui
+npm install
+npm run build && npm run preview
+
+# Docker services (Qdrant, mem0, etc.)
+cd /srv/focus-flow/07_system/config
+docker compose up -d
 ```
 
-### Process Inbox Item
+### Systemd Services
 
 ```bash
-# Convert to task
-curl -X POST http://localhost:3001/api/inbox/inbox-20260203-001/process \
-  -H "Content-Type: application/json" \
-  -d '{
-    "action": "task",
-    "task_data": {
-      "category": "personal",
-      "priority": "high",
-      "due_date": "2026-02-10"
-    }
-  }'
+sudo systemctl enable --now focus-flow-backend    # Port 3001
+sudo systemctl enable --now focus-flow-frontend   # Port 5173
+sudo systemctl enable --now focus-flow-telegram   # Port 3002
 ```
 
-### Create Task Directly
+### Verify
 
 ```bash
-curl -X POST http://localhost:3001/api/tasks \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Review Q1 budget",
-    "category": "work",
-    "priority": "high",
-    "due_date": "2026-02-10"
-  }'
-```
-
-### Log Health Metric
-
-```bash
-curl -X POST http://localhost:3001/api/health/log \
-  -H "Content-Type: application/json" \
-  -d '{
-    "metric_type": "mood",
-    "value": 8,
-    "date": "2026-02-03",
-    "notes": "Feeling productive"
-  }'
+curl http://localhost:3001/api/health
+curl http://localhost:5173
 ```
 
 ---
 
-## Telegram Bot Commands
+## Safety & Autonomy
 
-```
-/start              - Welcome and setup
-/capture <text>     - Quick capture to inbox
-/inbox              - Show inbox counts
-/inbox work         - Show work items
-/process <id>       - Process inbox item
-/projects           - List active projects
-/task <text>        - Create task quickly
-/health mood 8      - Log health metric
-/help               - Show all commands
-```
+### Three-Tier Autonomy Model
+
+| Tier | Actions | Approval |
+|------|---------|----------|
+| **T1 (Auto)** | Research, reports, analysis, file writes | None needed |
+| **T2 (Soft Gate)** | Drafts, pipeline changes, budget adjustments | Approval with rollback |
+| **T3 (Hard Gate)** | External comms, spending, deletion | Typed confirmation required |
+
+### Safety Infrastructure
+
+- **Kill switch**: `touch 07_system/agent/KILL_SWITCH`
+- **Cost budget**: `07_system/agent/cost-budget.json` ($20/day default)
+- **Safety gate hook**: Blocks writes to protected paths and secrets
+- **Security check hook**: Warns on hardcoded secrets, eval(), innerHTML
+- **Design token validator**: Prevents hardcoded colors in UI
+- **Build guard**: Verifies TypeScript compilation + Playwright smoke tests
+- **Circuit breaker**: Auto-disables failing skills after repeated errors
 
 ---
 
 ## Development
 
-### Backend Development
-
 ```bash
-cd /srv/focus-flow/02_projects/active/focus-flow-backend
+# Backend (hot reload)
+cd /srv/focus-flow/02_projects/active/focus-flow-backend && npm run dev
 
-# Install dependencies
-npm install
+# Frontend (HMR)
+cd /srv/focus-flow/02_projects/active/focus-flow-ui && npm run dev
 
-# Run in development mode (hot reload)
-npm run dev
+# Run E2E smoke tests
+cd /srv/focus-flow/02_projects/active/focus-flow-ui && npx playwright test tests/e2e/smoke.spec.ts
 
-# Build for production
-npm run build
-
-# Run production build
-npm start
-
-# Run tests
-npm test
+# TypeScript check
+cd /srv/focus-flow/02_projects/active/focus-flow-backend && npx tsc --noEmit
 ```
-
-### Frontend Development
-
-```bash
-cd /srv/focus-flow/02_projects/active/focus-flow-ui
-
-# Install dependencies
-npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
-
-# Run linter
-npm run lint
-```
-
-### Docker Services
-
-```bash
-cd /srv/focus-flow/07_system/config
-
-# Start all services
-docker compose up -d
-
-# View logs
-docker compose logs -f
-
-# Check service health
-docker compose ps
-
-# Stop all services
-docker compose down
-
-# Restart specific service
-docker compose restart openclaw
-```
-
----
-
-## API Documentation
-
-**Base URL:** `http://localhost:3001`
-
-### Core Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/health` | Health check |
-| POST | `/api/capture` | Quick capture item |
-| GET | `/api/inbox` | List inbox items |
-| GET | `/api/inbox/counts` | Get inbox counts |
-| POST | `/api/inbox/:id/process` | Process inbox item |
-| GET | `/api/tasks` | List tasks |
-| POST | `/api/tasks` | Create task |
-| GET | `/api/projects` | List projects |
-| POST | `/api/projects` | Create project |
-| GET | `/api/ideas` | List ideas |
-| POST | `/api/ideas` | Create idea |
-| POST | `/api/health/log` | Log health metric |
-| GET | `/api/summary` | Dashboard summary |
-
-For complete API reference, see [PRODUCTION.md](PRODUCTION.md#api-reference).
-
----
-
-## Security
-
-- **Firewall:** UFW configured to allow only Tailscale traffic
-- **VPN:** All services accessible via Tailscale only
-- **Secrets:** Stored in `/srv/focus-flow/07_system/secrets/` (not in Git)
-- **Docker:** Security hardening (no-new-privileges, dropped capabilities)
-- **HTTPS:** Automatic via Tailscale serve
-
----
-
-## Deployment
-
-### Systemd Services
-
-Create service files for each component:
-
-```bash
-# Backend API
-sudo systemctl enable focus-flow-backend
-sudo systemctl start focus-flow-backend
-
-# Frontend UI
-sudo systemctl enable focus-flow-ui
-sudo systemctl start focus-flow-ui
-
-# Telegram Bot
-sudo systemctl enable focus-flow-telegram-bot
-sudo systemctl start focus-flow-telegram-bot
-```
-
-### Docker Deployment
-
-Build and run with Docker:
-
-```bash
-# Backend
-cd /srv/focus-flow/02_projects/active/focus-flow-backend
-docker build -t focus-flow-backend .
-docker run -d -p 3001:3001 focus-flow-backend
-
-# Services
-cd /srv/focus-flow/07_system/config
-docker compose up -d
-```
-
-For detailed deployment instructions, see [PRODUCTION.md](PRODUCTION.md#deployment).
-
----
-
-## Monitoring
-
-### Health Checks
-
-```bash
-# Backend API
-curl http://localhost:3001/health
-
-# Docker services
-docker compose ps
-curl http://localhost:3000/health  # OpenClaw
-curl http://localhost:6333/health  # Qdrant
-curl http://localhost:8050/health  # mem0
-```
-
-### Logs
-
-```bash
-# Backend service logs
-sudo journalctl -u focus-flow-backend -f
-
-# Docker service logs
-docker compose logs -f
-
-# System logs
-tail -f /srv/focus-flow/07_system/logs/*.log
-```
-
----
-
-## Backup & Recovery
-
-### Automated Backups
-
-```bash
-# Run backup script
-/srv/focus-flow/07_system/scripts/backup-vault.sh
-
-# Schedule daily backups (cron)
-0 2 * * * /srv/focus-flow/07_system/scripts/backup-vault.sh
-```
-
-### Manual Backup
-
-```bash
-# Backup entire vault
-tar -czf focus-flow-backup-$(date +%Y%m%d).tar.gz /srv/focus-flow
-
-# Restore from backup
-tar -xzf focus-flow-backup-20260203.tar.gz -C /
-```
-
-For detailed backup strategies, see [PRODUCTION.md](PRODUCTION.md#backup--recovery).
-
----
-
-## Troubleshooting
-
-### Backend Won't Start
-
-```bash
-# Check if port is in use
-sudo lsof -i :3001
-
-# View service logs
-sudo journalctl -u focus-flow-backend -n 50
-
-# Test manually
-cd /srv/focus-flow/02_projects/active/focus-flow-backend
-npm run dev
-```
-
-### Docker Services Unhealthy
-
-```bash
-# Check service logs
-docker compose logs openclaw
-
-# Restart service
-docker compose restart openclaw
-
-# Verify health
-curl http://localhost:3000/health
-```
-
-### AI Classification Not Working
-
-```bash
-# Verify API key
-cat /srv/focus-flow/07_system/secrets/anthropic_api_key.txt
-
-# Check backend logs for API errors
-sudo journalctl -u focus-flow-backend | grep -i "anthropic"
-
-# Manually trigger classification
-curl -X POST http://localhost:3001/api/inbox/classify-all
-```
-
-For complete troubleshooting guide, see [PRODUCTION.md](PRODUCTION.md#troubleshooting).
-
----
-
-## Roadmap
-
-### Phase 1: Foundation (Complete)
-- [x] Vault structure
-- [x] Docker services
-- [x] Security setup (UFW, Tailscale)
-- [x] Agent framework
-
-### Phase 2: Backend API (Complete)
-- [x] REST API endpoints
-- [x] Vault file operations
-- [x] AI classification service
-- [x] Background processing
-
-### Phase 3: Frontend (In Progress)
-- [x] React + Vite setup
-- [x] Tailwind design system
-- [x] Basic routing
-- [ ] Dashboard screen
-- [ ] Inbox processing screen
-- [ ] Project workspace
-
-### Phase 4: Telegram Bot (In Progress)
-- [x] Bot framework
-- [x] Basic commands
-- [x] API integration
-- [ ] Voice transcription
-- [ ] Image OCR
-
-### Phase 5: AI Integration (Planned)
-- [x] Claude API client
-- [x] Auto-classification
-- [ ] AI Council for ideas
-- [ ] Project spec generation
-- [ ] mem0 integration
-
-### Phase 6: Advanced Features (Future)
-- [ ] Calendar integration
-- [ ] Advanced analytics
-- [ ] Mobile app
-- [ ] Collaboration features
-- [ ] Plugin system
-
----
-
-## Contributing
-
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
-### Quick Contribution Guide
-
-1. Fork the repository
-2. Create feature branch: `git checkout -b feature/amazing-feature`
-3. Commit changes: `git commit -m 'Add amazing feature'`
-4. Push to branch: `git push origin feature/amazing-feature`
-5. Open Pull Request
 
 ---
 
 ## License
 
-This project is licensed under the MIT License - see [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-## Acknowledgments
-
-- **Anthropic** - Claude AI API
-- **Qdrant** - Vector database
-- **mem0** - Personal memory layer
-- **Tailscale** - Secure networking
-- **React Team** - React framework
-- **Vite Team** - Build tool
-
----
-
-## Support
-
-- **Documentation:** [PRODUCTION.md](PRODUCTION.md)
-- **API Reference:** [PRODUCTION.md#api-reference](PRODUCTION.md#api-reference)
-- **Troubleshooting:** [PRODUCTION.md#troubleshooting](PRODUCTION.md#troubleshooting)
-
----
-
-## Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for version history and release notes.
-
----
-
-**Built with focus. Powered by AI. Designed for productivity.**
+**Turn uncertainty into decisions. Powered by Claude.**

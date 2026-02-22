@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Onboarding: First Contact</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00e5ff20",
+                        "muted-teal": "#3BBFB2",
+                        "amber": "#ffb703",
+                        "violet": "#a78bfa",
+                        "background-dark": "#06080F",
+                        "background-light": "#f5f8f8",
+                        "surface": "#0f131a",
+                        "surface-glass": "rgba(15, 19, 26, 0.6)",
+                        "border-dim": "rgba(30, 48, 80, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],
+                        "heading": ["DM Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 15px rgba(0, 229, 255, 0.3)",
+                        "glow-amber": "0 0 15px rgba(255, 183, 3, 0.3)",
+                        "glow-text": "0 0 8px rgba(0, 229, 255, 0.6)",
+                        "glow-teal": "0 0 10px rgba(59, 191, 178, 0.2)",
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-starfield {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }
+        .glass-panel {
+            background: rgba(15, 19, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(59, 191, 178, 0.2);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.3);
+        }
+        .message-bubble-nitara {
+            background: linear-gradient(145deg, rgba(15, 19, 26, 0.7) 0%, rgba(15, 19, 26, 0.4) 100%);
+            backdrop-filter: blur(10px);
+            border-left: 2px solid #00e5ff;
+        }
+        .message-bubble-user {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.1);
+        }.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-starfield text-slate-300 font-body antialiased selection:bg-primary selection:text-black h-screen flex flex-col overflow-hidden relative">
+<div class="absolute top-8 left-1/2 -translate-x-1/2 flex items-center gap-3 z-50">
+<div class="w-2 h-2 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-2 h-2 rounded-full border border-slate-600/50"></div>
+<div class="w-2 h-2 rounded-full border border-slate-600/50"></div>
+<div class="w-2 h-2 rounded-full border border-slate-600/50"></div>
+<div class="w-2 h-2 rounded-full border border-slate-600/50"></div>
+</div>
+<main class="flex-1 flex flex-col items-center justify-start w-full max-w-[800px] mx-auto px-6 relative h-full">
+<div class="w-full flex-1 overflow-y-auto no-scrollbar pb-32 pt-[15vh]">
+<div class="text-center mb-16 space-y-4 animate-fade-in-up">
+<div class="inline-flex justify-center items-center mb-2">
+<span class="text-6xl text-primary animate-pulse-slow shadow-glow-primary rounded-full">✦</span>
+</div>
+<div>
+<h1 class="font-display font-bold text-5xl tracking-[0.1em] text-white uppercase drop-shadow-[0_0_15px_rgba(0,229,255,0.4)]">Nitara</h1>
+<p class="text-slate-400 font-heading text-lg tracking-wide mt-2">Your AI Business Partner</p>
+</div>
+</div>
+<div class="space-y-10 w-full">
+<div class="flex gap-6 items-start opacity-0 animate-[fadeIn_0.5s_ease-out_0.2s_forwards]" style="animation-fill-mode: forwards;">
+<div class="flex-shrink-0 mt-1">
+<div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shadow-glow-text">
+                            ✦
+                        </div>
+</div>
+<div class="message-bubble-nitara p-6 rounded-r-2xl rounded-bl-2xl max-w-[90%]">
+<p class="text-white text-lg leading-relaxed font-light">
+                            Hey! I'm Nitara — I'll be your strategic partner. I'm here to help organize your chaos into execution. Let's start by building your profile.
+                        </p>
+</div>
+</div>
+<div class="flex justify-end opacity-0 animate-[fadeIn_0.5s_ease-out_0.8s_forwards]" style="animation-fill-mode: forwards;">
+<div class="message-bubble-user p-6 rounded-l-2xl rounded-br-2xl max-w-[80%] text-right">
+<p class="text-slate-200 text-lg leading-relaxed font-light">
+                            I'm Vimo, I'm based in Zürich. I'm starting an AI consulting studio. I also do some freelance dev work and teaching on the side.
+                        </p>
+</div>
+</div>
+<div class="flex gap-6 items-start opacity-0 animate-[fadeIn_0.5s_ease-out_1.5s_forwards]" style="animation-fill-mode: forwards;">
+<div class="flex-shrink-0 mt-1">
+<div class="w-8 h-8 rounded-full bg-primary/10 border border-primary/30 flex items-center justify-center text-primary shadow-glow-text">
+                            ✦
+                        </div>
+</div>
+<div class="space-y-4 max-w-[90%]">
+<div class="message-bubble-nitara p-6 rounded-r-2xl rounded-bl-2xl">
+<p class="text-white text-lg leading-relaxed font-light mb-4">
+                                Nice to meet you, Vimo! Already a lot going on. Let me map this out so I understand your context properly.
+                            </p>
+<div class="glass-card p-6 rounded-xl border-l-4 border-l-muted-teal mt-2">
+<div class="flex justify-between items-start mb-6">
+<div>
+<h3 class="font-heading font-bold text-white text-xl">Vimo</h3>
+<div class="flex items-center gap-2 mt-1">
+<span class="material-icons text-muted-teal text-sm">place</span>
+<span class="text-slate-400 text-sm">Zürich, Switzerland</span>
+</div>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-muted-teal/40">
+<img alt="Vimo Avatar" class="w-full h-full object-cover opacity-80" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKwuEergf5rSF5IHWOlG6-tHBkcH7qlyVfLnob_8Mp88STMSwLCdcdJYZ57hHZduBFJbjrnDyraAXHHKpMzithkFp7-pQ8OmKh9Oe7DbHS2F_nzNlB6TvUOSNa0u-9oEik49pNVXBZRj6D5M6yMlDlsSZ7EtLQbjLoyWQ4z1uSO1dsws0yTmRq8FsiX0oJaiOr5XYzmUZz23fQ9Q39Bo4qSBecsT0IRzpEQAY8R00MEb4TcFuGE3w-uKCJ3ZIP-CdFb6yyB2o4859"/>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<span class="text-xs font-mono text-muted-teal uppercase tracking-widest block mb-2">Active Workstreams</span>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface border border-muted-teal/30 text-slate-200 px-3 py-1.5 rounded text-sm">AI Consulting</span>
+<span class="bg-surface border border-muted-teal/30 text-slate-200 px-3 py-1.5 rounded text-sm">Freelance Dev</span>
+<span class="bg-surface border border-muted-teal/30 text-slate-200 px-3 py-1.5 rounded text-sm">Teaching</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3 mt-6 pt-4 border-t border-muted-teal/20">
+<button class="bg-muted-teal/10 text-muted-teal border border-muted-teal/50 hover:bg-muted-teal/20 px-6 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all shadow-glow-teal">
+                                        Looks Good
+                                    </button>
+<button class="text-slate-500 hover:text-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-1">
+<span class="material-icons text-sm">edit</span> Edit
+                                    </button>
+</div>
+</div>
+</div>
+<div class="message-bubble-nitara p-6 rounded-r-2xl rounded-bl-2xl">
+<p class="text-white text-lg leading-relaxed font-light">
+                                What skills are you strongest in? Like — if someone asked what you're the expert at, what would you say?
+                            </p>
+</div>
+</div>
+</div>
+</div>
+<div class="h-12"></div>
+</div>
+<div class="absolute bottom-10 w-[80%] max-w-[800px] z-20">
+<div class="relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary/20 via-muted-teal/20 to-primary/20 rounded-lg blur opacity-50 group-hover:opacity-100 transition duration-500"></div>
+<div class="relative flex items-center bg-[#06080F]/90 backdrop-blur-xl border border-muted-teal/30 rounded-lg p-1.5">
+<input autofocus="" class="w-full bg-transparent text-white p-4 text-lg placeholder-slate-600 focus:outline-none focus:ring-0 border-none font-body" placeholder="Tell Nitara about yourself..." type="text"/>
+<button class="p-3 mr-1 rounded bg-primary/10 text-primary hover:bg-primary hover:text-black transition-all duration-300 shadow-glow-primary group-hover:shadow-[0_0_20px_rgba(0,229,255,0.4)]">
+<span class="material-icons">mic</span>
+</button>
+</div>
+</div>
+<div class="text-center mt-3">
+<p class="text-slate-600 text-xs font-mono tracking-widest">PRESS ENTER TO SEND</p>
+</div>
+</div>
+</main>
+<div class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(6,8,15,0.8)_100%)] z-10"></div>
+<style>
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+</body></html>

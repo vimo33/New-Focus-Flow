@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Investor Executive Summary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;family=DM+Sans:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#8c2bee",
+                        "background-light": "#f7f6f8",
+                        "background-dark": "#191022",
+                        "void": "#06080F",
+                        "teal-muted": "#2A4A50",
+                        "cyan-electric": "#00F0FF",
+                        "panel-dark": "rgba(20, 24, 33, 0.6)",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"],
+                        "syncopate": ["Syncopate", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "sans-dm": ["DM Sans", "sans-serif"],
+                    },
+                    boxShadow: {
+                        'neon': '0 0 5px theme("colors.primary"), 0 0 20px theme("colors.primary")',
+                        'neon-cyan': '0 0 5px theme("colors.cyan-electric"), 0 0 10px theme("colors.cyan-electric")',
+                    },
+                    backgroundImage: {
+                        'star-field': 'radial-gradient(circle at center, #1a1e29 1px, transparent 1px), radial-gradient(circle at center, #1a1e29 1px, transparent 1px)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 3px);
+            background-size: 550px 550px, 350px 350px, 250px 250px;
+            background-position: 0 0, 40px 60px, 130px 270px; 
+            /* Subtle starfield effect simulation */
+        }
+        
+        .frosted-glass {
+            background: rgba(15, 23, 42, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(140, 43, 238, 0.15);
+        }
+        
+        .grid-bg {
+            background-image: linear-gradient(rgba(42, 74, 80, 0.1) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(42, 74, 80, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(140, 43, 238, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 15px rgba(140, 43, 238, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(140, 43, 238, 0); }
+        }
+
+        /* Scrollbar hiding for clean UI */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2A4A50; 
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body class="text-gray-300 font-display min-h-screen overflow-hidden flex">
+<!-- Sidebar -->
+<aside class="w-[48px] h-screen border-r border-teal-muted/30 flex flex-col items-center py-8 bg-[#06080F]/90 backdrop-blur-sm z-50 fixed left-0 top-0">
+<div class="mb-10 text-primary">
+<span class="material-icons text-2xl">lens_blur</span>
+</div>
+<nav class="flex flex-col space-y-8 flex-1">
+<a class="text-gray-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-xl">grid_view</span>
+</a>
+<a class="text-primary relative group" href="#">
+<span class="absolute -left-[14px] top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full shadow-[0_0_10px_rgba(140,43,238,0.8)]"></span>
+<span class="material-icons text-xl">star</span>
+</a>
+<a class="text-gray-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-xl">insert_chart_outlined</span>
+</a>
+<a class="text-gray-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-xl">hub</span>
+</a>
+</nav>
+<div class="mt-auto">
+<a class="text-gray-500 hover:text-white transition-colors" href="#">
+<span class="material-icons text-xl">settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-[48px] flex-1 flex flex-col h-screen overflow-hidden relative">
+<!-- Header -->
+<header class="h-24 flex items-center px-10 border-b border-teal-muted/20 relative z-20 bg-gradient-to-r from-void via-void/80 to-transparent">
+<div class="flex flex-col justify-center">
+<h1 class="font-syncopate text-2xl tracking-widest text-white uppercase bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">
+                    Executive Summary <span class="text-teal-muted mx-2">//</span> SwissAI Studio
+                </h1>
+<p class="font-sans-dm text-sm text-gray-400 mt-1 tracking-wide">Strategic Brief for Capital Allocation and Partnership</p>
+</div>
+<div class="ml-auto flex items-center space-x-4">
+<div class="flex items-center space-x-2 px-3 py-1 rounded border border-teal-muted/30 bg-primary/5">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-xs font-mono text-gray-300">NITARA LIVE</span>
+</div>
+<img alt="Profile Picture of Executive" class="w-8 h-8 rounded-full border border-teal-muted grayscale hover:grayscale-0 transition-all cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6JqY5SgLmpRZU-71kcR49nuxlgyZHhjFm2dTROcpDd7Y6onQpw1qmG6d6dlARpAayOVxTSeBCDS6Dp-UPAbFUQX60AWFn3vOifknGNUtGPy6lF8xFK7DmWfDe6j479oOCksrdZRaDJxJknWzgEqWSuRVSAqfdOmWqagSAlP2_7AMeidcgbuw9tUziCxXoXtYRzBffGiAyK2ZUK1DOQB_-90XAA1dmJODiQY2WP6v6mbXKA5v7IAJO6T87TRo4vhbidgbxafKSok3J"/>
+</div>
+</header>
+<!-- Central Canvas -->
+<div class="flex-1 p-10 overflow-y-auto relative z-10 grid-bg">
+<div class="max-w-[1300px] mx-auto h-full flex flex-col gap-6">
+<!-- TOP ROW: The Pitch -->
+<div class="flex flex-col lg:flex-row gap-6 h-auto lg:h-[300px]">
+<!-- Vision Card -->
+<div class="w-full lg:w-[65%] frosted-glass rounded-xl p-8 flex flex-col justify-between relative overflow-hidden group hover:border-primary/40 transition-colors duration-500">
+<!-- Decorative element -->
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full blur-2xl"></div>
+<div class="flex justify-between items-start mb-4">
+<h3 class="text-xs font-mono text-cyan-electric tracking-widest border border-cyan-electric/30 px-2 py-1 rounded">CORE VISION</h3>
+<span class="material-icons text-gray-600">auto_awesome</span>
+</div>
+<div class="relative z-10">
+<h2 class="text-3xl md:text-4xl font-display font-light text-white leading-tight mb-8">
+                                Automating the Swiss HR landscape through specialized <span class="text-primary font-normal">AI nodes</span>.
+                            </h2>
+<div class="flex flex-wrap gap-8 border-t border-white/10 pt-6">
+<div>
+<p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Market Opportunity</p>
+<p class="text-2xl font-mono text-white">CHF 120M</p>
+</div>
+<div class="w-px h-10 bg-white/10 hidden sm:block"></div>
+<div>
+<p class="text-xs text-gray-500 uppercase tracking-wider mb-1">Unique Moat</p>
+<p class="text-lg font-display text-gray-200">Proprietary integration layer</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Confidence Score -->
+<div class="w-full lg:w-[35%] frosted-glass rounded-xl p-8 flex flex-col items-center justify-center relative border-l-4 border-l-primary/50">
+<h3 class="absolute top-6 left-6 text-xs font-mono text-gray-400 uppercase tracking-wider">Council Consensus</h3>
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Outer pulsing ring -->
+<div class="absolute inset-0 rounded-full border border-primary/20 pulse-ring"></div>
+<div class="absolute inset-2 rounded-full border border-primary/10"></div>
+<!-- Inner content -->
+<div class="relative z-10 flex flex-col items-center">
+<span class="text-6xl font-mono font-bold text-white drop-shadow-[0_0_15px_rgba(140,43,238,0.5)]">7.4</span>
+<span class="text-xs text-primary mt-2 font-mono bg-primary/10 px-2 py-0.5 rounded">HIGH CONFIDENCE</span>
+</div>
+<!-- SVG Circular Progress Indicator Simulation -->
+<svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
+<circle cx="50%" cy="50%" fill="transparent" opacity="0.3" r="42%" stroke="#2A4A50" stroke-width="4"></circle>
+<circle cx="50%" cy="50%" fill="transparent" r="42%" stroke="#8c2bee" stroke-dasharray="264" stroke-dashoffset="66" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+</div>
+<div class="mt-4 text-center">
+<p class="text-xs text-gray-500 font-sans-dm">Computed from 14 internal metrics and <br/>real-time market sentiment analysis.</p>
+</div>
+</div>
+</div>
+<!-- MIDDLE ROW: Metrics & Roadmap -->
+<div class="flex flex-col lg:flex-row gap-6 h-auto lg:h-[220px]">
+<!-- Financials Card -->
+<div class="w-full lg:w-[45%] frosted-glass rounded-xl p-6 flex flex-col justify-between">
+<div class="flex justify-between items-center mb-2">
+<h3 class="text-xs font-mono text-gray-400 uppercase tracking-wider">Financial Projection</h3>
+<span class="material-icons text-sm text-green-400">trending_up</span>
+</div>
+<div class="grid grid-cols-2 gap-y-6">
+<div>
+<p class="text-[10px] text-gray-500 uppercase mb-1">Valuation Target</p>
+<p class="text-xl font-mono text-white">CHF 1.2M</p>
+</div>
+<div>
+<p class="text-[10px] text-gray-500 uppercase mb-1">Current Ask</p>
+<p class="text-xl font-mono text-white">CHF 200k</p>
+</div>
+<div class="col-span-2">
+<p class="text-[10px] text-gray-500 uppercase mb-1">Projected ROI (3yrs)</p>
+<div class="flex items-end gap-3">
+<p class="text-3xl font-mono text-cyan-electric drop-shadow-[0_0_8px_rgba(0,240,255,0.4)]">4.2x</p>
+<!-- Sparkline SVG -->
+<svg class="mb-1 opacity-80" fill="none" height="30" viewbox="0 0 120 30" width="120">
+<path d="M0 25L15 22L30 26L45 15L60 18L75 10L90 12L105 5L120 2" stroke="#4ADE80" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+<path d="M0 25L15 22L30 26L45 15L60 18L75 10L90 12L105 5L120 2V30H0V25Z" fill="url(#gradient-green)" opacity="0.2"></path>
+<defs>
+<lineargradient id="gradient-green" x1="0" x2="0" y1="0" y2="30">
+<stop offset="0%" stop-color="#4ADE80"></stop>
+<stop offset="100%" stop-color="transparent"></stop>
+</lineargradient>
+</defs>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Roadmap Card -->
+<div class="w-full lg:w-[55%] frosted-glass rounded-xl p-6 flex flex-col relative overflow-hidden">
+<div class="flex justify-between items-center mb-6 z-10">
+<h3 class="text-xs font-mono text-gray-400 uppercase tracking-wider">Execution Timeline</h3>
+<span class="text-[10px] font-mono bg-white/5 px-2 py-1 rounded border border-white/10">Q4 2024 FOCUS</span>
+</div>
+<!-- Timeline Graphic -->
+<div class="flex-1 flex items-center justify-between relative px-4 z-10">
+<!-- Connecting Line -->
+<div class="absolute left-4 right-4 top-1/2 h-0.5 bg-gray-700 -translate-y-1/2"></div>
+<!-- Progress Line -->
+<div class="absolute left-4 w-1/3 top-1/2 h-0.5 bg-gradient-to-r from-primary to-cyan-electric -translate-y-1/2 shadow-[0_0_10px_rgba(140,43,238,0.5)]"></div>
+<!-- Nodes -->
+<div class="relative flex flex-col items-center group cursor-pointer">
+<div class="w-3 h-3 rounded-full bg-primary shadow-[0_0_10px_theme('colors.primary')] mb-3 relative z-10 ring-4 ring-void"></div>
+<span class="text-[10px] font-mono text-primary font-bold">SEED</span>
+</div>
+<div class="relative flex flex-col items-center group cursor-pointer">
+<div class="w-3 h-3 rounded-full bg-cyan-electric shadow-[0_0_10px_theme('colors.cyan-electric')] mb-3 relative z-10 ring-4 ring-void animate-pulse"></div>
+<span class="text-[10px] font-mono text-cyan-electric font-bold">ALPHA</span>
+</div>
+<div class="relative flex flex-col items-center group cursor-pointer">
+<div class="w-3 h-3 rounded-full bg-gray-700 border border-gray-500 mb-3 relative z-10 ring-4 ring-void"></div>
+<span class="text-[10px] font-mono text-gray-500">BETA</span>
+</div>
+<div class="relative flex flex-col items-center group cursor-pointer">
+<div class="w-3 h-3 rounded-full bg-gray-700 border border-gray-500 mb-3 relative z-10 ring-4 ring-void"></div>
+<span class="text-[10px] font-mono text-gray-500">DOMINANCE</span>
+</div>
+</div>
+<!-- Background decoration -->
+<div class="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-primary/5 to-transparent"></div>
+</div>
+</div>
+<!-- BOTTOM ROW: The Intelligence -->
+<div class="flex-1 min-h-[140px] frosted-glass rounded-xl p-0 flex relative overflow-hidden border-l-4 border-l-cyan-electric">
+<div class="absolute inset-0 bg-gradient-to-r from-cyan-electric/5 to-transparent pointer-events-none"></div>
+<div class="p-6 md:p-8 flex flex-col justify-center w-full relative z-10">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-icons text-cyan-electric text-lg animate-pulse">psychology</span>
+<h3 class="text-xs font-mono text-cyan-electric uppercase tracking-widest">NITARA VERDICT</h3>
+</div>
+<p class="text-lg md:text-xl text-gray-200 font-light leading-relaxed max-w-4xl">
+                            "The technical foundation is superior to <span class="text-cyan-electric font-bold">82%</span> of current market competitors. Capital injection will accelerate Deliver phase by <span class="text-white border-b border-cyan-electric pb-0.5">4.5 months</span>."
+                        </p>
+</div>
+<!-- Decorative waveform or abstract pattern -->
+<div class="absolute right-0 top-0 bottom-0 w-1/3 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] mix-blend-overlay"></div>
+<div class="absolute right-[-50px] top-[-50px] w-64 h-64 bg-cyan-electric/10 rounded-full blur-3xl"></div>
+</div>
+<!-- Bottom Actions Area (Floating or Fixed at bottom right of content area) -->
+<div class="flex flex-wrap justify-end gap-4 mt-2 pb-10">
+<button class="flex items-center gap-2 px-5 py-3 rounded-lg border border-teal-muted/50 bg-void hover:bg-teal-muted/20 text-gray-300 text-sm font-medium transition-all group">
+<span class="material-icons text-base text-gray-500 group-hover:text-white transition-colors">link</span>
+                        Share Secure Link
+                    </button>
+<button class="flex items-center gap-2 px-5 py-3 rounded-lg border border-teal-muted/50 bg-void hover:bg-teal-muted/20 text-gray-300 text-sm font-medium transition-all group">
+<span class="material-icons text-base text-gray-500 group-hover:text-white transition-colors">file_download</span>
+                        Export Pitch Deck
+                    </button>
+<button class="flex items-center gap-2 px-6 py-3 rounded-lg bg-primary hover:bg-primary/90 text-white text-sm font-medium shadow-[0_0_15px_rgba(140,43,238,0.3)] hover:shadow-[0_0_20px_rgba(140,43,238,0.5)] transition-all transform hover:-translate-y-0.5">
+<span class="material-icons text-base">lock_open</span>
+                        Open Full Data Room
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Overlay Gradients for Depth -->
+<div class="fixed top-0 left-0 w-full h-32 bg-gradient-to-b from-[#06080F] to-transparent pointer-events-none z-0"></div>
+<div class="fixed bottom-0 left-0 w-full h-20 bg-gradient-to-t from-[#06080F] to-transparent pointer-events-none z-0"></div>
+</body></html>

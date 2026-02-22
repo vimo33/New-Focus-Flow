@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara System Preferences</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#06e0f9",
+                        "background-light": "#f5f8f8", // Not used due to dark mode enforcement
+                        "background-dark": "#050505", // Deep void black
+                        "card-dark": "rgba(20, 30, 35, 0.4)",
+                        "card-border": "rgba(6, 224, 249, 0.2)",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "syncopate": ["Space Grotesk", "sans-serif"], // Fallback to main font as per strict theme rules
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937; 
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #374151; 
+        }
+
+        /* Cyberpunk Slider Styling */
+        input[type=range] {
+            -webkit-appearance: none; 
+            background: transparent; 
+        }
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 20px;
+            width: 20px;
+            border-radius: 50%;
+            background: #06e0f9;
+            cursor: pointer;
+            margin-top: -8px; 
+            box-shadow: 0 0 10px rgba(6, 224, 249, 0.5);
+        }
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 4px;
+            cursor: pointer;
+            background: #1f2937;
+            border-radius: 2px;
+        }
+        
+        /* Glassmorphism utility */
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(20, 30, 35, 0.6) 0%, rgba(10, 15, 20, 0.4) 100%);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(6, 224, 249, 0.15);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glass-panel:hover {
+            border-color: rgba(6, 224, 249, 0.3);
+            box-shadow: 0 0 20px rgba(6, 224, 249, 0.05);
+        }
+
+        /* Animated grid background */
+        .bg-grid-pattern {
+            background-image: 
+                linear-gradient(rgba(6, 224, 249, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(6, 224, 249, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-300 h-screen overflow-hidden flex selection:bg-primary selection:text-black">
+<!-- Background Grid Effect -->
+<div class="fixed inset-0 pointer-events-none bg-grid-pattern z-0"></div>
+<!-- SIDEBAR -->
+<aside class="w-[48px] h-full border-r border-white/5 bg-black/40 backdrop-blur-sm flex flex-col items-center py-6 z-20 relative">
+<div class="mb-8">
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-blue-600 opacity-80" title="Nitara Logo"></div>
+</div>
+<nav class="flex-1 flex flex-col gap-6 w-full items-center">
+<button class="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition-colors group">
+<span class="material-icons-outlined text-xl group-hover:scale-110 transition-transform">dashboard</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition-colors group">
+<span class="material-icons-outlined text-xl group-hover:scale-110 transition-transform">chat_bubble_outline</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition-colors group">
+<span class="material-icons-outlined text-xl group-hover:scale-110 transition-transform">insights</span>
+</button>
+<div class="flex-1"></div>
+<button class="w-full h-12 flex items-center justify-center text-primary relative">
+<div class="absolute inset-y-0 right-0 w-[2px] bg-primary shadow-[0_0_10px_rgba(6,224,249,0.8)]"></div>
+<span class="material-icons text-xl animate-spin-slow" style="animation-duration: 10s;">settings</span>
+</button>
+<button class="w-12 h-12 flex items-center justify-center text-gray-500 hover:text-white transition-colors mb-2">
+<img alt="User Avatar" class="w-6 h-6 rounded-full opacity-60 hover:opacity-100 ring-2 ring-transparent hover:ring-white transition-all" data-alt="Small user profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQZyFVoPSlgUtQ-5ECsLPcK-T4jTAOeIObc-Pvs4cblH5A8WF7PRz9UyPSkR-BEgAKRyd72SBj3QOlwAFFUnAryzu7ar2YV_N9xHtynaPcZ2euo8OTHdmI9krssla7HQeXuTMjBRyDbt8WSY47ICJuBQVXkk6WmMLOlP3BtMH0kOKkhj_7H1lVtytmN5c53cjX-sblOTfQ7k0aIIo7cJuiB70RSAoxIqj3oBViewbl8Y50KR__5j_VUUOqIoX_qmua_5TQMTmlcJOl"/>
+</button>
+</nav>
+</aside>
+<!-- MAIN CONTENT -->
+<main class="flex-1 flex flex-col h-full relative z-10 overflow-hidden">
+<!-- HEADER -->
+<header class="px-8 py-8 flex flex-col justify-end min-h-[120px]">
+<h1 class="text-4xl tracking-[0.2em] font-light text-white uppercase drop-shadow-[0_0_15px_rgba(6,224,249,0.3)]">
+                System <span class="font-bold text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-500">Preferences</span>
+</h1>
+<p class="text-gray-500 mt-2 text-sm tracking-wide font-light flex items-center gap-2">
+<span class="w-1 h-1 bg-primary rounded-full"></span>
+                Fine-tune Nitara's neural parameters and interface behavior.
+            </p>
+</header>
+<!-- CONTENT GRID -->
+<div class="flex-1 px-8 pb-4 overflow-y-auto">
+<div class="flex flex-col lg:flex-row gap-6 h-full">
+<!-- LEFT COLUMN (60%) -->
+<div class="w-full lg:w-3/5 flex flex-col gap-6">
+<!-- SECTION: NITARA CORE -->
+<section class="glass-panel rounded-xl p-6 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-icons-outlined text-6xl text-primary">psychology</span>
+</div>
+<h2 class="text-sm uppercase tracking-widest text-primary font-bold mb-6 flex items-center gap-2">
+<span class="material-icons text-base">hub</span> Nitara Core
+                        </h2>
+<div class="space-y-8">
+<!-- Archetype -->
+<div class="relative">
+<label class="block text-xs text-gray-400 uppercase tracking-wide mb-2">Archetype Selection</label>
+<div class="relative group/dropdown">
+<button class="w-full bg-black/20 hover:bg-black/40 border border-white/10 hover:border-primary/50 text-white rounded-lg px-4 py-3 flex items-center justify-between transition-all duration-300">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-teal-900/30 flex items-center justify-center text-teal-400">
+<span class="material-icons text-sm">business_center</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm font-medium">The Co-Founder</span>
+<span class="text-[10px] text-gray-500">Strategic, analytical, direct</span>
+</div>
+</div>
+<span class="material-icons text-gray-500 group-hover/dropdown:text-primary transition-colors">expand_more</span>
+</button>
+</div>
+</div>
+<!-- Reasoning Depth -->
+<div>
+<div class="flex justify-between items-end mb-4">
+<label class="block text-xs text-gray-400 uppercase tracking-wide">Reasoning Depth</label>
+<span class="text-primary font-mono text-sm bg-primary/10 px-2 py-0.5 rounded border border-primary/20">0.85</span>
+</div>
+<div class="relative h-6 flex items-center">
+<div class="absolute w-full h-1 bg-gray-800 rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-blue-900 to-primary w-[85%] shadow-[0_0_10px_rgba(6,224,249,0.5)]"></div>
+</div>
+<input class="w-full relative z-10 opacity-0 cursor-pointer h-full" max="100" min="0" type="range" value="85"/>
+<div class="absolute left-[85%] w-4 h-4 bg-primary rounded-full shadow-[0_0_15px_rgba(6,224,249,0.8)] ring-4 ring-black transform -translate-x-1/2 pointer-events-none"></div>
+</div>
+<p class="mt-2 text-xs text-gray-500 font-light italic">High latency • Extensive context synthesis enabled</p>
+</div>
+<!-- Proactivity Level -->
+<div class="space-y-3">
+<label class="block text-xs text-gray-400 uppercase tracking-wide mb-2">Proactivity Protocols</label>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<!-- Toggle 1 -->
+<div class="bg-black/20 border border-white/5 rounded-lg p-3 flex flex-col justify-between gap-2 hover:border-primary/30 transition-colors cursor-pointer group/toggle">
+<div class="flex justify-between items-start">
+<span class="text-xs text-gray-300">Auto-drafting</span>
+<div class="w-8 h-4 bg-primary/20 rounded-full relative transition-colors">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-primary rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="h-1 w-full bg-gray-800 rounded-full overflow-hidden mt-1">
+<div class="h-full w-full bg-primary/50"></div>
+</div>
+</div>
+<!-- Toggle 2 -->
+<div class="bg-black/20 border border-white/5 rounded-lg p-3 flex flex-col justify-between gap-2 hover:border-primary/30 transition-colors cursor-pointer group/toggle">
+<div class="flex justify-between items-start">
+<span class="text-xs text-gray-300">Network Alerts</span>
+<div class="w-8 h-4 bg-primary/20 rounded-full relative transition-colors">
+<div class="absolute right-0.5 top-0.5 w-3 h-3 bg-primary rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="h-1 w-full bg-gray-800 rounded-full overflow-hidden mt-1">
+<div class="h-full w-full bg-primary/50"></div>
+</div>
+</div>
+<!-- Toggle 3 -->
+<div class="bg-black/20 border border-white/5 rounded-lg p-3 flex flex-col justify-between gap-2 hover:border-primary/30 transition-colors cursor-pointer group/toggle">
+<div class="flex justify-between items-start">
+<span class="text-xs text-gray-300">Risk Monitoring</span>
+<div class="w-8 h-4 bg-gray-700 rounded-full relative transition-colors">
+<div class="absolute left-0.5 top-0.5 w-3 h-3 bg-gray-400 rounded-full shadow-sm"></div>
+</div>
+</div>
+<div class="h-1 w-full bg-gray-800 rounded-full overflow-hidden mt-1">
+<div class="h-full w-0 bg-primary/50 transition-all"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: VOICE & AUDIO -->
+<section class="glass-panel rounded-xl p-6 relative">
+<h2 class="text-sm uppercase tracking-widest text-primary font-bold mb-6 flex items-center gap-2">
+<span class="material-icons text-base">graphic_eq</span> Voice &amp; Audio
+                        </h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Voice Selector -->
+<div class="space-y-4">
+<label class="block text-xs text-gray-400 uppercase tracking-wide">Output Voice</label>
+<div class="flex flex-col gap-2">
+<button class="flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-black/20 hover:border-white/20 transition-all group">
+<div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-gray-700">
+<span class="material-icons text-xs text-gray-400">play_arrow</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm text-gray-300">Nova</span>
+<span class="text-[10px] text-gray-500">Neutral, Balanced</span>
+</div>
+</button>
+<button class="flex items-center gap-3 p-3 rounded-lg border border-primary/50 bg-primary/5 transition-all relative">
+<div class="absolute right-3 top-3 w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(6,224,249,1)]"></div>
+<div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+<span class="material-icons text-xs text-primary">stop</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm text-white font-medium">Atlas</span>
+<span class="text-[10px] text-primary/70">Direct, Low Pitch</span>
+</div>
+</button>
+<button class="flex items-center gap-3 p-3 rounded-lg border border-white/5 bg-black/20 hover:border-white/20 transition-all group">
+<div class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center group-hover:bg-gray-700">
+<span class="material-icons text-xs text-gray-400">play_arrow</span>
+</div>
+<div class="flex flex-col items-start">
+<span class="text-sm text-gray-300">Lyra</span>
+<span class="text-[10px] text-gray-500">Empathetic, Soft</span>
+</div>
+</button>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Input Mode -->
+<div>
+<label class="block text-xs text-gray-400 uppercase tracking-wide mb-3">Input Mode</label>
+<div class="flex bg-black/40 rounded-lg p-1 border border-white/10">
+<button class="flex-1 py-2 text-xs font-medium text-gray-400 hover:text-white transition-colors">Push-to-talk</button>
+<button class="flex-1 py-2 text-xs font-medium text-black bg-primary rounded shadow-lg">Voice Active</button>
+</div>
+</div>
+<!-- Visualization Style -->
+<div>
+<label class="block text-xs text-gray-400 uppercase tracking-wide mb-3">Visualization</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="w-4 h-4 rounded-full border border-gray-500 flex items-center justify-center group-hover:border-primary">
+<div class="w-2 h-2 rounded-full bg-transparent group-hover:bg-primary/50"></div>
+</div>
+<span class="text-sm text-gray-400 group-hover:text-white">Aura</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="w-4 h-4 rounded-full border border-primary flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_5px_rgba(6,224,249,0.8)]"></div>
+</div>
+<span class="text-sm text-white">Waveform</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer group">
+<div class="w-4 h-4 rounded-full border border-gray-500 flex items-center justify-center group-hover:border-primary">
+<div class="w-2 h-2 rounded-full bg-transparent group-hover:bg-primary/50"></div>
+</div>
+<span class="text-sm text-gray-400 group-hover:text-white">Minimalist</span>
+</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN (40%) -->
+<div class="w-full lg:w-2/5 flex flex-col gap-6">
+<!-- SECTION: IDENTITY -->
+<section class="glass-panel rounded-xl p-6 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-transparent pointer-events-none"></div>
+<h2 class="text-sm uppercase tracking-widest text-primary font-bold mb-6 flex items-center gap-2">
+<span class="material-icons text-base">fingerprint</span> Identity
+                        </h2>
+<div class="flex items-center gap-4 mb-8">
+<div class="relative w-16 h-16">
+<div class="absolute inset-0 bg-gradient-to-tr from-primary to-blue-600 rounded-xl blur opacity-40"></div>
+<img alt="Vimo User Profile Picture" class="w-16 h-16 rounded-xl object-cover border border-white/20 relative z-10" data-alt="Geometric avatar user profile image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAT-ncNxd2_RvpRtUXKFhgE2NIkxhi9NGwo_eP-ejfRq2u17w54w2VB1LrYu0L4TKWoOr1Pu5Js7LAxK9kVpP4OTGa365CC0bu0mvBG9Qjial4gUcbSXveWWJD2_QXcEmeurgOwKS7Gjc-yA6zmhg3G1VRrls7ecQOGV3kxnwgkgu0qnGKX0BFejd7tfwkyOyuHvBeioFbVPfNjPDYNL2zMkYu47OqUpG7ZsmRqxP_EVODlVSJXXE738Oik6-SysDXMN4mXjdVb7Y2Y"/>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 bg-black rounded-full flex items-center justify-center z-20">
+<div class="w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-black"></div>
+</div>
+</div>
+<div>
+<h3 class="text-xl text-white font-medium">Vimo</h3>
+<p class="text-sm text-gray-500 flex items-center gap-1">
+<span class="material-icons text-[12px]">location_on</span> Zurich, CH
+                                </p>
+</div>
+</div>
+<div class="space-y-4">
+<label class="block text-xs text-gray-400 uppercase tracking-wide">Strategic Focus</label>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-full text-xs font-medium border border-primary/30 bg-primary/10 text-primary shadow-[0_0_10px_rgba(6,224,249,0.1)] cursor-pointer hover:bg-primary/20 transition-colors">
+                                    Solo-Agency
+                                </span>
+<span class="px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-black/30 text-gray-400 cursor-pointer hover:border-white/30 hover:text-white transition-colors">
+                                    SaaS Growth
+                                </span>
+<span class="px-3 py-1.5 rounded-full text-xs font-medium border border-white/10 bg-black/30 text-gray-400 cursor-pointer hover:border-white/30 hover:text-white transition-colors">
+                                    Studio Model
+                                </span>
+<span class="px-3 py-1.5 rounded-full text-xs font-medium border border-dashed border-white/20 text-gray-500 cursor-pointer hover:text-white hover:border-white/40 transition-colors">
+                                    + Add Tag
+                                </span>
+</div>
+</div>
+</section>
+<!-- SECTION: SYSTEM DEPTH -->
+<section class="glass-panel rounded-xl p-6 flex-1 flex flex-col relative overflow-hidden">
+<!-- Background abstract graphic -->
+<div class="absolute -right-10 -bottom-10 w-48 h-48 bg-primary/5 rounded-full blur-3xl pointer-events-none"></div>
+<h2 class="text-sm uppercase tracking-widest text-primary font-bold mb-6 flex items-center gap-2">
+<span class="material-icons text-base">memory</span> System Depth
+                        </h2>
+<div class="grid grid-cols-1 gap-4">
+<div class="bg-black/30 border border-white/5 rounded-lg p-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500">Model Version</span>
+<span class="text-white font-mono mt-1">Nitara 2.5</span>
+</div>
+<div class="px-2 py-1 rounded bg-green-900/20 border border-green-500/20 text-[10px] text-green-400">Stable</div>
+</div>
+<div class="bg-black/30 border border-white/5 rounded-lg p-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500">Context Window</span>
+<span class="text-white font-mono mt-1">128k Tokens</span>
+</div>
+<span class="material-icons text-gray-600 text-lg">history</span>
+</div>
+<div class="bg-black/30 border border-white/5 rounded-lg p-4 flex items-center justify-between">
+<div class="flex flex-col">
+<span class="text-xs text-gray-500">Last Sync</span>
+<span class="text-white font-mono mt-1">4m ago</span>
+</div>
+<span class="w-2 h-2 bg-primary rounded-full animate-pulse shadow-[0_0_8px_rgba(6,224,249,0.8)]"></span>
+</div>
+<!-- Visualization Map Placeholder -->
+<div class="mt-4 h-32 w-full rounded-lg overflow-hidden border border-white/5 relative bg-black/50">
+<img class="w-full h-full object-cover opacity-30 mix-blend-screen" data-alt="Abstract network map connecting nodes globally" data-location="Global Network" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCKVe-oYEEHSA1PnWwSVBltcGfEPNH8JBmXbTjEp_38MxUKvo4NnLu-Z9UnPOB-0-COoYyIy5yk7mMyZ6nRTcal2cj51WSCUdzaXzemPW4sjgOkYiLDp91qw4f7K6v457yG57guFXEtYWGxay3HLb8Q1ko7MsXsNxe8YOADvRtoHepo-F7XLjQkZ7HX0dD439f1EfLi1v8vfwtuODbvUVKALJucRFwVF9bcO2QxQimZSwu9_RtrKmvSUQWsGfFNzwninzPMHA30kcVn"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<span class="text-[10px] uppercase tracking-widest text-primary/60">Global Node Active</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+<!-- BOTTOM CONVERSATION RAIL -->
+<div class="mt-6 mb-2">
+<div class="glass-panel rounded-lg p-4 flex items-center gap-4 border-l-4 border-l-primary relative overflow-hidden animate-pulse-slow">
+<div class="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent pointer-events-none"></div>
+<div class="w-10 h-10 rounded-full bg-black/40 border border-primary/30 flex items-center justify-center shrink-0">
+<span class="material-icons text-primary animate-pulse">mic</span>
+</div>
+<div class="flex flex-col">
+<span class="text-[10px] uppercase tracking-wider text-primary font-bold mb-0.5">Nitara System Message</span>
+<p class="text-sm text-gray-200 font-light">Settings updated. I'll focus more on <span class="text-white font-medium border-b border-primary/40">ROI metrics</span> in the next briefing based on your new Strategic Focus tags.</p>
+</div>
+<div class="ml-auto flex gap-2">
+<button class="p-2 text-gray-500 hover:text-white transition-colors rounded-full hover:bg-white/5">
+<span class="material-icons text-sm">thumb_up</span>
+</button>
+<button class="p-2 text-gray-500 hover:text-white transition-colors rounded-full hover:bg-white/5">
+<span class="material-icons text-sm">close</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

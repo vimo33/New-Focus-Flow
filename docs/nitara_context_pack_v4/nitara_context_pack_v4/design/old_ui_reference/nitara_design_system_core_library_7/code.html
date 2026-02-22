@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Project Detail: HR Automation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00e5ff20",
+                        "muted-teal": "#3BBFB2",
+                        "amber": "#ffb703",
+                        "violet": "#a78bfa",
+                        "background-dark": "#06080F",
+                        "background-light": "#f5f8f8",
+                        "surface": "#0f131a",
+                        "surface-glass": "rgba(15, 19, 26, 0.6)",
+                        "border-dim": "rgba(30, 48, 80, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],
+                        "heading": ["DM Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 15px rgba(0, 229, 255, 0.3)",
+                        "glow-amber": "0 0 15px rgba(255, 183, 3, 0.3)",
+                        "glow-text": "0 0 8px rgba(0, 229, 255, 0.6)",
+                        "glow-teal": "0 0 10px rgba(59, 191, 178, 0.2)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-starfield {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px),
+                radial-gradient(white, rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }
+        .glass-panel {
+            background: rgba(15, 19, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(59, 191, 178, 0.2);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.3);
+            position: relative;
+        }
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: rgba(59, 191, 178, 0.3);
+            border-radius: 0 2px 2px 0;
+        }
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.35s;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #06080F;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3050;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #00e5ff;
+        }
+    </style>
+</head>
+<body class="bg-starfield text-slate-300 font-body antialiased selection:bg-primary selection:text-black min-h-screen flex overflow-hidden">
+<nav class="fixed left-0 top-0 h-screen w-12 border-r border-muted-teal/20 glass-panel flex flex-col items-center py-6 z-50">
+<div class="mb-10">
+<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-[10px]">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-6 w-full items-center">
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-xl">dashboard</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10">
+<div class="absolute left-0 h-5 w-0.5 bg-primary shadow-glow-primary rounded-r"></div>
+<span class="material-icons text-primary shadow-glow-text text-xl transition-all group-hover:scale-110">grid_view</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-xl">insights</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-xl">forum</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-icons text-xl">settings</span>
+</button>
+</div>
+<div class="mt-auto pb-4">
+<div class="w-8 h-8 rounded-full overflow-hidden border border-muted-teal/40">
+<img alt="User Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBU_JwNsLzviA4fpqBV0nIcAfgTrYBs1KRIm0Wj91UARsWI2vDiWPJtpH6LyULaLk00ing6mgSLeH-0pd70poblZz3GxAJqthf5fH7E_5N33jpHotyz6IwnP6iW5B6ik7nMBUX1POcUsVl1Joo8M0YbeiTqoic3-m_UnNEeLf644BIn9RpC7YLEB-drgG0NmZPVj5-x6h-BOXQQs-ug0UvuylSgKGk4CPkYb0MY6wc0GKIpZwmGR-8eHty2YpFWNHm6YsB_FoE70WU-"/>
+</div>
+</div>
+</nav>
+<main class="ml-12 w-full h-screen overflow-y-auto flex flex-col">
+<header class="pt-8 pb-6 px-10 border-b border-muted-teal/20 flex justify-between items-end relative bg-[#06080F]/80 backdrop-blur-md sticky top-0 z-40">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-0.5 text-[10px] font-mono border border-primary/40 text-primary rounded bg-primary/5 uppercase tracking-wider">Client Engagement</span>
+<span class="text-slate-500 text-sm font-heading">/</span>
+<span class="text-slate-300 text-sm font-heading font-medium">SwissHR AG</span>
+<span class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text ml-2"></span>
+<span class="text-primary text-xs font-mono uppercase tracking-wider">In Progress</span>
+</div>
+<h1 class="font-display font-bold text-4xl tracking-widest text-white uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]">HR Workflow Automation</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<p class="font-mono text-[10px] text-muted-teal uppercase tracking-widest mb-1">Lead Partner</p>
+<p class="font-heading font-bold text-white text-lg">Savya</p>
+</div>
+<div class="w-10 h-10 rounded-full border border-violet/50 p-0.5 relative">
+<img alt="Savya Avatar" class="w-full h-full rounded-full object-cover grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDjfJxXDPQnbu1qROWg-xPdjJtahcMlQT1amlvo2S3d36bEJvAdOIy9sQeiZz0IYnKrBmtLQvtlccsR2i5dyeq5Sykf7iSMokZCsTXNsNtynlMNlIxnD6Afo5LIEy1MpVQPN4MxUNbTKVRE3Irq6naSlXgLAEmLfBfva7jLdFaVZOIe9wM87B6OkO_nNtTX7nLMIbFwVkbvQqEbjqqLRM4X3iLU_9gg0duXsm9_EbwGKNG7nr6yw6jr8sskfqtK6mwRr9NRzbqyCE_g"/>
+<div class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-green-500 border-2 border-[#06080F] rounded-full"></div>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-primary/0 via-primary/30 to-primary/0"></div>
+</header>
+<div class="px-10 py-8 space-y-8 flex-1">
+<section class="w-full mb-8">
+<div class="relative flex justify-between items-center px-4">
+<div class="absolute top-[18px] left-0 right-0 h-[2px] bg-muted-teal/20 -z-10"></div>
+<div class="absolute top-[18px] left-0 w-[28%] h-[2px] bg-gradient-to-r from-muted-teal to-primary shadow-glow-text -z-10"></div>
+<div class="flex flex-col items-center gap-2 group cursor-pointer opacity-60 hover:opacity-100 transition-opacity">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<span class="material-icons text-muted-teal text-sm">check</span>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-muted-teal">Opportunity</span>
+</div>
+<div class="flex flex-col items-center gap-2 relative">
+<div class="w-9 h-9 rounded-full bg-surface border border-primary shadow-glow-primary flex items-center justify-center z-10 relative">
+<div class="w-3 h-3 bg-primary rounded-full animate-pulse"></div>
+<div class="absolute inset-0 rounded-full border border-primary opacity-50 animate-ping"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-primary font-bold">Proposal</span>
+<div class="absolute top-14 flex gap-4 w-48 justify-center left-1/2 -translate-x-1/2">
+<div class="flex items-center gap-1">
+<div class="w-1.5 h-1.5 bg-primary rounded-full shadow-glow-text"></div>
+<span class="text-[9px] font-mono text-white uppercase">Draft</span>
+</div>
+<div class="flex items-center gap-1 opacity-50">
+<div class="w-1.5 h-1.5 bg-muted-teal rounded-full"></div>
+<span class="text-[9px] font-mono text-slate-400 uppercase">Review</span>
+</div>
+<div class="flex items-center gap-1 opacity-50">
+<div class="w-1.5 h-1.5 bg-muted-teal rounded-full"></div>
+<span class="text-[9px] font-mono text-slate-400 uppercase">Send</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<div class="w-2 h-2 bg-muted-teal/50 rounded-full"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Negotiate</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<div class="w-2 h-2 bg-muted-teal/50 rounded-full"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Engage</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<div class="w-2 h-2 bg-muted-teal/50 rounded-full"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Deliver</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<div class="w-2 h-2 bg-muted-teal/50 rounded-full"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Review</span>
+</div>
+<div class="flex flex-col items-center gap-2 opacity-40">
+<div class="w-9 h-9 rounded-full bg-surface border border-muted-teal flex items-center justify-center z-10">
+<div class="w-2 h-2 bg-muted-teal/50 rounded-full"></div>
+</div>
+<span class="text-[10px] font-mono uppercase tracking-wider text-slate-400">Close</span>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 pb-24">
+<div class="lg:col-span-7 space-y-8">
+<div class="glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-6 pl-2">
+<h3 class="font-heading font-bold text-lg text-white uppercase tracking-wide">Current Deliverables</h3>
+<span class="font-mono text-xs text-primary bg-primary/10 px-2 py-1 rounded border border-primary/20">PHASE 2: PROPOSAL</span>
+</div>
+<div class="grid grid-cols-1 gap-4 pl-2">
+<div class="bg-surface/50 border border-muted-teal/20 p-4 rounded flex items-center justify-between group hover:border-muted-teal/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-muted-teal/10 rounded flex items-center justify-center text-muted-teal">
+<span class="material-icons text-lg">description</span>
+</div>
+<div>
+<h4 class="text-white font-medium text-sm">Client Brief</h4>
+<p class="text-xs text-slate-500 font-mono mt-0.5">V1.2 • APPROVED</p>
+</div>
+</div>
+<span class="material-icons text-muted-teal text-lg">check_circle</span>
+</div>
+<div class="bg-surface/50 border border-muted-teal/20 p-4 rounded flex items-center justify-between group hover:border-muted-teal/50 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-muted-teal/10 rounded flex items-center justify-center text-muted-teal">
+<span class="material-icons text-lg">toc</span>
+</div>
+<div>
+<h4 class="text-white font-medium text-sm">Scope Document</h4>
+<p class="text-xs text-slate-500 font-mono mt-0.5">V2.0 • APPROVED</p>
+</div>
+</div>
+<span class="material-icons text-muted-teal text-lg">check_circle</span>
+</div>
+<div class="bg-surface/50 border border-primary/30 p-4 rounded flex items-center justify-between group hover:border-primary/60 transition-colors shadow-[0_0_10px_rgba(0,229,255,0.05)]">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 bg-primary/10 rounded flex items-center justify-center text-primary relative">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90">
+<circle class="text-transparent" cx="20" cy="20" fill="transparent" r="18" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary animate-[pulse_2s_infinite]" cx="20" cy="20" fill="transparent" r="18" stroke="currentColor" stroke-dasharray="113" stroke-dashoffset="45" stroke-linecap="round" stroke-width="2"></circle>
+</svg>
+<span class="material-icons text-lg relative z-10">edit_document</span>
+</div>
+<div>
+<h4 class="text-white font-medium text-sm">Proposal Draft</h4>
+<p class="text-xs text-primary font-mono mt-0.5">IN PROGRESS • 60%</p>
+</div>
+</div>
+<button class="text-xs font-bold text-primary border border-primary/30 px-3 py-1.5 rounded uppercase hover:bg-primary hover:text-black transition-colors">View</button>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl">
+<div class="flex justify-between items-center mb-6 pl-2">
+<h3 class="font-heading font-bold text-lg text-white uppercase tracking-wide">Tasks</h3>
+<button class="text-xs text-muted-teal hover:text-white transition-colors flex items-center gap-1">
+                                VIEW ALL <span class="material-icons text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="space-y-3 pl-2">
+<div class="flex items-center gap-4 p-2 hover:bg-white/5 rounded transition-colors group">
+<div class="w-5 h-5 rounded border border-muted-teal/40 flex items-center justify-center group-hover:border-primary/60 cursor-pointer">
+<span class="material-icons text-primary text-sm opacity-0 group-hover:opacity-100">check</span>
+</div>
+<span class="text-sm text-slate-300 flex-1">Review competitor pricing models</span>
+<span class="text-[10px] font-mono text-muted-teal bg-muted-teal/10 px-2 py-0.5 rounded">RESEARCH</span>
+</div>
+<div class="flex items-center gap-4 p-2 hover:bg-white/5 rounded transition-colors group">
+<div class="w-5 h-5 rounded border border-muted-teal/40 flex items-center justify-center group-hover:border-primary/60 cursor-pointer">
+<span class="material-icons text-primary text-sm opacity-0 group-hover:opacity-100">check</span>
+</div>
+<span class="text-sm text-slate-300 flex-1">Draft integration timeline</span>
+<span class="text-[10px] font-mono text-primary bg-primary/10 px-2 py-0.5 rounded">URGENT</span>
+</div>
+<div class="flex items-center gap-4 p-2 hover:bg-white/5 rounded transition-colors group opacity-50">
+<div class="w-5 h-5 rounded bg-muted-teal/20 border border-muted-teal/40 flex items-center justify-center">
+<span class="material-icons text-muted-teal text-sm">check</span>
+</div>
+<span class="text-sm text-slate-500 flex-1 line-through">Initial scope meeting</span>
+<span class="text-[10px] font-mono text-slate-600 bg-slate-800 px-2 py-0.5 rounded">DONE</span>
+</div>
+<div class="flex items-center gap-4 p-2 bg-amber/5 border border-amber/20 rounded transition-colors group">
+<div class="w-5 h-5 rounded border border-amber/40 flex items-center justify-center cursor-not-allowed">
+<span class="material-icons text-amber text-sm">lock</span>
+</div>
+<span class="text-sm text-slate-300 flex-1">Send proposal to client</span>
+<span class="text-[10px] font-mono text-amber bg-amber/10 px-2 py-0.5 rounded flex items-center gap-1">
+<span class="material-icons text-[10px]">warning</span> BLOCKED
+                            </span>
+</div>
+</div>
+</div>
+</div>
+<div class="lg:col-span-5 space-y-8">
+<div class="glass-card p-6 rounded-xl relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity">
+<span class="material-icons text-8xl text-primary">attach_money</span>
+</div>
+<h3 class="font-heading font-bold text-lg text-white uppercase tracking-wide mb-6 pl-2">Financials</h3>
+<div class="space-y-6 pl-2 relative z-10">
+<div class="flex justify-between items-end border-b border-white/5 pb-2">
+<span class="text-sm text-slate-400 font-heading">Quote Value</span>
+<span class="text-xl text-white font-mono font-bold tracking-tight">CHF 3,000</span>
+</div>
+<div class="flex justify-between items-end border-b border-white/5 pb-2">
+<span class="text-sm text-slate-400 font-heading">Estimated Costs</span>
+<span class="text-xl text-slate-300 font-mono font-bold tracking-tight">CHF 400</span>
+</div>
+<div class="flex justify-between items-end pt-2">
+<span class="text-sm text-primary font-heading font-bold uppercase">Margin</span>
+<div class="text-right">
+<span class="text-2xl text-primary font-mono font-bold tracking-tight block drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">CHF 2,600</span>
+<span class="text-xs text-muted-teal font-mono">87% Projected</span>
+</div>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl">
+<h3 class="font-heading font-bold text-lg text-white uppercase tracking-wide mb-4 pl-2">Client Context</h3>
+<div class="pl-2 space-y-4">
+<div class="flex items-start gap-3">
+<div class="w-10 h-10 rounded bg-slate-800 flex items-center justify-center text-slate-400 text-lg font-bold">S</div>
+<div>
+<h4 class="text-white font-bold text-sm">SwissHR AG</h4>
+<p class="text-xs text-slate-400">Zurich, CH • Enterprise</p>
+</div>
+</div>
+<div class="space-y-2 mt-4">
+<p class="text-xs font-mono text-muted-teal uppercase mb-1">Point of Contact</p>
+<div class="flex items-center justify-between text-sm text-slate-300">
+<span>Thomas M. (CTO)</span>
+<a class="text-muted-teal hover:text-primary transition-colors" href="#"><span class="material-icons text-sm">mail</span></a>
+</div>
+</div>
+<div class="bg-violet/10 border border-violet/30 p-3 rounded mt-2 relative">
+<div class="absolute -left-[1px] top-3 bottom-3 w-[2px] bg-violet"></div>
+<p class="text-xs text-slate-300 leading-relaxed pl-2">
+<span class="text-violet font-bold font-mono text-[10px] uppercase block mb-1">Nitara Note</span>
+                                Thomas mentioned the CFO needs budget approval by Friday. Ensure the ROI section highlights automation savings.
+                            </p>
+</div>
+</div>
+</div>
+<div class="glass-card p-6 rounded-xl border-t-2 border-t-amber">
+<div class="flex justify-between items-start mb-4 pl-2">
+<div>
+<h3 class="font-heading font-bold text-lg text-white uppercase tracking-wide">Partner</h3>
+<p class="text-xs text-slate-400 mt-1">Leading Engagement</p>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-amber/30">
+<img alt="Partner" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVpClx0NfacGXAaT3Mw5-wZNJBGlQ35Y5ijuxDr_BRG2HDNsMpzUc_-MXq8OmxbCFqKGe2rlbgAyjiflmfP0dbGpQGHI2dbZFgUnvnMtsreXfkU-iWAnZpB_NKLGQGmLuxPnn9GeYzMkeK8PgGgbD5YGBH23tJOyLP5oQkLXM1JFnmbPlHt68a7-lwZgPJVVilZwBfqqZyeFEVEuboEzCtb8tQI7bGHlWMuHgNsVAWya6VnUY96pjefSa5NyEB8AtyCIrL3GtfCLfb"/>
+</div>
+</div>
+<div class="pl-2">
+<div class="mb-2 flex justify-between items-center">
+<span class="text-xs text-slate-400 font-heading">Business Possibility</span>
+<span class="text-amber font-mono text-xs font-bold">0.72</span>
+</div>
+<div class="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+<div class="h-full w-[72%] bg-gradient-to-r from-amber/80 to-amber shadow-glow-amber rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sticky bottom-0 w-full glass-panel border-t border-primary/30 z-50 p-4 lg:px-10">
+<div class="max-w-[1600px] mx-auto flex items-start gap-4">
+<div class="flex-shrink-0 mt-1">
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center shadow-glow-primary animate-[pulse_3s_infinite]">
+<span class="material-icons text-white text-xs">auto_awesome</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="flex items-center gap-2 mb-1">
+<span class="text-primary text-xs font-bold font-heading">NITARA</span>
+<span class="text-slate-500 text-[10px] font-mono">JUST NOW</span>
+</div>
+<p class="text-slate-200 text-sm leading-relaxed">
+                    I'm 60% done with the proposal draft. The pricing breakdown depends on whether we include ongoing maintenance — <span class="text-primary font-medium cursor-pointer hover:underline decoration-primary underline-offset-4">should I include a CHF 500/month retainer option?</span>
+</p>
+</div>
+<div class="flex gap-2 self-end">
+<button class="bg-surface border border-muted-teal/30 hover:border-primary/50 text-slate-300 hover:text-white px-4 py-2 rounded text-xs font-bold uppercase transition-all">No</button>
+<button class="bg-primary text-black hover:bg-white px-4 py-2 rounded text-xs font-bold uppercase shadow-glow-primary transition-all">Yes, Include it</button>
+</div>
+</div>
+</div>
+</main>
+
+</body></html>

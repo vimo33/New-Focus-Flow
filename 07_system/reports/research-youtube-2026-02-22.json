@@ -1,0 +1,311 @@
+{
+  "task_type": "research-youtube",
+  "status": "complete",
+  "date": "2026-02-22",
+  "founder": "Vikas Mohan",
+  "domains_researched": [
+    "AI agents and multi-agent systems",
+    "Workflow automation (n8n, Make, Zapier)",
+    "Solo founder / build in public",
+    "Technical AI engineering",
+    "Privacy engineering / European tech"
+  ],
+  "sources": [
+    {
+      "url": "https://skimai.com/top-ten-ai-youtubers-you-need-to-follow-in-2025/",
+      "type": "channel_list",
+      "description": "Top 10 AI YouTubers ranked by subscribers with content themes"
+    },
+    {
+      "url": "https://www.digitalocean.com/resources/articles/ai-youtubers",
+      "type": "channel_list",
+      "description": "14 educational AI YouTubers with subscriber counts and URLs"
+    },
+    {
+      "url": "https://inferencebysequoia.substack.com/p/best-content-and-community-resources",
+      "type": "channel_list",
+      "description": "Best n8n content creators and resources for founders"
+    },
+    {
+      "url": "https://ottomator.ai/team/cole-medin/",
+      "type": "channel_profile",
+      "description": "Cole Medin profile and content analysis"
+    },
+    {
+      "url": "https://app.thoughtleaders.io/youtube/liam-ottley",
+      "type": "channel_analytics",
+      "description": "Liam Ottley YouTube stats: 706K subscribers, 25M views"
+    },
+    {
+      "url": "https://blog.veefly.com/youtube-marketing/what-are-the-best-untapped-ai-youtube-niches-in-2026/",
+      "type": "gap_analysis",
+      "description": "Untapped AI YouTube niches in 2026"
+    },
+    {
+      "url": "https://medium.com/activated-thinker/10-youtube-niches-that-are-still-undersaturated-in-2026-67ea122864cf",
+      "type": "gap_analysis",
+      "description": "10 undersaturated YouTube niches in 2026"
+    },
+    {
+      "url": "https://machinelearningmastery.com/7-agentic-ai-trends-to-watch-in-2026/",
+      "type": "market_context",
+      "description": "Agentic AI trends and 1445% demand surge in multi-agent systems"
+    },
+    {
+      "url": "https://starstat.yt/ch/greg-isenberg-net-worth",
+      "type": "channel_analytics",
+      "description": "Greg Isenberg YouTube stats: 32.7K subscribers, 502 videos"
+    },
+    {
+      "url": "https://ventress.app/blog/youtube-posting-frequency-guide-2025/",
+      "type": "strategy",
+      "description": "Optimal YouTube posting frequency for growth"
+    },
+    {
+      "url": "https://videos.feedspot.com/ai_youtube_channels/",
+      "type": "channel_list",
+      "description": "100 AI YouTubers curated list 2026"
+    }
+  ],
+  "channel_profiles": [
+    {
+      "name": "Liam Ottley",
+      "url": "youtube.com/@liamottley",
+      "subscribers": 706000,
+      "total_views": 25000000,
+      "posting_frequency": "2-3 videos/week",
+      "primary_topics": ["AI automation agencies", "AI SaaS building", "client acquisition", "monetizing AI"],
+      "monetization": ["courses", "community membership", "sponsorships"],
+      "relevance_score": 7,
+      "gap_vs_vikas": "Agency model focus, no technical depth, no privacy/EU angle"
+    },
+    {
+      "name": "Matthew Berman",
+      "url": "youtube.com/@matthew_berman",
+      "subscribers": 338000,
+      "posting_frequency": "3-5 videos/week",
+      "primary_topics": ["AI model analysis", "LLM benchmarks", "open-source AI", "coding AI"],
+      "monetization": ["sponsorships", "affiliates"],
+      "relevance_score": 5,
+      "gap_vs_vikas": "Model analysis only, not product building, no business layer"
+    },
+    {
+      "name": "All About AI (Kristian Fagerlie)",
+      "url": "youtube.com/@allabtai",
+      "subscribers": 217000,
+      "posting_frequency": "1-2 videos/week",
+      "primary_topics": ["enterprise AI agents", "practical coding with AI", "AI tools integration"],
+      "monetization": ["sponsorships"],
+      "relevance_score": 7,
+      "gap_vs_vikas": "No founder/product strategy, no privacy, no Swiss/EU perspective"
+    },
+    {
+      "name": "Cole Medin",
+      "url": "youtube.com/@ColeMedin",
+      "subscribers": 174000,
+      "posting_frequency": "1-2 videos/week",
+      "primary_topics": ["agentic AI", "RAG systems", "local AI deployment", "enterprise agent architectures"],
+      "best_performing": [
+        {"title": "Turn ANY Website into LLM Knowledge", "views": 222000},
+        {"title": "Agentic RAG with DeepSeek", "views": 86000}
+      ],
+      "monetization": ["course platform (Dynamous AI)", "community"],
+      "relevance_score": 9,
+      "gap_vs_vikas": "No solo founder/portfolio angle, no business layer, no Swiss context"
+    },
+    {
+      "name": "David Ondrej",
+      "url": "youtube.com/@DavidOndrej",
+      "subscribers": 128000,
+      "posting_frequency": "2-3 videos/week",
+      "primary_topics": ["Claude AI", "OpenAI tools", "building AI agents", "AI startup building"],
+      "relevance_score": 7,
+      "gap_vs_vikas": "No privacy angle, no Swiss/EU perspective, no multi-venture portfolio context"
+    },
+    {
+      "name": "Wes Roth",
+      "url": "youtube.com/@WesRoth",
+      "subscribers": 211000,
+      "posting_frequency": "2-3 videos/week",
+      "primary_topics": ["AI industry news", "AGI discussion", "enterprise AI analysis"],
+      "relevance_score": 3,
+      "gap_vs_vikas": "Commentary/news focus, not building"
+    },
+    {
+      "name": "Greg Isenberg",
+      "url": "youtube.com/@gregisenberg",
+      "subscribers": 32700,
+      "posting_frequency": "1 video/week + 2x podcast",
+      "monthly_growth": "51.4%",
+      "primary_topics": ["startup ideas", "community businesses", "AI for founders", "idea frameworks"],
+      "monetization": ["newsletter", "consulting", "community"],
+      "relevance_score": 6,
+      "gap_vs_vikas": "No technical depth, idea-stage only, no agent/privacy angle"
+    },
+    {
+      "name": "Nick Saraev",
+      "url": "n8n.io/creators/nicksaraev/",
+      "posting_frequency": "weekly",
+      "primary_topics": ["n8n automation", "AI workflow courses", "beginner-to-professional AI automations"],
+      "relevance_score": 5,
+      "gap_vs_vikas": "n8n/no-code focus, not production agent architecture"
+    },
+    {
+      "name": "Sam Witteveen AI",
+      "subscribers": 109000,
+      "posting_frequency": "weekly",
+      "primary_topics": ["ML projects", "AI frameworks", "real-world AI deployments"],
+      "relevance_score": 6,
+      "gap_vs_vikas": "No founder/business layer"
+    }
+  ],
+  "gap_analysis": [
+    {
+      "gap_id": "GAP-1",
+      "title": "Agentic AI for Product Builders",
+      "priority": "HIGH",
+      "demand_signal": "1,445% surge in multi-agent system inquiries Q1 2024 to Q2 2025",
+      "current_coverage": "Cole Medin (closest), David Ondrej, All About AI — all lack product-building + business-framing lens",
+      "what_is_missing": "Practitioner showing how to wire multi-agent systems into actual products with business logic, success metrics, and revenue outcomes",
+      "vikas_fit": "EXPERT — building Nitara as living example of this",
+      "estimated_audience": "100K–500K potential in 24 months",
+      "cpm_range": "$15-40"
+    },
+    {
+      "gap_id": "GAP-2",
+      "title": "Solo Technical Founder as Studio Operator",
+      "priority": "HIGH",
+      "demand_signal": "Strong solopreneur movement; 2026 State of Solopreneurship reports growing market",
+      "current_coverage": "Greg Isenberg (idea stage), Liam Ottley (agency model), Pieter Levels (Twitter, no YouTube)",
+      "what_is_missing": "Mechanics of running a portfolio of 5+ ventures solo using AI — prioritization, validation, portfolio hygiene, cognitive load management",
+      "vikas_fit": "EXPERT — lives this daily, building Nitara for exactly this",
+      "estimated_audience": "50K–200K potential in 24 months",
+      "cpm_range": "$12-25"
+    },
+    {
+      "gap_id": "GAP-3",
+      "title": "Privacy-First AI Architecture",
+      "priority": "MEDIUM-HIGH",
+      "demand_signal": "450M+ EU addressable audience, growing GDPR enforcement, AI Act implementation",
+      "current_coverage": "ZERO credible practitioner channels on YouTube",
+      "what_is_missing": "How to build GDPR/Swiss DSG compliant AI applications — self-hosted inference, data residency, consent flows, audit trails in AI systems",
+      "vikas_fit": "ADVANCED — privacy engineering background, Kavach AI project, Swiss base",
+      "estimated_audience": "30K–100K potential in 24 months (very defensible)",
+      "cpm_range": "$20-40 (compliance/B2B audience)"
+    },
+    {
+      "gap_id": "GAP-4",
+      "title": "Production-Grade AI Workflow Orchestration",
+      "priority": "MEDIUM",
+      "demand_signal": "n8n valuation reached $1.5B in 2025; enterprise AI agent adoption accelerating",
+      "current_coverage": "Nick Saraev (beginner-intermediate n8n), Cole Medin (agentic RAG) — no production-depth orchestration",
+      "what_is_missing": "Advanced orchestration: multi-agent routing, cost budgeting, kill switches, approval queues, HITL patterns — the stuff after the tutorial breaks",
+      "vikas_fit": "EXPERT — Nitara's agent queue, cost-gate, KILL_SWITCH system is real implementation",
+      "estimated_audience": "40K–150K potential in 24 months",
+      "cpm_range": "$15-30"
+    },
+    {
+      "gap_id": "GAP-5",
+      "title": "European Tech Founder Perspective",
+      "priority": "LOWER",
+      "demand_signal": "Growing European AI sovereignty movement; Proton €100M EU investment",
+      "current_coverage": "No credible Swiss/EU technical founder YouTube channel",
+      "what_is_missing": "Swiss/European perspective on AI, compliance, bootstrapping — cross-border execution context",
+      "vikas_fit": "UNIQUE — Zurich base, cross-border experience, GDPR/DSG expertise",
+      "estimated_audience": "20K–60K (niche but highly qualified)",
+      "cpm_range": "$18-35"
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": 1,
+      "action": "Start 'Agent Stack' video series",
+      "rationale": "Maps directly to Nitara build work, addresses highest-demand unsatisfied niche, first 10 videos can be pulled from existing Nitara architecture decisions",
+      "first_10_video_titles": [
+        "How I built a multi-agent system to run my startup portfolio",
+        "Agent orchestration patterns that work in production (kill switches, approval queues, cost budgets)",
+        "Claude vs GPT-4 for agentic tasks: a founder's real comparison",
+        "Building your first HITL checkpoint with Claude Code",
+        "Why 90% of AI agent demos fail in production (and what to do instead)",
+        "The $20/day agent budget: how I cap autonomous AI costs",
+        "Multi-tier approval gates in AI systems — Tier 1/2/3 design patterns",
+        "Self-hosted vs. cloud LLMs: a privacy engineer's honest comparison",
+        "How I wire Claude Opus, Sonnet, and Haiku into one agent system",
+        "Mem0 + Qdrant + file vault: the memory architecture for AI co-founders"
+      ]
+    },
+    {
+      "priority": 2,
+      "action": "Add 'Studio OS' series for portfolio operator angle",
+      "rationale": "Unique differentiator no other channel has; builds audience of serious founders, not just AI hobbyists",
+      "first_5_video_titles": [
+        "How I run 8 ventures simultaneously without losing my mind",
+        "The validation framework I use before writing a single line of code",
+        "Kill vs Scale vs Pivot: my decision gate system for projects",
+        "Why I stopped building features and started building systems",
+        "The cost of context switching and how AI reduces it to near-zero"
+      ]
+    },
+    {
+      "priority": 3,
+      "action": "Weave privacy/compliance lens into all content",
+      "rationale": "Persistent differentiator; no competitor does this; builds credibility with B2B/European audience that pays premium CPM",
+      "execution": "Include a 'privacy note' in every technical video — 2-3 minutes on how to adapt what you're building for GDPR compliance"
+    },
+    {
+      "priority": 4,
+      "action": "Direct sponsor outreach at 1K subscribers",
+      "rationale": "Technical niche + practitioner audience = premium sponsorship value regardless of raw subscriber count",
+      "target_sponsors": ["Anthropic", "n8n", "Qdrant", "Mem0", "LiveKit", "Hetzner (European hosting)", "Fathom Analytics (privacy-first analytics)"]
+    }
+  ],
+  "monetization_forecast": {
+    "months_1_to_3": {
+      "focus": "Foundation building — 12-16 videos, SEO optimization",
+      "revenue_estimate": "$0-500"
+    },
+    "months_4_to_6": {
+      "focus": "YPP threshold + first sponsorships",
+      "revenue_estimate": "$500-2000/month",
+      "milestones": ["1,000 subscribers", "4,000 watch hours", "first sponsor integration"]
+    },
+    "months_7_to_12": {
+      "focus": "10K-30K subscribers, recurring sponsorships",
+      "revenue_estimate": "$3000-12000/month",
+      "breakdown": {"ads": "$800-2000", "sponsorships": "$2000-8000", "affiliates": "$200-2000"}
+    },
+    "months_13_plus": {
+      "focus": "Course/community launch",
+      "revenue_estimate": "$8000-20000/month steady + $15000-50000 launch events",
+      "course_concept": "Agent Architecture Bootcamp — $200-500 one-time"
+    }
+  },
+  "optimal_posting_schedule": {
+    "long_form": "1 video/week (12-25 minutes)",
+    "shorts": "2-3 per week (repurposed from long-form)",
+    "frequency_rationale": "VidIQ analysis of 5M channels: 12+ uploads/month yields 53% more views and 66% more subscribers vs 1-3/month. For solo operator, 1 long-form + 2 shorts/week = 12 pieces/month achievable."
+  },
+  "cpm_context": {
+    "ai_tech_saas_automation": "$15-40 CPM",
+    "general_entertainment": "$2-8 CPM",
+    "b2b_compliance": "$20-40 CPM",
+    "sponsorship_per_integration": "$500-5000 depending on channel size",
+    "source": "Various: lenostube.com, awisee.com, tastyedits.com CPM data 2025"
+  },
+  "strategic_positioning": {
+    "channel_concept": "The AI co-founder stack — how a solo technical founder in Zurich runs 10+ ventures using multi-agent AI systems, privacy-first architecture, and decision-grade intelligence",
+    "target_audience": "Serious solo technical founders, AI engineers building products, European builders navigating compliance",
+    "primary_differentiators": [
+      "Practitioner depth — not tutorials, not news, not theory — real systems built in production",
+      "Portfolio operator lens — running 5+ concurrent ventures with AI",
+      "Privacy-first by default — GDPR/Swiss DSG compliance woven in",
+      "European market grounding — Swiss base, cross-border execution",
+      "Decision-grade output focus — every build aims at business outcomes, not demos"
+    ],
+    "avoid": [
+      "Competing with Liam Ottley on agency content",
+      "Competing with Matthew Berman on model news/benchmarks",
+      "Beginner tutorial format that commoditizes your expertise"
+    ]
+  }
+}

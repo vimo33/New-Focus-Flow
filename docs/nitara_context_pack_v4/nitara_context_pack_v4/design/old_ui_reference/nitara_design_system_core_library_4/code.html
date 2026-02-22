@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Network Intelligence View</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;500;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@400;700&amp;family=Syncopate:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#00e5ff",
+                        "primary-dim": "#00e5ff20",
+                        "muted-teal": "#3BBFB2",
+                        "amber": "#ffb703",
+                        "violet": "#8B5CF6",
+                        "background-dark": "#06080F",
+                        "background-light": "#f5f8f8",
+                        "surface": "#0f131a",
+                        "surface-glass": "rgba(15, 19, 26, 0.6)",
+                        "border-dim": "rgba(30, 48, 80, 0.4)",
+                    },
+                    fontFamily: {
+                        "display": ["Syncopate", "sans-serif"],
+                        "heading": ["DM Sans", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        "glow-primary": "0 0 15px rgba(0, 229, 255, 0.3)",
+                        "glow-amber": "0 0 15px rgba(255, 183, 3, 0.3)",
+                        "glow-text": "0 0 8px rgba(0, 229, 255, 0.6)",
+                        "glow-teal": "0 0 10px rgba(59, 191, 178, 0.2)",
+                        "glow-nebula-blue": "0 0 60px 20px rgba(0, 229, 255, 0.15)",
+                        "glow-nebula-violet": "0 0 60px 20px rgba(139, 92, 246, 0.15)",
+                        "glow-nebula-teal": "0 0 60px 20px rgba(59, 191, 178, 0.15)",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .bg-starfield {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 1.5px),
+                radial-gradient(white, rgba(255,255,255,.05) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+        }
+        .glass-panel {
+            background: rgba(15, 19, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-right: 1px solid rgba(59, 191, 178, 0.2);
+        }
+        .glass-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 191, 178, 0.3);
+        }.custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(6, 8, 15, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(59, 191, 178, 0.3);
+            border-radius: 2px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 229, 255, 0.5);
+        }
+        .nebula-shape {
+            filter: blur(40px);
+            opacity: 0.6;
+            transition: all 2s ease-in-out;
+        }
+        .nebula-shape:hover {
+            opacity: 0.8;
+            filter: blur(30px);
+        }
+        .pulse-line {
+            stroke-dasharray: 10;
+            animation: dash 3s linear infinite;
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -100;
+            }
+        }
+    </style>
+</head>
+<body class="bg-starfield text-slate-300 font-body antialiased overflow-hidden h-screen flex">
+<nav class="h-full w-12 border-r border-muted-teal/20 glass-panel flex flex-col items-center py-6 z-50 flex-shrink-0">
+<div class="mb-8">
+<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-blue-600 flex items-center justify-center shadow-glow-primary">
+<span class="material-icons text-black text-[10px]">auto_awesome</span>
+</div>
+</div>
+<div class="flex flex-col gap-6 w-full items-center">
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10">
+<div class="absolute left-0 h-5 w-0.5 bg-primary shadow-glow-primary rounded-r"></div>
+<span class="material-symbols-outlined text-primary shadow-glow-text text-xl transition-all group-hover:scale-110">hub</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">insights</span>
+</button>
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">forum</span>
+</button>
+</div>
+<div class="mt-auto mb-4">
+<button class="group relative flex items-center justify-center w-full h-10 text-muted-teal/60 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">settings</span>
+</button>
+<div class="w-6 h-6 rounded-full overflow-hidden border border-muted-teal/40 mt-4 mx-auto">
+<img alt="User Profile" class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcKwuEergf5rSF5IHWOlG6-tHBkcH7qlyVfLnob_8Mp88STMSwLCdcdJYZ57hHZduBFJbjrnDyraAXHHKpMzithkFp7-pQ8OmKh9Oe7DbHS2F_nzNlB6TvUOSNa0u-9oEik49pNVXBZRj6D5M6yMlDlsSZ7EtLQbjLoyWQ4z1uSO1dsws0yTmRq8FsiX0oJaiOr5XYzmUZz23fQ9Q39Bo4qSBecsT0IRzpEQAY8R00MEb4TcFuGE3w-uKCJ3ZIP-CdFb6yyB2o4859"/>
+</div>
+</div>
+</nav>
+<main class="flex-1 flex h-full overflow-hidden">
+<section class="w-[35%] h-full flex flex-col border-r border-muted-teal/20 bg-background-dark/30 backdrop-blur-sm z-10 relative">
+<div class="p-6 pb-2">
+<h1 class="font-display text-white text-lg tracking-widest mb-4">NETWORK VIEW</h1>
+<div class="relative group mb-4">
+<input class="w-full bg-surface-glass border border-muted-teal shadow-glow-teal text-white py-3 pl-10 pr-4 rounded-lg focus:border-primary focus:ring-1 focus:ring-primary focus:shadow-glow-primary transition-all outline-none font-body text-sm placeholder-slate-500" placeholder="Search entity or cluster..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-lg">search</span>
+</div>
+<div class="flex justify-between items-end border-b border-muted-teal/20 pb-4">
+<div class="font-mono text-xs text-slate-400">
+<span class="text-white">312</span> contacts · <span class="text-primary">47</span> strong · <span class="text-slate-600">89</span> dormant
+                    </div>
+<button class="text-muted-teal hover:text-white transition-colors">
+<span class="material-symbols-outlined text-lg">filter_list</span>
+</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 pt-0 space-y-2">
+<div class="group p-4 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-muted-teal/30 cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="font-heading font-bold text-white text-base group-hover:text-primary transition-colors">Marcus R.</h3>
+<p class="text-xs text-slate-400">CTO, ZüriTech Systems</p>
+</div>
+<div class="flex gap-0.5 mt-1" title="Relationship Strength: Strong">
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-muted-teal/10 text-muted-teal border border-muted-teal/20">fintech</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-400 border border-slate-700">Zürich</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-violet/10 text-violet border border-violet/20">Lead</span>
+</div>
+</div>
+<div class="group p-4 rounded-lg bg-white/[0.02] border border-muted-teal/10 hover:bg-white/5 transition-all hover:border-muted-teal/30 cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="font-heading font-bold text-white text-base group-hover:text-primary transition-colors">Savya S.</h3>
+<p class="text-xs text-slate-400">VP Engineering, Mumbai Dynamics</p>
+</div>
+<div class="flex gap-0.5 mt-1" title="Relationship Strength: Medium">
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-muted-teal/10 text-muted-teal border border-muted-teal/20">enterprise</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-400 border border-slate-700">Mumbai</span>
+</div>
+</div>
+<div class="group p-4 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-muted-teal/30 cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="font-heading font-bold text-white text-base group-hover:text-primary transition-colors">Elena V.</h3>
+<p class="text-xs text-slate-400">Founder, NeuroCore AI</p>
+</div>
+<div class="flex gap-0.5 mt-1" title="Relationship Strength: Developing">
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-muted-teal/10 text-muted-teal border border-muted-teal/20">AI/ML</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-400 border border-slate-700">Berlin</span>
+</div>
+</div>
+<div class="group p-4 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-muted-teal/30 cursor-pointer opacity-70">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="font-heading font-bold text-slate-300 text-base group-hover:text-primary transition-colors">Klaus M.</h3>
+<p class="text-xs text-slate-500">Investor, Alpine VC</p>
+</div>
+<div class="flex gap-0.5 mt-1">
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+<div class="w-1.5 h-1.5 rounded-full border border-primary/40"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-500 border border-slate-800">Finance</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-500 border border-slate-800">Bern</span>
+</div>
+</div>
+<div class="group p-4 rounded-lg hover:bg-white/5 transition-all border border-transparent hover:border-muted-teal/30 cursor-pointer">
+<div class="flex justify-between items-start mb-1">
+<div>
+<h3 class="font-heading font-bold text-white text-base group-hover:text-primary transition-colors">Priya D.</h3>
+<p class="text-xs text-slate-400">Director, TechHub India</p>
+</div>
+<div class="flex gap-0.5 mt-1">
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+<div class="w-1.5 h-1.5 rounded-full bg-primary shadow-glow-text"></div>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-muted-teal/10 text-muted-teal border border-muted-teal/20">Community</span>
+<span class="px-2 py-0.5 rounded text-[10px] font-mono bg-surface text-slate-400 border border-slate-700">Bangalore</span>
+</div>
+</div>
+</div>
+</section>
+<section class="w-[65%] h-full flex flex-col relative">
+<div class="flex-1 relative overflow-hidden bg-gradient-to-b from-transparent to-background-dark/90">
+<div class="absolute inset-0 z-0 opacity-10" style="background-image: linear-gradient(#3BBFB2 1px, transparent 1px), linear-gradient(90deg, #3BBFB2 1px, transparent 1px); background-size: 100px 100px;"></div>
+<svg class="absolute inset-0 w-full h-full z-10 pointer-events-none">
+<line class="pulse-line" stroke="#00e5ff" stroke-opacity="0.3" stroke-width="1" x1="50%" x2="25%" y1="50%" y2="35%"></line>
+<line class="pulse-line" stroke="#00e5ff" stroke-opacity="0.3" stroke-width="1" x1="50%" x2="75%" y1="50%" y2="40%"></line>
+<line class="pulse-line" stroke="#00e5ff" stroke-opacity="0.3" stroke-width="1" x1="50%" x2="55%" y1="50%" y2="70%"></line>
+<circle cx="25%" cy="35%" fill="#3BBFB2" r="3"></circle>
+<circle cx="75%" cy="40%" fill="#3BBFB2" r="3"></circle>
+<circle cx="55%" cy="70%" fill="#3BBFB2" r="3"></circle>
+</svg>
+<div class="absolute top-[20%] left-[15%] w-64 h-64 bg-primary/20 rounded-full blur-[80px] animate-pulse"></div> 
+<div class="absolute top-[25%] right-[15%] w-80 h-80 bg-violet/20 rounded-full blur-[90px] animate-pulse" style="animation-delay: 1s;"></div> 
+<div class="absolute bottom-[20%] left-[45%] w-56 h-56 bg-muted-teal/20 rounded-full blur-[70px] animate-pulse" style="animation-delay: 2s;"></div> 
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center">
+<div class="relative w-4 h-4">
+<div class="absolute inset-0 bg-white rounded-full shadow-[0_0_20px_5px_rgba(255,255,255,0.8)] animate-pulse"></div>
+<div class="absolute inset-[-4px] border border-primary rounded-full animate-ping opacity-20"></div>
+</div>
+<span class="mt-4 font-mono text-[10px] text-white bg-black/50 px-2 py-0.5 rounded border border-white/20 backdrop-blur-md">YOU</span>
+</div>
+<div class="absolute top-[30%] left-[20%] z-20 -translate-x-1/2 text-center group cursor-pointer">
+<div class="w-2 h-2 bg-primary rounded-full mx-auto mb-2 shadow-glow-primary"></div>
+<span class="font-heading font-bold text-white text-sm shadow-black drop-shadow-md">Swiss Fintech</span>
+<span class="block font-mono text-[10px] text-primary">47 NODES</span>
+</div>
+<div class="absolute top-[35%] right-[20%] z-20 -translate-x-1/2 text-center group cursor-pointer">
+<div class="w-2 h-2 bg-violet rounded-full mx-auto mb-2 shadow-[0_0_10px_#8B5CF6]"></div>
+<span class="font-heading font-bold text-white text-sm shadow-black drop-shadow-md">Indian Tech</span>
+<span class="block font-mono text-[10px] text-violet">83 NODES</span>
+</div>
+<div class="absolute bottom-[25%] left-[53%] z-20 -translate-x-1/2 text-center group cursor-pointer">
+<div class="w-2 h-2 bg-muted-teal rounded-full mx-auto mb-2 shadow-glow-teal"></div>
+<span class="font-heading font-bold text-white text-sm shadow-black drop-shadow-md">AI/ML Research</span>
+<span class="block font-mono text-[10px] text-muted-teal">34 NODES</span>
+</div>
+<div class="absolute top-6 right-6 z-30 flex gap-2">
+<button class="bg-black/40 backdrop-blur-md border border-muted-teal/30 p-2 rounded hover:bg-muted-teal/10 hover:border-primary transition-colors text-white">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+<button class="bg-black/40 backdrop-blur-md border border-muted-teal/30 p-2 rounded hover:bg-muted-teal/10 hover:border-primary transition-colors text-white">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<button class="bg-black/40 backdrop-blur-md border border-muted-teal/30 p-2 rounded hover:bg-muted-teal/10 hover:border-primary transition-colors text-white">
+<span class="material-symbols-outlined text-lg">center_focus_strong</span>
+</button>
+</div>
+</div>
+<div class="h-auto z-20 bg-gradient-to-t from-background-dark via-background-dark to-transparent pt-10 px-8 pb-4">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-violet animate-pulse">auto_awesome</span>
+<h2 class="font-display font-bold text-sm text-slate-400 tracking-widest uppercase">Network Intelligence</h2>
+</div>
+<div class="grid grid-cols-2 gap-6 mb-6">
+<div class="glass-card relative rounded-xl p-6 pl-8 overflow-hidden group hover:border-primary/50 transition-colors">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-violet group-hover:shadow-[0_0_15px_#8B5CF6] transition-shadow"></div>
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></span>
+<span class="font-mono text-[10px] text-green-400 tracking-wider">OPPORTUNITY</span>
+</div>
+<h3 class="font-heading font-bold text-white text-lg mb-1">Warm Lead Detected: Marcus R.</h3>
+<p class="text-slate-400 text-sm max-w-sm">Recent activity in <span class="text-slate-300">DeFi protocols</span> matches your new offering.</p>
+</div>
+<button class="bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-black px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">edit_note</span>
+                                Draft Outreach
+                            </button>
+</div>
+</div>
+<div class="glass-card relative rounded-xl p-6 pl-8 overflow-hidden group hover:border-violet/50 transition-colors">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-violet group-hover:shadow-[0_0_15px_#8B5CF6] transition-shadow"></div>
+<div class="flex justify-between items-start">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="font-mono text-[10px] text-violet tracking-wider">INSIGHT</span>
+</div>
+<h3 class="font-heading font-bold text-white text-lg mb-1">Partner Network Expansion</h3>
+<div class="flex gap-4 mt-2">
+<div>
+<span class="block font-mono text-lg text-white">12</span>
+<span class="text-[10px] text-slate-500 uppercase">New Nodes</span>
+</div>
+<div class="w-px bg-slate-700 h-8"></div>
+<div>
+<span class="block font-mono text-lg text-white">+24%</span>
+<span class="text-[10px] text-slate-500 uppercase">Growth (MOM)</span>
+</div>
+</div>
+</div>
+<button class="bg-transparent border border-muted-teal/30 text-slate-300 hover:text-white hover:border-white px-4 py-2 rounded text-xs font-bold uppercase tracking-wider transition-all">
+                                View Details
+                            </button>
+</div>
+</div>
+</div>
+<div class="border-t border-muted-teal/20 pt-4 pb-2">
+<div class="flex items-start gap-4 mb-3 px-2 animate-in fade-in slide-in-from-bottom-2 duration-700">
+<div class="w-8 h-8 rounded-full bg-gradient-to-br from-primary via-blue-500 to-violet-500 flex items-center justify-center flex-shrink-0 shadow-glow-primary">
+<span class="material-icons text-white text-xs">auto_awesome</span>
+</div>
+<div class="flex-1">
+<p class="text-sm text-slate-300 leading-relaxed font-body">
+                                I noticed <span class="text-white font-medium">3 people</span> from your Weiterbildung course cohort are now at companies that could use AI consulting. Want me to draft a gentle reconnection message?
+                            </p>
+</div>
+</div>
+<div class="relative group">
+<input class="w-full bg-surface-glass border border-muted-teal/30 text-white p-3 pr-12 rounded-lg focus:border-primary focus:ring-0 focus:shadow-glow-primary transition-all outline-none font-body text-sm placeholder-slate-500" placeholder="Reply to Nitara..." type="text"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 text-primary hover:bg-primary/10 p-1.5 rounded transition-colors">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+
+</body></html>

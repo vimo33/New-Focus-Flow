@@ -5,10 +5,14 @@
   "priority": "low",
   "directive_aligned": false,
   "trust_tier": 2,
-  "status": "queued",
+  "status": "completed",
   "max_duration_minutes": 120,
   "created_at": "2026-02-20T18:00:01.368Z",
   "hitl_timeout_hours": 24,
   "retry_count": 0,
-  "created_by": "system"
+  "created_by": "system",
+  "started_at": "2026-02-22T00:00:11.836Z",
+  "pid": 2593912,
+  "completed_at": "2026-02-22T00:04:04.242Z",
+  "result_file": "/srv/focus-flow/07_system/reports/time-value-analyze-2026-02-22.json"
 }

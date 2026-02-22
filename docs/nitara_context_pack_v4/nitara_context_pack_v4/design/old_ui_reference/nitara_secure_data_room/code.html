@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nitara Secure Data Room</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ecec",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102222", // Keeping theme config, but will override page bg as requested
+                        "void": "#06080F",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["DM Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Star Field Background */
+        .bg-star-field {
+            background-color: #06080F;
+            background-image: 
+                radial-gradient(1px 1px at 25px 5px, white, rgba(255, 255, 255, 0)),
+                radial-gradient(1px 1px at 50px 25px, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0)),
+                radial-gradient(1.5px 1.5px at 125px 20px, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0)),
+                radial-gradient(2px 2px at 250px 180px, rgba(19, 236, 236, 0.4), rgba(19, 236, 236, 0));
+            background-size: 550px 550px;
+        }
+
+        /* Frosted Glass Utilities */
+        .glass-panel {
+            background: rgba(16, 34, 34, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(19, 236, 236, 0.15);
+        }
+        
+        .glass-panel-light {
+            background: rgba(19, 236, 236, 0.03);
+            border: 1px solid rgba(19, 236, 236, 0.1);
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2); 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(19, 236, 236, 0.2); 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(19, 236, 236, 0.4); 
+        }
+
+        /* Diagonal Watermark Text */
+        .watermark-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 5rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.03);
+            pointer-events: none;
+            white-space: nowrap;
+            z-index: 10;
+            letter-spacing: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-star-field text-gray-300 font-display antialiased h-screen flex overflow-hidden">
+<!-- SIDEBAR RAIL -->
+<aside class="w-12 h-full flex flex-col items-center py-6 border-r border-white/10 glass-panel z-50 flex-shrink-0">
+<div class="mb-8">
+<div class="w-6 h-6 rounded bg-primary/20 flex items-center justify-center">
+<span class="material-icons text-primary text-sm">token</span>
+</div>
+</div>
+<nav class="flex flex-col gap-6 w-full items-center">
+<button class="w-full flex justify-center py-2 relative group">
+<span class="material-icons text-white/40 group-hover:text-primary transition-colors text-xl">dashboard</span>
+</button>
+<button class="w-full flex justify-center py-2 relative group">
+<div class="absolute left-0 top-0 bottom-0 w-0.5 bg-primary shadow-[0_0_10px_#13ecec]"></div>
+<span class="material-icons text-primary text-xl shadow-[0_0_15px_rgba(19,236,236,0.5)]">folder_shared</span>
+</button>
+<button class="w-full flex justify-center py-2 relative group">
+<span class="material-icons text-white/40 group-hover:text-primary transition-colors text-xl">people</span>
+</button>
+<button class="w-full flex justify-center py-2 relative group">
+<span class="material-icons text-white/40 group-hover:text-primary transition-colors text-xl">analytics</span>
+</button>
+</nav>
+<div class="mt-auto flex flex-col gap-6 w-full items-center">
+<button class="w-full flex justify-center py-2 group">
+<span class="material-icons text-white/40 group-hover:text-primary transition-colors text-xl">settings</span>
+</button>
+<div class="w-6 h-6 rounded-full bg-gradient-to-br from-primary to-blue-600 overflow-hidden relative">
+<img class="w-full h-full object-cover opacity-80" data-alt="User profile avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD9zy8_yvpW-4j-CE5efC8Cd9ul4-usrIRrC_2d4EQDdmSpiG1BsFHeoAXqP1l37FR3clbyH0ipdxkjJXXnG6SIl1qqfDuVl39oFSJBEumKqEdzmLfC-47pWyWj3Qm7q47xuP8Nu3LS92cQtjsMa-KN6FMafLLHDfQwt6ofyxRUUNjSpjD1thjj0AwDahyC6KFIj1S6k8VSwmGZerDDujlwe1dcdzld3ey-n-DtZb5v16y4K_0nZ8XxWbio8MJRa4GY3FfgQXycPku3"/>
+</div>
+</div>
+</aside>
+<!-- MAIN CONTENT -->
+<main class="flex-1 flex flex-col h-full relative">
+<!-- HEADER -->
+<header class="h-20 border-b border-white/5 bg-background-dark/80 backdrop-blur-md flex items-center justify-between px-8 flex-shrink-0 z-40">
+<div>
+<h1 class="text-2xl font-bold tracking-widest text-white uppercase flex items-center gap-3">
+<span class="text-primary material-icons text-2xl">lock</span>
+                    Data Room <span class="text-white/30 mx-1">//</span> SwissAI Studio
+                </h1>
+<p class="text-white/50 text-sm font-body tracking-wide mt-1">Secure, encrypted environment for investor due diligence.</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-2 rounded-lg border border-red-500/30 text-red-400 text-xs font-semibold uppercase tracking-wider hover:bg-red-500/10 transition-colors flex items-center gap-2">
+<span class="material-icons text-sm">block</span>
+                    Revoke All Access
+                </button>
+<button class="px-4 py-2 rounded-lg border border-primary/30 text-primary text-xs font-semibold uppercase tracking-wider hover:bg-primary/10 transition-colors flex items-center gap-2">
+<span class="material-icons text-sm">history</span>
+                    Audit Log
+                </button>
+<button class="px-4 py-2 rounded-lg bg-primary text-background-dark text-xs font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-[0_0_15px_rgba(19,236,236,0.3)] flex items-center gap-2">
+<span class="material-icons text-sm">person_add</span>
+                    Invite Partner
+                </button>
+</div>
+</header>
+<!-- CONTENT AREA -->
+<div class="flex-1 flex overflow-hidden p-6 gap-6">
+<!-- LEFT: FILE EXPLORER -->
+<div class="w-80 flex-shrink-0 flex flex-col gap-4">
+<div class="glass-panel rounded-xl flex-1 flex flex-col overflow-hidden">
+<div class="p-4 border-b border-white/10 flex items-center justify-between bg-white/5">
+<span class="text-xs font-bold text-white/70 uppercase tracking-widest">Directory</span>
+<span class="material-icons text-white/40 text-sm">filter_list</span>
+</div>
+<div class="flex-1 overflow-y-auto p-2">
+<!-- Folders -->
+<div class="mb-4">
+<div class="px-3 py-2 text-[10px] text-primary/70 uppercase font-bold tracking-wider mb-1">Folders</div>
+<div class="space-y-1">
+<button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-left group transition-all">
+<span class="material-icons text-yellow-500/80 group-hover:text-yellow-400">folder</span>
+<span class="text-sm text-gray-300 font-medium">Financials</span>
+<span class="ml-auto text-xs text-white/20">3 items</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-left group transition-all">
+<span class="material-icons text-purple-400/80 group-hover:text-purple-300">folder</span>
+<span class="text-sm text-gray-300 font-medium">Legal &amp; IP</span>
+<span class="ml-auto text-xs text-white/20">12 items</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-left group transition-all">
+<span class="material-icons text-blue-400/80 group-hover:text-blue-300">folder</span>
+<span class="text-sm text-gray-300 font-medium">Technical Docs</span>
+<span class="ml-auto text-xs text-white/20">8 items</span>
+</button>
+<button class="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-white/5 text-left group transition-all">
+<span class="material-icons text-emerald-400/80 group-hover:text-emerald-300">folder</span>
+<span class="text-sm text-gray-300 font-medium">Customer Contracts</span>
+<span class="ml-auto text-xs text-white/20">5 items</span>
+</button>
+</div>
+</div>
+<!-- Files -->
+<div>
+<div class="px-3 py-2 text-[10px] text-primary/70 uppercase font-bold tracking-wider mb-1">Recent Files</div>
+<div class="space-y-1">
+<!-- Selected File -->
+<button class="w-full flex flex-col gap-1 px-3 py-2 rounded-lg bg-primary/10 border border-primary/30 text-left transition-all relative overflow-hidden group">
+<div class="absolute inset-y-0 left-0 w-1 bg-primary"></div>
+<div class="flex items-center gap-3 w-full pl-2">
+<span class="material-icons text-red-400 text-lg">picture_as_pdf</span>
+<span class="text-sm text-white font-semibold truncate">Q4 Projections.pdf</span>
+</div>
+<div class="flex items-center gap-2 pl-9 mt-1">
+<span class="text-[10px] text-white/40 font-mono">2.4 MB</span>
+<span class="px-1.5 py-0.5 rounded bg-violet-500/20 border border-violet-500/40 text-[9px] text-violet-300 uppercase tracking-wide flex items-center gap-1">
+<span class="material-icons text-[10px]">verified_user</span> Verified
+                                        </span>
+</div>
+</button>
+<button class="w-full flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-white/5 border border-transparent text-left transition-all pl-4 opacity-70 hover:opacity-100">
+<div class="flex items-center gap-3 w-full">
+<span class="material-icons text-blue-400 text-lg">description</span>
+<span class="text-sm text-gray-300 font-medium truncate">Term Sheet - Draft v3.docx</span>
+</div>
+<div class="flex items-center gap-2 pl-8 mt-1">
+<span class="text-[10px] text-white/40 font-mono">145 KB</span>
+</div>
+</button>
+<button class="w-full flex flex-col gap-1 px-3 py-2 rounded-lg hover:bg-white/5 border border-transparent text-left transition-all pl-4 opacity-70 hover:opacity-100">
+<div class="flex items-center gap-3 w-full">
+<span class="material-icons text-green-400 text-lg">table_chart</span>
+<span class="text-sm text-gray-300 font-medium truncate">Cap Table 2023.xls</span>
+</div>
+<div class="flex items-center gap-2 pl-8 mt-1">
+<span class="text-[10px] text-white/40 font-mono">850 KB</span>
+<span class="px-1.5 py-0.5 rounded bg-violet-500/20 border border-violet-500/40 text-[9px] text-violet-300 uppercase tracking-wide flex items-center gap-1">
+<span class="material-icons text-[10px]">verified_user</span> Verified
+                                        </span>
+</div>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- MIDDLE: PREVIEW -->
+<div class="flex-1 flex flex-col min-w-0">
+<div class="glass-panel flex-1 rounded-xl relative overflow-hidden flex flex-col border border-primary shadow-[0_0_30px_rgba(19,236,236,0.05)]">
+<!-- Preview Toolbar -->
+<div class="h-12 border-b border-white/10 bg-black/40 flex items-center justify-between px-4">
+<div class="flex items-center gap-3">
+<span class="text-white font-medium text-sm">Q4 Projections.pdf</span>
+<span class="bg-primary/20 text-primary text-[10px] px-2 py-0.5 rounded font-mono">READ ONLY</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="text-white/40 hover:text-white transition-colors"><span class="material-icons text-lg">zoom_out</span></button>
+<span class="text-white/60 text-xs font-mono">100%</span>
+<button class="text-white/40 hover:text-white transition-colors"><span class="material-icons text-lg">zoom_in</span></button>
+<div class="h-4 w-px bg-white/10 mx-1"></div>
+<button class="text-white/40 hover:text-white transition-colors"><span class="material-icons text-lg">file_download_off</span></button>
+</div>
+</div>
+<!-- Document Content Simulation -->
+<div class="flex-1 bg-white/90 relative overflow-hidden flex flex-col items-center p-8">
+<div class="watermark-text">CONFIDENTIAL</div>
+<div class="bg-white w-full max-w-3xl h-full shadow-lg p-12 text-gray-800 flex flex-col gap-6 relative z-0">
+<!-- Fake Document Content -->
+<div class="flex justify-between items-end border-b-2 border-gray-900 pb-4 mb-4">
+<h1 class="text-3xl font-bold font-display uppercase tracking-tighter text-gray-900">Financial Overview</h1>
+<span class="text-sm font-mono text-gray-500">Q4 2023 // PRIVATE</span>
+</div>
+<div class="grid grid-cols-2 gap-8 mb-4">
+<div>
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Revenue Growth</h3>
+<div class="h-32 bg-gray-100 rounded p-4 flex items-end justify-between gap-2">
+<div class="w-full bg-primary/40 h-[40%] rounded-t"></div>
+<div class="w-full bg-primary/60 h-[55%] rounded-t"></div>
+<div class="w-full bg-primary/80 h-[70%] rounded-t"></div>
+<div class="w-full bg-primary h-[92%] rounded-t"></div>
+</div>
+</div>
+<div>
+<h3 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Operational Costs</h3>
+<div class="space-y-3">
+<div class="flex justify-between text-sm border-b border-gray-200 pb-1"><span>R&amp;D</span> <span class="font-mono font-bold">45%</span></div>
+<div class="flex justify-between text-sm border-b border-gray-200 pb-1"><span>Sales</span> <span class="font-mono font-bold">22%</span></div>
+<div class="flex justify-between text-sm border-b border-gray-200 pb-1"><span>G&amp;A</span> <span class="font-mono font-bold">12%</span></div>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="h-2 bg-gray-100 rounded w-full"></div>
+<div class="h-2 bg-gray-100 rounded w-[95%]"></div>
+<div class="h-2 bg-gray-100 rounded w-[90%]"></div>
+<div class="h-2 bg-gray-100 rounded w-[98%]"></div>
+<div class="h-2 bg-gray-100 rounded w-[85%]"></div>
+</div>
+<div class="mt-8 p-4 bg-gray-50 border border-gray-200 rounded text-xs text-gray-500 leading-relaxed text-justify">
+<strong class="text-gray-900">AI Analysis Note:</strong> This document contains forward-looking statements regarding future events and the future results of SwissAI Studio. These statements are based on current expectations, estimates, forecasts, and projections about the industry in which the company operates and the beliefs and assumptions of the management.
+                            </div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT: INSIGHTS & ACTIVITY -->
+<div class="w-72 flex-shrink-0 flex flex-col gap-4">
+<!-- Security Pulse -->
+<div class="glass-panel rounded-xl p-4 relative overflow-hidden">
+<div class="absolute top-0 right-0 w-20 h-20 bg-primary/20 blur-3xl rounded-full -mr-10 -mt-10"></div>
+<div class="flex items-center gap-2 mb-4 border-b border-white/10 pb-2">
+<span class="material-icons text-primary text-base">shield</span>
+<h2 class="text-xs font-bold uppercase tracking-widest text-white">Security Pulse</h2>
+</div>
+<div class="space-y-3">
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-400">Encryption</span>
+<span class="text-xs text-primary font-mono">AES-256</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-400">Architecture</span>
+<span class="text-xs text-primary font-mono">Zero-Trust</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-xs text-gray-400">Last Audit</span>
+<span class="text-xs text-white font-mono">2m ago</span>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-white/10">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="text-[10px] uppercase text-green-400 font-bold tracking-wider">System Secure</span>
+</div>
+</div>
+</div>
+<!-- Active Participants -->
+<div class="glass-panel rounded-xl flex-1 flex flex-col">
+<div class="p-4 border-b border-white/10 flex items-center justify-between">
+<h2 class="text-xs font-bold uppercase tracking-widest text-white">Active Users</h2>
+<span class="bg-white/10 text-white px-1.5 py-0.5 rounded text-[10px] font-mono">3</span>
+</div>
+<div class="p-2 space-y-1">
+<!-- User 1 -->
+<div class="flex items-center gap-3 p-2 rounded-lg bg-white/5 border border-white/5">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-white/20" data-alt="Thomas M profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBnoNDg63qbuZfxznDgvTnzxidJh6Fs50OEk2ujrtbQAGbbBnFrbxRzBNr4bzET1CCG9sxH2JdLKceugbieqfpCV2X9EBQsdXp_39CyXIDIlwkTzSuSZIsC53enewLPp8EnB4Pzg8lKVbV_moyPexv3GF_iEk5bp468P-y09e_fdOL7zIWFzuNaM-Gf7iokOIeZb1S2_7j0vaLo2aChSpc0rFlqatM7GNqkZKvoLojwF9lwJC2A4uhZsQ1-KS0rJu_JKvJp4qvfgC-F"/>
+<div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-green-500 border-2 border-black rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="text-xs font-bold text-white truncate">Thomas M.</div>
+<div class="text-[10px] text-primary truncate">SwissHR • Viewing</div>
+</div>
+<span class="material-icons text-primary/50 text-sm">visibility</span>
+</div>
+<!-- User 2 -->
+<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors border border-transparent">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-white/20 grayscale opacity-70" data-alt="Savya profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOsj80i80p8yV5LLmshjnNGI9dYpRB-KJyqRkHyfr3mSGshB1YsOqyKZ25_qxlrzPe6OUDIXaa74g-F42bEvg0qD4wOiqK6Rh5ZyOld4fsO_om42FlFJzXwJshL3CDf0uOHhcSng94qSvovX8K5MaeNBHi77b6ycys3p0vaeZu9kUbLLwR29b3e01GkMOP2zCAyXyz0TSiOIAUdcMuGAvwRsrBXNhx9XOo7wMwuS8Kr0gJwaX-zSbDtBcmQ0Wb9ThRJElwnfAdHz_7"/>
+<div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-yellow-500 border-2 border-black rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="text-xs font-bold text-gray-400 truncate">Savya</div>
+<div class="text-[10px] text-gray-500 truncate">Partner • Idle 5m</div>
+</div>
+</div>
+<!-- User 3 -->
+<div class="flex items-center gap-3 p-2 rounded-lg hover:bg-white/5 transition-colors border border-transparent">
+<div class="relative">
+<img class="w-8 h-8 rounded-full border border-white/20 grayscale opacity-70" data-alt="Julian profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPu1NFQa3_zpk9pusSih0aQLgRuiyTnPRAUs2oeU-yOO_lYIx_Tkx_AZWKb2HDecCTUntzx7lWLjyuh_JQ-7y8OM8DZv6SzDz7NdbwsjDG0TX1PLR4LXCwjLa27dBj2YDLBeQYVvuCuTEeBeatMBNTmf6PzymL5JRZ5c9mRgQs9ApA6FhiBL4GSBC1PtMDpZFsCpSapcQG_h2_59dZzaCZsmAB8LRL__1oD0v1uhFoQCcu87je9mndIubwTbKjsKvF2p85Ygh7z3eo"/>
+<div class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-gray-500 border-2 border-black rounded-full"></div>
+</div>
+<div class="flex-1 min-w-0">
+<div class="text-xs font-bold text-gray-400 truncate">Julian R.</div>
+<div class="text-[10px] text-gray-500 truncate">Legal • Offline</div>
+</div>
+</div>
+</div>
+<!-- AI Alert Box inside Right Panel -->
+<div class="mt-auto m-2 p-3 rounded-lg bg-gradient-to-br from-violet-900/40 to-background-dark border border-violet-500/30">
+<div class="flex items-start gap-2">
+<span class="material-icons text-violet-400 text-sm mt-0.5">auto_awesome</span>
+<div>
+<h4 class="text-[10px] font-bold text-violet-300 uppercase mb-1">AI Council Insight</h4>
+<p class="text-[10px] text-gray-400 leading-snug">
+                                     Thomas M. requested access to "IP Portfolio". Access granted based on clearance level 4.
+                                 </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- BOTTOM CONVERSATION RAIL -->
+<div class="h-14 bg-black/80 border-t border-primary/20 flex items-center px-6 gap-4 z-50 backdrop-blur-xl">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center border border-primary/40 shadow-[0_0_10px_rgba(19,236,236,0.2)]">
+<span class="material-icons text-primary text-sm animate-pulse">smart_toy</span>
+</div>
+<div class="flex-1 flex items-center gap-2">
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Nitara:</span>
+<p class="text-sm text-gray-300 font-body">I've automatically redacted sensitive customer PII from the contracts in the Legal folder. The Data Room is ready for Thomas M.'s review.</p>
+</div>
+<button class="text-gray-500 hover:text-primary transition-colors">
+<span class="material-icons text-lg">mic</span>
+</button>
+<div class="h-8 w-px bg-white/10 mx-2"></div>
+<div class="flex items-center gap-2 text-xs text-gray-500 font-mono">
+<div class="w-1.5 h-1.5 rounded-full bg-primary"></div>
+                AI SYSTEMS ONLINE
+            </div>
+</div>
+</main>
+</body></html>

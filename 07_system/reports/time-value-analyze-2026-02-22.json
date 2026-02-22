@@ -1,0 +1,161 @@
+{
+  "task_type": "time-value-analyze",
+  "status": "completed",
+  "generated_at": "2026-02-22T00:00:00.000Z",
+  "founder": "Vikas Mohan (VIMO)",
+  "analysis_period": "2026-02-15 to 2026-02-22",
+  "data_confidence_notes": [
+    "No time-tracking system exists. Allocation is inferred from: portfolio state (20 projects all at concept), task history (13 open todos, 4 stale 7-12 days), agent queue skill invocations, knowledge digest signals, and active work entries in founder profile.",
+    "Revenue data is sparse: CHF 7K/month from two one-time streams, one closed deal (Orthoanalytics USD 9K), no recurring income.",
+    "Profiling completeness is 16% — significant gaps remain, especially around actual time spent per project.",
+    "The most reliable signal: 18 active concept-phase projects with zero execution = the founder is spending time generating and grooming ideas, not executing."
+  ],
+  "assumptions": {
+    "work_hours_per_week": 50,
+    "work_hours_per_month": 200,
+    "monthly_revenue_chf": 7000,
+    "monthly_burn_chf": 5000,
+    "monthly_surplus_chf": 2000,
+    "revenue_type": "sporadic_one_time",
+    "active_work_list_count": 8,
+    "concept_projects_count": 19,
+    "executing_projects_count": 0
+  },
+  "current_allocation": {
+    "build": 35,
+    "sell": 5,
+    "network": 10,
+    "learn": 15,
+    "admin": 15,
+    "ideate": 20
+  },
+  "current_allocation_rationale": {
+    "build": "Nitara/Focus Flow OS is actively in development (backend + frontend, systemd services running). This is the largest verifiable execution effort, but it is building for a future SaaS rather than current revenue.",
+    "sell": "Only 1 deal in pipeline (Orthoanalytics, closed_won). Network analysis shows 0 hours of active outreach completed against 11 identified warm contacts this week. Tasks 'setup call with FRa' and 'Interview 20-30 power users' are stale 9-11 days.",
+    "network": "Network import was run (94 contacts), network-enrich skill ran once, network-analyze produced a report. This is system-level networking, not relationship activation. Zero outreach messages sent.",
+    "learn": "Inference logs show fast_classification at 33% of usage volume — heavy use of AI for synthesis and classification tasks suggesting research/learning cycles. Agent queue shows youtube-research skill was run.",
+    "admin": "Infrastructure maintenance (3 systemd services running, openclaw-gateway debugging, agent queue management). Monitor-project ran 15 times in the queue period, consuming disproportionate cost (93% of total Nitara spend).",
+    "ideate": "20 projects at concept phase. 3 AURA variants, 3 Global Foundation variants, 2 Overture variants, 2 Bramha ESG variants. This is not ideation leading to execution — it is ideation replacing execution. Ideas are being elaborated (council scores, PRDs written) without decisions being made."
+  },
+  "recommended_allocation": {
+    "build": 25,
+    "sell": 35,
+    "network": 20,
+    "learn": 5,
+    "admin": 10,
+    "ideate": 5
+  },
+  "recommended_allocation_rationale": {
+    "build": "Continue Nitara MVP build but cap it — shipping a usable v1 in 8 weeks matters more than perfecting architecture. 25% is sufficient for a focused weekly sprint.",
+    "sell": "This is the single most underallocated category given the active directive (primary focus: income). Three specific sell actions are revenue-proximate RIGHT NOW: (1) close the Soft Schwizz client pipeline, (2) pitch consulting/workshop engagement using existing skills, (3) follow up on Orthoanalytics relationship for next engagement. The Bramha CI services-first model requires selling immediately, not after building.",
+    "network": "Increase from 10% but make it transactional. The network analysis identified 6 this-week urgent contacts. None have been reached. These are not 'networking' — they are sales conversations. Rodolphe Bocquet (ESG4Boards) alone could validate or kill the Bramha ESG thesis in 30 minutes.",
+    "learn": "Reduce sharply. Expert-level skills in Product Strategy, Technical Architecture, and Multi-Agent Design are already at ceiling. Additional learning produces diminishing returns. The gap is not knowledge — it is execution.",
+    "admin": "Reduce by fixing the monitor-project runaway cost ($41.33 of $44.59 weekly Nitara spend). Admin should be 10% max, not the engine consuming 93% of AI budget.",
+    "ideate": "Near-zero. The portfolio analysis recommended killing 9 projects and parking 8 more. Until that cleanup happens, any new ideation is noise. The portfolio already contains 3 years of ideas to execute. Zero new ideas are needed."
+  },
+  "biggest_misallocation": "IDEATE is at 20% estimated allocation when it should be 5% or less. The evidence: 20 projects all at concept stage, 3 duplicate AURA variants, 3 duplicate Global Foundation variants, PRDs written for projects the council scored 3.6-4.6/10. This is not productive ideation — it is ideation as a substitute for the harder work of committing to one path and selling it.",
+  "founder_trap_detected": "DUAL TRAP: Ideation Addiction + Build Without Sell. The founder is generating ideas (20 concept projects) and building infrastructure (Nitara platform) simultaneously while allocating near-zero time to selling. Revenue is CHF 7K/month from one-time work — if these two engagements end, income drops to zero. The portfolio has been active for 6+ months with zero projects moving past concept to execution. This is not a strategy problem — the portfolio analysis produced clear recommendations. It is an execution and selling deficit.",
+  "expected_hourly_value": {
+    "build": 35,
+    "sell": 120,
+    "network": 80,
+    "learn": 8,
+    "admin": 5,
+    "ideate": 3
+  },
+  "hourly_value_rationale": {
+    "build": "Nitara build is valuable long-term but revenue is 6-12 months away. $35/hr reflects future discounted value. Bramha CI build would be $60/hr if services-first model is activated.",
+    "sell": "At Swiss consulting rates (CHF 150-250/hr), one hour of effective selling converts to a 3-5x revenue multiple. A 10-hour sales week closing one CHF 5K consulting engagement = CHF 500/hour effective rate. $120/hr is conservative.",
+    "network": "Warm leads in network have 3-5x higher conversion rates than cold. Given 6 this-week urgent contacts identified (Rodolphe, Tommy, Penny, Nathalie, Jan, Ajith), each contact activated has non-linear revenue potential. $80/hr reflects relationship leverage multiplier.",
+    "learn": "Expert-level skills already present. Marginal learning hour has ~$8/hr value — useful but not urgent. The learning needed (sales skills, closing techniques) is best acquired by doing, not studying.",
+    "admin": "Necessary maintenance. $5/hr direct value. The monitor-project runaway ($41/week for infrastructure monitoring) is admin eating disproportionate budget.",
+    "ideate": "At 20 concept projects with zero execution, additional ideation has near-zero marginal value. $3/hr reflects opportunity cost — every ideation hour crowds out a sell or network hour."
+  },
+  "revenue_proximity_analysis": {
+    "immediate_0_30_days": [
+      "Soft Schwizz client pipeline — direct consulting revenue possible now",
+      "AI course follow-on module — existing audience, proven revenue stream",
+      "Bramha CI consulting engagement — services-first, no build required",
+      "Follow the Rabbit Studios (FTR) — setup call stale 11 days, existing relationship"
+    ],
+    "near_term_30_90_days": [
+      "Bramha CI first client engagement (CHF 5-15K per engagement)",
+      "AI workshop/bootcamp curriculum monetization",
+      "Nitara early access / consulting wrapper"
+    ],
+    "long_term_90_plus_days": [
+      "Nitara SaaS productization",
+      "Bramha CI productized SaaS",
+      "Any concept-stage project not yet validated"
+    ]
+  },
+  "network_opportunity_gap": {
+    "warm_leads_identified": 6,
+    "outreach_sent_this_week": 0,
+    "estimated_weekly_revenue_loss": "CHF 500-2000",
+    "most_urgent_contact": "Rodolphe Bocquet (ESG4Boards) — 30-minute call validates or kills Bramha ESG thesis, saves months of misdirected effort",
+    "second_urgent": "FTR setup call — stale 11 days, active revenue relationship at risk of cooling"
+  },
+  "top_recommendations": [
+    {
+      "priority": 1,
+      "category": "sell",
+      "action": "Send 3 outreach messages today — Rodolphe Bocquet, FTR call setup, Soft Schwizz follow-up",
+      "time_required_hours": 1.5,
+      "expected_revenue_impact": "CHF 3,000-15,000 within 60 days",
+      "rationale": "Network analysis identified these as this-week urgent. Zero messages have been sent. These are not speculative — they are warm contacts with clear conversion paths. One Bramha CI consulting engagement closes the income gap immediately."
+    },
+    {
+      "priority": 2,
+      "category": "ideate_kill",
+      "action": "Execute the portfolio kill/park decisions from the 2026-02-18 analysis — kill 9 projects, park 8 more",
+      "time_required_hours": 2,
+      "expected_revenue_impact": "Indirect — frees 40% of cognitive bandwidth currently allocated to maintaining 18 concept-stage projects",
+      "rationale": "You cannot sell what you cannot explain. With 20 active projects, no single pitch is convincing. Killing projects is a revenue decision."
+    },
+    {
+      "priority": 3,
+      "category": "build",
+      "action": "Time-box Nitara build to 20 hours/week max with a hard 8-week MVP deadline",
+      "time_required_hours": "ongoing",
+      "expected_revenue_impact": "Limits opportunity cost of build-without-sell pattern",
+      "rationale": "Nitara is the highest-scored project (7.2/10). It is being built. The risk is that perfecting it crowds out selling. Hard deadline forces feature cuts that enable earlier monetization."
+    },
+    {
+      "priority": 4,
+      "category": "admin",
+      "action": "Fix monitor-project skill — it is consuming 93% of Nitara's weekly AI budget ($41.33 of $44.59)",
+      "time_required_hours": 2,
+      "expected_revenue_impact": "Saves ~$160/month in wasted AI inference costs",
+      "rationale": "The monitor-project skill hit the $20/day budget cap on 2 of the last 3 reporting days. This is a runaway cost, not a monitoring tool. Fix the cost ceiling or the skill logic."
+    },
+    {
+      "priority": 5,
+      "category": "sell",
+      "action": "Define a consulting offer in writing — 3 specific packages, price points, deliverables — before end of week",
+      "time_required_hours": 3,
+      "expected_revenue_impact": "Enables selling. Expert skills exist but no offer exists to sell.",
+      "rationale": "The portfolio analysis notes 'Expert-level skills currently generating CHF 0 in consulting. Quick path to CHF 3-5K/month.' But consulting requires a defined offer. Without a written offer, outreach produces conversations, not contracts."
+    }
+  ],
+  "nitara_cost_efficiency": {
+    "total_weekly_cost_usd": 44.59,
+    "daily_average_usd": 6.37,
+    "monthly_estimate_usd": 191,
+    "cost_by_task_type": {
+      "monitor_project": 41.33,
+      "fast_classification": 2.86,
+      "conversation": 0.32,
+      "strategic_reasoning": 0.05,
+      "memory_extraction": 0.01,
+      "summarization": 0.01
+    },
+    "highest_roi_skill": "conversation + strategic_reasoning — combined $0.38 for AI co-founder conversations and strategic analysis. These are the skills that produce actionable insight directly. The portfolio-analysis and network-analyze reports that informed this analysis cost approximately $0.00 in logged cost (likely via Claude Code CLI session costs not captured in inference log).",
+    "lowest_roi_skill": "monitor-project — $41.33 spent on infrastructure monitoring in the past week, hitting the $20/day cap on 2 days. This skill is misconfigured, running over budget, and producing diminishing-returns health checks. It is consuming 93% of Nitara's weekly AI budget while the human-facing skills (conversation, reasoning, analysis) run on $0.38.",
+    "recommendation": "Fix monitor-project immediately. Reduce its scheduling frequency from hourly to twice daily. Add a hard token limit of $2/run. The weekly $41 budget recovered from fixing this skill funds 4+ hours of Opus-quality strategic reasoning instead. Nitara's ROI is currently negative because the monitoring overhead costs more than the strategic value produced."
+  },
+  "portfolio_stage_assessment": "EARLY_REVENUE transitioning to PRE_REVENUE risk",
+  "portfolio_stage_rationale": "Revenue exists (CHF 7K/month) but is entirely one-time and non-recurring. If the AI course and FTR engagements end, monthly income drops to zero with no recurring base. The active directive correctly identifies this as the primary risk. The portfolio is operating as if in 'Growing' mode (building product, generating ideas) when the financial reality demands 'Early Revenue' mode (sell first, build second).",
+  "recommended_allocation_stage": "early_revenue",
+  "confidence": 0.62
+}
